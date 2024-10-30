@@ -1,23 +1,22 @@
-import { Grid, Stack, Box, Typography } from "@mui/joy";
+import { useState } from "react";
 
-import BreadcrumbsComponent from "../Components/BreadcrumbsComponent";
-import AvatarComponent from "../Components/AvatarComponent";
+import { Grid, Box, Typography, Stack } from "@mui/joy";
 
-import SheetComponent from "../Components/SheetComponent";
-import ButtonComponent from "../Components/ButtonComponent";
+//layouts
+import Header from "../Layout/Header/Header";
+import SearchFilter from "../Layout/SearchFilter/SearchFilter";
+import Table from "../Layout/Table/Table";
 
-import InputComponent from "../Components/Form/InputComponent";
+//custom components
 import DatePickerComponent from "../Components/Form/DatePickerComponent";
 import SelectComponent from "../Components/Form/SelectComponent";
-import TableComponent from "../Components/Table/TableComponent";
+import ModalComponent from "../Components/Dialogs/ModalComponent";
+import AutoCompleteComponent from "../Components/Form/AutoCompleteComponent";
+import InputComponent from "../Components/Form/InputComponent";
 
-import { ChevronRight } from "lucide-react";
-
-const user = {
-    name: "Remy Sharp",
-    email: "email@domain.com",
-    src: "https://mui.com/static/images/avatar/1.jpg"
-};
+//datas
+import { items, user } from '../Data/index'
+import { receivingTableHeader } from '../Data/TableHeader'
 
 const categoryFilter = [
     { name: 'Option 1', value: 'option 1' },
@@ -33,164 +32,173 @@ const sortFilter = [
 
 const Releasing = () => {
 
-    const pageTitle = { title: "Requisition and issue slip", description: "this is a sample description" }
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-    const tableHeader = {
-
+    const pageDetails = {
+        title: "Requisition and issue slip",
+        description: "this is a sample description"
     }
+
+    const handleDialogOpen = () => {
+        setIsDialogOpen(true)
+    }
+
+    const handleDialogClose = () => {
+        setIsDialogOpen(false)
+    }
+
+    const handleSaveRIS = () => {
+        alert('RIS TO BE SAVED')
+        setIsDialogOpen(false)
+        //add snackbar indication item was saved
+    }
+
+    const FilterOptions = () => (
+        <>
+            <Box mr={2}>
+                <DatePickerComponent />
+            </Box>
+            <Box mr={2}>
+                <DatePickerComponent />
+            </Box>
+            <Box mr={2}>
+                <SelectComponent placeholder="Select Category" options={categoryFilter} />
+            </Box>
+            <Box>
+                <SelectComponent placeholder="Sort By" options={sortFilter} />
+            </Box>
+        </>
+    );
+
+    const ModalContent = () => (
+        <>
+            <Box>
+
+                <AutoCompleteComponent
+                    placeholder={'Search Item...'}
+                    label={'Item Name'}
+                />
+
+                <Typography
+                    mt={2}
+                >
+                    Item’s current stock level: 1,200/3,000 (40% remaining)
+                </Typography>
+                <Box mt={4} >
+                    <Stack direction='row' spacing={3} >
+                        <Box mt={2}>
+                            <SelectComponent
+                                placeholder="Select a source"
+                                label='Source'
+                                options={categoryFilter}
+                                width={300}
+                            />
+                        </Box>
+
+                        <Box mt={2}>
+                            <SelectComponent
+                                placeholder="Select an office"
+                                label='Requesting Office'
+                                options={categoryFilter}
+                                width={300}
+                            />
+                        </Box>
+
+                    </Stack>
+
+                    <Stack mt={2} direction='row' spacing={3} >
+                        <DatePickerComponent
+                            width={300}
+                            label='RIS date'
+                            placeholder='xxxx.xx.xx'
+                        />
+                        <InputComponent
+                            label="RIS number"
+                            placeholder='xxx.xxx.xxx'
+                            width={300}
+                            fullWidth={true}
+                        />
+                    </Stack>
+
+                    <Box mt={2}>
+                        <SelectComponent
+                            placeholder="Assign in a category"
+                            label='Category'
+                            options={categoryFilter}
+                        />
+                    </Box>
+
+                    <Stack mt={2} direction='row' spacing={3} >
+
+                        <InputComponent
+                            label="Quantity Requested"
+                            placeholder='xxx.xxx.xxx'
+                            width={300}
+                            fullWidth={true}
+                        />
+
+                        <InputComponent
+                            label="Quantity Served"
+                            placeholder='xxx.xxx.xxx'
+                            width={300}
+                            fullWidth={true}
+                        />
+                    </Stack>
+
+                </Box>
+
+            </Box>
+        </>
+    );
 
     return (
         <>
             <Grid
                 container
                 spacing={2}
-                sx={{ flexGrow: 1, justifyContent: 'space-between' }}
+                sx={{
+                    flexGrow: 1,
+                    justifyContent: 'space-between'
+                }}
             >
-                <Grid item md={5}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: "start"
-                        }}
-                    >
-                        <Stack
-                            direction="row"
-                            alignItems='center'
-                        >
-                            {user ? <AvatarComponent
-                                alt={user.name}
-                                src={user.src}
-                            />
-                                :
-                                <AvatarComponent />
-                            }
-
-                            <BreadcrumbsComponent
-                                name="Steve Dela Cerna"
-                                pageTitle={pageTitle.title}
-                            />
-                        </Stack>
-
-                        <Stack
-                            mt={3}
-                        >
-                            <Typography level="h2" gutterBottom>{pageTitle.title}</Typography>
-                            <Typography level="body-lg" gutterBottom>{pageTitle.description}</Typography>
-                        </Stack>
-                    </Box>
-                </Grid>
-
-                <Grid item md={5}>
-                    <SheetComponent
-                        variant={"outlined"}
-                    >
-
-                        <Stack
-                            alignItems='center'
-                            direction='row'
-                            justifyContent='start'
-                        >
-                            <Box
-                                mr={2}
-                            >
-                                {user ? <AvatarComponent
-                                    alt={user.name}
-                                    src={user.src}
-                                />
-                                    :
-                                    <AvatarComponent />
-                                }
-                            </Box>
-
-                            <Stack mr={2}>
-                                <Typography level="body-lg" gutterBottom>{user.name}</Typography>
-                                <Typography level="body-" gutterBottom>{user.email}</Typography>
-                            </Stack>
-
-                            <Box >
-                                <ChevronRight />
-                            </Box>
-                        </Stack>
-                    </SheetComponent>
-
-                    <Box mt={2} display="flex" justifyContent="flex-end">
-                        <ButtonComponent label="Generate report" size="lg" />
-                    </Box>
+                {/* Page Header */}
+                <Grid item md={12}>
+                    <Header
+                        pageDetails={pageDetails}
+                        data={user}
+                    />
                 </Grid>
 
                 {/* search and filter */}
                 <Grid item md={12}>
-                    <SheetComponent>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: 'center',
-                                justifyContent: 'space-between'
-                            }}
-                        >
-
-                            <InputComponent />
-
-                            <Stack
-                                direction='row'
-                            >
-
-                                <Box mr={2}>
-                                    <DatePickerComponent />
-                                </Box>
-
-                                <Box mr={2}>
-                                    <DatePickerComponent />
-                                </Box>
-
-                                <Box mr={2}>
-                                    <SelectComponent
-                                        placeholder={"Select Category"}
-                                        options={categoryFilter}
-                                    />
-                                </Box>
-
-                                <Box>
-                                    <SelectComponent
-                                        placeholder={"Sort By"}
-                                        options={sortFilter}
-                                    />
-                                </Box>
-                            </Stack>
-                        </Box>
-
-                        <hr />
-
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: 'space-between'
-                            }}
-                        >
-                            <Typography variant="body-lg">
-                                Showing 6 records as filtered from 08-01-2023 - Present
-                            </Typography>
-
-                            <Stack
-                                direction='row'
-                            >
-                                <ButtonComponent
-                                    size="sm"
-                                    variant="outlined"
-                                    label='Clear Filters'
-                                />
-                            </Stack>
-                        </Box>
-                    </SheetComponent>
+                    <SearchFilter>
+                        <FilterOptions categoryOptions={categoryFilter} sortOptions={sortFilter} />
+                    </SearchFilter>
                 </Grid>
 
                 <Grid item md={12}>
-                    <SheetComponent>
-                        <TableComponent />
-                    </SheetComponent>
+                    <Table
+                        tableHeader={receivingTableHeader}
+                        tableData={items}
+                        tableTitle="RIS Records"
+                        tableSubtitle='This is a subheading. It should add more context to the interaction.'
+                        btnLabel='New RIS'
+                        onClick={handleDialogOpen}
+                    />
                 </Grid>
             </Grid>
+
+            <ModalComponent
+                isOpen={isDialogOpen}
+                handleClose={handleDialogClose}
+                content={<ModalContent />}
+                leftButtonLabel={'Cancel'}
+                leftButtonAction={handleDialogClose}
+                rightButtonLabel={'Save'}
+                rightButtonAction={handleSaveRIS}
+                title="Record a new Requisition and Issue slip"
+                description={"Describe how would you like to release items from your inventory. All fields are required."}
+            />
         </>
     )
 }

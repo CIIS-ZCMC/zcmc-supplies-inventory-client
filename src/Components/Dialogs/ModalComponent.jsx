@@ -65,11 +65,11 @@ function ModalComponent({
       <ModalDialog
         minWidth={minWidth}
         maxWidth={maxWidth}
-        sx={{ width: "auto", borderRadius: 20 }}
+        sx={{ width: "auto", p: 4, borderRadius: 20 }}
       >
         {/* TITLE */}
         <DialogTitle
-          sx={{ alignItems: "center", justifyContent: "space-between" }}
+          sx={{ alignItems: "start", justifyContent: "space-between" }}
         >
           <Stack gap={0.4}>
             <Typography level="title-lg" fontWeight={600}>
@@ -95,7 +95,9 @@ function ModalComponent({
         <Divider sx={{ mx: 0.2 }} />
 
         {/* CONTENT */}
-        <DialogContent sx={{ p: 1 }}>{content}</DialogContent>
+        <DialogContent sx={{ p: 1 }}>
+          {content}
+        </DialogContent>
 
         {/* FOOTER */}
         <Divider sx={{ mx: 0.2 }} />

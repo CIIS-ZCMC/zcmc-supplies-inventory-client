@@ -19,19 +19,22 @@ function InputComponent({
   setValue,
   autoFocus,
   fontWeight,
+  fullWidth,
+  width,
 }) {
   return (
     <FormControl>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
-        size="md"
+        size="lg"
         variant="outlined"
         color="success"
         autoFocus={autoFocus}
         placeholder={placeholder}
         value={value}
+        fullWidth={fullWidth}
         onChange={(e) => setValue(e.target.value)}
-        sx={{ fontWeight: fontWeight }}
+        sx={{ fontWeight: fontWeight, width: width }}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>

@@ -1,10 +1,11 @@
 import { Sheet } from "@mui/joy"
 
-const SheetComponent = ({ variant, children }) => {
+const SheetComponent = ({ variant, children, width }) => {
 
     const sheetStyles = {
         borderRadius: '20px',
-        padding: '1rem'
+        padding: '1rem',
+        width: width
     }
 
     return (

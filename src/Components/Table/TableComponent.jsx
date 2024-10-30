@@ -1,50 +1,37 @@
 import * as React from "react";
-import Table from "@mui/joy/Table";
+import { Table } from "@mui/joy";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import { SquareArrowOutUpRight } from "lucide-react";
+import ButtonComponent from "../ButtonComponent";
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
-export default function TableComponent() {
+export default function TableComponent({ tableHeader, tableData, onClick }) {
   return (
-    <Table borderAxis="both">
+    <Table hoverRow borderAxis="both">
       <thead>
         <tr>
-          <th style={{ width: "40%" }}>Menu</th>
-          <th>Calories</th>
-          <th>Fat&nbsp;(g)</th>
-          <th>Carbs&nbsp;(g)</th>
-          <th>Protein&nbsp;(g)</th>
+          {tableHeader.map(({ id, label }) => (
+            <th key={id}>{label}</th>
+          ))}
+          <th style={{ textAlign: "center" }}>Action</th>
         </tr>
       </thead>
       <tbody>
-        {rows.map((row) => (
-          <tr key={row.name}>
-            <td>{row.name}</td>
-            <td>{row.calories}</td>
-            <td>{row.fat}</td>
-            <td>{row.carbs}</td>
-            <td>{row.protein}</td>
+        {tableData.map((row) => (
+          <tr key={row.id}>
+            {tableHeader.map(({ id }) => (
+              <td key={id}>{row[id]}</td>
+            ))}
+            <td align="center">
+              <ButtonComponent
+                size={"sm"}
+                onClick={onClick}
+                startDecorator={<SquareArrowOutUpRight size={'1rem'} />}
+                label={'View'}
+              />
+            </td>
           </tr>
         ))}
       </tbody>
-      <tfoot>
-        <tr>
-          <th scope="row">Totals</th>
-          <td>1,319</td>
-          <td>50.7</td>
-          <td>201</td>
-          <td>22.5</td>
-        </tr>
-      </tfoot>
     </Table>
   );
 }

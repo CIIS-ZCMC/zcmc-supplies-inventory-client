@@ -52,7 +52,7 @@ function ButtonComponent({
 
   return (
     <Button
-      size={size}
+      size='lg'
       variant={variant}
       color={color}
       fullWidth={fullWidth}
