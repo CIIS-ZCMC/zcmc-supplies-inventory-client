@@ -1,10 +1,26 @@
 import * as React from "react";
+
 import { Table } from "@mui/joy";
+import { useNavigate } from "react-router-dom";
 
 import { SquareArrowOutUpRight } from "lucide-react";
+
+import useSelectedRow from "../../Store/SelectedRowStore";
+
 import ButtonComponent from "../ButtonComponent";
 
 export default function TableComponent({ tableHeader, tableData, onClick }) {
+
+  const { setSelectedRow } = useSelectedRow();
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (row) => {
+    const { id } = row
+    navigate(`/releasing/${id}`)
+    setSelectedRow(row)
+  };
+
   return (
     <Table hoverRow borderAxis="both">
       <thead>
@@ -24,7 +40,7 @@ export default function TableComponent({ tableHeader, tableData, onClick }) {
             <td align="center">
               <ButtonComponent
                 size={"sm"}
-                onClick={onClick}
+                onClick={() => handleNavigate(row)}  // Corrected line
                 startDecorator={<SquareArrowOutUpRight size={'1rem'} />}
                 label={'View'}
               />

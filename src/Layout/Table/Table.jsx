@@ -7,6 +7,7 @@ import ChipComponent from "../../Components/ChipComponent"
 import ButtonComponent from "../../Components/ButtonComponent"
 
 const Table = ({ tableHeader, tableData, tableTitle, tableSubtitle, btnLabel, onClick }) => {
+
     return (
         <div>
             <SheetComponent>
@@ -46,6 +47,7 @@ const Table = ({ tableHeader, tableData, tableTitle, tableSubtitle, btnLabel, on
                     <TableComponent
                         tableHeader={tableHeader}
                         tableData={tableData}
+                        icon
                     />
                 </Box>
             </SheetComponent>
