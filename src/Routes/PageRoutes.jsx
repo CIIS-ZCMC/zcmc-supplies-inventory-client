@@ -1,15 +1,23 @@
 import Dashboard from "../Pages/Dashboard";
 import Receiving from "../Pages/Receiving";
 import Releasing from "../Pages/Releasing";
-import ItemReview from '../Pages/ItemReview';
-import Categories from '../Pages/Categories';
-import Suppliers from '../pages/Suppliers';
-import Brands from '../Pages/Brands';
+import ItemReview from "../Pages/ItemReview";
+import Categories from "../Pages/Categories";
+import Suppliers from "../pages/Suppliers";
+import Brands from "../Pages/Brands";
 
 import ManageRequest from "../Pages/ManageRequest";
 import MainPage from "../Pages/End-User/MainPage";
 
-import { CircleGauge, ArrowUpFromLine, ArrowDownToLine, BaggageClaim, Tag, ClipboardList, LayoutGrid } from "lucide-react"
+import {
+  CircleGauge,
+  ArrowUpFromLine,
+  ArrowDownToLine,
+  BaggageClaim,
+  Tag,
+  ClipboardList,
+  LayoutGrid,
+} from "lucide-react";
 
 export const sidebarRoutes = [
   {
@@ -74,7 +82,6 @@ export const sidebarRoutes = [
     // code: "PRM-REQ",
     permissions: ["view"],
   },
-
 ];
 
 export const childrenRoutes = [
