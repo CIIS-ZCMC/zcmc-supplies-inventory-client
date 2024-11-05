@@ -9,6 +9,7 @@ InputComponent.propTypes = {
   setValue: PropTypes.func.isRequired,
   autoFocus: PropTypes.bool,
   fontWeight: PropTypes.number,
+  startIcon: PropTypes.object,
 };
 
 function InputComponent({
@@ -19,6 +20,7 @@ function InputComponent({
   setValue,
   autoFocus,
   fontWeight,
+  startIcon,
   fullWidth,
   width,
 }) {
@@ -28,13 +30,13 @@ function InputComponent({
       <Input
         size="lg"
         variant="outlined"
-        color="success"
+        color="primary"
         autoFocus={autoFocus}
         placeholder={placeholder}
         value={value}
         fullWidth={fullWidth}
         onChange={(e) => setValue(e.target.value)}
-        sx={{ fontWeight: fontWeight, width: width }}
+        sx={{ fontWeight: fontWeight }}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>

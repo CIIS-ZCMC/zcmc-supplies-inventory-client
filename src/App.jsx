@@ -14,7 +14,7 @@ const theme = extendTheme({
           light: "#0A223E",
           lighter: "#E5FBF5",
           lightBg: "#F2F8F6",
-          buttonBg: "#0E5844",
+          buttonBg: "#1D70BC",
           active: "rgba(249, 250, 251, 0.12)",
         },
       },

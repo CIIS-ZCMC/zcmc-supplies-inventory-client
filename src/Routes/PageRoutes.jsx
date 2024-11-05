@@ -42,13 +42,32 @@ export const sidebarRoutes = [
     name: "Receiving (IAR)",
     element: <Receiving />,
     icon: <ArrowDownToLine />,
+    path: "/inventory", // DASHBOARD
     permissions: ["view"],
   },
   {
-    path: "/item-review",
-    name: "Item Review",
-    element: <ItemReview />,
+    name: "Inventory",
+    element: <Inventory />,
     icon: <ClipboardList />,
+    // code: "PRM-REQ",
+    permissions: ["view"],
+  },
+
+  {
+    path: "/releasing", // DASHBOARD
+    name: "Releasing (RIS)",
+    element: <Releasing />,
+    icon: <ArrowUpFromLine />,
+    // code: "PRM-REQ",
+    permissions: ["view"],
+  },
+
+  {
+    path: "/receiving", // DASHBOARD
+    name: "Receiving (IAR)",
+    element: <Receiving />,
+    icon: <ArrowDownToLine />,
+    // code: "PRM-REQ",
     permissions: ["view"],
   },
   {
