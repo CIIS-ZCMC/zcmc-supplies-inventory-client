@@ -22,11 +22,13 @@ const data = Array.from({ length: 1000 }, (_, i) => ({
 }));
 
 PaginatedTable.propTypes = {
-  rows: PropTypes.number,
+  rowsPage: PropTypes.number,
+  columns: PropTypes.array,
+  rows: PropTypes.array,
 };
-function PaginatedTable({ rows = 20 }) {
+function PaginatedTable({ rowsPage = 10, columns, rows }) {
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(rows);
+  const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
   const handleChangePage = (newPage) => {
@@ -42,7 +44,7 @@ function PaginatedTable({ rows = 20 }) {
 
   // Calculate the subset of data to display
   const startIdx = (page - 1) * rowsPerPage;
-  const currentRows = data.slice(startIdx, startIdx + rowsPerPage);
+  const currentRows = rows.slice(startIdx, startIdx + rowsPerPage);
 
   return (
     <Box>
@@ -51,27 +53,18 @@ function PaginatedTable({ rows = 20 }) {
       <Table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>PO Number</th>
-            <th>IAR Number</th>
-            <th>Item Name</th>
-            <th>Category</th>
-            <th>Unit</th>
-            <th>Source</th>
-            <th>Quantity</th>
-            <th>Actions</th>
+            {columns.map((col, index) => (
+              <th key={index}>{col.label}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {currentRows.map((row, index) => (
             <tr key={row.id}>
               <td>{startIdx + index + 1}</td>
-              <td>{row.poNumber}</td>
-              <td>{row.iarNumber}</td>
               <td>{row.itemName}</td>
               <td>{row.category}</td>
               <td>{row.unit}</td>
-              <td>{row.source}</td>
               <td>{row.quantity}</td>
               <td>
                 {/* Add any action buttons or icons here */}

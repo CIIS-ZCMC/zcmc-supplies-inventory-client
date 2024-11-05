@@ -7,7 +7,22 @@ import InputComponent from "../Components/Form/InputComponent";
 import { SearchIcon } from "lucide-react";
 import TableComponent from "../Components/Table/TableComponent";
 import PaginatedTable from "../Components/Table/PaginatedTable";
+const data = Array.from({ length: 1000 }, (_, i) => ({
+  id: i + 1,
+  itemName: "Zonrox Color Bleach",
+  category: "Category name",
+  unit: "1L bottle (x8 pieces per box)",
+  quantity: "1,000",
+}));
 
+const columns = [
+  { id: "#", label: "#" },
+  { id: "itemName", label: "Item Name" },
+  { id: "category", label: "Category" },
+  { id: "unit", label: "Unit" },
+  { id: "quantity", label: "Quantity" },
+  { id: "actions", label: "Actions" },
+];
 const Inventory = () => {
   const theme = useTheme();
   return (
@@ -35,7 +50,7 @@ const Inventory = () => {
           </Stack>
         </ContainerComponent>
         <ContainerComponent>
-          <PaginatedTable />
+          <PaginatedTable columns={columns} rows={data} />
         </ContainerComponent>
       </Stack>
     </Fragment>
