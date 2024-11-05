@@ -1,6 +1,9 @@
 import "./App.css";
 import AnimatedRoutes from "./Routes/AnimatedRoutes";
 import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const theme = extendTheme({
   colorSchemes: {
@@ -32,9 +35,12 @@ const theme = extendTheme({
 });
 function App() {
   return (
-    <CssVarsProvider theme={theme}>
-      <AnimatedRoutes />
-    </CssVarsProvider>
+    <QueryClientProvider client={queryClient}>
+      <CssVarsProvider theme={theme}>
+        <AnimatedRoutes />
+      </CssVarsProvider>
+    </QueryClientProvider>
+
   );
 }
 

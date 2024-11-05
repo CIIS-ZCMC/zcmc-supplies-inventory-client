@@ -3,13 +3,13 @@ import axios from "axios";
 
 import { BASE_URL, PATH } from '../Services/API'
 
-const { AREAS } = PATH
+const { CATEGORIES } = PATH
 
-const useAreasHook = create((set) => ({
+const useCategoriesHook = create((set) => ({
 
-    getAreas: async () => {
+    getCategories: async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/${AREAS}`);
+            const response = await axios.get(`${BASE_URL}/${CATEGORIES}`);
             return response.data
         } catch (error) {
             error.message;
@@ -17,4 +17,4 @@ const useAreasHook = create((set) => ({
     },
 }));
 
-export default useAreasHook
+export default useCategoriesHook

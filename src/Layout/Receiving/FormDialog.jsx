@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 
 import { Box, Typography, Stack } from "@mui/joy";
+import { useQuery } from '@tanstack/react-query';
 
 // custom components
 import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
@@ -9,20 +10,37 @@ import SelectComponent from "../../Components/Form/SelectComponent";
 import DatePickerComponent from '../../Components/Form/DatePickerComponent';
 
 import useSourceHook from '../../Hooks/SourceHook'
-
-const categoryFilter = [
-    { name: 'Option 1', value: 'option 1' },
-    { name: 'Option 2', value: 'option 2' },
-    { name: 'Option 3', value: 'option 3' }
-]
+import useAreasHook from '../../Hooks/AreasHook'
+import useCategoriesHook from '../../Hooks/CategoriesHook';
 
 const FormDialog = () => {
 
-    const { getSources, } = useSourceHook();
+    //hooks 
+    const { getAreas } = useAreasHook();
+    const { getSources } = useSourceHook();
+    const { getCategories } = useCategoriesHook();
 
-    useEffect(() => {
-        getSources(); // Call the function to fetch data
-    }, [getSources]);
+    //fetch sources data with react-query
+    const { data: sourcesData, isLoading, error } = useQuery({
+        queryKey: ['sources'],
+        queryFn: getSources,
+    });
+
+    //fetch areas data with react-query
+    const { data: areasData, isLoading: isAreasLoading, error: areasError } = useQuery({
+        queryKey: ['areas'],
+        queryFn: getAreas,
+    });
+
+    //fetch categories data with react-query
+    const { data: categoriesData, isLoading: isCategoriesLoading, error: categoriesError } = useQuery({
+        queryKey: ['categories'],
+        queryFn: getCategories,
+    });
+
+    const sources = sourcesData?.data
+    const areas = areasData?.data
+    const cetegories = categoriesData?.data
 
     return (
         <form>
@@ -40,21 +58,28 @@ const FormDialog = () => {
                 <Box mt={4} >
                     <Stack direction='row' spacing={3} >
                         <Box mt={2}>
+
+                            {/* <AutoCompleteComponent
+                                placeholder={'Search Item...'}
+                                label={'Item Name'}
+                                options={sources} // Pass sources as options
+                            /> */}
+
                             <SelectComponent
                                 placeholder="Select a source"
-                                label='Source'
-                                options={categoryFilter}
+                                label="Source"
+                                options={sources} // Pass sources as options
                                 width={300}
                             />
                         </Box>
 
                         <Box mt={2}>
-                            <SelectComponent
+                            {/* <SelectComponent
                                 placeholder="Select an office"
                                 label='Requesting Office'
-                                options={categoryFilter}
+                                options={areas}
                                 width={300}
-                            />
+                            /> */}
                         </Box>
 
                     </Stack>
@@ -74,11 +99,11 @@ const FormDialog = () => {
                     </Stack>
 
                     <Box mt={2}>
-                        <SelectComponent
+                        {/* <SelectComponent
                             placeholder="Assign in a category"
                             label='Category'
-                            options={categoryFilter}
-                        />
+                            options={cetegories}
+                        /> */}
                     </Box>
 
                     <Stack mt={2} direction='row' spacing={3} >
