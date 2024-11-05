@@ -5,10 +5,7 @@ import ItemReview from "../Pages/ItemReview";
 import Categories from "../Pages/Categories";
 import Suppliers from "../pages/Suppliers";
 import Brands from "../Pages/Brands";
-
-import ManageRequest from "../Pages/ManageRequest";
-import MainPage from "../Pages/End-User/MainPage";
-
+import { lazy } from "react";
 import {
   CircleGauge,
   ArrowUpFromLine,
@@ -19,74 +16,99 @@ import {
   LayoutGrid,
 } from "lucide-react";
 
+// Lazy load each page component
+const Dashboard = lazy(() => import("../Pages/Dashboard"));
+const Receiving = lazy(() => import("../Pages/Receiving"));
+
+import {
+  CircleGauge,
+  ArrowUpFromLine,
+  ArrowDownToLine,
+  BaggageClaim,
+  Tag,
+  ClipboardList,
+  LayoutGrid,
+} from "lucide-react";
+const ReleasingOverview = lazy(() =>
+  import("../Pages/Releasing/ReleasingOveriew")
+);
+const ReleasingDetails = lazy(() =>
+  import("../Pages/Releasing/ReleasingDetails")
+);
+
+// const ItemReview = lazy(() => import("../Pages/ItemReview"));
+const Categories = lazy(() => import("../Pages/Categories"));
+const Suppliers = lazy(() => import("../Pages/Suppliers"));
+const Brands = lazy(() => import("../Pages/Brands"));
+const ManageRequest = lazy(() => import("../Pages/ManageRequest"));
+const Inventory = lazy(() => import("../Pages/Inventory"));
+const MainPage = lazy(() => import("../Pages/End-User/MainPage"));
+
 export const sidebarRoutes = [
   {
-    path: "/dashboard", // DASHBOARD
+    path: "/dashboard",
     name: "Dashboard",
     element: <Dashboard />,
     icon: <CircleGauge />,
-    // code: "PRM-REQ",
     permissions: ["view"],
   },
-
   {
-    path: "/receiving", // DASHBOARD
+    path: "/releasing",
+    name: "Releasing (RIS)",
+    element: <ReleasingOverview />,
+    icon: <ArrowUpFromLine />,
+    permissions: ["view"],
+  },
+  {
+    path: "/releasing/:id",
+    name: "Releasing Details",
+    element: <ReleasingDetails />,
+    icon: <ArrowUpFromLine />,
+    permissions: ["view"],
+  },
+  {
+    path: "/receiving",
     name: "Receiving (IAR)",
     element: <Receiving />,
     icon: <ArrowDownToLine />,
-    // code: "PRM-REQ",
     permissions: ["view"],
   },
 
   {
-    path: "/releasing", // DASHBOARD
-    name: "Releasing (RIS)",
-    element: <Releasing />,
-    icon: <ArrowUpFromLine />,
-    // code: "PRM-REQ",
-    permissions: ["view"],
-  },
-
-  {
-    path: "/item-review", // DASHBOARD
-    name: "Item Review",
-    element: <ItemReview />,
+    path: "/inventory",
+    name: "Inventory",
+    element: <Inventory />,
     icon: <ClipboardList />,
     // code: "PRM-REQ",
     permissions: ["view"],
   },
 
   {
-    path: "/categories", // DASHBOARD
+    path: "/categories",
     name: "Categories",
     element: <Categories />,
     icon: <LayoutGrid />,
-    // code: "PRM-REQ",
     permissions: ["view"],
   },
-
   {
-    path: "/suppliers", // DASHBOARD
+    path: "/suppliers",
     name: "Suppliers",
     element: <Suppliers />,
     icon: <BaggageClaim />,
-    // code: "PRM-REQ",
     permissions: ["view"],
   },
-
   {
-    path: "/brands", // DASHBOARD
+    path: "/brands",
     name: "Brands",
     element: <Brands />,
     icon: <Tag />,
-    // code: "PRM-REQ",
     permissions: ["view"],
   },
 ];
 
 export const childrenRoutes = [
   {
-    path: "/transactions/manage-pr", // DASHBOARD
+    path: "/transactions/manage-pr",
     name: "Manage",
     element: <ManageRequest />,
     icon: null,

@@ -9,6 +9,7 @@ InputComponent.propTypes = {
   setValue: PropTypes.func.isRequired,
   autoFocus: PropTypes.bool,
   fontWeight: PropTypes.number,
+  startIcon: PropTypes.object,
 };
 
 function InputComponent({
@@ -19,17 +20,21 @@ function InputComponent({
   setValue,
   autoFocus,
   fontWeight,
+  startIcon,
+  fullWidth,
+  width,
 }) {
   return (
     <FormControl>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
-        size="md"
+        size="lg"
         variant="outlined"
-        color="success"
+        color="primary"
         autoFocus={autoFocus}
         placeholder={placeholder}
         value={value}
+        fullWidth={fullWidth}
         onChange={(e) => setValue(e.target.value)}
         sx={{ fontWeight: fontWeight }}
       />

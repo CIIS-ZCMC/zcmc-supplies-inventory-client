@@ -17,6 +17,22 @@ export const SSO_SIGNING_PATH = "signing-in";
 export const ROOT_PATH = "/dashboard";
 
 /**
+ * Server End points add here
+ */
+export const API = {
+  AREAS: "areas",
+  BRANDS: "brands",
+  SUPPLIERS: "suppliers",
+  UNITS: "units",
+  SOURCES: "sources",
+  CATEGORIES: "categories",
+  SUPPLIES: "supplies",
+  INVENTORY: "get-inventory",
+  RECEIVING: "receiving-list",
+  RELEASING: "releasing-list",
+};
+
+/**
  * URLs of different site
  * landing_page site where user sign in
  *
