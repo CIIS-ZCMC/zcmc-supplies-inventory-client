@@ -8,7 +8,7 @@ const Receiving = lazy(() => import("../Pages/Receiving"));
 const ReleasingOverview = lazy(() => import("../Pages/Releasing/ReleasingOveriew"));
 const ReleasingDetails = lazy(() => import("../Pages/Releasing/ReleasingDetails"));
 
-const ItemReview = lazy(() => import("../Pages/ItemReview"));
+// const ItemReview = lazy(() => import("../Pages/ItemReview"));
 const Categories = lazy(() => import("../Pages/Categories"));
 const Suppliers = lazy(() => import("../Pages/Suppliers"));
 const Brands = lazy(() => import("../Pages/Brands"));
@@ -43,10 +43,11 @@ export const sidebarRoutes = [
     name: "Receiving (IAR)",
     element: <Receiving />,
     icon: <ArrowDownToLine />,
-    path: "/inventory", // DASHBOARD
     permissions: ["view"],
   },
+
   {
+    path: "/inventory",
     name: "Inventory",
     element: <Inventory />,
     icon: <ClipboardList />,
@@ -54,23 +55,6 @@ export const sidebarRoutes = [
     permissions: ["view"],
   },
 
-  {
-    path: "/releasing", // DASHBOARD
-    name: "Releasing (RIS)",
-    element: <Releasing />,
-    icon: <ArrowUpFromLine />,
-    // code: "PRM-REQ",
-    permissions: ["view"],
-  },
-
-  {
-    path: "/receiving", // DASHBOARD
-    name: "Receiving (IAR)",
-    element: <Receiving />,
-    icon: <ArrowDownToLine />,
-    // code: "PRM-REQ",
-    permissions: ["view"],
-  },
   {
     path: "/categories",
     name: "Categories",
