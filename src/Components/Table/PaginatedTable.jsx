@@ -8,6 +8,7 @@ import {
   Typography,
   Stack,
 } from "@mui/joy";
+import PropTypes from "prop-types";
 
 const data = Array.from({ length: 1000 }, (_, i) => ({
   id: i + 1,
@@ -20,9 +21,12 @@ const data = Array.from({ length: 1000 }, (_, i) => ({
   quantity: "1,000",
 }));
 
-function PaginatedTable() {
+PaginatedTable.propTypes = {
+  rows: PropTypes.number,
+};
+function PaginatedTable({ rows = 20 }) {
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(rows);
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
   const handleChangePage = (newPage) => {
@@ -42,6 +46,7 @@ function PaginatedTable() {
 
   return (
     <Box>
+      <Typography></Typography>
       {/* Table */}
       <Table>
         <thead>

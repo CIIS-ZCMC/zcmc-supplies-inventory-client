@@ -1,15 +1,24 @@
 import Dashboard from "../Pages/Dashboard";
 import Receiving from "../Pages/Receiving";
 import Releasing from "../Pages/Releasing";
-import ItemReview from '../Pages/ItemReview';
-import Categories from '../Pages/Categories';
-import Suppliers from '../pages/Suppliers';
-import Brands from '../Pages/Brands';
+import ItemReview from "../Pages/Inventory";
+import Categories from "../Pages/Categories";
+import Suppliers from "../pages/Suppliers";
+import Brands from "../Pages/Brands";
 
 import ManageRequest from "../Pages/ManageRequest";
 import MainPage from "../Pages/End-User/MainPage";
 
-import { CircleGauge, ArrowUpFromLine, ArrowDownToLine, BaggageClaim, Tag, ClipboardList, LayoutGrid } from "lucide-react"
+import {
+  CircleGauge,
+  ArrowUpFromLine,
+  ArrowDownToLine,
+  BaggageClaim,
+  Tag,
+  ClipboardList,
+  LayoutGrid,
+} from "lucide-react";
+import Inventory from "../Pages/Inventory";
 
 export const sidebarRoutes = [
   {
@@ -22,10 +31,10 @@ export const sidebarRoutes = [
   },
 
   {
-    path: "/receiving", // DASHBOARD
-    name: "Receiving (IAR)",
-    element: <Receiving />,
-    icon: <ArrowDownToLine />,
+    path: "/inventory", // DASHBOARD
+    name: "Inventory",
+    element: <Inventory />,
+    icon: <ClipboardList />,
     // code: "PRM-REQ",
     permissions: ["view"],
   },
@@ -40,10 +49,10 @@ export const sidebarRoutes = [
   },
 
   {
-    path: "/item-review", // DASHBOARD
-    name: "Item Review",
-    element: <ItemReview />,
-    icon: <ClipboardList />,
+    path: "/receiving", // DASHBOARD
+    name: "Receiving (IAR)",
+    element: <Receiving />,
+    icon: <ArrowDownToLine />,
     // code: "PRM-REQ",
     permissions: ["view"],
   },
@@ -74,7 +83,6 @@ export const sidebarRoutes = [
     // code: "PRM-REQ",
     permissions: ["view"],
   },
-
 ];
 
 export const childrenRoutes = [

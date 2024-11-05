@@ -5,7 +5,10 @@ ButtonComponent.propTypes = {
   label: PropTypes.string,
   onClick: PropTypes.func,
   variant: PropTypes.string,
-  color: PropTypes.string,
+  color: PropTypes.oneOfType([
+    PropTypes.string, // Allow a simple string color, e.g., "blue" or "#FFF"
+    PropTypes.object,
+  ]),
   startDecorator: PropTypes.node,
   endDecorator: PropTypes.node,
   fullWidth: PropTypes.bool,
