@@ -1,10 +1,3 @@
-import Dashboard from "../Pages/Dashboard";
-import Receiving from "../Pages/Receiving";
-import Releasing from "../Pages/Releasing";
-import ItemReview from "../Pages/ItemReview";
-import Categories from "../Pages/Categories";
-import Suppliers from "../pages/Suppliers";
-import Brands from "../Pages/Brands";
 import { lazy } from "react";
 import {
   CircleGauge,
@@ -20,15 +13,6 @@ import {
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
 const Receiving = lazy(() => import("../Pages/Receiving"));
 
-import {
-  CircleGauge,
-  ArrowUpFromLine,
-  ArrowDownToLine,
-  BaggageClaim,
-  Tag,
-  ClipboardList,
-  LayoutGrid,
-} from "lucide-react";
 const ReleasingOverview = lazy(() =>
   import("../Pages/Releasing/ReleasingOveriew")
 );
