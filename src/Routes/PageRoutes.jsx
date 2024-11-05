@@ -13,6 +13,7 @@ const Categories = lazy(() => import("../Pages/Categories"));
 const Suppliers = lazy(() => import("../Pages/Suppliers"));
 const Brands = lazy(() => import("../Pages/Brands"));
 const ManageRequest = lazy(() => import("../Pages/ManageRequest"));
+const Inventory = lazy(() => import("../Pages/Inventory"));
 const MainPage = lazy(() => import("../Pages/End-User/MainPage"));
 
 export const sidebarRoutes = [
