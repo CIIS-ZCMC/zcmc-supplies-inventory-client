@@ -16,10 +16,10 @@ function Sidebar() {
       padding: `${theme.spacing(1.5)} ${theme.spacing(2)}`,
       textDecoration: "none",
       color: "white",
-      fontWeight: isActive(path.replace("/", "")) ? 600 : 400,
-      backgroundColor: isActive(path.replace("/", ""))
-        ? color.active
-        : "transparent",
+      // fontWeight: isActive(path.replace("/", "")) ? 600 : 400,
+      // backgroundColor: isActive(path.replace("/", ""))
+      //   ? color.active
+      //   : "transparent",
       borderRadius: 10,
       transition: "background-color 0.3s",
       "&:hover": {
