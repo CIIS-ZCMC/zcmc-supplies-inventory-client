@@ -18,12 +18,12 @@ function ChipComponent({ color, label, variant, ...props }) {
     ...(variant || color
       ? { color: color }
       : {
-          backgroundColor: customColor.lighter,
-          color: customColor.buttonBg,
-          fontWeight: 600,
-          border: 1,
-          borderColor: customColor.buttonBg,
-        }),
+        backgroundColor: customColor.lighter,
+        color: customColor.buttonBg,
+        fontWeight: 600,
+        border: 1,
+        borderColor: customColor.buttonBg,
+      }),
   };
 
   return (
