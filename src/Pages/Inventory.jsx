@@ -4,7 +4,7 @@ import { Box, Stack, Typography, useTheme } from "@mui/joy";
 import ButtonComponent from "../Components/ButtonComponent";
 import ContainerComponent from "../Components/Container/ContainerComponent";
 import InputComponent from "../Components/Form/InputComponent";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, ViewIcon } from "lucide-react";
 import TableComponent from "../Components/Table/TableComponent";
 import PaginatedTable from "../Components/Table/PaginatedTable";
 const data = Array.from({ length: 1000 }, (_, i) => ({
@@ -23,6 +23,7 @@ const columns = [
   { id: "quantity", label: "Quantity" },
   { id: "actions", label: "Actions" },
 ];
+
 const Inventory = () => {
   const theme = useTheme();
   return (
@@ -50,7 +51,15 @@ const Inventory = () => {
           </Stack>
         </ContainerComponent>
         <ContainerComponent>
-          <PaginatedTable columns={columns} rows={data} />
+          <PaginatedTable
+            tableTitle={"List of items"}
+            tableDesc={
+              "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
+            }
+            columns={columns}
+            rows={data}
+            actions={<ViewIcon />}
+          />
         </ContainerComponent>
       </Stack>
     </Fragment>

@@ -7,8 +7,14 @@ import {
   Table,
   Typography,
   Stack,
+  Divider,
+  Chip,
 } from "@mui/joy";
 import PropTypes from "prop-types";
+import ButtonComponent from "../ButtonComponent";
+import { SquareArrowOutUpRight } from "lucide-react";
+import useSelectedRow from "../../Store/SelectedRowStore";
+import { useNavigate } from "react-router-dom";
 
 const data = Array.from({ length: 1000 }, (_, i) => ({
   id: i + 1,
@@ -25,11 +31,31 @@ PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
   columns: PropTypes.array,
   rows: PropTypes.array,
+  tableTitle: PropTypes.string,
+  tableDesc: PropTypes.string,
+  showChip: PropTypes.bool,
 };
-function PaginatedTable({ rowsPage = 10, columns, rows }) {
+function PaginatedTable({
+  rowsPage = 10,
+  columns,
+  rows,
+  tableTitle,
+  tableDesc,
+  showChip = true,
+}) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
   const totalPages = Math.ceil(data.length / rowsPerPage);
+
+  const { setSelectedRow } = useSelectedRow();
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (row) => {
+    const { id } = row;
+    navigate(`/releasing/${id}`);
+    setSelectedRow(row);
+  };
 
   const handleChangePage = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -48,9 +74,22 @@ function PaginatedTable({ rowsPage = 10, columns, rows }) {
 
   return (
     <Box>
-      <Typography></Typography>
+      <Stack spacing={1}>
+        <Typography level="title-lg">
+          {tableTitle}
+          {showChip && (
+            <Chip variant="soft" color="primary" size="sm" sx={{ ml: 1 }}>
+              {rows?.length + " record(s)"}
+            </Chip>
+          )}
+        </Typography>
+        <Typography level="body-sm" color="#666666">
+          {tableDesc}
+        </Typography>
+      </Stack>
+      <Divider sx={{ my: 3, color: "#E6E6E6" }} />
       {/* Table */}
-      <Table>
+      <Table stripe="odd" borderAxis="both">
         <thead>
           <tr>
             {columns.map((col, index) => (
@@ -66,11 +105,14 @@ function PaginatedTable({ rowsPage = 10, columns, rows }) {
               <td>{row.category}</td>
               <td>{row.unit}</td>
               <td>{row.quantity}</td>
+
               <td>
-                {/* Add any action buttons or icons here */}
-                <Button variant="plain" size="sm">
-                  View
-                </Button>
+                <ButtonComponent
+                  size={"sm"}
+                  variant="plain"
+                  onClick={() => handleNavigate(row)} // Corrected line
+                  startDecorator={<SquareArrowOutUpRight size={"1rem"} />}
+                />
               </td>
             </tr>
           ))}
