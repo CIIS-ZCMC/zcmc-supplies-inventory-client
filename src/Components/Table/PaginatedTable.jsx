@@ -16,17 +16,6 @@ import { SquareArrowOutUpRight } from "lucide-react";
 import useSelectedRow from "../../Store/SelectedRowStore";
 import { useNavigate } from "react-router-dom";
 
-const data = Array.from({ length: 1000 }, (_, i) => ({
-  id: i + 1,
-  poNumber: `01-${12345 + i}`,
-  iarNumber: `01-${12345 + i}`,
-  itemName: "Zonrox Color Bleach",
-  category: "Category name",
-  unit: "1L bottle (x8 pieces per box)",
-  source: i % 2 === 0 ? "Donation" : "Regular",
-  quantity: "1,000",
-}));
-
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
   columns: PropTypes.array,
@@ -42,10 +31,11 @@ function PaginatedTable({
   tableTitle,
   tableDesc,
   showChip = true,
+  btnLabel,
 }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
-  const totalPages = Math.ceil(data.length / rowsPerPage);
+  const totalPages = Math.ceil(rows.length / rowsPerPage);
 
   const { setSelectedRow } = useSelectedRow();
 
@@ -74,18 +64,26 @@ function PaginatedTable({
 
   return (
     <Box>
-      <Stack spacing={1}>
-        <Typography level="title-lg">
-          {tableTitle}
-          {showChip && (
-            <Chip variant="soft" color="primary" size="sm" sx={{ ml: 1 }}>
-              {rows?.length + " record(s)"}
-            </Chip>
-          )}
-        </Typography>
-        <Typography level="body-sm" color="#666666">
-          {tableDesc}
-        </Typography>
+      <Stack
+        spacing={1}
+        direction="row"
+        justifyContent="space-between"
+        alignItems="flex-end"
+      >
+        <Box>
+          <Typography level="title-lg">
+            {tableTitle}
+            {showChip && (
+              <Chip variant="soft" color="primary" size="sm" sx={{ ml: 1 }}>
+                {rows?.length + " record(s)"}
+              </Chip>
+            )}
+          </Typography>
+          <Typography level="body-sm" color="#666666">
+            {tableDesc}
+          </Typography>
+        </Box>
+        <ButtonComponent label={btnLabel} />
       </Stack>
       <Divider sx={{ my: 3, color: "#E6E6E6" }} />
       {/* Table */}
@@ -221,7 +219,7 @@ function PaginatedTable({
               ))}
             </Select>
             <Typography variant="body2" sx={{ ml: 1 }}>
-              items out of {data.length}
+              items out of {rows.length}
             </Typography>
           </Box>
         </Stack>
