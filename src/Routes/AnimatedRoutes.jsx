@@ -1,9 +1,12 @@
 // App.js
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { childrenRoutes, sidebarRoutes } from "./PageRoutes";
-import Layout from "../Layout";
-import { Suspense } from "react";
+import ProtectedRoutes from "./ProtectedRoutes";
 import { CircularProgress } from "@mui/joy";
+import PageNotFound from "../Pages/404/PageNotFound";
+import { Suspense } from "react";
+import Layout from "../Layout";
+import Authentication from "../Pages/Authentication/Authentication";
 
 const router = createBrowserRouter([
   {
@@ -16,17 +19,13 @@ const router = createBrowserRouter([
     element: <Layout />, // Parent component that renders common layout
     children: childrenRoutes, // Custom page routes
   },
-
-  // Below are pages that are not included in the sidebar display
   {
-    path: "/sample",
-    element: <div>Sample page</div>,
+    path: "/signing-in/:id",
+    element: <Authentication />,
   },
-
-  // Page not found
   {
     path: "*",
-    element: <div>404 Not Found</div>,
+    element: <PageNotFound />,
   },
 ]);
 
