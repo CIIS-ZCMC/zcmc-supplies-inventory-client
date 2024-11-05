@@ -27,6 +27,7 @@ function ButtonComponent({
   endDecorator,
   fullWidth,
   customOutlined,
+  type,
 }) {
   const theme = useTheme();
 
@@ -55,6 +56,7 @@ function ButtonComponent({
 
   return (
     <Button
+      type={type}
       size='lg'
       variant={variant}
       color={color}

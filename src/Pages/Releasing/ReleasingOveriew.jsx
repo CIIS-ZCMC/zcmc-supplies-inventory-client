@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Grid, Box, Typography, Stack } from "@mui/joy";
+import { useQuery } from "@tanstack/react-query";
 
 //layouts
 import Header from "../../Layout/Header/Header";
@@ -18,6 +19,8 @@ import { items, user } from '../../Data/index'
 import { receivingTableHeader } from '../../Data/TableHeader'
 
 
+import useReleasingHook from "../../Hooks/ReleasingHook";
+
 const categoryFilter = [
     { name: 'Option 1', value: 'option 1' },
     { name: 'Option 2', value: 'option 2' },
@@ -31,6 +34,16 @@ const sortFilter = [
 ]
 
 const Releasing = () => {
+
+    const { getStockOut } = useReleasingHook();
+
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['stocks'],
+        queryFn: getStockOut // Pass the function reference without parentheses
+    });
+
+    const supplies = data?.data
+
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const pageDetails = {
@@ -44,12 +57,6 @@ const Releasing = () => {
 
     const handleDialogClose = () => {
         setIsDialogOpen(false)
-    }
-
-    const handleSaveRIS = () => {
-        alert('RIS TO BE SAVED')
-        setIsDialogOpen(false)
-        //add snackbar indication item was saved
     }
 
     const FilterOptions = () => (
@@ -98,7 +105,7 @@ const Releasing = () => {
                     {/* table */}
                     <Table
                         tableHeader={receivingTableHeader}
-                        tableData={items}
+                        tableData={supplies}
                         tableTitle="RIS Records"
                         tableSubtitle='This is a subheading. It should add more context to the interaction.'
                         btnLabel='New RIS'
@@ -110,11 +117,7 @@ const Releasing = () => {
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
-                content={<FormDialog />}
-                leftButtonLabel={'Cancel'}
-                leftButtonAction={handleDialogClose}
-                rightButtonLabel={'Save'}
-                rightButtonAction={handleSaveRIS}
+                content={<FormDialog handleDialogClose={handleDialogClose} />}
                 title="Record a new Requisition and Issue slip"
                 description={"Describe how would you like to release items from your inventory. All fields are required."}
             />

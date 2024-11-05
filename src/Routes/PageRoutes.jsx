@@ -31,13 +31,14 @@ export const sidebarRoutes = [
     icon: <ArrowUpFromLine />,
     permissions: ["view"],
   },
+
   {
     path: "/releasing/:id",
-    name: "Releasing Details",
+    // name: "Releasing Details",
     element: <ReleasingDetails />,
-    icon: <ArrowUpFromLine />,
     permissions: ["view"],
   },
+
   {
     path: "/receiving",
     name: "Receiving (IAR)",

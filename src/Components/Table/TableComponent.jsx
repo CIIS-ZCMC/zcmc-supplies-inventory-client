@@ -32,9 +32,9 @@ export default function TableComponent({ tableHeader, tableData, onClick }) {
         </tr>
       </thead>
       <tbody>
-        {tableData.map((row) => (
+        {tableData?.map((row) => (
           <tr key={row.id}>
-            {tableHeader.map(({ id }) => (
+            {tableHeader?.map(({ id }) => (
               <td key={id}>{row[id]}</td>
             ))}
             <td align="center">
