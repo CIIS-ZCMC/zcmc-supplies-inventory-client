@@ -1,7 +1,7 @@
 // App.js
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { BASE_URL, ROOT_PATH, SSO_SIGNING_PATH } from "../services/Config";
+import { BASE_URL, ROOT_PATH, SSO_SIGNING_PATH } from "../Services/Config";
 import useUserHook from "../hooks/UserHook";
 import { useEffect, useState } from "react";
 import axios from "axios";
