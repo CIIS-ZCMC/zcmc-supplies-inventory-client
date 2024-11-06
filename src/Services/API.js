@@ -11,4 +11,5 @@ export const PATH = {
     INVENTORY: 'get-inventory',
     RECEIVING: 'receiving-list',
     RELEASING: 'releasing-list',
+    STOCKOUT: 'stock-out'
 }

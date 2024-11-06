@@ -13,11 +13,11 @@ import DatePickerComponent from "../../Components/Form/DatePickerComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import FormDialog from "../../Layout/Receiving/FormDialog";
+import SnackbarComponent from "../../Components/SnackbarComponent";
 
 //datas
 import { items, user } from '../../Data/index'
 import { receivingTableHeader } from '../../Data/TableHeader'
-
 
 import useReleasingHook from "../../Hooks/ReleasingHook";
 
@@ -33,7 +33,12 @@ const sortFilter = [
     { name: 'sort option 3', value: 'sort option 3' }
 ]
 
-const Releasing = () => {
+const pageDetails = {
+    title: "Requisition and issue slip",
+    description: "this is a sample description"
+}
+
+const ReleasingOverview = () => {
 
     const { getStockOut } = useReleasingHook();
 
@@ -46,10 +51,15 @@ const Releasing = () => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-    const pageDetails = {
-        title: "Requisition and issue slip",
-        description: "this is a sample description"
-    }
+    const [snackbar, setSnackbar] = useState({ open: false, message: "", color: "success" });
+
+    const showSnackbar = (message, severity) => {
+        setSnackbar({ open: true, message, severity });
+    };
+
+    const handleSnackbarClose = () => {
+        setSnackbar((prev) => ({ ...prev, open: false }));
+    };
 
     const handleDialogOpen = () => {
         setIsDialogOpen(true)
@@ -117,12 +127,21 @@ const Releasing = () => {
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
-                content={<FormDialog handleDialogClose={handleDialogClose} />}
+                content={<FormDialog handleDialogClose={handleDialogClose} showSnackbar={showSnackbar} />}
                 title="Record a new Requisition and Issue slip"
                 description={"Describe how would you like to release items from your inventory. All fields are required."}
+            />
+
+            <SnackbarComponent
+                open={snackbar.open}
+                onClose={handleSnackbarClose}
+                color={snackbar.color}
+                message={snackbar.message}
+                variant={'solid'}
+                anchor={{ vertical: 'top', horizontal: 'center' }}
             />
         </>
     )
 }
 
-export default Releasing
+export default ReleasingOverview

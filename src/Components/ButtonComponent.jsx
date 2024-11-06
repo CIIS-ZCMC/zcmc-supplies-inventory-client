@@ -28,6 +28,7 @@ function ButtonComponent({
   fullWidth,
   customOutlined,
   type,
+  loading,
 }) {
   const theme = useTheme();
 
@@ -65,6 +66,7 @@ function ButtonComponent({
       onClick={onClick}
       startDecorator={startDecorator}
       endDecorator={endDecorator}
+      loading={loading}
     >
       {label}
     </Button>
