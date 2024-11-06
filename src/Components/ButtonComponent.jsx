@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { Button, useTheme } from "@mui/joy";
 
 ButtonComponent.propTypes = {
-
   size: PropTypes.string,
   label: PropTypes.string,
   onClick: PropTypes.func,
@@ -18,7 +17,7 @@ ButtonComponent.propTypes = {
 };
 
 function ButtonComponent({
-  size,
+  size = "lg",
   label,
   onClick,
   variant,
@@ -36,18 +35,18 @@ function ButtonComponent({
     py: 1,
     ...(customOutlined
       ? {
-        backgroundColor: "white",
-        color: theme.palette.custom.buttonBg,
-        border: 2,
-        borderColor: theme.palette.custom.buttonBg,
-        "&:hover": {
-          backgroundColor: theme.palette.custom.light,
-          color: "white",
-        },
-      }
+          backgroundColor: "white",
+          color: theme.palette.custom.buttonBg,
+          border: 2,
+          borderColor: theme.palette.custom.buttonBg,
+          "&:hover": {
+            backgroundColor: theme.palette.custom.light,
+            color: "white",
+          },
+        }
       : variant || color
-        ? {}
-        : {
+      ? {}
+      : {
           backgroundColor: theme.palette.custom.buttonBg,
           "&:hover": { backgroundColor: theme.palette.custom.light },
         }),
@@ -55,7 +54,7 @@ function ButtonComponent({
 
   return (
     <Button
-      size='lg'
+      size={size}
       variant={variant}
       color={color}
       fullWidth={fullWidth}

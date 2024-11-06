@@ -44,12 +44,17 @@ const Header = ({ pageDetails, data }) => {
           <BreadcrumbsComponent
             name={data.name}
             pageTitle={pageDetails.title}
+            pagePath={pageDetails?.pagePath}
+            subPath={pageDetails?.subPath}
+            subTitle={pageDetails?.subTitle}
           />
         </FlexContainer>
 
         <Stack mt={3}>
           <Typography fontSize={30} fontWeight={600}>
-            {pageDetails.title}
+            {pageDetails?.pageTitle
+              ? pageDetails?.pageTitle
+              : pageDetails.title}
           </Typography>
           <Typography level="body-sm">{pageDetails.description}</Typography>
         </Stack>
@@ -74,22 +79,26 @@ const Header = ({ pageDetails, data }) => {
               )}
             </Box>
 
-            <Stack mr={2}>
+            <Stack>
               <Typography level="body-lg" fontWeight={600}>
                 {data.name}
               </Typography>
               <Typography level="body-sm">{data.email}</Typography>
             </Stack>
 
-            <Box>
+            <Box ml={2}>
               <ChevronRight />
             </Box>
           </FlexContainer>
         </SheetComponent>
 
-        <Box mt={2}>
-          <ButtonComponent label="Generate report" size="lg" />
-        </Box>
+        {/* <Box mt={2}>
+          <ButtonComponent
+            variant={"outlined"}
+            label="Generate report"
+            size="lg"
+          />
+        </Box> */}
       </FlexContainer>
     </FlexContainer>
   );

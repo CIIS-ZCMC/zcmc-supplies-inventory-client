@@ -8,6 +8,7 @@ import {
   ClipboardList,
   LayoutGrid,
 } from "lucide-react";
+import ViewDetails from "../Pages/ViewDetails";
 
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
@@ -64,6 +65,14 @@ export const sidebarRoutes = [
     element: <Inventory />,
     icon: <ClipboardList />,
     // code: "PRM-REQ",
+    permissions: ["view"],
+  },
+  {
+    path: "/inventory/viewing",
+    name: "Manage",
+    element: <ViewDetails />,
+    icon: null,
+    code: "PRM-REQ",
     permissions: ["view"],
   },
 

@@ -28,7 +28,7 @@ function InputComponent({
     <FormControl>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
-        size="lg"
+        size="md"
         variant="outlined"
         color="primary"
         autoFocus={autoFocus}

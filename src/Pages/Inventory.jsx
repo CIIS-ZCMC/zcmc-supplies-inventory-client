@@ -1,15 +1,30 @@
 import React, { Fragment, useEffect } from "react";
 import PageTitle from "../Components/PageSetup/PageTitle";
-import { Box, Stack, Typography, useTheme } from "@mui/joy";
+import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
 import ButtonComponent from "../Components/ButtonComponent";
 import ContainerComponent from "../Components/Container/ContainerComponent";
 import InputComponent from "../Components/Form/InputComponent";
-import { SearchIcon, ViewIcon } from "lucide-react";
+import { ArrowDown, ArrowUp, SearchIcon, ViewIcon } from "lucide-react";
 import TableComponent from "../Components/Table/TableComponent";
 import PaginatedTable from "../Components/Table/PaginatedTable";
 import useInventoryHook from "../Hooks/InventoryHook";
 import { items, user } from "../Data/index";
 import Header from "../Layout/Header/Header";
+import DatePickerComponent from "../Components/Form/DatePickerComponent";
+import SelectComponent from "../Components/Form/SelectComponent";
+import useFilterHook from "../Hooks/FilterHook";
+
+const categoryFilter = [
+  { name: "Janitorial", value: "Janitorial" },
+  { name: "Medical", value: "Medical" },
+  { name: "Office", value: "Office" },
+];
+
+const sortFilter = [
+  { icon: <ArrowUp />, name: "Highest first (descending)", value: "highest" },
+  { icon: <ArrowDown />, name: "Lowest first (ascending)", value: "lowest" },
+];
+
 const data = Array.from({ length: 1000 }, (_, i) => ({
   id: i + 1,
   itemName: "Zonrox Color Bleach",
@@ -19,25 +34,33 @@ const data = Array.from({ length: 1000 }, (_, i) => ({
 }));
 
 const columns = [
-  { id: "#", label: "#" },
-  { id: "itemName", label: "Item Name" },
-  { id: "category", label: "Category" },
-  { id: "unit", label: "Unit" },
+  { id: "id", label: "#" },
+  { id: "supply_name", label: "Item Name" },
+  { id: "category_name", label: "Category" },
+  { id: "unit_name", label: "Unit" },
   { id: "quantity", label: "Quantity" },
   { id: "actions", label: "Actions" },
 ];
 
 const Inventory = () => {
   const { inventory, getInventory } = useInventoryHook();
+  const {
+    filteredInventory,
+    selectedCategory,
+    sortOrder,
+    setCategory,
+    setSortOrder,
+    clearFilters,
+  } = useFilterHook();
   const theme = useTheme();
   const pageDetails = {
     title: "Inventory",
     description: "See the list of items in your inventory.",
+    pagePath: "/inventory",
   };
   useEffect(() => {
     const timeout = setTimeout(() => {
       getInventory();
-      console.log(inventory);
     }, 300);
     return () => {
       clearTimeout(timeout);
@@ -54,6 +77,28 @@ const Inventory = () => {
             alignItems="flex-end"
           >
             <InputComponent label="Find a slip" startIcon={<SearchIcon />} />
+            <Box display="flex" gap={1}>
+              <SelectComponent
+                startIcon={"Sort by:"}
+                placeholder={"category"}
+                options={categoryFilter}
+                value={selectedCategory}
+                onChange={setCategory}
+              />
+              <SelectComponent
+                startIcon={"Sort by:"}
+                placeholder={"highest"}
+                options={sortFilter}
+                value={sortOrder}
+                onChange={setSortOrder}
+              />
+              <ButtonComponent
+                size="sm"
+                variant={"outlined"}
+                label={"Clear Filters"}
+                onClick={clearFilters}
+              />
+            </Box>
           </Stack>
         </ContainerComponent>
         <ContainerComponent>
@@ -63,9 +108,19 @@ const Inventory = () => {
               "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
             }
             columns={columns}
-            rows={inventory}
+            rows={filteredInventory(inventory)}
             actions={<ViewIcon />}
             btnLabel={"Add new item name"}
+            actionBtns={
+              <Stack direction="row" spacing={1}>
+                <ButtonComponent
+                  variant={"outlined"}
+                  label="Generate report"
+                  size="lg"
+                />
+                <ButtonComponent label="Add new item name" />
+              </Stack>
+            }
           />
         </ContainerComponent>
       </Stack>

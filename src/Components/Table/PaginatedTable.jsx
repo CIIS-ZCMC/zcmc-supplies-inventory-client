@@ -32,6 +32,7 @@ function PaginatedTable({
   tableDesc,
   showChip = true,
   btnLabel,
+  actionBtns,
 }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
@@ -43,7 +44,7 @@ function PaginatedTable({
 
   const handleNavigate = (row) => {
     const { id } = row;
-    navigate(`/releasing/${id}`);
+    navigate(`/inventory/viewing`);
     setSelectedRow(row);
   };
 
@@ -60,7 +61,7 @@ function PaginatedTable({
 
   // Calculate the subset of data to display
   const startIdx = (page - 1) * rowsPerPage;
-  const currentRows = rows.slice(startIdx, startIdx + rowsPerPage);
+  const currentRows = rows?.slice(startIdx, startIdx + rowsPerPage);
 
   return (
     <Box>
@@ -83,7 +84,7 @@ function PaginatedTable({
             {tableDesc}
           </Typography>
         </Box>
-        <ButtonComponent label={btnLabel} />
+        {actionBtns}
       </Stack>
       <Divider sx={{ my: 3, color: "#E6E6E6" }} />
       {/* Table */}
@@ -98,20 +99,20 @@ function PaginatedTable({
         <tbody>
           {currentRows.map((row, index) => (
             <tr key={row.id}>
-              <td>{startIdx + index + 1}</td>
-              <td>{row.itemName}</td>
-              <td>{row.category}</td>
-              <td>{row.unit}</td>
-              <td>{row.quantity}</td>
-
-              <td>
-                <ButtonComponent
-                  size={"sm"}
-                  variant="plain"
-                  onClick={() => handleNavigate(row)} // Corrected line
-                  startDecorator={<SquareArrowOutUpRight size={"1rem"} />}
-                />
-              </td>
+              {columns.map((column) => (
+                <td key={column.id}>
+                  {column.id === "actions" ? (
+                    <ButtonComponent
+                      size={"sm"}
+                      variant="plain"
+                      onClick={() => handleNavigate(row)}
+                      startDecorator={<SquareArrowOutUpRight size={"1rem"} />}
+                    />
+                  ) : (
+                    row[column.id] ?? `${startIdx + index + 1}`
+                  )}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
@@ -135,77 +136,9 @@ function PaginatedTable({
         </Button>
 
         <Stack direction="row">
-          <Box display="flex" alignItems="center">
-            {totalPages <= 5 ? (
-              // Show all page numbers if total is 5 or less
-              [...Array(totalPages)].map((_, index) => (
-                <Button
-                  key={index + 1}
-                  size="sm"
-                  variant={page === index + 1 ? "solid" : "plain"}
-                  onClick={() => handleChangePage(index + 1)}
-                  sx={{ minWidth: 32, margin: "0 4px" }}
-                >
-                  {index + 1}
-                </Button>
-              ))
-            ) : (
-              <>
-                <Button
-                  key={1}
-                  size="sm"
-                  variant={page === 1 ? "solid" : "plain"}
-                  onClick={() => handleChangePage(1)}
-                  sx={{ minWidth: 32, margin: "0 4px" }}
-                >
-                  1
-                </Button>
-                {totalPages > 1 && (
-                  <Button
-                    key={2}
-                    size="sm"
-                    variant={page === 2 ? "solid" : "plain"}
-                    onClick={() => handleChangePage(2)}
-                    sx={{ minWidth: 32, margin: "0 4px" }}
-                  >
-                    2
-                  </Button>
-                )}
-
-                {/* Show the third page if it exists */}
-                {totalPages > 2 && (
-                  <Button
-                    key={3}
-                    size="sm"
-                    variant={page === 3 ? "solid" : "plain"}
-                    onClick={() => handleChangePage(3)}
-                    sx={{ minWidth: 32, margin: "0 4px" }}
-                  >
-                    3
-                  </Button>
-                )}
-                {/* Always show the current page */}
-                {page < totalPages - 2 && <span>...</span>}
-
-                {/* Show the last page button */}
-                {totalPages > 3 && (
-                  <Button
-                    key={totalPages}
-                    size="sm"
-                    variant={page === totalPages ? "solid" : "plain"}
-                    onClick={() => handleChangePage(totalPages)}
-                    sx={{ minWidth: 32, margin: "0 4px" }}
-                  >
-                    {totalPages}
-                  </Button>
-                )}
-              </>
-            )}
-          </Box>
-
           <Box display="flex" alignItems="center" ml={2}>
             <Typography variant="body2" sx={{ mr: 1 }}>
-              showing
+              rows per page:
             </Typography>
             <Select
               value={rowsPerPage}
