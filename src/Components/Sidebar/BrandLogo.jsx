@@ -1,5 +1,6 @@
 import zcmc_logo from "../../assets/zcmc.png";
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
+import { SYSTEM_NAME } from "../../services/Config";
 import "./Sidebar.css";
 
 function BrandLogo() {
@@ -9,7 +10,7 @@ function BrandLogo() {
     <Stack
       gap={1}
       p={1.5}
-    // sx={{ backgroundColor: color.light, borderRadius: theme.radius.lg }}
+      // sx={{ backgroundColor: color.light, borderRadius: theme.radius.lg }}
     >
       <Stack direction={"row"} gap={1}>
         <img src={zcmc_logo} style={{ width: "33px", height: "44px" }} />
@@ -45,7 +46,7 @@ function BrandLogo() {
         fontSize={14}
         sx={{ color: "white", fontWeight: 500 }}
       >
-        Supplies Inventory System
+        {SYSTEM_NAME}
       </Typography>
     </Stack>
   );

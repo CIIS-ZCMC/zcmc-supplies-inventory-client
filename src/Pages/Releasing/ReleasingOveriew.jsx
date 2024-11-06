@@ -19,13 +19,12 @@ import SnackbarComponent from "../../Components/SnackbarComponent";
 import { items, user } from '../../Data/index'
 import { receivingTableHeader } from '../../Data/TableHeader'
 
-import useReleasingHook from "../../Hooks/ReleasingHook";
 
 const categoryFilter = [
-    { name: 'Option 1', value: 'option 1' },
-    { name: 'Option 2', value: 'option 2' },
-    { name: 'Option 3', value: 'option 3' }
-]
+    { name: "Option 1", value: "option 1" },
+    { name: "Option 2", value: "option 2" },
+    { name: "Option 3", value: "option 3" },
+];
 
 const sortFilter = [
     { name: 'sort option 1', value: 'sort option 1' },
@@ -33,40 +32,26 @@ const sortFilter = [
     { name: 'sort option 3', value: 'sort option 3' }
 ]
 
-const pageDetails = {
-    title: "Requisition and issue slip",
-    description: "this is a sample description"
-}
-
-const ReleasingOverview = () => {
-
-    const { getStockOut } = useReleasingHook();
-
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['stocks'],
-        queryFn: getStockOut // Pass the function reference without parentheses
-    });
-
-    const supplies = data?.data
-
+const Releasing = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-    const [snackbar, setSnackbar] = useState({ open: false, message: "", color: "success" });
-
-    const showSnackbar = (message, severity) => {
-        setSnackbar({ open: true, message, severity });
-    };
-
-    const handleSnackbarClose = () => {
-        setSnackbar((prev) => ({ ...prev, open: false }));
-    };
+    const pageDetails = {
+        title: "Requisition and issue slip",
+        description: "this is a sample description"
+    }
 
     const handleDialogOpen = () => {
-        setIsDialogOpen(true)
-    }
+        setIsDialogOpen(true);
+    };
 
     const handleDialogClose = () => {
         setIsDialogOpen(false)
+    }
+
+    const handleSaveRIS = () => {
+        alert('RIS TO BE SAVED')
+        setIsDialogOpen(false)
+        //add snackbar indication item was saved
     }
 
     const FilterOptions = () => (
@@ -78,7 +63,10 @@ const ReleasingOverview = () => {
                 <DatePickerComponent />
             </Box>
             <Box mr={2}>
-                <SelectComponent placeholder="Select Category" options={categoryFilter} />
+                <SelectComponent
+                    placeholder="Select Category"
+                    options={categoryFilter}
+                />
             </Box>
             <Box>
                 <SelectComponent placeholder="Sort By" options={sortFilter} />
@@ -93,21 +81,21 @@ const ReleasingOverview = () => {
                 spacing={2}
                 sx={{
                     flexGrow: 1,
-                    justifyContent: 'space-between'
+                    justifyContent: "space-between",
                 }}
             >
                 {/* Page Header */}
                 <Grid item md={12}>
-                    <Header
-                        pageDetails={pageDetails}
-                        data={user}
-                    />
+                    <Header pageDetails={pageDetails} data={user} />
                 </Grid>
 
                 {/* search and filter */}
                 <Grid item md={12}>
                     <SearchFilter>
-                        <FilterOptions categoryOptions={categoryFilter} sortOptions={sortFilter} />
+                        <FilterOptions
+                            categoryOptions={categoryFilter}
+                            sortOptions={sortFilter}
+                        />
                     </SearchFilter>
                 </Grid>
 
@@ -115,7 +103,7 @@ const ReleasingOverview = () => {
                     {/* table */}
                     <Table
                         tableHeader={receivingTableHeader}
-                        tableData={supplies}
+                        tableData={items}
                         tableTitle="RIS Records"
                         tableSubtitle='This is a subheading. It should add more context to the interaction.'
                         btnLabel='New RIS'
@@ -127,21 +115,16 @@ const ReleasingOverview = () => {
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
-                content={<FormDialog handleDialogClose={handleDialogClose} showSnackbar={showSnackbar} />}
+                content={<FormDialog />}
+                leftButtonLabel={'Cancel'}
+                leftButtonAction={handleDialogClose}
+                rightButtonLabel={'Save'}
+                rightButtonAction={handleSaveRIS}
                 title="Record a new Requisition and Issue slip"
                 description={"Describe how would you like to release items from your inventory. All fields are required."}
-            />
-
-            <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant={'solid'}
-                anchor={{ vertical: 'top', horizontal: 'center' }}
             />
         </>
     )
 }
 
-export default ReleasingOverview
+export default Releasing

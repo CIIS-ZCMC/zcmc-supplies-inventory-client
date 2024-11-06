@@ -1,12 +1,24 @@
-import { lazy } from 'react';
-import { CircleGauge, ArrowUpFromLine, ArrowDownToLine, BaggageClaim, Tag, ClipboardList, LayoutGrid } from "lucide-react";
+import { lazy } from "react";
+import {
+  CircleGauge,
+  ArrowUpFromLine,
+  ArrowDownToLine,
+  BaggageClaim,
+  Tag,
+  ClipboardList,
+  LayoutGrid,
+} from "lucide-react";
 
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
 const Receiving = lazy(() => import("../Pages/Receiving"));
 
-const ReleasingOverview = lazy(() => import("../Pages/Releasing/ReleasingOveriew"));
-const ReleasingDetails = lazy(() => import("../Pages/Releasing/ReleasingDetails"));
+const ReleasingOverview = lazy(() =>
+  import("../Pages/Releasing/ReleasingOveriew")
+);
+const ReleasingDetails = lazy(() =>
+  import("../Pages/Releasing/ReleasingDetails")
+);
 
 // const ItemReview = lazy(() => import("../Pages/ItemReview"));
 const Categories = lazy(() => import("../Pages/Categories"));
