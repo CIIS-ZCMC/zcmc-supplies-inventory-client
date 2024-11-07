@@ -1,17 +1,43 @@
-import { Breadcrumbs, Typography, Link } from "@mui/joy"
+import { Breadcrumbs, Typography, Link } from "@mui/joy";
+import { useNavigate } from "react-router-dom";
 
-const BreadcrumbsComponent = ({ name, pageTitle }) => {
+const BreadcrumbsComponent = ({
+  name,
+  pageTitle,
+  pagePath,
+  subTitle,
+  subPath,
+}) => {
+  const navigate = useNavigate();
 
-    return (
-        <>
-            <Breadcrumbs separator={">"} aria-label="breadcrumbs">
-                <Typography>{name}</Typography>
-                <Link color="neutral" component={"text"}>
-                    {pageTitle}
-                </Link>
-            </Breadcrumbs>
-        </>
-    )
-}
+  // Handle breadcrumb link clicks
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
 
-export default BreadcrumbsComponent
+  return (
+    <>
+      <Breadcrumbs separator={">"} aria-label="breadcrumbs">
+        <Typography>{name}</Typography>
+        <Link
+          color="neutral"
+          component={"text"}
+          onClick={() => handleNavigate(pagePath)}
+        >
+          {pageTitle}
+        </Link>
+        {subTitle && (
+          <Link
+            color="neutral"
+            component="button"
+            onClick={() => handleNavigate(subPath)} // Navigate to the specific subpage
+          >
+            {subTitle}
+          </Link>
+        )}
+      </Breadcrumbs>
+    </>
+  );
+};
+
+export default BreadcrumbsComponent;

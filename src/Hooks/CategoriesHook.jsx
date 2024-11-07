@@ -1,20 +1,19 @@
 import { create } from "zustand";
 import axios from "axios";
 
-import { BASE_URL, PATH } from '../Services/API'
-
-const { CATEGORIES } = PATH
+import { API, BASE_URL } from "../Services/Config";
 
 const useCategoriesHook = create((set) => ({
-
-    getCategories: async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/${CATEGORIES}`);
-            return response.data
-        } catch (error) {
-            error.message;
-        }
-    },
+  getCategories: async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.CATEGORIES}`
+      );
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
 }));
 
-export default useCategoriesHook
+export default useCategoriesHook;

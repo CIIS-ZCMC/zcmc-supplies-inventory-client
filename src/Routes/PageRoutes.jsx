@@ -1,12 +1,25 @@
-import { lazy } from 'react';
-import { CircleGauge, ArrowUpFromLine, ArrowDownToLine, BaggageClaim, Tag, ClipboardList, LayoutGrid } from "lucide-react";
+import { lazy } from "react";
+import {
+  CircleGauge,
+  ArrowUpFromLine,
+  ArrowDownToLine,
+  BaggageClaim,
+  Tag,
+  ClipboardList,
+  LayoutGrid,
+} from "lucide-react";
+import ViewDetails from "../Pages/ViewDetails";
 
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
 const Receiving = lazy(() => import("../Pages/Receiving"));
 
-const ReleasingOverview = lazy(() => import("../Pages/Releasing/ReleasingOveriew"));
-const ReleasingDetails = lazy(() => import("../Pages/Releasing/ReleasingDetails"));
+const ReleasingOverview = lazy(() =>
+  import("../Pages/Releasing/ReleasingOveriew")
+);
+const ReleasingDetails = lazy(() =>
+  import("../Pages/Releasing/ReleasingDetails")
+);
 
 // const ItemReview = lazy(() => import("../Pages/ItemReview"));
 const Categories = lazy(() => import("../Pages/Categories"));
@@ -52,7 +65,6 @@ export const sidebarRoutes = [
     name: "Inventory",
     element: <Inventory />,
     icon: <ClipboardList />,
-    // code: "PRM-REQ",
     permissions: ["view"],
   },
 
@@ -81,11 +93,10 @@ export const sidebarRoutes = [
 
 export const childrenRoutes = [
   {
-    path: "/transactions/manage-pr",
+    path: "/inventory/viewing",
     name: "Manage",
-    element: <ManageRequest />,
+    element: <ViewDetails />,
     icon: null,
-    code: "PRM-REQ",
     permissions: ["view"],
   },
 ];
