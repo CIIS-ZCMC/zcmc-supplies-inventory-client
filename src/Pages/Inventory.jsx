@@ -5,12 +5,10 @@ import ButtonComponent from "../Components/ButtonComponent";
 import ContainerComponent from "../Components/Container/ContainerComponent";
 import InputComponent from "../Components/Form/InputComponent";
 import { ArrowDown, ArrowUp, SearchIcon, ViewIcon } from "lucide-react";
-import TableComponent from "../Components/Table/TableComponent";
 import PaginatedTable from "../Components/Table/PaginatedTable";
 import useInventoryHook from "../Hooks/InventoryHook";
-import { items, user } from "../Data/index";
+import { user } from "../Data/index";
 import Header from "../Layout/Header/Header";
-import DatePickerComponent from "../Components/Form/DatePickerComponent";
 import SelectComponent from "../Components/Form/SelectComponent";
 import useFilterHook from "../Hooks/FilterHook";
 
@@ -48,8 +46,10 @@ const Inventory = () => {
     filteredInventory,
     selectedCategory,
     sortOrder,
+    searchTerm,
     setCategory,
     setSortOrder,
+    setSearchTerm,
     clearFilters,
   } = useFilterHook();
   const theme = useTheme();
@@ -76,7 +76,13 @@ const Inventory = () => {
             justifyContent="space-between"
             alignItems="flex-end"
           >
-            <InputComponent label="Find a slip" startIcon={<SearchIcon />} />
+            {/* search*/}
+            <InputComponent
+              label="Find a slip"
+              startIcon={<SearchIcon />}
+              value={searchTerm}
+              setValue={setSearchTerm}
+            />
             <Box display="flex" gap={1}>
               <SelectComponent
                 startIcon={"Sort by:"}

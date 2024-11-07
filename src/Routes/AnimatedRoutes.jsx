@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     children: sidebarRoutes, // Custom page routes
   },
   {
-    path: "/transactions",
+    path: "/inventory",
     element: <Layout />, // Parent component that renders common layout
     children: childrenRoutes, // Custom page routes
   },

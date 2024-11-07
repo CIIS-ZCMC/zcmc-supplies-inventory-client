@@ -64,15 +64,6 @@ export const sidebarRoutes = [
     name: "Inventory",
     element: <Inventory />,
     icon: <ClipboardList />,
-    // code: "PRM-REQ",
-    permissions: ["view"],
-  },
-  {
-    path: "/inventory/viewing",
-    name: "Manage",
-    element: <ViewDetails />,
-    icon: null,
-    code: "PRM-REQ",
     permissions: ["view"],
   },
 
@@ -101,11 +92,10 @@ export const sidebarRoutes = [
 
 export const childrenRoutes = [
   {
-    path: "/transactions/manage-pr",
+    path: "/inventory/viewing",
     name: "Manage",
-    element: <ManageRequest />,
+    element: <ViewDetails />,
     icon: null,
-    code: "PRM-REQ",
     permissions: ["view"],
   },
 ];

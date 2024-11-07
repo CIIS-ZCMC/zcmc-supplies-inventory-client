@@ -61,6 +61,7 @@ function PaginatedTable({
 
   // Calculate the subset of data to display
   const startIdx = (page - 1) * rowsPerPage;
+  const endIdx = Math.min(startIdx + rowsPerPage, rows.length);
   const currentRows = rows?.slice(startIdx, startIdx + rowsPerPage);
 
   return (
@@ -152,7 +153,7 @@ function PaginatedTable({
               ))}
             </Select>
             <Typography variant="body2" sx={{ ml: 1 }}>
-              items out of {rows.length}
+              Showing {startIdx + 1}-{endIdx} items out of {rows.length}
             </Typography>
           </Box>
         </Stack>

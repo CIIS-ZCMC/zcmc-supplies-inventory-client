@@ -6,6 +6,7 @@ import { API, BASE_URL } from "../Services/Config";
 const useFilterHook = create((set) => ({
   selectedCategory: "",
   sortOrder: "",
+  searchTerm: "",
 
   // Update selected category filter
   setCategory: (category) => set({ selectedCategory: category }),
@@ -13,19 +14,26 @@ const useFilterHook = create((set) => ({
   // Update sort order
   setSortOrder: (order) => set({ sortOrder: order }),
 
+  setSearchTerm: (term) => set({ searchTerm: term }),
+
   // Clear filters
   clearFilters: () => set({ selectedCategory: "", sortOrder: "" }),
 
   // Computed property for filtered and sorted inventory
   filteredInventory: (inventory) => {
-    const { selectedCategory, sortOrder } = useFilterHook.getState();
+    const { selectedCategory, sortOrder, searchTerm } =
+      useFilterHook.getState();
 
     // Filter by selected category
-    let filtered = inventory.filter(
-      (item) => !selectedCategory || item.category_name === selectedCategory
-    );
+    let filtered = inventory.filter((item) => {
+      const matchesCategory =
+        !selectedCategory || item.category_name === selectedCategory;
+      const matchesSearch =
+        !searchTerm ||
+        item.supply_name.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
 
-    console.log(sortOrder);
     // Sort by quantity
     if (sortOrder === "highest") {
       filtered = filtered.sort((a, b) => b.quantity - a.quantity);
