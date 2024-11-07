@@ -26,13 +26,14 @@ function InputComponent({
   width,
   onChange,
   error,
+  size
 }) {
   return (
     <FormControl>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
         name={name}
-        size="lg"
+        size={size}
         variant="outlined"
         error={error}
         autoFocus={autoFocus}
