@@ -49,7 +49,6 @@ function ViewDetails(props) {
     { id: "supply_name", label: "Item Name" },
     { id: "category_name", label: "Category" },
     { id: "unit_name", label: "Unit" },
-    { id: "quantity", label: "Quantity" },
   ];
 
   const totalQuantity = details.reduce((sum, item) => sum + item.quantity, 0);
@@ -80,7 +79,7 @@ function ViewDetails(props) {
                 }}
               />
             }
-            categoryName={selectedRow.category_name}
+            categoryName={selectedRow?.category_name}
             categoryTitle={"Item category"}
           />
           <BoxItem
@@ -94,7 +93,7 @@ function ViewDetails(props) {
                 }}
               />
             }
-            categoryName={selectedRow.quantity}
+            categoryName={selectedRow?.quantity}
             categoryTitle={"Total quantity"}
           />
           <BoxItem
@@ -108,7 +107,7 @@ function ViewDetails(props) {
                 }}
               />
             }
-            categoryName={selectedRow.unit_name}
+            categoryName={selectedRow?.unit_name}
             categoryTitle={"Type of unit"}
           />
         </Stack>

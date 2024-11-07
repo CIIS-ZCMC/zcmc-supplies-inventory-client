@@ -36,7 +36,7 @@ function PaginatedTable({
 }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
-  const totalPages = Math.ceil(rows.length / rowsPerPage);
+  const totalPages = Math.ceil(rows?.length / rowsPerPage);
 
   const { setSelectedRow } = useSelectedRow();
 
@@ -61,7 +61,7 @@ function PaginatedTable({
 
   // Calculate the subset of data to display
   const startIdx = (page - 1) * rowsPerPage;
-  const endIdx = Math.min(startIdx + rowsPerPage, rows.length);
+  const endIdx = Math.min(startIdx + rowsPerPage, rows?.length);
   const currentRows = rows?.slice(startIdx, startIdx + rowsPerPage);
 
   return (
@@ -92,17 +92,17 @@ function PaginatedTable({
       <Table stripe="odd" borderAxis="both">
         <thead>
           <tr>
-            {columns.map((col, index) => (
-              <th key={index}>{col.label}</th>
+            {columns?.map((col, index) => (
+              <th key={index}>{col?.label}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {currentRows.map((row, index) => (
-            <tr key={row.id}>
-              {columns.map((column) => (
-                <td key={column.id}>
-                  {column.id === "actions" ? (
+          {currentRows?.map((row, index) => (
+            <tr key={row?.id}>
+              {columns?.map((column) => (
+                <td key={column?.id}>
+                  {column?.id === "actions" ? (
                     <ButtonComponent
                       size={"sm"}
                       variant="plain"
@@ -110,7 +110,7 @@ function PaginatedTable({
                       startDecorator={<SquareArrowOutUpRight size={"1rem"} />}
                     />
                   ) : (
-                    row[column.id] ?? `${startIdx + index + 1}`
+                    row[column?.id] ?? `${startIdx + index + 1}`
                   )}
                 </td>
               ))}
@@ -138,13 +138,14 @@ function PaginatedTable({
 
         <Stack direction="row">
           <Box display="flex" alignItems="center" ml={2}>
-            <Typography variant="body2" sx={{ mr: 1 }}>
+            <Typography level="body-sm" sx={{ mr: 1 }}>
               rows per page:
             </Typography>
             <Select
               value={rowsPerPage}
               onChange={handleRowsPerPageChange}
               sx={{ minWidth: 70 }}
+              size="sm"
             >
               {[10, 20, 30, 50].map((option) => (
                 <Option key={option} value={option}>
@@ -152,8 +153,8 @@ function PaginatedTable({
                 </Option>
               ))}
             </Select>
-            <Typography variant="body2" sx={{ ml: 1 }}>
-              Showing {startIdx + 1}-{endIdx} items out of {rows.length}
+            <Typography level="body-sm" sx={{ ml: 1 }}>
+              Showing {startIdx + 1}-{endIdx} items out of {rows?.length}
             </Typography>
           </Box>
         </Stack>

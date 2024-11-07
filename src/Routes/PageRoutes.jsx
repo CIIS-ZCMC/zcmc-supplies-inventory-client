@@ -9,6 +9,9 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import ViewDetails from "../Pages/ViewDetails";
+import Reports from "../Pages/Reports";
+import { BiCategory } from "react-icons/bi";
+import { GrDocument } from "react-icons/gr";
 
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
@@ -34,7 +37,14 @@ export const sidebarRoutes = [
     path: "/dashboard",
     name: "Dashboard",
     element: <Dashboard />,
-    icon: <CircleGauge />,
+    icon: <BiCategory />,
+    permissions: ["view"],
+  },
+  {
+    path: "/inventory",
+    name: "Inventory",
+    element: <Inventory />,
+    icon: <ClipboardList />,
     permissions: ["view"],
   },
   {
@@ -58,34 +68,11 @@ export const sidebarRoutes = [
     icon: <ArrowDownToLine />,
     permissions: ["view"],
   },
-
   {
-    path: "/inventory",
-    name: "Inventory",
-    element: <Inventory />,
-    icon: <ClipboardList />,
-    permissions: ["view"],
-  },
-
-  {
-    path: "/categories",
-    name: "Categories",
-    element: <Categories />,
-    icon: <LayoutGrid />,
-    permissions: ["view"],
-  },
-  {
-    path: "/suppliers",
-    name: "Suppliers",
-    element: <Suppliers />,
-    icon: <BaggageClaim />,
-    permissions: ["view"],
-  },
-  {
-    path: "/brands",
-    name: "Brands",
-    element: <Brands />,
-    icon: <Tag />,
+    path: "/reports",
+    name: "Reports",
+    element: <Reports />,
+    icon: <GrDocument />,
     permissions: ["view"],
   },
 ];

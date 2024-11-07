@@ -36,7 +36,7 @@ function InputComponent({
         value={value}
         fullWidth={fullWidth}
         onChange={(e) => setValue(e.target.value)}
-        sx={{ fontWeight: fontWeight }}
+        sx={{ fontWeight: fontWeight, width: width }}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
