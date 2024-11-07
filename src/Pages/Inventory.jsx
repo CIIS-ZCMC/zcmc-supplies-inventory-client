@@ -79,9 +79,11 @@ const Inventory = () => {
             {/* search*/}
             <InputComponent
               label="Find a slip"
+              placeholder="Find by item name, category, unit"
               startIcon={<SearchIcon />}
               value={searchTerm}
               setValue={setSearchTerm}
+              width={300}
             />
             <Box display="flex" gap={1}>
               <SelectComponent

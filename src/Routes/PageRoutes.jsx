@@ -45,12 +45,7 @@ export const sidebarRoutes = [
     permissions: ["view"],
   },
 
-  {
-    path: "/releasing/:id",
-    // name: "Releasing Details",
-    element: <ReleasingDetails />,
-    permissions: ["view"],
-  },
+
 
   {
     path: "/receiving",
@@ -92,8 +87,16 @@ export const sidebarRoutes = [
 ];
 
 export const childrenRoutes = [
+
   {
-    path: "/inventory/viewing",
+    path: "/releasing/:id",
+    // name: "Releasing Details",
+    element: <ReleasingDetails />,
+    permissions: ["view"],
+  },
+
+  {
+    path: "/inventory/:id",
     name: "Manage",
     element: <ViewDetails />,
     icon: null,

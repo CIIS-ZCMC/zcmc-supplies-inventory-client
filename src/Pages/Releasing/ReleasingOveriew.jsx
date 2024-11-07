@@ -3,10 +3,17 @@ import { useEffect, useState } from "react";
 import { Grid, Box, Typography, Stack } from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
 
+import { ViewIcon } from "lucide-react";
+
+//hooks
+import useSuppliesHook from "../../Hooks/SuppliesHook";
+
 //layouts
 import Header from "../../Layout/Header/Header";
 import SearchFilter from "../../Layout/SearchFilter/SearchFilter";
 import Table from "../../Layout/Table/Table";
+import PaginatedTable from "../../Components/Table/PaginatedTable";
+import ButtonComponent from "../../Components/ButtonComponent";
 
 //custom components
 import DatePickerComponent from "../../Components/Form/DatePickerComponent";
@@ -19,6 +26,18 @@ import SnackbarComponent from "../../Components/SnackbarComponent";
 import { items, user } from '../../Data/index'
 import { receivingTableHeader } from '../../Data/TableHeader'
 
+
+const data = [
+  {
+    id: 1,
+    supply_name: 'Alcohol',
+    category_name: 'Medical',
+    unit_name: 'Box',
+    quantity: 0,
+    decription: 'Isopropyl 70 %"',
+    name: 'Alcohol (Box)'
+  }
+]
 
 const categoryFilter = [
   { name: "Option 1", value: "option 1" },
@@ -33,6 +52,15 @@ const sortFilter = [
 ]
 
 const Releasing = () => {
+  const { getSupplies } = useSuppliesHook();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['supplies'],
+    queryFn: getSupplies,
+  })
+
+  const suppliedData = data?.data
+
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const pageDetails = {
@@ -101,14 +129,36 @@ const Releasing = () => {
 
         <Grid item md={12}>
           {/* table */}
-          <Table
+          {/* <Table
             tableHeader={receivingTableHeader}
-            tableData={items}
+            tableData={suppliedData}
             tableTitle="RIS Records"
             tableSubtitle='This is a subheading. It should add more context to the interaction.'
             btnLabel='New RIS'
             onClick={handleDialogOpen}
+          /> */}
+
+
+          <PaginatedTable
+            tableTitle={"List of items"}
+            // tableDesc={
+            //   "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
+            // }
+            columns={receivingTableHeader}
+            rows={suppliedData}
+            actions={<ViewIcon />}
+            actionBtns={
+              <Stack direction="row" spacing={1}>
+                <ButtonComponent
+                  variant={"outlined"}
+                  label="Generate report"
+                  size="lg"
+                />
+                <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
+              </Stack>
+            }
           />
+
         </Grid>
       </Grid>
 

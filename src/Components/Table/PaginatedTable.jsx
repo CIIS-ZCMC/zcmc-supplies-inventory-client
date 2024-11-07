@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 import ButtonComponent from "../ButtonComponent";
 import { SquareArrowOutUpRight } from "lucide-react";
 import useSelectedRow from "../../Store/SelectedRowStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -34,17 +34,22 @@ function PaginatedTable({
   btnLabel,
   actionBtns,
 }) {
+
+
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
-  const totalPages = Math.ceil(rows.length / rowsPerPage);
+  const totalPages = Math.ceil(rows?.length / rowsPerPage);
 
   const { setSelectedRow } = useSelectedRow();
 
   const navigate = useNavigate();
+  const location = useLocation()
+
+  const currentPath = location.pathname
 
   const handleNavigate = (row) => {
     const { id } = row;
-    navigate(`/inventory/viewing`);
+    navigate(`${currentPath}/${id}`); //dynamic route handling
     setSelectedRow(row);
   };
 
@@ -61,7 +66,7 @@ function PaginatedTable({
 
   // Calculate the subset of data to display
   const startIdx = (page - 1) * rowsPerPage;
-  const endIdx = Math.min(startIdx + rowsPerPage, rows.length);
+  const endIdx = Math.min(startIdx + rowsPerPage, rows?.length);
   const currentRows = rows?.slice(startIdx, startIdx + rowsPerPage);
 
   return (
@@ -92,15 +97,15 @@ function PaginatedTable({
       <Table stripe="odd" borderAxis="both">
         <thead>
           <tr>
-            {columns.map((col, index) => (
+            {columns?.map((col, index) => (
               <th key={index}>{col.label}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {currentRows.map((row, index) => (
+          {currentRows?.map((row, index) => (
             <tr key={row.id}>
-              {columns.map((column) => (
+              {columns?.map((column) => (
                 <td key={column.id}>
                   {column.id === "actions" ? (
                     <ButtonComponent
@@ -153,7 +158,7 @@ function PaginatedTable({
               ))}
             </Select>
             <Typography variant="body2" sx={{ ml: 1 }}>
-              Showing {startIdx + 1}-{endIdx} items out of {rows.length}
+              Showing {startIdx + 1}-{endIdx} items out of {rows?.length}
             </Typography>
           </Box>
         </Stack>

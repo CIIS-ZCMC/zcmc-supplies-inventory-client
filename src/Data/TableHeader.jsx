@@ -35,4 +35,6 @@ export const receivingTableHeader = [
         disablePadding: false,
         label: 'Unit',
     },
+
+    { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ]
