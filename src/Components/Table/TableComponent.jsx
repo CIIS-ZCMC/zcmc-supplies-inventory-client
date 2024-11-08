@@ -23,6 +23,7 @@ export default function TableComponent({
   columns = [],
   rows = [],
   filterBtns,
+  searchLbl = "Search a record",
 }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
@@ -61,9 +62,10 @@ export default function TableComponent({
         direction="row"
         justifyContent={"space-between"}
         alignItems={"center"}
+        mb={2}
       >
         <InputComponent
-          label="Find a slip"
+          label={searchLbl}
           placeholder="Find by item name, category, unit"
           startIcon={<SearchIcon />}
           value={searchTerm}
@@ -76,7 +78,9 @@ export default function TableComponent({
         <thead>
           <tr>
             {columns?.map((col, index) => (
-              <th key={index}>{col?.label}</th>
+              <th key={index} style={{ textWrap: "wrap", width: col?.width }}>
+                {col?.label}
+              </th>
             ))}
           </tr>
         </thead>

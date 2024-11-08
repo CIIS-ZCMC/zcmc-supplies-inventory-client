@@ -30,6 +30,15 @@ export const API = {
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",
   RELEASING: "releasing-list",
+  REPORTS_NEAR_EXP: "get-near-expiration",
+  REPORTS_DISPOSAL: "get-disposed-items",
+  REPORTS_STARTING_BAL: "get-starting-balance",
+  REPORTS_ITEM_COUNT: "get-item-count",
+  REPORTS_ZERO_STOCKS: "get-zero-stocks",
+  REPORTS_CONSUMED: "get-most-consumed",
+  REPORTS_UNCONSUMED: "get-without-transaction",
+  REPORTS_SUFFICIENT: "get-sufficient-supply",
+  REPORTS_REORDER: "get-reorder-supply",
 };
 
 /**

@@ -32,12 +32,12 @@ const data = Array.from({ length: 1000 }, (_, i) => ({
 }));
 
 const columns = [
-  { id: "id", label: "#" },
-  { id: "supply_name", label: "Item Name" },
+  { id: "id", label: "#", width: "5%" },
+  { id: "supply_name", label: "Item Name", width: "30%" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
-  { id: "quantity", label: "Quantity" },
-  { id: "actions", label: "Actions" },
+  { id: "quantity", label: "Quantity", width: "10%" },
+  { id: "actions", label: "Actions", width: "5%" },
 ];
 
 const Inventory = () => {

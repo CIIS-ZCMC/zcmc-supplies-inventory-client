@@ -93,7 +93,9 @@ function PaginatedTable({
         <thead>
           <tr>
             {columns?.map((col, index) => (
-              <th key={index}>{col?.label}</th>
+              <th key={index} style={{ textWrap: "wrap", width: col?.width }}>
+                {col?.label}
+              </th>
             ))}
           </tr>
         </thead>
@@ -101,7 +103,7 @@ function PaginatedTable({
           {currentRows?.map((row, index) => (
             <tr key={row?.id}>
               {columns?.map((column) => (
-                <td key={column?.id}>
+                <td key={column?.id} style={{ textWrap: "wrap" }}>
                   {column?.id === "actions" ? (
                     <ButtonComponent
                       size={"sm"}
