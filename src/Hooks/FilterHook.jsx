@@ -23,7 +23,7 @@ const useFilterHook = create((set) => ({
   filteredInventory: (inventory) => {
     const { selectedCategory, sortOrder, searchTerm } =
       useFilterHook.getState();
-
+    console.log(selectedCategory);
     // Filter by selected category
     let filtered = inventory.filter((item) => {
       const matchesCategory =
@@ -41,6 +41,7 @@ const useFilterHook = create((set) => ({
       filtered = filtered.sort((a, b) => a.quantity - b.quantity);
     }
 
+    console.log(filtered);
     return filtered;
   },
 }));

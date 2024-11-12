@@ -8,10 +8,10 @@ import { Box, Typography } from "@mui/joy";
 import { InfoIcon } from "lucide-react";
 import { useTheme } from "@emotion/react";
 
-function TabComponent({ tabs, withTabDesc = false }) {
+function TabComponent({ tabs, onTabChange, withTabDesc = false }) {
   const theme = useTheme();
   return (
-    <Tabs aria-label="Dynamic tabs" defaultValue={0}>
+    <Tabs aria-label="Dynamic tabs" defaultValue={0} onChange={onTabChange}>
       <TabList size="sm" sx={{ overflow: "auto" }}>
         {tabs.map((tab, index) => (
           <Tab key={index}>{tab.label}</Tab>

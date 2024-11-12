@@ -11,6 +11,8 @@ import { user } from "../Data/index";
 import Header from "../Layout/Header/Header";
 import SelectComponent from "../Components/Form/SelectComponent";
 import useFilterHook from "../Hooks/FilterHook";
+import { MdOutlineLibraryAdd } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
@@ -58,6 +60,7 @@ const Inventory = () => {
     description: "See the list of items in your inventory.",
     pagePath: "/inventory",
   };
+  const navigate = useNavigate();
   useEffect(() => {
     const timeout = setTimeout(() => {
       getInventory();
@@ -129,6 +132,22 @@ const Inventory = () => {
                 <ButtonComponent label="Add new item name" />
               </Stack>
             }
+            icon={
+              <MdOutlineLibraryAdd
+                style={{
+                  verticalAlign: "middle",
+                  color: theme.palette.custom.buttonBg,
+                  fontSize: 30,
+                  backgroundColor: "#EBF2F9",
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+              />
+            }
+            label={"Fill-up your inventory by creating a New item"}
+            desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
+inventory items in filling-up IARs and RIS requests.`}
+            btn={<ButtonComponent label={"Create new item"} onClick={`/`} />}
           />
         </ContainerComponent>
       </Stack>
