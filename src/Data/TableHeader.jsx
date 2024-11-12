@@ -87,6 +87,8 @@ export const receivingHeader = [
         numeric: false,
         disablePadding: false,
         label: 'Quantity',
-    }
+    },
+
+    { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 
 ]

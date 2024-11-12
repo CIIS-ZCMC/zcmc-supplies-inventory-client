@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useState } from 'react';
-import { Box, Stack, Grid, Divider, Alert, Typography } from "@mui/joy";
+import { Box, Stack, Grid, Divider, Alert } from "@mui/joy";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 
@@ -12,29 +12,29 @@ import TextAreaComponent from '../../Components/Form/TextAreaComponent';
 
 // hooks
 import useSourceHook from '../../Hooks/SourceHook';
+import useAreasHook from '../../Hooks/AreasHook';
+import useCategoriesHook from '../../Hooks/CategoriesHook';
 import useSuppliesHook from '../../Hooks/SuppliesHook';
-import useSuppliersHook from '../../Hooks/SuppliersHook';
-import useBrandsHook from '../../Hooks/BrandsHook';
-import useReceivingHook from '../../Hooks/ReceivingHook';
 
-const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
+import useReleasingHook from "../../Hooks/ReleasingHook";
+
+const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
     const queryClient = useQueryClient()
 
     // Hooks for data fetching functions
-    const { getSuppliers } = useSuppliersHook(); //change this into brand
-    const { getBrands } = useBrandsHook(); //change this int o suppliers
+    const { getAreas } = useAreasHook();
     const { getSources } = useSourceHook();
+    const { getCategories } = useCategoriesHook();
     const { getSupplies } = useSuppliesHook();
-
-    const { initialValues, validationSchema, createStockIn, } = useReceivingHook();
+    const { createStockOut, initialValues, validationSchema } = useReleasingHook();
 
     // Array of queries to manage multiple fetching in a cleaner way
     const queryConfigs = [
         { key: 'supplies', fn: getSupplies },
         { key: 'sources', fn: getSources },
-        { key: 'brands', fn: getBrands },
-        { key: 'suppliers', fn: getSuppliers },
+        { key: 'areas', fn: getAreas },
+        { key: 'categories', fn: getCategories },
     ];
 
     const queries = queryConfigs.map(({ key, fn }) =>
@@ -45,8 +45,8 @@ const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
     const [
         { data: suppliesData, isLoading: isSuppliesLoading },
         { data: sourcesData, isLoading: isSourcesLoading },
-        { data: brandsData, isLoading: isBrandsLoading },
-        { data: suppliersData, isLoading: isSuppliersLoading },
+        { data: areasData, isLoading: isAreasLoading },
+        { data: categoriesData, isLoading: isCategoriesLoading },
     ] = queries;
 
     // Helper function for mapping options
@@ -56,33 +56,32 @@ const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
     // Memoized options to avoid recalculating on every render
     const suppliesOptions = useMemo(() => mapOptions(suppliesData?.data, 'name'), [suppliesData]);
     const sourcesOptions = useMemo(() => mapOptions(sourcesData?.data, 'source_name'), [sourcesData]);
-    const brandsOptions = useMemo(() => mapOptions(brandsData?.data, 'brand_name'), [brandsData]);
-    const suppliersOptions = useMemo(() => mapOptions(suppliersData?.data, 'supplier_name'), [suppliersData]);
+    const areaOptions = useMemo(() => mapOptions(areasData?.data, 'area_name'), [areasData]);
+    const categoriesOptions = useMemo(() => mapOptions(categoriesData?.data, 'category_name'), [categoriesData]);
 
     // Define create the mutation for stockout
     const mutation = useMutation({
-        mutationFn: createStockIn,
+        mutationFn: createStockOut,
         onSuccess: () => {
             ``
             // Only show success notification and close dialog after mutation is successful
-            setSnackbar({ open: true, color: 'success', message: 'Stockin Success' })
-            queryClient.invalidateQueries('stockin');
+            showSnackbar("Form submitted successfully", 'success'); // Show success notification
+            queryClient.invalidateQueries('stocks');
 
             // Reset Formik form values after submission
             formik.resetForm(); // Reset form to initial values
-
         },
         onError: (error) => {
-            setSnackbar({ open: true, color: 'danger', message: `${error}` })
             console.error("Error submitting form:", error);
+            showSnackbar("Failed to submit form", 'danger'); // Show error notification
         },
         onSettled: () => {
             // Always close the dialog after the mutation is finished (whether successful or error)
-            handleDialogClose();
+            handleCloseDialog();
         }
     });
 
-    // // Track if the mutation is loading
+    // Track if the mutation is loading
     const isSubmitting = mutation.isLoading;
 
     // Now you can use `isSubmitting` to disable the close button or prevent closing the dialog
@@ -101,14 +100,14 @@ const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
 
             // Map formik values to the expected API field names
             formData.append("supplies_masterlist_id", values.itemName);
-            formData.append("brand_id", values.brand);
+            formData.append("quantity", values.quantityServed);
+            formData.append("requested_quantity", values.quantityRequested);
+            formData.append("transaction_type", values.transactionType);
+            formData.append("ris_no", values.risNumber);
+            formData.append("ris_date", values.risDate);
+            formData.append("remarks", values.remarks);
+            formData.append("area_id", values.area);
             formData.append("source_id", values.source);
-            formData.append("supplier_id", values.supplier);
-            formData.append("expiration_date", values.expiryDate);
-            formData.append("quantity", values.quantity);
-            formData.append("delivery_date", values.dateDelivered);
-            formData.append("purchase_order_no", values.poNumber);
-            formData.append("iar_no", values.iarNumber);
 
             // Log all FormData entries to the console for testing only 
             // for (let [key, value] of formData.entries()) {
@@ -146,13 +145,6 @@ const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
                                 helperText={formik.touched.itemName && formik.errors.itemName}
                                 fullWidth={true}
                             />
-
-                            <Stack mt={2}>
-                                <Typography level="body-sm">
-                                    Item’s name and type of unit is combined and derived from your Dynamic Library to speed-up form fill-up and prevent typographical errors on input.
-                                </Typography>
-                            </Stack>
-
                         </Grid>
 
                         <Grid xs={12} md={6}>
@@ -171,103 +163,101 @@ const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
                         </Grid>
 
                         <Grid xs={12} md={6}>
-                            <InputComponent
-                                name={'quantity'}
-                                size='lg'
-                                label="Quantity"
-                                placeholder="xxx.xxx"
+                            <AutoCompleteComponent
+                                name={'area'}
+                                placeholder="Search area..."
+                                label="Area"
+                                options={areaOptions}
+                                loading={isAreasLoading}
+                                value={suppliesOptions.find(option => option.id === formik.values.area) || null}
+                                onChange={(event, value) => formik.setFieldValue("area", value ? value.id : '')}
+                                error={formik.touched.area && Boolean(formik.errors.area)}
+                                helperText={formik.touched.area && formik.errors.area}
                                 fullWidth={true}
-                                value={formik.values.quantity}
-                                onChange={formik.handleChange}
-                                error={formik.touched.quantity && Boolean(formik.errors.quantity)}
-                                helperText={formik.touched.quantity && formik.errors.quantity}
-                            />
-                        </Grid>
-
-                        <Grid xs={12} md={6}>
-                            <InputComponent
-                                size='lg'
-                                label="PO Number"
-                                placeholder="xxx.xxx"
-                                fullWidth={true}
-                                name={'poNumber'}
-                                value={formik.values.poNumber}
-                                onChange={formik.handleChange}
-                                error={formik.touched.poNumber && Boolean(formik.errors.poNumber)}
-                                helperText={formik.touched.poNumber && formik.errors.poNumber}
-                            />
-                        </Grid>
-
-                        <Grid xs={12} md={6}>
-                            <InputComponent
-                                size='lg'
-                                label="IAR Number"
-                                placeholder="xxx.xxx"
-                                fullWidth={true}
-                                name={'iarNumber'}
-                                value={formik.values.iarNumber}
-                                onChange={formik.handleChange}
-                                error={formik.touched.iarNumber && Boolean(formik.errors.iarNumber)}
-                                helperText={formik.touched.iarNumber && formik.errors.iarNumber}
                             />
                         </Grid>
 
                         <Grid xs={12} md={6}>
                             <DatePickerComponent
-                                name={"dateDelivered"}
-                                label="Date Delivered"
+                                name={"risDate"}
+                                label="RIS date"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.dateDelivered}
-                                onChange={(date) => formik.setFieldValue("dateDelivered", date)}
-                                error={formik.touched.dateDelivered && Boolean(formik.errors.dateDelivered)}
-                                helperText={formik.touched.dateDelivered && formik.errors.dateDelivered}
+                                value={formik.values.risDate}
+                                onChange={(date) => formik.setFieldValue("risDate", date)}
+                                error={formik.touched.risDate && Boolean(formik.errors.risDate)}
+                                helperText={formik.touched.risDate && formik.errors.risDate}
                             />
                         </Grid>
 
                         <Grid xs={12} md={6}>
-                            <DatePickerComponent
-                                name={"expiryDate"}
-                                label="Expiry Date"
-                                placeholder="xxxx.xx.xx"
-                                value={formik.values.expiryDate}
-                                onChange={(date) => formik.setFieldValue("expiryDate", date)}
-                                error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
-                                helperText={formik.touched.expiryDate && formik.errors.expiryDate}
-                            />
-                        </Grid>
-
-                        <Grid xs={12} md={6}>
-                            <AutoCompleteComponent
-                                name={'brand'}
-                                placeholder="Search brands..."
-                                label="Brand"
-                                options={brandsOptions}
-                                loading={isBrandsLoading}
-                                value={brandsOptions.find(option => option.id === formik.values.brand) || null}
-                                onChange={(event, value) => formik.setFieldValue("brand", value ? value.id : '')}
-                                error={formik.touched.brand && Boolean(formik.errors.brand)}
-                                helperText={formik.touched.brand && formik.errors.brand}
+                            <InputComponent
+                                label="RIS number"
+                                placeholder="xxx.xxx.xxx"
                                 fullWidth={true}
+                                name={'risNumber'}
+                                value={formik.values.risNumber}
+                                onChange={formik.handleChange}
+                                error={formik.touched.risNumber && Boolean(formik.errors.risNumber)}
+                                helperText={formik.touched.risNumber && formik.errors.risNumber}
+                            />
+
+                        </Grid>
+
+                        {/* <Grid xs={12}>
+                        <AutoCompleteComponent
+                            placeholder="Search categories..."
+                            label="Categories"
+                            options={categoriesOptions}
+                            loading={isCategoriesLoading}
+                            fullWidth={true}
+                            value={formik.values.category}
+                            onChange={(event, value) => formik.setFieldValue("category", value)}
+                            error={formik.touched.category && Boolean(formik.errors.category)}
+                            helperText={formik.touched.category && formik.errors.category}
+                        />
+                    </Grid> */}
+
+                        <Grid xs={12} md={6}>
+                            <InputComponent
+                                label="Quantity Requested"
+                                placeholder="xxx.xxx.xxx"
+                                fullWidth={true}
+                                name={'quantityRequested'}
+                                value={formik.values.quantityRequested}
+                                onChange={formik.handleChange}
+                                error={formik.touched.quantityRequested && Boolean(formik.errors.quantityRequested)}
+                                helperText={formik.touched.quantityRequested && formik.errors.quantityRequested}
                             />
                         </Grid>
 
                         <Grid xs={12} md={6}>
-                            <AutoCompleteComponent
-                                name={'supplier'}
-                                placeholder="Search supplier..."
-                                label="Supplier"
-                                options={suppliersOptions}
-                                loading={isSuppliersLoading}
-                                value={suppliersOptions.find(option => option.id === formik.values.supplier) || null}
-                                onChange={(event, value) => formik.setFieldValue("supplier", value ? value.id : '')}
-                                error={formik.touched.supplier && Boolean(formik.errors.supplier)}
-                                helperText={formik.touched.supplier && formik.errors.supplier}
+                            <InputComponent
+                                label="Quantity Served"
+                                placeholder="xxx.xxx.xxx"
                                 fullWidth={true}
+                                name={'quantityServed'}
+                                value={formik.values.quantityServed}
+                                onChange={formik.handleChange}
+                                error={formik.touched.quantityServed && Boolean(formik.errors.quantityServed)}
+                                helperText={formik.touched.quantityServed && formik.errors.quantityServed}
+                            />
+                        </Grid>
+
+                        <Grid xs={12}>
+                            <TextAreaComponent
+                                label={'Remarks'}
+                                placeholder={'Enter Remarks'}
+                                name={'remarks'}
+                                value={formik.values.remarks}
+                                onChange={formik.handleChange}
+                                error={formik.touched.remarks && Boolean(formik.errors.remarks)}
+                                helperText={formik.touched.remarks && formik.errors.remarks}
                             />
                         </Grid>
                     </Grid>
 
                 </Box>
+
 
                 <Divider sx={{ marginY: 3 }} />  {/* Horizontal Divider */}
 
