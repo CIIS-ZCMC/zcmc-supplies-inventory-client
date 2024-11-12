@@ -4,9 +4,9 @@ import * as Yup from 'yup';
 
 import { BASE_URL, PATH } from '../Services/API'
 
-const { RELEASING, STOCKOUT } = PATH
+const { RECEIVING, STOCKIN } = PATH
 
-const useReleasingHook = create((set) => ({
+const useReceivingHook = create((set) => ({
 
     initialValues: {
         itemName: '',
@@ -32,20 +32,20 @@ const useReleasingHook = create((set) => ({
         quantityServed: Yup.number().required('Quantity Served is required'),
     }),
 
-    //fetch the fata of stock out / releasing list
-    getStockOut: async () => {
+    //fetch the fata of stock into / receiving list
+    getStockIn: async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/${RELEASING}`);
+            const response = await axios.get(`${BASE_URL}/${RECEIVING}`);
             return response.data
         } catch (error) {
             error.message;
         }
     },
 
-    // Create stock out with POST request
-    createStockOut: async (stockOutData) => {
+    // Create stock in with POST request
+    createStockIn: async (formData) => {
         try {
-            const response = await axios.post(`${BASE_URL}/${STOCKOUT}`, stockOutData);
+            const response = await axios.post(`${BASE_URL}/${STOCKIN}`, formData);
             return response.data;
         } catch (error) {
             console.error("Error creating stock out:", error.message);
@@ -56,4 +56,4 @@ const useReleasingHook = create((set) => ({
 
 }));
 
-export default useReleasingHook
+export default useReceivingHook

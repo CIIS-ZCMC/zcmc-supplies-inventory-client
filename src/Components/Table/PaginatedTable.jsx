@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -47,10 +47,13 @@ function PaginatedTable({
   const { setSelectedRow } = useSelectedRow();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentPath = location.pathname;
 
   const handleNavigate = (row) => {
     const { id } = row;
-    navigate(`/inventory/viewing`);
+    navigate(`${currentPath}/${id}`); //dynamic route handling
     setSelectedRow(row);
   };
 
@@ -97,7 +100,7 @@ function PaginatedTable({
       </Stack>
       <Divider sx={{ my: 3, color: "#E6E6E6" }} />
       {/* Table */}
-      {!rows.length > 0 ? (
+      {rows.length > 0 ? (
         <>
           <Table stripe="odd" borderAxis="both">
             <thead>

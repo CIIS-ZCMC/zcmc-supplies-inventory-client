@@ -1,5 +1,11 @@
 import PropTypes from "prop-types";
-import { FormControl, FormHelperText, FormLabel, Input } from "@mui/joy";
+import {
+  FormControl,
+  Typography,
+  FormLabel,
+  Input,
+  FormHelperText,
+} from "@mui/joy";
 
 InputComponent.propTypes = {
   label: PropTypes.string.isRequired,
@@ -14,6 +20,7 @@ InputComponent.propTypes = {
 
 function InputComponent({
   label,
+  name,
   placeholder,
   helperText,
   value,
@@ -23,14 +30,18 @@ function InputComponent({
   startIcon,
   fullWidth,
   width,
+  onChange,
+  error,
+  size,
 }) {
   return (
     <FormControl>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
-        size="md"
+        name={name}
+        size={size}
         variant="outlined"
-        color="primary"
+        error={error}
         autoFocus={autoFocus}
         placeholder={placeholder}
         value={value}

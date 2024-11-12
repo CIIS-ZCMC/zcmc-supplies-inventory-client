@@ -1,21 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Grid, Box, Typography, Stack } from "@mui/joy";
+import { useQuery } from "@tanstack/react-query";
+
+import { ViewIcon } from "lucide-react";
+
+//hooks
+import useSuppliesHook from "../../Hooks/SuppliesHook";
+import useReleasingHook from "../../Hooks/ReleasingHook";
 
 //layouts
 import Header from "../../Layout/Header/Header";
 import SearchFilter from "../../Layout/SearchFilter/SearchFilter";
 import Table from "../../Layout/Table/Table";
 
+
 //custom components
 import DatePickerComponent from "../../Components/Form/DatePickerComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import FormDialog from "../../Layout/Receiving/FormDialog";
+import SnackbarComponent from "../../Components/SnackbarComponent";
+import PaginatedTable from "../../Components/Table/PaginatedTable";
+import ButtonComponent from "../../Components/ButtonComponent";
+import ContainerComponent from '../../Components/Container/ContainerComponent'
 
 //datas
-import { items, user } from "../../Data/index";
-import { receivingTableHeader } from "../../Data/TableHeader";
+import { items, user } from '../../Data/index';
+import { releasingHeader } from '../../Data/TableHeader';
 
 const categoryFilter = [
   { name: "Option 1", value: "option 1" },
@@ -24,32 +36,41 @@ const categoryFilter = [
 ];
 
 const sortFilter = [
-  { name: "sort option 1", value: "sort option 1" },
-  { name: "sort option 2", value: "sort option 2" },
-  { name: "sort option 3", value: "sort option 3" },
-];
+  { name: 'sort option 1', value: 'sort option 1' },
+  { name: 'sort option 2', value: 'sort option 2' },
+  { name: 'sort option 3', value: 'sort option 3' }
+]
 
 const Releasing = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { getStockOut } = useReleasingHook();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['stockout'],
+    queryFn: getStockOut,
+  })
+
+  const stockoutData = data?.data
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const pageDetails = {
     title: "Requisition and issue slip",
-    description: "this is a sample description",
-  };
+    description: "this is a sample description"
+  }
 
   const handleDialogOpen = () => {
     setIsDialogOpen(true);
   };
 
   const handleDialogClose = () => {
-    setIsDialogOpen(false);
-  };
+    setIsDialogOpen(false)
+  }
 
   const handleSaveRIS = () => {
-    alert("RIS TO BE SAVED");
-    setIsDialogOpen(false);
+    alert('RIS TO BE SAVED')
+    setIsDialogOpen(false)
     //add snackbar indication item was saved
-  };
+  }
 
   const FilterOptions = () => (
     <>
@@ -73,57 +94,53 @@ const Releasing = () => {
 
   return (
     <>
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          flexGrow: 1,
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Page Header */}
-        <Grid item md={12}>
-          <Header pageDetails={pageDetails} data={user} />
-        </Grid>
+      <Header pageDetails={pageDetails} data={user} />
+      <Stack gap={2} mt={2}>
 
         {/* search and filter */}
-        <Grid item md={12}>
+        <ContainerComponent>
           <SearchFilter>
             <FilterOptions
               categoryOptions={categoryFilter}
               sortOptions={sortFilter}
             />
           </SearchFilter>
-        </Grid>
+        </ContainerComponent>
 
-        <Grid item md={12}>
-          {/* table */}
-          <Table
-            tableHeader={receivingTableHeader}
-            tableData={items}
-            tableTitle="RIS Records"
-            tableSubtitle="This is a subheading. It should add more context to the interaction."
-            btnLabel="New RIS"
-            onClick={handleDialogOpen}
+        <ContainerComponent>
+          <PaginatedTable
+            tableTitle={"List of stock-out transactions"}
+            tableDesc={"Sample Table Desription"}
+            columns={releasingHeader}
+            rows={stockoutData}
+            actions={<ViewIcon />}
+            actionBtns={
+              <Stack direction="row" spacing={1}>
+                <ButtonComponent
+                  variant={"outlined"}
+                  label="Generate report"
+                  size="lg"
+                />
+                <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
+              </Stack>
+            }
           />
-        </Grid>
-      </Grid>
+        </ContainerComponent>
 
-      <ModalComponent
-        isOpen={isDialogOpen}
-        handleClose={handleDialogClose}
-        content={<FormDialog />}
-        leftButtonLabel={"Cancel"}
-        leftButtonAction={handleDialogClose}
-        rightButtonLabel={"Save"}
-        rightButtonAction={handleSaveRIS}
-        title="Record a new Requisition and Issue slip"
-        description={
-          "Describe how would you like to release items from your inventory. All fields are required."
-        }
-      />
+        <ModalComponent
+          isOpen={isDialogOpen}
+          handleClose={handleDialogClose}
+          content={<FormDialog />}
+          leftButtonLabel={'Cancel'}
+          leftButtonAction={handleDialogClose}
+          rightButtonLabel={'Save'}
+          rightButtonAction={handleSaveRIS}
+          title="Record a new Requisition and Issue slip"
+          description={"Describe how would you like to release items from your inventory. All fields are required."}
+        />
+      </Stack>
     </>
-  );
-};
+  )
+}
 
-export default Releasing;
+export default Releasing

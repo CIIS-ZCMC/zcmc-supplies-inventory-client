@@ -26,6 +26,8 @@ function ButtonComponent({
   endDecorator,
   fullWidth,
   customOutlined,
+  type,
+  loading,
 }) {
   const theme = useTheme();
 
@@ -35,18 +37,18 @@ function ButtonComponent({
     py: 1,
     ...(customOutlined
       ? {
-          backgroundColor: "white",
-          color: theme.palette.custom.buttonBg,
-          border: 2,
-          borderColor: theme.palette.custom.buttonBg,
-          "&:hover": {
-            backgroundColor: theme.palette.custom.light,
-            color: "white",
-          },
-        }
+        backgroundColor: "white",
+        color: theme.palette.custom.buttonBg,
+        border: 2,
+        borderColor: theme.palette.custom.buttonBg,
+        "&:hover": {
+          backgroundColor: theme.palette.custom.light,
+          color: "white",
+        },
+      }
       : variant || color
-      ? {}
-      : {
+        ? {}
+        : {
           backgroundColor: theme.palette.custom.buttonBg,
           "&:hover": { backgroundColor: theme.palette.custom.light },
         }),
@@ -54,6 +56,7 @@ function ButtonComponent({
 
   return (
     <Button
+      type={type}
       size={size}
       variant={variant}
       color={color}
@@ -62,6 +65,7 @@ function ButtonComponent({
       onClick={onClick}
       startDecorator={startDecorator}
       endDecorator={endDecorator}
+      loading={loading}
     >
       {label}
     </Button>
