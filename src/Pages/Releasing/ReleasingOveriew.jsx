@@ -19,7 +19,7 @@ import Table from "../../Layout/Table/Table";
 import DatePickerComponent from "../../Components/Form/DatePickerComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
-import FormDialog from "../../Layout/Receiving/FormDialog";
+import FormDialog from "../../Layout/Releasing/FormDialog";
 import SnackbarComponent from "../../Components/SnackbarComponent";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import ButtonComponent from "../../Components/ButtonComponent";

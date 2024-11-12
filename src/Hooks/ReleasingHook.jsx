@@ -35,6 +35,7 @@ const useReleasingHook = create((set) => ({
     //fetch the fata of stock out / releasing list
     getStockOut: async () => {
         try {
+            console.log(`${BASE_URL}/${RELEASING}`)
             const response = await axios.get(`${BASE_URL}/${RELEASING}`);
             return response.data
         } catch (error) {

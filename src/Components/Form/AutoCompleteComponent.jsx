@@ -10,13 +10,15 @@ const AutoCompleteComponent = ({ name, placeholder, label, options = [], width, 
                 <Autocomplete
                     error={error}
                     name={name}
-                    sx={{ marginTop: 1, width, width }}
+                    sx={{ marginTop: 1, width }}
                     options={options}
                     placeholder={placeholder}
                     size='lg'
                     onChange={onChange}
                     value={value}
                     fullWidth={fullWidth}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                    getOptionLabel={(option) => option.label || ''} // Safely retrieve the label
                 />
                 {error && <Typography variant="body2" color="danger" sx={{ marginTop: 1 }}>{helperText}</Typography>}
             </FormControl>

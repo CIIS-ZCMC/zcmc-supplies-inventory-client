@@ -29,7 +29,7 @@ function InputComponent({
   size
 }) {
   return (
-    <FormControl>
+    <FormControl fullWidth>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
         name={name}
@@ -41,7 +41,7 @@ function InputComponent({
         value={value}
         fullWidth={fullWidth}
         onChange={onChange}
-        sx={{ fontWeight: fontWeight }}
+        sx={{ marginTop: 1, fontWeight: fontWeight }}
       />
       {error && <Typography variant="body2" color="danger" sx={{ marginTop: 1 }}>{helperText}</Typography>}
     </FormControl>
