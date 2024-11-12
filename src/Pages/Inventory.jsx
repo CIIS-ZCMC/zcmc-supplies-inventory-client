@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PageTitle from "../Components/PageSetup/PageTitle";
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
 import ButtonComponent from "../Components/ButtonComponent";
@@ -54,16 +54,21 @@ const Inventory = () => {
     setSearchTerm,
     clearFilters,
   } = useFilterHook();
+
   const theme = useTheme();
+
   const pageDetails = {
     title: "Inventory",
     description: "See the list of items in your inventory.",
     pagePath: "/inventory",
   };
-  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       getInventory();
+      setLoading(false);
     }, 300);
     return () => {
       clearTimeout(timeout);
@@ -105,7 +110,7 @@ const Inventory = () => {
               />
               <ButtonComponent
                 size="sm"
-                variant={"outlined"}
+                variant={"soft"}
                 label={"Clear Filters"}
                 onClick={clearFilters}
               />
@@ -114,6 +119,7 @@ const Inventory = () => {
         </ContainerComponent>
         <ContainerComponent>
           <PaginatedTable
+            loading={loading}
             tableTitle={"List of items"}
             tableDesc={
               "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."

@@ -52,7 +52,7 @@ export const itemHeader = [
 export const startingBalHeader = [
   { id: "supplies_masterlist_id", label: "#", width: "5%" },
   { id: "supply_name", label: "Item Name" },
-  { id: "category", label: "Category" },
+  { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
   { id: "regular_quantity", label: "Regualr staring balance" },
   { id: "donation_quantity", label: "Donation starting balance" },
@@ -61,7 +61,7 @@ export const startingBalHeader = [
 export const nearExpHeader = [
   { id: "id", label: "#", width: "5%" },
   { id: "supply_name", label: "Item Name" },
-  { id: "category", label: "Category" },
+  { id: "category_name", label: "Category" },
   { id: "brand_name", label: "Brand" },
   { id: "unit_name", label: "Unit" },
   { id: "quantity", label: "Current balance" },

@@ -51,7 +51,9 @@ function Reports(props) {
     getReorder,
     getDisposal,
   } = useReportsHook();
+
   const { isOpen, openModal, closeModal } = useModalHook();
+
   const {
     filteredInventory,
     selectedCategory,
@@ -62,129 +64,151 @@ function Reports(props) {
     setSearchTerm,
     clearFilters,
   } = useFilterHook();
+
   const pageDetails = {
     title: "Reports",
     description:
       "Generate different types of reports here on-demand to fit your data-intensive requirements.",
     pagePath: "/reports",
   };
+
+  const [loading, setLoading] = useState(true);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
   const tabsData = [
     {
       label: "Item count",
-      content: (
-        <TableComponent
-          columns={itemHeader}
-          title={"Item count"}
-          filterBtns={
-            <SelectComponent
-              startIcon={"Sort by:"}
-              placeholder={"category"}
-              options={categoryFilter}
-              value={selectedCategory}
-              onChange={setCategory}
-            />
-          }
-          rows={filteredInventory(item_count)}
+      columns: itemHeader,
+      rows: filteredInventory(item_count),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: filteredInventory(item_count),
       desc: "the number of balances and consumption.",
     },
     {
       label: "Starting balance",
-      content: (
-        <TableComponent
-          columns={startingBalHeader}
-          rows={starting_bal}
-          title={"Starting balance"}
+      columns: startingBalHeader,
+      rows: filteredInventory(starting_bal),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: starting_bal,
       desc: "starting balance of 0 upon start of the year.",
     },
     {
       label: "Near expiration date",
-      content: (
-        <TableComponent
-          columns={nearExpHeader}
-          rows={near_exp}
-          title={"Near expiration date"}
+      columns: nearExpHeader,
+      rows: filteredInventory(near_exp),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: near_exp,
       desc: "less than 4 months remaining prior date of expiry.",
     },
     {
       label: "Zero stocks",
-      content: (
-        <TableComponent
-          columns={zeroStocksHeader}
-          rows={zero_stocks}
-          title={"Zero stocks"}
+      columns: zeroStocksHeader,
+      rows: filteredInventory(zero_stocks),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: zero_stocks,
       desc: "zero starting balance, no IAR up to this moment and with zero current balance.",
     },
     {
       label: "Most consumed items",
-      content: (
-        <TableComponent
-          columns={consumedHeader}
-          rows={consumed}
-          title={"Most consumed items"}
+      columns: consumedHeader,
+      rows: filteredInventory(consumed),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: consumed,
       desc: "its number of average monthly consumption",
     },
     {
       label: "Items with sufficient stocks",
-      content: (
-        <TableComponent
-          columns={sufficientHeader}
-          rows={sufficient_sup}
-          title={"Items with sufficient stocks"}
+      columns: sufficientHeader,
+      rows: filteredInventory(sufficient_sup),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: sufficient_sup,
       desc: "those with sufficient stocks having months left to consume of greater than 5 months",
     },
     {
       label: "Unconsumed without RIS",
-      content: (
-        <TableComponent
-          columns={unconsumedHeader}
-          rows={unconsumed}
-          title={"Unconsumed without RIS"}
+      columns: unconsumedHeader,
+      rows: filteredInventory(unconsumed),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: unconsumed,
       desc: "those with sufficient stocks having months left to consume of greater than 5 months but with no RIS requests",
     },
     {
       label: "Reorder items",
-      content: (
-        <TableComponent
-          columns={reorderHeader}
-          rows={reorder}
-          title={"Reorder items"}
+      columns: reorderHeader,
+      rows: filteredInventory(reorder),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: reorder,
       desc: "those below the 7-month threshold (number of months left to consume)",
     },
     {
       label: "For disposal",
-      content: (
-        <TableComponent
-          columns={disposalHeader}
-          rows={disposal}
-          title={"or disposal"}
+      columns: disposalHeader,
+      rows: filteredInventory(disposal),
+      filterBtns: (
+        <SelectComponent
+          startIcon={"Sort by:"}
+          placeholder={"category"}
+          options={categoryFilter}
+          value={selectedCategory}
+          onChange={setCategory}
         />
       ),
-      rows: disposal,
       desc: "those marked on RIS requests with assigned office to WMR.",
     },
   ];
@@ -200,6 +224,7 @@ function Reports(props) {
       getUnconsumed();
       getReorder();
       getDisposal();
+      setLoading(false);
     }, 300);
     return () => {
       clearTimeout(timeout);
@@ -235,8 +260,14 @@ function Reports(props) {
       >
         <TabComponent
           tabs={tabsData}
-          onTabChange={(index) => setSelectedTabIndex(index)}
+          onTabChange={(index) => {
+            setSelectedTabIndex(index);
+          }}
+          selectedTabIndex={selectedTabIndex}
+          loading={loading}
+          clearFilters={clearFilters}
           withTabDesc
+          isTable
         />
       </ContainerComponent>
 

@@ -7,11 +7,27 @@ import TabPanel from "@mui/joy/TabPanel";
 import { Box, Typography } from "@mui/joy";
 import { InfoIcon } from "lucide-react";
 import { useTheme } from "@emotion/react";
+import TableComponent from "./Table/TableComponent";
 
-function TabComponent({ tabs, onTabChange, withTabDesc = false }) {
+function TabComponent({
+  tabs,
+  onTabChange,
+  withTabDesc = false,
+  isTable = false,
+  selectedTabIndex,
+  loading,
+  clearFilters,
+}) {
   const theme = useTheme();
   return (
-    <Tabs aria-label="Dynamic tabs" defaultValue={0} onChange={onTabChange}>
+    <Tabs
+      aria-label="Dynamic tabs"
+      value={selectedTabIndex} // Control the selected tab using the state
+      onChange={(event, newIndex) => {
+        onTabChange(newIndex);
+        clearFilters();
+      }}
+    >
       <TabList size="sm" sx={{ overflow: "auto" }}>
         {tabs.map((tab, index) => (
           <Tab key={index}>{tab.label}</Tab>
@@ -39,7 +55,17 @@ function TabComponent({ tabs, onTabChange, withTabDesc = false }) {
             </Box>
           )}
 
-          {tab.content}
+          {isTable ? (
+            <TableComponent
+              columns={tab?.columns}
+              rows={tab?.rows}
+              title={tab?.label}
+              filterBtns={tab?.filterBtns}
+              loading={loading}
+            />
+          ) : (
+            tab.content
+          )}
         </TabPanel>
       ))}
     </Tabs>

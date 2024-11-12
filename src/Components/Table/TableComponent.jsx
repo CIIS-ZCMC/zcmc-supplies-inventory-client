@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Option,
   Select,
   Stack,
@@ -28,6 +29,7 @@ export default function TableComponent({
   filterBtns,
   searchLbl = "Search a record",
   title,
+  loading,
 }) {
   const theme = useTheme();
   const {
@@ -72,6 +74,7 @@ export default function TableComponent({
 
   return (
     <Box>
+      {console.log(title)}
       <Stack
         direction="row"
         justifyContent={"space-between"}
@@ -91,14 +94,18 @@ export default function TableComponent({
           {filterBtns}
           <ButtonComponent
             size="sm"
-            variant={"outlined"}
+            variant={"soft"}
             label={"Clear Filters"}
             onClick={clearFilters}
           />
         </Stack>
       </Stack>
       {console.log(rows)}
-      {rows?.length > 0 ? (
+      {loading ? (
+        <Box display="flex" justifyContent="center" py={5}>
+          <CircularProgress />
+        </Box>
+      ) : rows?.length > 0 ? (
         <>
           <Table stripe="odd" borderAxis="both">
             <thead>

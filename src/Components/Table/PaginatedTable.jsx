@@ -9,12 +9,13 @@ import {
   Stack,
   Divider,
   Chip,
+  CircularProgress,
 } from "@mui/joy";
 import PropTypes from "prop-types";
 import ButtonComponent from "../ButtonComponent";
 import { SquareArrowOutUpRight } from "lucide-react";
 import useSelectedRow from "../../Store/SelectedRowStore";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NoRows from "../../Pages/NoRows";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 
@@ -39,6 +40,7 @@ function PaginatedTable({
   label,
   desc,
   btn,
+  loading,
 }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
@@ -100,7 +102,11 @@ function PaginatedTable({
       </Stack>
       <Divider sx={{ my: 3, color: "#E6E6E6" }} />
       {/* Table */}
-      {rows.length > 0 ? (
+      {loading ? (
+        <Box display="flex" justifyContent="center" py={5}>
+          <CircularProgress />
+        </Box>
+      ) : rows.length > 0 ? (
         <>
           <Table stripe="odd" borderAxis="both">
             <thead>

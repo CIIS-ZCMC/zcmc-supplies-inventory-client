@@ -7,6 +7,7 @@ function NoRows({ pageTitle, label = "No records found", icon, desc, button }) {
 
   return (
     <div>
+      {console.log(pageTitle)}
       <Box
         sx={{
           border: "1px solid #F9B066",
@@ -44,9 +45,7 @@ function NoRows({ pageTitle, label = "No records found", icon, desc, button }) {
             {desc
               ? desc
               : `There are no records found that are eligible for processing
-                 ${(
-                   <b style={{ color: "#1D70BC" }}>{pageTitle}</b>
-                 )} as of this moment.
+                 "${pageTitle}" as of this moment.
                  Some records are not yet ready for reporting. You may need to manage
                  some records to accumulate data for reporting.`}
           </Typography>

@@ -124,7 +124,6 @@ const useReportsHook = create((set) => ({
         `${BASE_URL.development}${API.REPORTS_DISPOSAL}`
       );
       set({ disposal: response.data.data });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error.message);
