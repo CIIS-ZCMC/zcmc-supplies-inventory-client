@@ -92,3 +92,54 @@ export const receivingHeader = [
     { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 
 ]
+
+export const areaHeader = [
+
+    {
+        id: 'id',
+        numeric: true,
+        disablePadding: true,
+        label: '#',
+    },
+
+    {
+        id: 'area_name',
+        numeric: false,
+        disablePadding: false,
+        label: 'Name of area',
+    },
+
+    {
+        id: 'created_at',
+        numeric: false,
+        disablePadding: false,
+        label: 'Created at',
+    },
+
+]
+
+
+export const brandHeader = [
+
+    {
+        id: 'id',
+        numeric: true,
+        disablePadding: true,
+        label: '#',
+    },
+
+    {
+        id: 'brand_name',
+        numeric: false,
+        disablePadding: false,
+        label: 'Name of area',
+    },
+
+    {
+        id: 'created_at',
+        numeric: false,
+        disablePadding: false,
+        label: 'Created at',
+    },
+
+]

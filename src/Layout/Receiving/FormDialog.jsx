@@ -17,7 +17,7 @@ import useSuppliersHook from '../../Hooks/SuppliersHook';
 import useBrandsHook from '../../Hooks/BrandsHook';
 import useReceivingHook from '../../Hooks/ReceivingHook';
 
-const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
+const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
     const queryClient = useQueryClient()
 
@@ -81,16 +81,6 @@ const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
             handleDialogClose();
         }
     });
-
-    // // Track if the mutation is loading
-    const isSubmitting = mutation.isLoading;
-
-    // Now you can use `isSubmitting` to disable the close button or prevent closing the dialog
-    const handleCloseDialog = () => {
-        if (!isSubmitting) {
-            handleDialogClose(); // Close dialog only if mutation is not in progress
-        }
-    };
 
     const formik = useFormik({
         initialValues: initialValues,
@@ -285,7 +275,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, snackbar }) => {
                         color={"primary"}
                         label={'Save'}
                         fullWidth
-                        loading={isSubmitting}
+                        loading={mutation.isPending}
                     />
                 </Stack>
             </form >

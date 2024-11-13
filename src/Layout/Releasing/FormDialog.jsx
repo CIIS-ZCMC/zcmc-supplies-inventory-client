@@ -117,7 +117,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             // Send formData to the API
             await mutation.mutate(formData); // Assuming this is your API call function
             console.log("Form submitted successfully",);
-
         }
     })
 
@@ -131,7 +130,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                 <Box>
 
                     <Grid container spacing={2}>
-                        <Grid xs={12}>
+                        <Grid item xs={12}>
                             {/* Supplies Autocomplete */}
                             <AutoCompleteComponent
                                 name={'itemName'}
@@ -147,7 +146,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                             />
                         </Grid>
 
-                        <Grid xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                             <AutoCompleteComponent
                                 name={'source'}
                                 placeholder="Search source..."
@@ -162,7 +161,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                             />
                         </Grid>
 
-                        <Grid xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                             <AutoCompleteComponent
                                 name={'area'}
                                 placeholder="Search area..."
@@ -177,7 +176,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                             />
                         </Grid>
 
-                        <Grid xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                             <DatePickerComponent
                                 name={"risDate"}
                                 label="RIS date"
@@ -189,7 +188,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                             />
                         </Grid>
 
-                        <Grid xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                             <InputComponent
                                 label="RIS number"
                                 placeholder="xxx.xxx.xxx"
@@ -217,7 +216,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                         />
                     </Grid> */}
 
-                        <Grid xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                             <InputComponent
                                 label="Quantity Requested"
                                 placeholder="xxx.xxx.xxx"
@@ -230,7 +229,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                             />
                         </Grid>
 
-                        <Grid xs={12} md={6}>
+                        <Grid item xs={12} md={6}>
                             <InputComponent
                                 label="Quantity Served"
                                 placeholder="xxx.xxx.xxx"
@@ -243,7 +242,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                             />
                         </Grid>
 
-                        <Grid xs={12}>
+                        <Grid item xs={12}>
                             <TextAreaComponent
                                 label={'Remarks'}
                                 placeholder={'Enter Remarks'}
@@ -257,7 +256,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                     </Grid>
 
                 </Box>
-
 
                 <Divider sx={{ marginY: 3 }} />  {/* Horizontal Divider */}
 

@@ -12,6 +12,7 @@ const AvatarComponent = ({ alt, src }) => {
             <Avatar
                 sx={{ ...avatarStyles }}
                 variant='solid'
+                size='sm'
                 alt={alt}
                 src={src}
             />

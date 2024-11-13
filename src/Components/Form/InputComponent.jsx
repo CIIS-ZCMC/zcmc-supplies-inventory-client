@@ -32,6 +32,7 @@ function InputComponent({
     <FormControl fullWidth>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
+        width={width}
         name={name}
         size={size}
         variant="outlined"

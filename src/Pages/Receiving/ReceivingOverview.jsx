@@ -104,11 +104,11 @@ const ReceivingOverview = () => {
                 {/* search and filter */}
                 <ContainerComponent>
                     {/* <SearchFilter>
-            <FilterOptions
-              categoryOptions={categoryFilter}
-              sortOptions={sortFilter}
-            />
-          </SearchFilter> */}
+                        <FilterOptions
+                        categoryOptions={categoryFilter}
+                        sortOptions={sortFilter}
+                        />
+                    </SearchFilter> */}
 
                     <Stack
                         direction="row"
@@ -140,11 +140,11 @@ const ReceivingOverview = () => {
                             // onChange={setSortOrder}
                             />
                             {/* <ButtonComponent
-                size="sm"
-                variant={"outlined"}
-                label={"Clear Filters"}
-                onClick={clearFilters}
-              /> */}
+                                size="sm"
+                                variant={"outlined"}
+                                label={"Clear Filters"}
+                                onClick={clearFilters}
+                            /> */}
                         </Box>
                     </Stack>
 

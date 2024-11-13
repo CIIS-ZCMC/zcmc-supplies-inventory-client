@@ -1,16 +1,16 @@
 import React, { Fragment, useEffect } from "react";
-import PageTitle from "../Components/PageSetup/PageTitle";
+import PageTitle from "../../Components/PageSetup/PageTitle";
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
-import ButtonComponent from "../Components/ButtonComponent";
-import ContainerComponent from "../Components/Container/ContainerComponent";
-import InputComponent from "../Components/Form/InputComponent";
+import ButtonComponent from "../../Components/ButtonComponent";
+import ContainerComponent from "../../Components/Container/ContainerComponent";
+import InputComponent from "../../Components/Form/InputComponent";
 import { ArrowDown, ArrowUp, SearchIcon, ViewIcon } from "lucide-react";
-import PaginatedTable from "../Components/Table/PaginatedTable";
-import useInventoryHook from "../Hooks/InventoryHook";
-import { user } from "../Data/index";
-import Header from "../Layout/Header/Header";
-import SelectComponent from "../Components/Form/SelectComponent";
-import useFilterHook from "../Hooks/FilterHook";
+import PaginatedTable from "../../Components/Table/PaginatedTable";
+import useInventoryHook from "../../Hooks/InventoryHook";
+import { user } from "../../Data/index";
+import Header from "../../Layout/Header/Header";
+import SelectComponent from "../../Components/Form/SelectComponent";
+import useFilterHook from "../../Hooks/FilterHook";
 
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },

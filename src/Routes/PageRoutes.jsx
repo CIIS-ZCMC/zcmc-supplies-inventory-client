@@ -12,20 +12,17 @@ import ViewDetails from "../Pages/ViewDetails";
 
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
-
+//Releasing/Stock Out
 const ReleasingOverview = lazy(() => import("../Pages/Releasing/ReleasingOveriew"));
 const ReleasingDetails = lazy(() => import("../Pages/Releasing/ReleasingDetails"));
 
+//Receiving/Stock in
 const ReceivingOverview = lazy(() => import('../Pages/Receiving/ReceivingOverview'));
 const ReceivingDetails = lazy(() => import("../Pages/Receiving/ReceivingDetails"));
 
-// const ItemReview = lazy(() => import("../Pages/ItemReview"));
-const Categories = lazy(() => import("../Pages/Categories"));
-const Suppliers = lazy(() => import("../Pages/Suppliers"));
-const Brands = lazy(() => import("../Pages/Brands"));
-const ManageRequest = lazy(() => import("../Pages/ManageRequest"));
-const Inventory = lazy(() => import("../Pages/Inventory"));
-const MainPage = lazy(() => import("../Pages/End-User/MainPage"));
+const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
+
+const Inventory = lazy(() => import("../Pages/Libraries/Inventory"));
 
 export const sidebarRoutes = [
   {
@@ -33,6 +30,13 @@ export const sidebarRoutes = [
     name: "Dashboard",
     element: <Dashboard />,
     icon: <CircleGauge />,
+    permissions: ["view"],
+  },
+  {
+    path: "/inventory",
+    name: "Inventory",
+    element: <Inventory />,
+    icon: <ClipboardList />,
     permissions: ["view"],
   },
   {
@@ -51,38 +55,15 @@ export const sidebarRoutes = [
     permissions: ["view"],
   },
 
-  {
-    path: "/inventory",
-    name: "Inventory",
-    element: <Inventory />,
-    icon: <ClipboardList />,
-    permissions: ["view"],
-  },
-
-  {
-    path: "/categories",
-    name: "Categories",
-    element: <Categories />,
-    icon: <LayoutGrid />,
-    permissions: ["view"],
-  },
-  {
-    path: "/suppliers",
-    name: "Suppliers",
-    element: <Suppliers />,
-    icon: <BaggageClaim />,
-    permissions: ["view"],
-  },
-  {
-    path: "/brands",
-    name: "Brands",
-    element: <Brands />,
-    icon: <Tag />,
-    permissions: ["view"],
-  },
 ];
 
 export const childrenRoutes = [
+
+  {
+    path: 'libraries',
+    element: <Libraries />,
+    permission: ["view"],
+  },
 
   {
     path: "/receiving/:id",

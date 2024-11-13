@@ -21,7 +21,9 @@ export const ROOT_PATH = "/dashboard";
  */
 export const API = {
   AREAS: "areas",
+  AREA: 'area-store',
   BRANDS: "brands",
+  BRAND: 'brand-store',
   SUPPLIERS: "suppliers",
   UNITS: "units",
   SOURCES: "sources",
