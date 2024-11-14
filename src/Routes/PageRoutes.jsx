@@ -8,27 +8,34 @@ import {
   ClipboardList,
   LayoutGrid,
 } from "lucide-react";
-import ViewDetails from "../Pages/ViewDetails";
-import Reports from "../Pages/Reports";
+
 import { BiCategory } from "react-icons/bi";
 import { GrDocument } from "react-icons/gr";
+import ViewItemDetails from "../Pages/Reports/ViewItemDetails";
 
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
 
-const ReleasingOverview = lazy(() => import("../Pages/Releasing/ReleasingOveriew"));
-const ReleasingDetails = lazy(() => import("../Pages/Releasing/ReleasingDetails"));
+const ReleasingOverview = lazy(() =>
+  import("../Pages/Releasing/ReleasingOveriew")
+);
+const ReleasingDetails = lazy(() =>
+  import("../Pages/Releasing/ReleasingDetails")
+);
 
-const ReceivingOverview = lazy(() => import('../Pages/Receiving/ReceivingOverview'));
-const ReceivingDetails = lazy(() => import("../Pages/Receiving/ReceivingDetails"));
+const ReceivingOverview = lazy(() =>
+  import("../Pages/Receiving/ReceivingOverview")
+);
+const ReceivingDetails = lazy(() =>
+  import("../Pages/Receiving/ReceivingDetails")
+);
 
 // const ItemReview = lazy(() => import("../Pages/ItemReview"));
-const Categories = lazy(() => import("../Pages/Categories"));
-const Suppliers = lazy(() => import("../Pages/Suppliers"));
-const Brands = lazy(() => import("../Pages/Brands"));
-const ManageRequest = lazy(() => import("../Pages/ManageRequest"));
-const Inventory = lazy(() => import("../Pages/Inventory"));
-const MainPage = lazy(() => import("../Pages/End-User/MainPage"));
+
+const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
+const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
+
+const Reports = lazy(() => import("../Pages/Reports/Reports"));
 
 export const sidebarRoutes = [
   {
@@ -70,7 +77,6 @@ export const sidebarRoutes = [
 ];
 
 export const childrenRoutes = [
-
   {
     path: "/receiving/:id",
     // name: "Releasing Details",
@@ -87,8 +93,14 @@ export const childrenRoutes = [
 
   {
     path: "/inventory/:id",
-    name: "Manage",
     element: <ViewDetails />,
+    icon: null,
+    permissions: ["view"],
+  },
+
+  {
+    path: "/reports/:id",
+    element: <ViewItemDetails />,
     icon: null,
     permissions: ["view"],
   },

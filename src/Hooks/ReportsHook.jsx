@@ -13,6 +13,9 @@ const useReportsHook = create((set) => ({
   unconsumed: [],
   reorder: [],
   disposal: [],
+  detais: [],
+  item_total: [],
+  item_iar: [],
 
   getItemCount: async () => {
     try {
@@ -20,7 +23,6 @@ const useReportsHook = create((set) => ({
         `${BASE_URL.development}${API.REPORTS_ITEM_COUNT}`
       );
       set({ item_count: response.data });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -33,7 +35,6 @@ const useReportsHook = create((set) => ({
         `${BASE_URL.development}${API.REPORTS_STARTING_BAL}`
       );
       set({ starting_bal: response.data });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -46,7 +47,6 @@ const useReportsHook = create((set) => ({
         `${BASE_URL.development}${API.REPORTS_NEAR_EXP}`
       );
       set({ near_exp: response.data.data });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -58,8 +58,7 @@ const useReportsHook = create((set) => ({
       const response = await axios.get(
         `${BASE_URL.development}${API.REPORTS_ZERO_STOCKS}`
       );
-      set({ zero_stocks: response.data.data });
-      console.log(response.data);
+      set({ zero_stocks: response.data });
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -71,8 +70,7 @@ const useReportsHook = create((set) => ({
       const response = await axios.get(
         `${BASE_URL.development}${API.REPORTS_CONSUMED}`
       );
-      set({ consumed: response.data.data });
-      console.log(response.data);
+      set({ consumed: response.data });
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -84,8 +82,7 @@ const useReportsHook = create((set) => ({
       const response = await axios.get(
         `${BASE_URL.development}${API.REPORTS_SUFFICIENT}`
       );
-      set({ sufficient_sup: response.data.data });
-      console.log(response.data);
+      set({ sufficient_sup: response.data });
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -97,8 +94,7 @@ const useReportsHook = create((set) => ({
       const response = await axios.get(
         `${BASE_URL.development}${API.REPORTS_UNCONSUMED}`
       );
-      set({ unconsumed: response.data.data });
-      console.log(response.data);
+      set({ unconsumed: response.data });
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -110,8 +106,7 @@ const useReportsHook = create((set) => ({
       const response = await axios.get(
         `${BASE_URL.development}${API.REPORTS_REORDER}`
       );
-      set({ reorder: response.data.data });
-      console.log(response.data);
+      set({ reorder: response.data });
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -124,9 +119,57 @@ const useReportsHook = create((set) => ({
         `${BASE_URL.development}${API.REPORTS_DISPOSAL}`
       );
       set({ disposal: response.data.data });
+
       return response.data;
     } catch (error) {
       console.error(error.message);
+    }
+  },
+
+  getItemCountDetails: async (id) => {
+    try {
+      // Include the id in the API request URL
+      const response = await axios.get(
+        `${BASE_URL.development}${API.REPORTS_ITEM_COUNT_BREAKDOWN}/${id}`
+      );
+
+      // Update the state with the fetched data
+      set({ details: response.data.monthly_breakdown });
+      console.log(response.data.monthly_breakdown);
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
+    }
+  },
+  getItemCountInfo: async (id) => {
+    try {
+      // Include the id in the API request URL
+      const response = await axios.get(
+        `${BASE_URL.development}${API.REPORTS_ITEM_COUNT_TOTAL}/${id}`
+      );
+
+      // Update the state with the fetched data
+      set({ item_count: response.data });
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
+    }
+  },
+  getItemCountIAR: async (id) => {
+    try {
+      // Include the id in the API request URL
+      const response = await axios.get(
+        `${BASE_URL.development}${API.REPORTS_ITEM_COUNT_IAR}/${id}`
+      );
+
+      // Update the state with the fetched data
+      set({ item_iar: response.data });
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
     }
   },
 }));

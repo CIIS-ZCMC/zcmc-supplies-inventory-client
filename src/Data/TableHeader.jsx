@@ -38,8 +38,9 @@ export const receivingTableHeader = [
 ];
 
 export const itemHeader = [
-  { id: "supplies_masterlist_id", label: "#", width: "5%" },
+  { id: "id", label: "#", width: "5%" },
   { id: "supply_name", label: "Item Name" },
+  { id: "category_name", label: "Category Name" },
   { id: "unit_name", label: "Unit" },
   { id: "months_with_consumptions", label: "No. of months with consumption" },
   { id: "current_month_end_balance", label: "Current month end balance" },
@@ -50,7 +51,7 @@ export const itemHeader = [
 ];
 
 export const startingBalHeader = [
-  { id: "supplies_masterlist_id", label: "#", width: "5%" },
+  { id: "id", label: "#", width: "5%" },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -77,7 +78,7 @@ export const zeroStocksHeader = [
 ];
 
 export const consumedHeader = [
-  { id: "supplies_masterlist_id", label: "#", width: "5%" },
+  { id: "id", label: "#", width: "5%" },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -85,7 +86,7 @@ export const consumedHeader = [
 ];
 
 export const sufficientHeader = [
-  { id: "supplies_masterlist_id", label: "#", width: "5%" },
+  { id: "id", label: "#", width: "5%" },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -94,7 +95,7 @@ export const sufficientHeader = [
 ];
 
 export const unconsumedHeader = [
-  { id: "supplies_masterlist_id", label: "#", width: "5%" },
+  { id: "id", label: "#", width: "5%" },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -102,13 +103,13 @@ export const unconsumedHeader = [
 ];
 
 export const reorderHeader = [
-  { id: "supplies_masterlist_id", label: "#", width: "5%" },
+  { id: "id", label: "#", width: "5%" },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
   { id: "current_balance", label: "Quantity" },
   { id: "average_monthly_consumption", label: "Monthly consumption" },
-  { id: "months_left_to_consume", label: "Monthly left to consume" },
+  { id: "months_left_to_consume", label: "Months left to consume" },
 ];
 
 export const disposalHeader = [
@@ -117,6 +118,16 @@ export const disposalHeader = [
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
   { id: "quantity", label: "Quantity served to WMR" },
+];
+
+export const itemBreakdown = [
+  { id: "id", label: "#", width: "5%" },
+  { id: "month", label: "Month" },
+  { id: "iar_purchased", label: "IAR purchased" },
+  { id: "iar_donation", label: "IAR donation" },
+  { id: "ris_purchased", label: "RIS from purchased" },
+  { id: "ris_donation", label: "RIS from donation" },
+  { id: "ending_balance", label: "Ending balance" },
 ];
 
 export const releasingHeader = [

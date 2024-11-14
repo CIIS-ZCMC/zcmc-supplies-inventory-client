@@ -1,11 +1,11 @@
 import { Fragment, useEffect, useState } from "react";
-import { user } from "../Data/index";
-import Header from "../Layout/Header/Header";
-import ContainerComponent from "../Components/Container/ContainerComponent";
+import { user } from "../../Data/index";
+import Header from "../../Layout/Header/Header";
+import ContainerComponent from "../../Components/Container/ContainerComponent";
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
-import ButtonComponent from "../Components/ButtonComponent";
-import TabComponent from "../Components/TabComponent";
-import TableComponent from "../Components/Table/TableComponent";
+import ButtonComponent from "../../Components/ButtonComponent";
+import TabComponent from "../../Components/TabComponent";
+import TableComponent from "../../Components/Table/TableComponent";
 import {
   consumedHeader,
   disposalHeader,
@@ -16,18 +16,25 @@ import {
   sufficientHeader,
   unconsumedHeader,
   zeroStocksHeader,
-} from "../Data/TableHeader";
-import useReportsHook from "../Hooks/ReportsHook";
-import useModalHook from "../Hooks/ModalHook";
-import ModalComponent from "../Components/Dialogs/ModalComponent";
-import SelectComponent from "../Components/Form/SelectComponent";
-import useFilterHook from "../Hooks/FilterHook";
+} from "../../Data/TableHeader";
+import useReportsHook from "../../Hooks/ReportsHook";
+import useModalHook from "../../Hooks/ModalHook";
+import ModalComponent from "../../Components/Dialogs/ModalComponent";
+import SelectComponent from "../../Components/Form/SelectComponent";
+import useFilterHook from "../../Hooks/FilterHook";
+import { useLocation } from "react-router-dom";
+import { BiCheckCircle } from "react-icons/bi";
 
-const categoryFilter = [
-  { name: "Janitorial", value: "Janitorial" },
-  { name: "Medical", value: "Medical" },
-  { name: "Office", value: "Office" },
-];
+export const FilterInfo = ({ label }) => {
+  return (
+    <Box display="flex" alignItems="center">
+      <BiCheckCircle style={{ color: "green" }} />
+      <Typography level="body-sm" ml={1}>
+        {label}
+      </Typography>
+    </Box>
+  );
+};
 
 function Reports(props) {
   const theme = useTheme();
@@ -41,6 +48,7 @@ function Reports(props) {
     unconsumed,
     reorder,
     disposal,
+    item_iar,
     getItemCount,
     getStartingBal,
     getNearExp,
@@ -50,6 +58,7 @@ function Reports(props) {
     getUnconsumed,
     getReorder,
     getDisposal,
+    getItemCountIAR,
   } = useReportsHook();
 
   const { isOpen, openModal, closeModal } = useModalHook();
@@ -65,15 +74,44 @@ function Reports(props) {
     clearFilters,
   } = useFilterHook();
 
+  const location = useLocation();
+
+  const currentPath = location.pathname;
+
   const pageDetails = {
     title: "Reports",
     description:
       "Generate different types of reports here on-demand to fit your data-intensive requirements.",
-    pagePath: "/reports",
+    pagePath: `${currentPath}`,
   };
 
   const [loading, setLoading] = useState(true);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      console.log("Navigated to Reports page");
+      getItemCount();
+      getStartingBal();
+      getNearExp();
+      getZeroStocks();
+      getConsumed();
+      getSufficient();
+      getUnconsumed();
+      getReorder();
+      getDisposal();
+      setLoading(false);
+    }, 300);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  const categoryFilter = [
+    { name: "Janitorial", value: "Janitorial" },
+    { name: "Medical", value: "Medical" },
+    { name: "Office", value: "Office" },
+  ];
 
   const tabsData = [
     {
@@ -213,35 +251,22 @@ function Reports(props) {
     },
   ];
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      getItemCount();
-      getStartingBal();
-      getNearExp();
-      getZeroStocks();
-      getConsumed();
-      getSufficient();
-      getUnconsumed();
-      getReorder();
-      getDisposal();
-      setLoading(false);
-    }, 300);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [
-    getItemCount,
-    getStartingBal,
-    getNearExp,
-    getZeroStocks,
-    getConsumed,
-    getSufficient,
-    getUnconsumed,
-    getReorder,
-    getDisposal,
-  ]);
+  const expire_legends = [
+    { label: "1 month", color: "red" },
+    { label: "2 months", color: "yellow" },
+    { label: "3 months", color: "green" },
+  ];
+
+  const stock_legends = [
+    { label: "Out of stock", color: "red" },
+    { label: "Low stock", color: "orange" },
+    { label: "Moderate", color: "yellow" },
+    { label: "Sufficient", color: "green" },
+  ];
+
   return (
     <Fragment>
+      {console.log("hello")}
       <Header pageDetails={pageDetails} data={user} />
       <ContainerComponent
         marginTop={30}
@@ -266,6 +291,63 @@ function Reports(props) {
           selectedTabIndex={selectedTabIndex}
           loading={loading}
           clearFilters={clearFilters}
+          otherDetails={
+            selectedTabIndex === 2 ? (
+              <Stack direction="row" alignItems="center" gap={1}>
+                <Typography level="body-sm">
+                  Legend (by number of months left prior expiry):
+                </Typography>
+                {expire_legends.map((e, i) => (
+                  <>
+                    <Box
+                      bgcolor="white"
+                      padding={0.5}
+                      borderRadius={100}
+                      style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}
+                    >
+                      <Box
+                        borderRadius={100}
+                        bgcolor={e.color}
+                        width={15}
+                        height={15}
+                      ></Box>
+                    </Box>
+
+                    <Typography key={i} level="body-sm">
+                      {e.label}
+                    </Typography>
+                  </>
+                ))}
+              </Stack>
+            ) : selectedTabIndex === 0 || selectedTabIndex === 7 ? (
+              <Stack direction="row" alignItems="center" gap={1}>
+                <Typography level="body-sm">Legend:</Typography>
+                {stock_legends.map((e, i) => (
+                  <>
+                    <Box
+                      bgcolor="white"
+                      padding={0.5}
+                      borderRadius={100}
+                      style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}
+                    >
+                      <Box
+                        borderRadius={100}
+                        bgcolor={e.color}
+                        width={15}
+                        height={15}
+                      ></Box>
+                    </Box>
+
+                    <Typography key={i} level="body-sm">
+                      {e.label}
+                    </Typography>
+                  </>
+                ))}
+              </Stack>
+            ) : (
+              ""
+            )
+          }
           withTabDesc
           isTable
         />
@@ -311,6 +393,20 @@ function Reports(props) {
                     {tabsData[selectedTabIndex].rows.length} items
                   </Typography>
                 </Box>
+              </Stack>
+              <Stack
+                sx={{ border: `1px solid #F0F0F0`, p: 1, borderRadius: 10 }}
+              >
+                <Typography level="body-md">Applied filters:</Typography>
+                {selectedCategory === "" || selectedCategory === null ? (
+                  <FilterInfo
+                    label={`Fetch and filter items from all categories.`}
+                  />
+                ) : (
+                  <FilterInfo
+                    label={`Fetch and filter items from Category: ${selectedCategory}`}
+                  />
+                )}
               </Stack>
             </Stack>
           </>

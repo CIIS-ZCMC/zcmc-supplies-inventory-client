@@ -39,6 +39,9 @@ export const API = {
   REPORTS_UNCONSUMED: "get-without-transaction",
   REPORTS_SUFFICIENT: "get-sufficient-supply",
   REPORTS_REORDER: "get-reorder-supply",
+  REPORTS_ITEM_COUNT_BREAKDOWN: "get-item-breakdown",
+  REPORTS_ITEM_COUNT_TOTAL: "get-item-total",
+  REPORTS_ITEM_COUNT_IAR: "get-item-iar",
 };
 
 /**

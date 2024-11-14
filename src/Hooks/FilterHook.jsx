@@ -20,12 +20,16 @@ const useFilterHook = create((set) => ({
   clearFilters: () => set({ selectedCategory: "", sortOrder: "" }),
 
   // Computed property for filtered and sorted inventory
-  filteredInventory: (inventory) => {
+  filteredInventory: (data) => {
+    // Ensure data is an array
+    if (!Array.isArray(data)) {
+      console.error("Expected an array but got:", data);
+      return [];
+    }
     const { selectedCategory, sortOrder, searchTerm } =
       useFilterHook.getState();
-    console.log(selectedCategory);
     // Filter by selected category
-    let filtered = inventory.filter((item) => {
+    let filtered = data?.filter((item) => {
       const matchesCategory =
         !selectedCategory || item.category_name === selectedCategory;
       const matchesSearch =
@@ -41,7 +45,6 @@ const useFilterHook = create((set) => ({
       filtered = filtered.sort((a, b) => a.quantity - b.quantity);
     }
 
-    console.log(filtered);
     return filtered;
   },
 }));

@@ -10,7 +10,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/joy";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { SearchIcon, SquareArrowOutUpRight } from "lucide-react";
 
@@ -21,6 +21,7 @@ import InputComponent from "../Form/InputComponent";
 import useFilterHook from "../../Hooks/FilterHook";
 import NoRows from "../../Pages/NoRows";
 import { MdOutlineFindInPage } from "react-icons/md";
+import moment from "moment";
 
 export default function TableComponent({
   rowsPage = 10,
@@ -30,6 +31,7 @@ export default function TableComponent({
   searchLbl = "Search a record",
   title,
   loading,
+  withSearch = true,
 }) {
   const theme = useTheme();
   const {
@@ -41,6 +43,7 @@ export default function TableComponent({
     setSortOrder,
     setSearchTerm,
     clearFilters,
+    viewPath,
   } = useFilterHook();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
@@ -49,10 +52,13 @@ export default function TableComponent({
   const { setSelectedRow } = useSelectedRow();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentPath = location.pathname;
 
   const handleNavigate = (row) => {
     const { id } = row;
-    navigate(`/inventory/viewing`);
+    navigate(`${currentPath}/${id}`); //dynamic route handling
     setSelectedRow(row);
   };
 
@@ -72,35 +78,80 @@ export default function TableComponent({
   const endIdx = Math.min(startIdx + rowsPerPage, rows?.length);
   const currentRows = rows?.slice(startIdx, startIdx + rowsPerPage);
 
+  const getExpirationColor = (expirationDate) => {
+    const today = new Date();
+    const date = new Date(expirationDate);
+
+    // Calculate the difference in months
+    const diffInMonths =
+      (date.getFullYear() - today.getFullYear()) * 12 +
+      (date.getMonth() - today.getMonth());
+
+    if (diffInMonths <= 1) {
+      // 1 month or less left (Red)
+      return "red";
+    } else if (diffInMonths === 2) {
+      // 2 months left (Yellow)
+      return "yellow";
+    } else if (diffInMonths >= 3) {
+      // 3 months or more left (Green)
+      return "green";
+    } else {
+      // Default to gray if no condition matches (optional)
+      return "gray";
+    }
+  };
+
+  function getStockColor(value) {
+    if (value === 0) {
+      // Out of stock
+      return "red";
+    } else if (value === 1 || value === 2) {
+      // Low stock (1 or 2 months)
+      return "orange";
+    } else if (value === 3 || value === 4) {
+      // Moderate stock (3 or 4 months)
+      return "yellow";
+    } else if (value === 5 || value === 6) {
+      // Sufficient stock (5 or 6 months)
+      return "green";
+    } else {
+      // Default color for other cases (if applicable)
+      return "grey";
+    }
+  }
+
   return (
     <Box>
-      {console.log(title)}
       <Stack
         direction="row"
         justifyContent={"space-between"}
         alignItems={"flex-end"}
         mb={2}
       >
-        <InputComponent
-          label={searchLbl}
-          placeholder="Find by item name, category, unit"
-          startIcon={<SearchIcon />}
-          value={searchTerm}
-          setValue={setSearchTerm}
-          width={300}
-        />
-
-        <Stack direction="row" gap={1}>
-          {filterBtns}
-          <ButtonComponent
-            size="sm"
-            variant={"soft"}
-            label={"Clear Filters"}
-            onClick={clearFilters}
+        {withSearch && (
+          <InputComponent
+            label={searchLbl}
+            placeholder="Find by item name, category, unit"
+            startIcon={<SearchIcon />}
+            value={searchTerm}
+            setValue={setSearchTerm}
+            width={300}
           />
-        </Stack>
+        )}
+
+        {filterBtns && (
+          <Stack direction="row" gap={1}>
+            {filterBtns}
+            <ButtonComponent
+              size="sm"
+              variant={"soft"}
+              label={"Clear Filters"}
+              onClick={clearFilters}
+            />
+          </Stack>
+        )}
       </Stack>
-      {console.log(rows)}
       {loading ? (
         <Box display="flex" justifyContent="center" py={5}>
           <CircularProgress />
@@ -134,6 +185,36 @@ export default function TableComponent({
                             <SquareArrowOutUpRight size={"1rem"} />
                           }
                         />
+                      ) : column?.id === "expiration_date" ? (
+                        // Display expiration date with a colored indicator
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <div
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              borderRadius: "20%",
+                              backgroundColor: getExpirationColor(
+                                row[column?.id]
+                              ),
+                              marginRight: "8px",
+                            }}
+                          ></div>
+                          {moment(row[column?.id]).format("L")}
+                        </div>
+                      ) : column?.id === "months_left_to_consume" ? (
+                        // Display expiration date with a colored indicator
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <div
+                            style={{
+                              width: "20px",
+                              height: "20px",
+                              borderRadius: "20%",
+                              backgroundColor: getStockColor(row[column?.id]),
+                              marginRight: "8px",
+                            }}
+                          ></div>
+                          {row[column?.id]} months
+                        </div>
                       ) : (
                         row[column?.id] ?? `${startIdx + index + 1}`
                       )}

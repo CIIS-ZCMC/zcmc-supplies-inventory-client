@@ -1,17 +1,18 @@
 import React, { Fragment, useEffect } from "react";
-import Header from "../Layout/Header/Header";
-import useSelectedRow from "../Store/SelectedRowStore";
-import { items, user } from "../Data/index";
-import ContainerComponent from "../Components/Container/ContainerComponent";
-import PaginatedTable from "../Components/Table/PaginatedTable";
-import useInventoryHook from "../Hooks/InventoryHook";
+import Header from "../../Layout/Header/Header";
+import useSelectedRow from "../../Store/SelectedRowStore";
+import { items, user } from "../../Data/index";
+import ContainerComponent from "../../Components/Container/ContainerComponent";
+import PaginatedTable from "../../Components/Table/PaginatedTable";
+import useInventoryHook from "../../Hooks/InventoryHook";
 import { Box, Stack, Typography } from "@mui/joy";
-import BoxComponent from "../Components/Container/BoxComponent";
+import BoxComponent from "../../Components/Container/BoxComponent";
 import { BiCategory } from "react-icons/bi";
 import { useTheme } from "@emotion/react";
 import { MdAppShortcut, MdTune } from "react-icons/md";
 import { GrApps } from "react-icons/gr";
-import ButtonComponent from "../Components/ButtonComponent";
+import ButtonComponent from "../../Components/ButtonComponent";
+import { useParams } from "react-router-dom";
 
 export const BoxItem = ({ icon, iconColor, categoryTitle, categoryName }) => {
   const theme = useTheme(); // Access the theme
@@ -32,17 +33,18 @@ export const BoxItem = ({ icon, iconColor, categoryTitle, categoryName }) => {
 function ViewDetails(props) {
   const theme = useTheme();
   const { selectedRow } = useSelectedRow();
+  const { id } = useParams();
+  const storedSupplyName = localStorage.getItem("supply_name");
   const { details, getInventoryDetails } = useInventoryHook();
-  console.log(selectedRow);
 
   const pageDetails = {
-    pageTitle: `Viewing "${selectedRow?.supply_name}"`,
+    pageTitle: `Viewing "${storedSupplyName}"`,
     title: "Inventory",
     description:
       "See how an RIS item was received by your inventory, including more information about its integrity.",
     pagePath: "/inventory",
     subTitle: "Viewing Item",
-    subPath: "/inventory/viewing",
+    subPath: "/viewing/:id",
   };
   const columns = [
     { id: "id", label: "#" },
@@ -56,7 +58,7 @@ function ViewDetails(props) {
   console.log("Total Quantity:", totalQuantity);
   useEffect(() => {
     const timeout = setTimeout(() => {
-      getInventoryDetails(selectedRow.id);
+      getInventoryDetails(id);
     }, 300);
     return () => {
       clearTimeout(timeout);
