@@ -3,19 +3,19 @@ import axios from "axios";
 import * as Yup from 'yup';
 import { BASE_URL, API } from '../Services/Config'
 
-const useBrandsHook = create((set) => ({
+const useUnitsHook = create((set) => ({
 
     initialValues: {
-        brandName: '',
+        unitName: '',
     },
 
     validationSchema: Yup.object({
-        brandName: Yup.string().required('Brand name is required'),
+        unitName: Yup.string().required('Unit name is required'),
     }),
 
-    getBrands: async () => {
+    getUnits: async () => {
         try {
-            const response = await axios.get(`${BASE_URL.development}/${API.BRANDS}`);
+            const response = await axios.get(`${BASE_URL.development}/${API.UNITS}`);
             return response.data
         } catch (error) {
             error.message;
@@ -23,15 +23,15 @@ const useBrandsHook = create((set) => ({
     },
 
     // Create Area in with POST request
-    createBrand: async (formData) => {
+    createUnit: async (formData) => {
         try {
-            const response = await axios.post(`${BASE_URL.development}/${API.BRAND_STORE}`, formData);
+            const response = await axios.post(`${BASE_URL.development}/${API.UNIT_STORE}`, formData);
             return response.data;
         } catch (error) {
-            console.error("Error creating brands:", error.message);
+            console.error("Error creating unit:", error.message);
             throw error;
         }
     }
 }));
 
-export default useBrandsHook
+export default useUnitsHook

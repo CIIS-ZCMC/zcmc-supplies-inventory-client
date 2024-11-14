@@ -11,6 +11,11 @@ import { user } from '../../Data/index';
 
 import AreasOverview from './Areas/AreasOverview';
 import BrandsOverview from './Brands/BrandsOverview';
+import SuppliersOverview from './Suppliers/SuppliersOverview';
+import CategoriesOverview from './Categories/CategoriesOverview';
+import SourceOverview from './Source/SourceOverview';
+import SuppliesOverview from './Supplies/SuppliesOverview'
+import UnitsOverview from './Units/UnitsOverview'
 
 const Libraries = () => {
     const [selectedOption, setSelectedOption] = useState('Areas'); // Initial view
@@ -30,15 +35,15 @@ const Libraries = () => {
             case 'Brands':
                 return <div><BrandsOverview /></div>;
             case 'Suppliers':
-                return <div>Suppliers View</div>;
+                return <div><SuppliersOverview /></div>;
             case 'Categories':
-                return <div>Categories View</div>;
+                return <div><CategoriesOverview /></div>;
             case 'Units':
-                return <div>Units View</div>;
+                return <div><UnitsOverview /></div>;
             case 'Source':
-                return <div>Source View</div>;
+                return <div><SourceOverview /></div>;
             case 'Item Names':
-                return <div>Item Names View</div>;
+                return <div><SuppliesOverview /></div>;
             default:
                 return null;
         }

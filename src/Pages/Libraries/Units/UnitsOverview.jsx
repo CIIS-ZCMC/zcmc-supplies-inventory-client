@@ -11,19 +11,20 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 
 import FormDialog from './FormDialog';
 
-import useCategoriesHook from '../../../Hooks/CategoriesHook'
-import { categoriesHeader } from '../../../Data/TableHeader';
+import useUnitsHook from '../../../Hooks/UnitsHook'
+
+import { unitHeader } from '../../../Data/TableHeader';
 
 const SuppliersOverview = () => {
 
-    const { getCategories } = useCategoriesHook();
+    const { getUnits } = useUnitsHook();
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['categories'],
-        queryFn: getCategories,
+        queryKey: ['units'],
+        queryFn: getUnits,
     })
 
-    const categoriesData = data?.data
+    const unitsData = data?.data
 
     const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -42,7 +43,7 @@ const SuppliersOverview = () => {
 
     return (
         <div>
-            {categoriesData?.length < 0 ?
+            {unitsData?.length < 0 ?
                 <Stack height={750} direction={'column'} alignItems={'center'} justifyContent={'center'}>
                     <Box sx={{
                         my: 2
@@ -70,19 +71,19 @@ const SuppliersOverview = () => {
                 <PaginatedTable
                     tableTitle={"Supplies"}
                     // tableDesc={"Sample Table Desription"}
-                    columns={categoriesHeader}
-                    rows={categoriesData}
+                    columns={unitHeader}
+                    rows={unitsData}
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>
-                            <ButtonComponent label="Add new area" onClick={handleDialogOpen} />
+                            <ButtonComponent label="Add new unit" onClick={handleDialogOpen} />
                         </Stack>
                     }
                 />
             }
             <ModalComponent
                 isOpen={isDialogOpen}
-                title="Create a new area record"
+                title="Create a new unit record"
                 description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
                 handleClose={handleDialogClose}
                 content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}

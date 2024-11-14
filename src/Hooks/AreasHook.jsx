@@ -31,7 +31,7 @@ const useAreasHook = create((set) => ({
   // Create Area in with POST request
   createArea: async (formData) => {
     try {
-      const response = await axios.post(`${BASE_URL.development}/${API.AREA}`, formData);
+      const response = await axios.post(`${BASE_URL.development}/${API.AREA_STORE}`, formData);
       return response.data;
     } catch (error) {
       console.error("Error creating area:", error.message);
