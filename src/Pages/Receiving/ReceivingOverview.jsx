@@ -50,11 +50,16 @@ const ReceivingOverview = () => {
 
     const stockinData = data?.data
 
+    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const pageDetails = {
-        title: "Requisition and issue slip",
-        description: "this is a sample description"
+        title: "Receiving (IAR Management)",
+        description: "all your IARs are shown here, you may open each ont to see more information"
+    }
+
+    const handleSnackbarClose = () => {
+        setSnackbar({ open: false })
     }
 
     const handleDialogOpen = () => {
@@ -99,11 +104,11 @@ const ReceivingOverview = () => {
                 {/* search and filter */}
                 <ContainerComponent>
                     {/* <SearchFilter>
-            <FilterOptions
-              categoryOptions={categoryFilter}
-              sortOptions={sortFilter}
-            />
-          </SearchFilter> */}
+                        <FilterOptions
+                        categoryOptions={categoryFilter}
+                        sortOptions={sortFilter}
+                        />
+                    </SearchFilter> */}
 
                     <Stack
                         direction="row"
@@ -113,7 +118,7 @@ const ReceivingOverview = () => {
                         {/* search*/}
                         <InputComponent
                             label="Find a slip"
-                            placeholder="Find by item name, category, unit"
+                            placeholder="Find by PO, number, IAR number or date"
                             startIcon={<SearchIcon />}
                             // value={searchTerm}
                             // setValue={setSearchTerm}
@@ -135,11 +140,11 @@ const ReceivingOverview = () => {
                             // onChange={setSortOrder}
                             />
                             {/* <ButtonComponent
-                size="sm"
-                variant={"outlined"}
-                label={"Clear Filters"}
-                onClick={clearFilters}
-              /> */}
+                                size="sm"
+                                variant={"outlined"}
+                                label={"Clear Filters"}
+                                onClick={clearFilters}
+                            /> */}
                         </Box>
                     </Stack>
 
@@ -164,21 +169,36 @@ const ReceivingOverview = () => {
                         }
                     />
                 </ContainerComponent>
-
-
             </Stack>
 
-            {/* Feedback components */}
+            {/* <ModalComponent
+                isOpen={isViewDialogOpen}
+                handle={() => setIsViewDialogOpen(true)}
+                content={<ViewDialog />}
+                title={'Transaction Overview'}
+            /> */}
+
+
+            {/* stock in form */}
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
-                content={<FormDialog />}
+                content={<FormDialog snackbar={snackbar} handleDialogClose={handleDialogClose} setSnackbar={setSnackbar} />}
                 leftButtonLabel={'Cancel'}
                 leftButtonAction={handleDialogClose}
                 rightButtonLabel={'Save'}
                 rightButtonAction={handleSaveRIS}
                 title="Record a new Requisition and Issue slip"
                 description={"Describe how would you like to release items from your inventory. All fields are required."}
+            />
+
+            <SnackbarComponent
+                open={snackbar.open}
+                onClose={handleSnackbarClose}
+                color={snackbar.color}
+                message={snackbar.message}
+                variant='solid'
+                anchor={{ vertical: 'top', horizontal: 'right' }}
             />
         </>
     )

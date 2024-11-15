@@ -35,9 +35,10 @@ function InputComponent({
   size,
 }) {
   return (
-    <FormControl>
+    <FormControl fullWidth>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
+        width={width}
         name={name}
         size={size}
         variant="outlined"
@@ -47,7 +48,7 @@ function InputComponent({
         value={value}
         fullWidth={fullWidth}
         onChange={(e) => setValue(e.target.value)}
-        sx={{ fontWeight: fontWeight, width: width }}
+        sx={{ marginTop: 1, fontWeight: fontWeight, width: width }}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>

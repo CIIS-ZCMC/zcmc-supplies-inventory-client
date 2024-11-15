@@ -28,10 +28,12 @@ function ButtonComponent({
   customOutlined,
   type,
   loading,
+  width
 }) {
   const theme = useTheme();
 
   const sxStyles = {
+    width: width,
     fontWeight: 500,
     fontSize: 13,
     py: 1,

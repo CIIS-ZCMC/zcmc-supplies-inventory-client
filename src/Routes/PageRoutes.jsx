@@ -15,7 +15,7 @@ import ViewItemDetails from "../Pages/Reports/ViewItemDetails";
 
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
-
+//Releasing/Stock Out
 const ReleasingOverview = lazy(() =>
   import("../Pages/Releasing/ReleasingOveriew")
 );
@@ -23,6 +23,7 @@ const ReleasingDetails = lazy(() =>
   import("../Pages/Releasing/ReleasingDetails")
 );
 
+//Receiving/Stock in
 const ReceivingOverview = lazy(() =>
   import("../Pages/Receiving/ReceivingOverview")
 );
@@ -31,7 +32,7 @@ const ReceivingDetails = lazy(() =>
 );
 
 // const ItemReview = lazy(() => import("../Pages/ItemReview"));
-
+const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
 const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
 const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
 
@@ -43,6 +44,13 @@ export const sidebarRoutes = [
     name: "Dashboard",
     element: <Dashboard />,
     icon: <BiCategory />,
+    permissions: ["view"],
+  },
+  {
+    path: "/inventory",
+    name: "Inventory",
+    element: <Inventory />,
+    icon: <ClipboardList />,
     permissions: ["view"],
   },
   {
@@ -77,6 +85,12 @@ export const sidebarRoutes = [
 ];
 
 export const childrenRoutes = [
+  {
+    path: "libraries",
+    element: <Libraries />,
+    permission: ["view"],
+  },
+
   {
     path: "/receiving/:id",
     // name: "Releasing Details",
