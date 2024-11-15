@@ -20,7 +20,6 @@ const SelectComponent = ({
   onChange,
 }) => {
   const getLabelAndValue = (option) => {
-    console.log(option);
     const label =
       option.source_name ||
       option.name ||

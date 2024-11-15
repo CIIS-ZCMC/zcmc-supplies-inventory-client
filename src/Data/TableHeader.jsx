@@ -55,7 +55,7 @@ export const startingBalHeader = [
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
-  { id: "regular_quantity", label: "Regualr staring balance" },
+  { id: "regular_quantity", label: "Regular starting balance" },
   { id: "donation_quantity", label: "Donation starting balance" },
 ];
 

@@ -1,8 +1,5 @@
-<<<<<<<< HEAD:src/Pages/Inventory/Inventory.jsx
 import React, { Fragment, useEffect, useState } from "react";
-========
 import React, { Fragment, useEffect } from "react";
->>>>>>>> development:src/Pages/Libraries/Inventory.jsx
 import PageTitle from "../../Components/PageSetup/PageTitle";
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
 import ButtonComponent from "../../Components/ButtonComponent";
@@ -15,11 +12,8 @@ import { user } from "../../Data/index";
 import Header from "../../Layout/Header/Header";
 import SelectComponent from "../../Components/Form/SelectComponent";
 import useFilterHook from "../../Hooks/FilterHook";
-<<<<<<<< HEAD:src/Pages/Inventory/Inventory.jsx
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-========
->>>>>>>> development:src/Pages/Libraries/Inventory.jsx
 
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },

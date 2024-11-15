@@ -202,7 +202,8 @@ export default function TableComponent({
                           ></div>
                           {moment(row[column?.id]).format("L")}
                         </div>
-                      ) : column?.id === "months_left_to_consume" ? (
+                      ) : title === "Reorder items" &&
+                        column?.id === "months_left_to_consume" ? (
                         // Display expiration date with a colored indicator
                         <div style={{ display: "flex", alignItems: "center" }}>
                           <div

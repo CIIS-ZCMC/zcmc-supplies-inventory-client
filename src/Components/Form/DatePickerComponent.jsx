@@ -13,7 +13,16 @@ const DatePickerComponent = ({
   size,
   startDecorator,
   type = "date",
+  actions,
 }) => {
+  const handleChange = (e) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+    if (actions) {
+      actions(e.target.value);
+    }
+  };
   return (
     <>
       <FormControl>
@@ -22,9 +31,7 @@ const DatePickerComponent = ({
           sx={{ width: width }}
           value={value}
           name={name}
-          onChange={(event) => {
-            onChange(event.target.value); // Pass the new date value to Formik
-          }}
+          onChange={handleChange}
           size={size}
           type={type}
           error={error}

@@ -55,7 +55,6 @@ function ViewDetails(props) {
 
   const totalQuantity = details.reduce((sum, item) => sum + item.quantity, 0);
 
-  console.log("Total Quantity:", totalQuantity);
   useEffect(() => {
     const timeout = setTimeout(() => {
       getInventoryDetails(id);

@@ -55,7 +55,8 @@ const useFilterHook = create((set) => ({
         !selectedCategory || item.category_name === selectedCategory;
       const matchesSearch =
         !searchTerm ||
-        item.supply_name.toLowerCase().includes(searchTerm.toLowerCase()); // Assuming your data has a `date` field
+        item.supply_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.unit_name.toLowerCase().includes(searchTerm.toLowerCase()); // Assuming your data has a `date` field
 
       return matchesCategory && matchesSearch;
     });

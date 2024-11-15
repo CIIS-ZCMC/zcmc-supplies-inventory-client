@@ -7,7 +7,6 @@ function NoRows({ pageTitle, label = "No records found", icon, desc, button }) {
 
   return (
     <div>
-      {console.log(pageTitle)}
       <Box
         sx={{
           border: "1px solid #F9B066",

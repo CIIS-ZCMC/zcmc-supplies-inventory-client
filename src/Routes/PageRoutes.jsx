@@ -54,13 +54,6 @@ export const sidebarRoutes = [
     permissions: ["view"],
   },
   {
-    path: "/inventory",
-    name: "Inventory",
-    element: <Inventory />,
-    icon: <ClipboardList />,
-    permissions: ["view"],
-  },
-  {
     path: "/releasing",
     name: "Releasing (RIS)",
     element: <ReleasingOverview />,
