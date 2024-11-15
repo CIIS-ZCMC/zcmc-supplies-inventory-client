@@ -30,6 +30,7 @@ export const API = {
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",
   RELEASING: "releasing-list",
+  REPORTS_DATE: "get-date",
   REPORTS_NEAR_EXP: "get-near-expiration",
   REPORTS_DISPOSAL: "get-disposed-items",
   REPORTS_STARTING_BAL: "get-starting-balance",

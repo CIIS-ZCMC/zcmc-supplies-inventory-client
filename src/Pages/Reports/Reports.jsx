@@ -24,6 +24,9 @@ import SelectComponent from "../../Components/Form/SelectComponent";
 import useFilterHook from "../../Hooks/FilterHook";
 import { useLocation } from "react-router-dom";
 import { BiCheckCircle } from "react-icons/bi";
+import DatePickerComponent from "../../Components/Form/DatePickerComponent";
+import YearSelect from "../../Components/Form/SelectYearComponent";
+import * as XLSX from "xlsx";
 
 export const FilterInfo = ({ label }) => {
   return (
@@ -48,7 +51,7 @@ function Reports(props) {
     unconsumed,
     reorder,
     disposal,
-    item_iar,
+    dates,
     getItemCount,
     getStartingBal,
     getNearExp,
@@ -58,7 +61,7 @@ function Reports(props) {
     getUnconsumed,
     getReorder,
     getDisposal,
-    getItemCountIAR,
+    getDate,
   } = useReportsHook();
 
   const { isOpen, openModal, closeModal } = useModalHook();
@@ -66,11 +69,11 @@ function Reports(props) {
   const {
     filteredInventory,
     selectedCategory,
-    sortOrder,
-    searchTerm,
+    month,
+    year,
     setCategory,
-    setSortOrder,
-    setSearchTerm,
+    setMonth,
+    setYear,
     clearFilters,
   } = useFilterHook();
 
@@ -87,25 +90,6 @@ function Reports(props) {
 
   const [loading, setLoading] = useState(true);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      console.log("Navigated to Reports page");
-      getItemCount();
-      getStartingBal();
-      getNearExp();
-      getZeroStocks();
-      getConsumed();
-      getSufficient();
-      getUnconsumed();
-      getReorder();
-      getDisposal();
-      setLoading(false);
-    }, 300);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
 
   const categoryFilter = [
     { name: "Janitorial", value: "Janitorial" },
@@ -179,13 +163,21 @@ function Reports(props) {
       columns: consumedHeader,
       rows: filteredInventory(consumed),
       filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
+        <>
+          <YearSelect
+            value={year}
+            onChange={setYear}
+            actions={(year) => getConsumed(year)}
+          />{" "}
+          {/* Default to 2024 */}
+          <SelectComponent
+            startIcon={"Sort by:"}
+            placeholder={"category"}
+            options={categoryFilter}
+            value={selectedCategory}
+            onChange={setCategory}
+          />
+        </>
       ),
       desc: "its number of average monthly consumption",
     },
@@ -209,13 +201,20 @@ function Reports(props) {
       columns: unconsumedHeader,
       rows: filteredInventory(unconsumed),
       filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
+        <>
+          <YearSelect
+            value={year}
+            onChange={setYear}
+            actions={(year) => getUnconsumed(year)}
+          />
+          <SelectComponent
+            startIcon={"Sort by:"}
+            placeholder={"category"}
+            options={categoryFilter}
+            value={selectedCategory}
+            onChange={setCategory}
+          />
+        </>
       ),
       desc: "those with sufficient stocks having months left to consume of greater than 5 months but with no RIS requests",
     },
@@ -224,13 +223,21 @@ function Reports(props) {
       columns: reorderHeader,
       rows: filteredInventory(reorder),
       filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
+        <>
+          <DatePickerComponent
+            type="month"
+            startDecorator={"Month:"}
+            value={month}
+            onChange={setMonth}
+          />
+          <SelectComponent
+            startIcon={"Sort by:"}
+            placeholder={"category"}
+            options={categoryFilter}
+            value={selectedCategory}
+            onChange={setCategory}
+          />
+        </>
       ),
       desc: "those below the 7-month threshold (number of months left to consume)",
     },
@@ -239,13 +246,21 @@ function Reports(props) {
       columns: disposalHeader,
       rows: filteredInventory(disposal),
       filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
+        <>
+          <DatePickerComponent
+            type="month"
+            startDecorator={"Month:"}
+            value={month}
+            onChange={setMonth}
+          />
+          <SelectComponent
+            startIcon={"Sort by:"}
+            placeholder={"category"}
+            options={categoryFilter}
+            value={selectedCategory}
+            onChange={setCategory}
+          />
+        </>
       ),
       desc: "those marked on RIS requests with assigned office to WMR.",
     },
@@ -264,9 +279,47 @@ function Reports(props) {
     { label: "Sufficient", color: "green" },
   ];
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setYear(2024);
+      if (selectedTabIndex === 4) {
+        getConsumed(2024);
+      }
+      if (selectedTabIndex === 6) {
+        getUnconsumed(2024);
+      }
+      // Fetch data for 2024
+
+      getItemCount();
+      getStartingBal();
+      getNearExp();
+      getZeroStocks();
+      getSufficient();
+      getReorder();
+      getDisposal();
+      getDate();
+      setLoading(false);
+    }, 300);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  const generateExcel = () => {
+    const data = tabsData[selectedTabIndex].rows; // Get the current tab's rows
+    const worksheet = XLSX.utils.json_to_sheet(data); // Convert rows to worksheet
+    const workbook = XLSX.utils.book_new(); // Create a new workbook
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      tabsData[selectedTabIndex].label
+    ); // Append sheet to workbook
+
+    // Generate the Excel file and trigger download
+    XLSX.writeFile(workbook, `${tabsData[selectedTabIndex].label}_report.xlsx`);
+  };
   return (
     <Fragment>
-      {console.log("hello")}
       <Header pageDetails={pageDetails} data={user} />
       <ContainerComponent
         marginTop={30}
@@ -356,6 +409,10 @@ function Reports(props) {
       <ModalComponent
         isOpen={isOpen}
         handleClose={closeModal}
+        leftButtonLabel={"Cancel"}
+        leftButtonAction={closeModal}
+        rightButtonAction={generateExcel}
+        rightButtonLabel={"Generate"}
         title="Inventory report summary"
         description={
           "Describe how would you like to release items from your inventory. All fields are required."
@@ -405,6 +462,13 @@ function Reports(props) {
                 ) : (
                   <FilterInfo
                     label={`Fetch and filter items from Category: ${selectedCategory}`}
+                  />
+                )}
+                {year ? (
+                  <FilterInfo label={`For the year of ${year}`} />
+                ) : (
+                  <FilterInfo
+                    label={`For the entire period from ${dates.start_date} - ${dates.current_date}`}
                   />
                 )}
               </Stack>

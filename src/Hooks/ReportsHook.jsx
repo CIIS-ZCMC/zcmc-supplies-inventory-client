@@ -16,6 +16,7 @@ const useReportsHook = create((set) => ({
   detais: [],
   item_total: [],
   item_iar: [],
+  dates: [],
 
   getItemCount: async () => {
     try {
@@ -23,6 +24,7 @@ const useReportsHook = create((set) => ({
         `${BASE_URL.development}${API.REPORTS_ITEM_COUNT}`
       );
       set({ item_count: response.data });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -65,12 +67,14 @@ const useReportsHook = create((set) => ({
     }
   },
 
-  getConsumed: async () => {
+  getConsumed: async (year) => {
     try {
+      console.log(year);
       const response = await axios.get(
-        `${BASE_URL.development}${API.REPORTS_CONSUMED}`
+        `${BASE_URL.development}${API.REPORTS_CONSUMED}/${year}`
       );
       set({ consumed: response.data });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -89,12 +93,14 @@ const useReportsHook = create((set) => ({
     }
   },
 
-  getUnconsumed: async () => {
+  getUnconsumed: async (year) => {
     try {
+      console.log(year);
       const response = await axios.get(
-        `${BASE_URL.development}${API.REPORTS_UNCONSUMED}`
+        `${BASE_URL.development}${API.REPORTS_UNCONSUMED}/${year}`
       );
       set({ unconsumed: response.data });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -166,6 +172,21 @@ const useReportsHook = create((set) => ({
 
       // Update the state with the fetched data
       set({ item_iar: response.data });
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
+    }
+  },
+  getDate: async () => {
+    try {
+      // Include the id in the API request URL
+      const response = await axios.get(
+        `${BASE_URL.development}${API.REPORTS_DATE}`
+      );
+
+      // Update the state with the fetched data
+      set({ dates: response.data });
       // Return the response data
       return response.data;
     } catch (error) {

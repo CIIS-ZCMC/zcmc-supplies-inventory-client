@@ -22,6 +22,7 @@ import useFilterHook from "../../Hooks/FilterHook";
 import NoRows from "../../Pages/NoRows";
 import { MdOutlineFindInPage } from "react-icons/md";
 import moment from "moment";
+// Import the xlsx library
 
 export default function TableComponent({
   rowsPage = 10,

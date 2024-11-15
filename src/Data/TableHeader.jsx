@@ -99,7 +99,7 @@ export const unconsumedHeader = [
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
-  { id: "current_balance", label: "Quantity" },
+  { id: "quantity", label: "Quantity" },
 ];
 
 export const reorderHeader = [
