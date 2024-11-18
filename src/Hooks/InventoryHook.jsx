@@ -15,7 +15,7 @@ const useInventoryHook = create((set) => ({
       set({ inventory: response.data.data });
       return response.data;
     } catch (error) {
-      console.error(error.message);
+      console.error(error.message); ``
     }
   },
   getInventoryDetails: async (id) => {

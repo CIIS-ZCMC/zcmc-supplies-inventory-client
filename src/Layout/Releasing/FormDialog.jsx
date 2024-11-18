@@ -9,6 +9,7 @@ import InputComponent from "../../Components/Form/InputComponent";
 import DatePickerComponent from '../../Components/Form/DatePickerComponent';
 import ButtonComponent from '../../Components/ButtonComponent';
 import TextAreaComponent from '../../Components/Form/TextAreaComponent';
+import AccordionComponent from '../../Components/AccordionComponent';
 
 // hooks
 import useSourceHook from '../../Hooks/SourceHook';
@@ -17,6 +18,11 @@ import useCategoriesHook from '../../Hooks/CategoriesHook';
 import useSuppliesHook from '../../Hooks/SuppliesHook';
 
 import useReleasingHook from "../../Hooks/ReleasingHook";
+
+import Regular from './Regular';
+import Donation from './Donation'
+
+const accordionData = [{ summary: 'Regular', details: <Regular /> }, { summary: 'Donation', details: <Donation /> }]
 
 const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
@@ -146,6 +152,13 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                             />
                         </Grid>
 
+                        <Grid item xs={12}>
+                            <AccordionComponent
+                                accordionData={accordionData}
+                            />
+                        </Grid>
+
+                        {/* 
                         <Grid item xs={12} md={6}>
                             <AutoCompleteComponent
                                 name={'source'}
@@ -159,9 +172,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 helperText={formik.touched.source && formik.errors.source}
                                 fullWidth={true}
                             />
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={12} md={6}>
+                        {/* <Grid item xs={12} md={6}>
                             <AutoCompleteComponent
                                 name={'area'}
                                 placeholder="Search area..."
@@ -174,9 +187,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 helperText={formik.touched.area && formik.errors.area}
                                 fullWidth={true}
                             />
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={12} md={6}>
+                        {/* <Grid item xs={12} md={6}>
                             <DatePickerComponent
                                 name={"risDate"}
                                 label="RIS date"
@@ -186,9 +199,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.risDate && Boolean(formik.errors.risDate)}
                                 helperText={formik.touched.risDate && formik.errors.risDate}
                             />
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={12} md={6}>
+                        {/* <Grid item xs={12} md={6}>
                             <InputComponent
                                 label="RIS number"
                                 placeholder="xxx.xxx.xxx"
@@ -200,7 +213,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 helperText={formik.touched.risNumber && formik.errors.risNumber}
                             />
 
-                        </Grid>
+                        </Grid> */}
 
                         {/* <Grid xs={12}>
                         <AutoCompleteComponent
@@ -216,7 +229,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                         />
                     </Grid> */}
 
-                        <Grid item xs={12} md={6}>
+                        {/* <Grid item xs={12} md={6}>
                             <InputComponent
                                 label="Quantity Requested"
                                 placeholder="xxx.xxx.xxx"
@@ -227,8 +240,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.quantityRequested && Boolean(formik.errors.quantityRequested)}
                                 helperText={formik.touched.quantityRequested && formik.errors.quantityRequested}
                             />
-                        </Grid>
-
+                        </Grid> */}
+                        {/* 
                         <Grid item xs={12} md={6}>
                             <InputComponent
                                 label="Quantity Served"
@@ -240,9 +253,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.quantityServed && Boolean(formik.errors.quantityServed)}
                                 helperText={formik.touched.quantityServed && formik.errors.quantityServed}
                             />
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                             <TextAreaComponent
                                 label={'Remarks'}
                                 placeholder={'Enter Remarks'}
@@ -252,7 +265,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.remarks && Boolean(formik.errors.remarks)}
                                 helperText={formik.touched.remarks && formik.errors.remarks}
                             />
-                        </Grid>
+                        </Grid> */}
                     </Grid>
 
                 </Box>

@@ -7,7 +7,7 @@ import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import ButtonComponent from '../../../Components/ButtonComponent'
 import InputComponent from '../../../Components/Form/InputComponent'
 import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent'
-
+import AccordionComponent from '../../../Components/AccordionComponent'
 
 import useSuppliesHook from '../../../Hooks/SuppliesHook'
 import useCategoriesHook from '../../../Hooks/CategoriesHook'
@@ -50,7 +50,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         onSuccess: () => {
             // Show success notification, close dialog, and invalidate areas cache
             setSnackbar({ open: true, color: 'success', message: 'Source created successfully' });
-            queryClient.invalidateQueries('sources');
+            queryClient.invalidateQueries('supplies');
             // Reset Formik form values after submission
             formik.resetForm(); // Reset form to initial values
             // setInitialValues;  // Reset the initial state in the store
