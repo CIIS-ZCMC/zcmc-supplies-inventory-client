@@ -21,8 +21,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
     const queryClient = useQueryClient()
 
     // local state
-    const [selectedId, setSelectedId] = useState(null)
-    const [selectedQuantity, setSelectedQuantity] = useState(null)
+    const [selectedId, setSelectedId] = useState()
+    const [selectedQuantity, setSelectedQuantity] = useState()
 
     // Hooks for data fetching functions
     const { getAreas } = useAreasHook();
@@ -136,6 +136,11 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         details: <Donation />
     }]
 
+    const submit = () => {
+        console.log("Selected ID:", selectedId);
+        console.log("Accordion Data:", accordionData);
+    }
+
     // useEffect(() => {
     //     if (selectedId) {
     //         getBrandRegular(selectedId).then(data => console.log(data));
@@ -144,7 +149,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
     return (
         <>
-            <form onSubmit={formik.handleSubmit}>
+            <form onSubmit={submit}>
                 <Box>
                     {activeStep === 1 &&
                         <Grid item xs={12}>
@@ -201,8 +206,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
                         </Button>
                     )}
                 </Stack>
-            </form >
-
+            </form>
         </>
     );
 };

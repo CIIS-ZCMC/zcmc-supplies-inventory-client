@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Grid, Typography, Stack, Box, } from '@mui/joy';
 
@@ -24,11 +24,16 @@ const Regular = ({ formik, selectedId, setSelectedQuantity }) => {
     });
 
     const mapOptions = (data, labelKey) =>
-        data?.map(item => ({ label: item[labelKey], id: item.id, quantity: item.quantity })) || [];
+        data?.map(item => ({ id: item.inventory_stock_id, label: item[labelKey], quantity: item.quantity })) || [];
 
     const brandRegularOptions = useMemo(() => mapOptions(brandRegularData, 'concatenated_info'), [brandRegularData])
 
     const selectedBrand = brandRegularOptions.find(option => option.id === formik.values.brandRegular);
+
+    const options = brandRegularOptions.map((data) => ({
+        id: data.id,
+        label: data.label,
+    }));
 
     // Safely parse and validate inputs
     const inputQuantity = Number(formik.values.quantity);
@@ -81,9 +86,28 @@ const Regular = ({ formik, selectedId, setSelectedQuantity }) => {
         );
     };
 
+    const [regularBrand, setRegularBrand] = useState();
+    const [regularQty, setRegularQty] = useState("");
+    const [brandsList, setBrandsList] = useState([]);
+
     const handleAddBrand = () => {
-        alert('add brand')
-    }
+        setBrandsList((prevList) => [
+            ...prevList,
+            { brandId: regularBrand, quantity: regularQty }
+        ]);
+        // Reset the state for brand and quantity inputs
+        setRegularBrand(null);
+        setRegularQty("");
+    };
+
+    const handleRemoveBrand = (index) => {
+        const updatedList = brandsList.filter((_, i) => i !== index);
+        setBrandsList(updatedList);
+    };
+
+    const handleSubmit = (e) => {
+        console.log("Submitted Brands and Quantities:", brandsList);
+    };
 
     return (
         <Box
@@ -96,7 +120,7 @@ const Regular = ({ formik, selectedId, setSelectedQuantity }) => {
                 borderRadius: '8px',
             }}
         >
-            <Grid container spacing={2}>
+            {/* <Grid container spacing={2}>
                 <Grid item md={12} lg={7}>
                     <AutoCompleteComponent
                         name={'brandRegular'}
@@ -141,7 +165,75 @@ const Regular = ({ formik, selectedId, setSelectedQuantity }) => {
                 </Grid>
             </Grid>
 
-            <ButtonComponent type={"button"} variant={'contained'} label={'Add another brand'} onClick={handleAddBrand} endDecorator={<Plus size={20} />} />
+            <ButtonComponent type={"button"} variant={'contained'} label={'Add another brand'} onClick={handleAddBrand} endDecorator={<Plus size={20} />} /> */}
+
+            <Grid container spacing={2}>
+                {brandsList.map((item, index) => (
+                    <Grid container spacing={2} key={index}>
+                        {/* Brand Selection */}
+                        <Grid item md={12} lg={7}>
+                            <AutoCompleteComponent
+                                name={'brandRegular'}
+                                placeholder="Search brand..."
+                                label="Brand"
+                                options={brandRegularOptions}
+                                loading={isBrandRegularloading}
+                                value={brandRegularOptions.find(option => option.id === item.brandId) || null}
+                                onChange={(e, value) => {
+                                    const updatedList = [...brandsList];
+                                    updatedList[index].brandId = value?.id || null;
+                                    setBrandsList(updatedList);
+                                }}
+                                fullWidth={true}
+                            />
+                        </Grid>
+
+                        {/* Quantity Input */}
+                        <Grid item md={12} lg={4}>
+                            <InputComponent
+                                width={100}
+                                label="Quantity"
+                                placeholder="xxx.xxx.xxx"
+                                fullWidth={true}
+                                name={`quantity-${index}`}
+                                size="lg"
+                                value={item.quantity}
+                                onChange={(e) => {
+                                    const updatedList = [...brandsList];
+                                    updatedList[index].quantity = e.target.value;
+                                    setBrandsList(updatedList);
+                                }}
+                            />
+                        </Grid>
+
+                        {/* Remove Button */}
+                        <Grid item>
+                            <IconButtonComponent
+                                icon={Trash}
+                                iconSize={16}
+                                onClick={() => handleRemoveBrand(index)} // Remove the selected brand and quantity
+                            />
+                        </Grid>
+                    </Grid>
+                ))}
+
+            </Grid>
+
+            <ButtonComponent
+                type="button"
+                variant="contained"
+                label="Add another brand"
+                onClick={handleAddBrand} // Trigger appending
+                endDecorator={<Plus size={20} />}
+            />
+
+            <ButtonComponent
+                type="button"
+                variant="contained"
+                label="Submit"
+                onClick={handleSubmit}
+                sx={{ mt: 2 }}
+            />
         </Box >
     )
 }
