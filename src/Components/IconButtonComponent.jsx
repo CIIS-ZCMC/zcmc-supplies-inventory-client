@@ -3,7 +3,7 @@ import { IconButton } from '@mui/joy'
 import PropTypes from 'prop-types'
 
 // This component accepts props for customization
-const IconButtonComponent = ({ icon: Icon, color = 'neutral', size = 'md', onClick, ...rest }) => {
+const IconButtonComponent = ({ icon: Icon, iconSize, color = 'neutral', size = 'md', onClick, ...rest }) => {
     return (
         <IconButton
             color={color}
@@ -12,7 +12,7 @@ const IconButtonComponent = ({ icon: Icon, color = 'neutral', size = 'md', onCli
             variant='plain'
             {...rest}
         >
-            <Icon />
+            <Icon size={iconSize} />
         </IconButton>
     )
 }

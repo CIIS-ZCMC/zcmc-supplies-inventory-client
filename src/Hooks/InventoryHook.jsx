@@ -18,6 +18,7 @@ const useInventoryHook = create((set) => ({
       console.error(error.message); ``
     }
   },
+
   getInventoryDetails: async (id) => {
     try {
       // Include the id in the API request URL

@@ -1,13 +1,14 @@
 import { FormLabel, FormControl, Input } from "@mui/joy";
 import { Calendar1Icon } from "lucide-react";
 
-const DatePickerComponent = ({ label, width, placeholder, value, name, onChange, error, helperText }) => {
+const DatePickerComponent = ({ label, width, placeholder, value, name, onChange, error, helperText, disabled }) => {
   return (
     <>
       <FormControl >
         <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
         <Input
-          sx={{ width: width }}
+          disabled={disabled}
+          sx={{ width: width, marginTop: 1, }}
           value={value}
           name={name}
           onChange={(event) => {

@@ -43,6 +43,8 @@ function ModalComponent({
   leftButtonAction,
   withProgress,
   progressValue,
+  steps,
+  activeStep
 }) {
   const handleCloseModal = (event, reason) => {
     // Prevent closing the modal when backdrop is clicked
@@ -72,6 +74,13 @@ function ModalComponent({
           sx={{ alignItems: "start", justifyContent: "space-between" }}
         >
           <Stack gap={0.4}>
+
+            {steps &&
+              <Typography level="body-sm" color="primary" >
+                Step {activeStep} of {steps.length}
+              </Typography>
+            }
+
             <Typography level="title-lg" fontWeight={600}>
               {title}
             </Typography>

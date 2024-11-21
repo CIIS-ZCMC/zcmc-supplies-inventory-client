@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useState } from 'react';
-import { Box, Stack, Grid, Divider, Alert, Typography } from "@mui/joy";
+import { Box, Stack, Grid, Divider, Checkbox, Typography } from "@mui/joy";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 
@@ -86,6 +86,8 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
+            console.log(values)
+
             // Create a new FormData object
             const formData = new FormData();
 
@@ -94,7 +96,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
             formData.append("brand_id", values.brand);
             formData.append("source_id", values.source);
             formData.append("supplier_id", values.supplier);
-            formData.append("expiration_date", values.expiryDate);
+            formData.append("expiration_date", values.expiryDate === "N/A" ? "" : expiryDate);
             formData.append("quantity", values.quantity);
             formData.append("delivery_date", values.dateDelivered);
             formData.append("purchase_order_no", values.poNumber);
@@ -107,7 +109,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
             // Send formData to the API
             await mutation.mutate(formData); // Assuming this is your API call function
-            console.log("Form submitted successfully",);
+            // console.log("Form submitted successfully",);
 
         }
     })
@@ -152,7 +154,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                                 label="Source"
                                 options={sourcesOptions}
                                 loading={isSourcesLoading}
-                                value={suppliesOptions.find(option => option.id === formik.values.source) || null}
+                                value={sourcesOptions.find(option => option.id === formik.values.source) || null}
                                 onChange={(event, value) => formik.setFieldValue("source", value ? value.id : '')}
                                 error={formik.touched.source && Boolean(formik.errors.source)}
                                 helperText={formik.touched.source && formik.errors.source}
@@ -216,14 +218,35 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
                         <Grid xs={12} md={6}>
                             <DatePickerComponent
-                                name={"expiryDate"}
+                                name="expiryDate"
                                 label="Expiry Date"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.expiryDate}
+                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate} // Show no date when "N/A"
                                 onChange={(date) => formik.setFieldValue("expiryDate", date)}
                                 error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
                                 helperText={formik.touched.expiryDate && formik.errors.expiryDate}
                             />
+
+                            {/* Checkbox for No Expiry Date */}
+                            <Checkbox
+                                label="No Expiry Date (N/A)"
+                                checked={formik.values.expiryDate === "N/A"}
+                                onChange={(e) =>
+                                    formik.setFieldValue("expiryDate", e.target.checked ? "N/A" : null)
+                                }
+                                size="lg"
+                                sx={{
+                                    mt: 1,
+                                    color: "primary.500",
+                                    "&.Mui-checked": {
+                                        color: "primary.700",
+                                    },
+                                }}
+                            >
+                                No Expiry Date (N/A)
+                            </Checkbox>
+
+
                         </Grid>
 
                         <Grid xs={12} md={6}>
@@ -231,14 +254,17 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                                 name={'brand'}
                                 placeholder="Search brands..."
                                 label="Brand"
-                                options={brandsOptions}
+                                options={brandsOptions} // Include "No Brand" in options
                                 loading={isBrandsLoading}
-                                value={brandsOptions.find(option => option.id === formik.values.brand) || null}
-                                onChange={(event, value) => formik.setFieldValue("brand", value ? value.id : '')}
+                                value={brandsOptions.find(option => option.id === formik.values.brand)}
+                                onChange={(event, value) =>
+                                    formik.setFieldValue("brand", value ? value.id : null)
+                                }
                                 error={formik.touched.brand && Boolean(formik.errors.brand)}
                                 helperText={formik.touched.brand && formik.errors.brand}
                                 fullWidth={true}
                             />
+
                         </Grid>
 
                         <Grid xs={12} md={6}>

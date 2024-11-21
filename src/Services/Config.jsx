@@ -43,7 +43,10 @@ export const API = {
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",
+
   RELEASING: "releasing-list",
+  BRAND_REGULAR: 'selected-supply-brand-regular',
+
   STOCKOUT: 'stock-out',
   STOCKIN: 'stock-in',
 };

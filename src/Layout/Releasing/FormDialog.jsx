@@ -1,58 +1,52 @@
 import { useMemo, useEffect, useState } from 'react';
-import { Box, Stack, Grid, Divider, Alert } from "@mui/joy";
+import { Box, Stack, Grid, Divider, Alert, Button, Typography } from "@mui/joy";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 
-// Custom Components
-import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
-import InputComponent from "../../Components/Form/InputComponent";
-import DatePickerComponent from '../../Components/Form/DatePickerComponent';
-import ButtonComponent from '../../Components/ButtonComponent';
-import TextAreaComponent from '../../Components/Form/TextAreaComponent';
-import AccordionComponent from '../../Components/AccordionComponent';
+//stepper components
+import Step1Form from './Stepper/Step1Form';
+import Step2Form from './Stepper/Step2Form';
+import Summary from './Stepper/Summary';
 
 // hooks
-import useSourceHook from '../../Hooks/SourceHook';
 import useAreasHook from '../../Hooks/AreasHook';
-import useCategoriesHook from '../../Hooks/CategoriesHook';
 import useSuppliesHook from '../../Hooks/SuppliesHook';
-
 import useReleasingHook from "../../Hooks/ReleasingHook";
 
 import Regular from './Regular';
 import Donation from './Donation'
 
-const accordionData = [{ summary: 'Regular', details: <Regular /> }, { summary: 'Donation', details: <Donation /> }]
-
-const FormDialog = ({ handleDialogClose, showSnackbar }) => {
+const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handleBack, handleNext }) => {
 
     const queryClient = useQueryClient()
 
+    // local state
+    const [selectedId, setSelectedId] = useState(null)
+    const [selectedQuantity, setSelectedQuantity] = useState(null)
+
     // Hooks for data fetching functions
     const { getAreas } = useAreasHook();
-    const { getSources } = useSourceHook();
-    const { getCategories } = useCategoriesHook();
     const { getSupplies } = useSuppliesHook();
-    const { createStockOut, initialValues, validationSchema } = useReleasingHook();
+    const { createStockOut, initialValues, validationSchema, } = useReleasingHook();
 
     // Array of queries to manage multiple fetching in a cleaner way
     const queryConfigs = [
         { key: 'supplies', fn: getSupplies },
-        { key: 'sources', fn: getSources },
         { key: 'areas', fn: getAreas },
-        { key: 'categories', fn: getCategories },
     ];
 
     const queries = queryConfigs.map(({ key, fn }) =>
         useQuery({ queryKey: [key], queryFn: fn })
     );
 
+    // useEffect(() => {
+    //     console.log("Selected ID:", selectedId);
+    // }, [selectedId]);
+
     // Destructure data and loading states from queries for cleaner access
     const [
         { data: suppliesData, isLoading: isSuppliesLoading },
-        { data: sourcesData, isLoading: isSourcesLoading },
         { data: areasData, isLoading: isAreasLoading },
-        { data: categoriesData, isLoading: isCategoriesLoading },
     ] = queries;
 
     // Helper function for mapping options
@@ -61,9 +55,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
     // Memoized options to avoid recalculating on every render
     const suppliesOptions = useMemo(() => mapOptions(suppliesData?.data, 'name'), [suppliesData]);
-    const sourcesOptions = useMemo(() => mapOptions(sourcesData?.data, 'source_name'), [sourcesData]);
     const areaOptions = useMemo(() => mapOptions(areasData?.data, 'area_name'), [areasData]);
-    const categoriesOptions = useMemo(() => mapOptions(categoriesData?.data, 'category_name'), [categoriesData]);
+    // const brandRegularOptions = useMemo(() => mapOptions(brandRegularData?.data, 'concatenated_info'), [brandRegularData])
 
     // Define create the mutation for stockout
     const mutation = useMutation({
@@ -96,7 +89,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             handleDialogClose(); // Close dialog only if mutation is not in progress
         }
     };
-
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: validationSchema,
@@ -126,168 +118,88 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
         }
     })
 
+    const accordionData = [{
+        summary: <>
+            <Stack>
+                <Typography>Regular</Typography>
+                <Typography level='body-sm'>Total quantity to be released from Regular: 0 / 1400 left</Typography>
+            </Stack>
+        </>,
+        details: <Regular
+            selectedId={selectedId}
+            formik={formik}
+            setSelectedQuantity={setSelectedQuantity}
+        />
+    },
+    {
+        summary: 'Donation',
+        details: <Donation />
+    }]
+
     // useEffect(() => {
-    //     console.log("Current form values:", formik.values);
-    // }, [formik.values]);
+    //     if (selectedId) {
+    //         getBrandRegular(selectedId).then(data => console.log(data));
+    //     }
+    // }, [selectedId]);
 
     return (
         <>
             <form onSubmit={formik.handleSubmit}>
                 <Box>
-
-                    <Grid container spacing={2}>
+                    {activeStep === 1 &&
                         <Grid item xs={12}>
-                            {/* Supplies Autocomplete */}
-                            <AutoCompleteComponent
-                                name={'itemName'}
-                                placeholder="Search Item..."
-                                label="Item Name"
-                                options={suppliesOptions}
-                                loading={isSuppliesLoading}
-                                value={suppliesOptions.find(option => option.id === formik.values.itemName) || null}
-                                onChange={(event, value) => formik.setFieldValue("itemName", value ? value.id : '')}
-                                error={formik.touched.itemName && Boolean(formik.errors.itemName)}
-                                helperText={formik.touched.itemName && formik.errors.itemName}
-                                fullWidth={true}
-                            />
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <AccordionComponent
+                            {/* Step 1 form */}
+                            <Step1Form
+                                formik={formik}
+                                selectedQuantity={selectedQuantity}
+                                setSelectedId={setSelectedId}
                                 accordionData={accordionData}
+                                suppliesOptions={suppliesOptions}
+                                isSuppliesLoading={isSuppliesLoading}
                             />
                         </Grid>
+                    }
 
-                        {/* 
-                        <Grid item xs={12} md={6}>
-                            <AutoCompleteComponent
-                                name={'source'}
-                                placeholder="Search source..."
-                                label="Source"
-                                options={sourcesOptions}
-                                loading={isSourcesLoading}
-                                value={suppliesOptions.find(option => option.id === formik.values.source) || null}
-                                onChange={(event, value) => formik.setFieldValue("source", value ? value.id : '')}
-                                error={formik.touched.source && Boolean(formik.errors.source)}
-                                helperText={formik.touched.source && formik.errors.source}
-                                fullWidth={true}
-                            />
-                        </Grid> */}
-
-                        {/* <Grid item xs={12} md={6}>
-                            <AutoCompleteComponent
-                                name={'area'}
-                                placeholder="Search area..."
-                                label="Area"
-                                options={areaOptions}
-                                loading={isAreasLoading}
-                                value={suppliesOptions.find(option => option.id === formik.values.area) || null}
-                                onChange={(event, value) => formik.setFieldValue("area", value ? value.id : '')}
-                                error={formik.touched.area && Boolean(formik.errors.area)}
-                                helperText={formik.touched.area && formik.errors.area}
-                                fullWidth={true}
-                            />
-                        </Grid> */}
-
-                        {/* <Grid item xs={12} md={6}>
-                            <DatePickerComponent
-                                name={"risDate"}
-                                label="RIS date"
-                                placeholder="xxxx.xx.xx"
-                                value={formik.values.risDate}
-                                onChange={(date) => formik.setFieldValue("risDate", date)}
-                                error={formik.touched.risDate && Boolean(formik.errors.risDate)}
-                                helperText={formik.touched.risDate && formik.errors.risDate}
-                            />
-                        </Grid> */}
-
-                        {/* <Grid item xs={12} md={6}>
-                            <InputComponent
-                                label="RIS number"
-                                placeholder="xxx.xxx.xxx"
-                                fullWidth={true}
-                                name={'risNumber'}
-                                value={formik.values.risNumber}
-                                onChange={formik.handleChange}
-                                error={formik.touched.risNumber && Boolean(formik.errors.risNumber)}
-                                helperText={formik.touched.risNumber && formik.errors.risNumber}
-                            />
-
-                        </Grid> */}
-
-                        {/* <Grid xs={12}>
-                        <AutoCompleteComponent
-                            placeholder="Search categories..."
-                            label="Categories"
-                            options={categoriesOptions}
-                            loading={isCategoriesLoading}
-                            fullWidth={true}
-                            value={formik.values.category}
-                            onChange={(event, value) => formik.setFieldValue("category", value)}
-                            error={formik.touched.category && Boolean(formik.errors.category)}
-                            helperText={formik.touched.category && formik.errors.category}
+                    {activeStep === 2 &&
+                        <Step2Form
+                            formik={formik}
+                            areaOptions={areaOptions}
+                            isAreasLoading={isAreasLoading}
                         />
-                    </Grid> */}
+                    }
 
-                        {/* <Grid item xs={12} md={6}>
-                            <InputComponent
-                                label="Quantity Requested"
-                                placeholder="xxx.xxx.xxx"
-                                fullWidth={true}
-                                name={'quantityRequested'}
-                                value={formik.values.quantityRequested}
-                                onChange={formik.handleChange}
-                                error={formik.touched.quantityRequested && Boolean(formik.errors.quantityRequested)}
-                                helperText={formik.touched.quantityRequested && formik.errors.quantityRequested}
-                            />
-                        </Grid> */}
-                        {/* 
-                        <Grid item xs={12} md={6}>
-                            <InputComponent
-                                label="Quantity Served"
-                                placeholder="xxx.xxx.xxx"
-                                fullWidth={true}
-                                name={'quantityServed'}
-                                value={formik.values.quantityServed}
-                                onChange={formik.handleChange}
-                                error={formik.touched.quantityServed && Boolean(formik.errors.quantityServed)}
-                                helperText={formik.touched.quantityServed && formik.errors.quantityServed}
-                            />
-                        </Grid> */}
-
-                        {/* <Grid item xs={12}>
-                            <TextAreaComponent
-                                label={'Remarks'}
-                                placeholder={'Enter Remarks'}
-                                name={'remarks'}
-                                value={formik.values.remarks}
-                                onChange={formik.handleChange}
-                                error={formik.touched.remarks && Boolean(formik.errors.remarks)}
-                                helperText={formik.touched.remarks && formik.errors.remarks}
-                            />
-                        </Grid> */}
-                    </Grid>
-
+                    {activeStep === 3 &&
+                        <Summary />
+                    }
                 </Box>
 
-                <Divider sx={{ marginY: 3 }} />  {/* Horizontal Divider */}
+                <Divider sx={{ marginY: 3 }} />
 
                 <Stack direction={'row'} spacing={2}>
-                    <ButtonComponent
-                        label={'Cancel'}
-                        variant="outlined"
-                        color="danger"
-                        onClick={handleDialogClose}
-                        fullWidth
-                    />
-                    <ButtonComponent
-                        type={'submit'}
-                        variant="solid"
-                        color={"primary"}
-                        label={'Save'}
-                        fullWidth
-                        loading={isSubmitting}
-                    />
+
+                    {/* display only on step 1 */}
+                    {activeStep === 1 && (
+                        <Button onClick={handleNext} variant="outlined" fullWidth>
+                            Cancel
+                        </Button>
+                    )}
+
+                    {activeStep > 1 && (
+                        <Button onClick={handleBack} variant="outlined" fullWidth>
+                            Back
+                        </Button>
+                    )}
+
+                    {activeStep < steps.length - 0 ? (
+                        // selectedQuantity here para hindi man proceed si el quantity <= 0
+                        <Button disabled={selectedQuantity < 0} onClick={handleNext} variant="solid" fullWidth>
+                            Next
+                        </Button>
+                    ) : (
+                        <Button type="submit" variant="solid" fullWidth>
+                            Submit
+                        </Button>
+                    )}
                 </Stack>
             </form >
 

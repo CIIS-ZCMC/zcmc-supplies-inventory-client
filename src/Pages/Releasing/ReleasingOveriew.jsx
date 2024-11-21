@@ -42,6 +42,17 @@ const sortFilter = [
 ]
 
 const Releasing = () => {
+
+  // local States
+  const [activeStep, setActiveStep] = useState(1);
+  const [formData, setFormData] = useState({
+    step1: '',
+    step2: '',
+    step3: '',
+  });
+
+  const steps = ['Step 1', 'Step 2', 'Step 3'];
+
   const { getStockOut } = useReleasingHook();
 
   const { data, isLoading, error } = useQuery({
@@ -66,11 +77,13 @@ const Releasing = () => {
     setIsDialogOpen(false)
   }
 
-  const handleSaveRIS = () => {
-    alert('RIS TO BE SAVED')
-    setIsDialogOpen(false)
-    //add snackbar indication item was saved
-  }
+  const handleNext = () => {
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevStep) => prevStep - 1);
+  };
 
   const FilterOptions = () => (
     <>
@@ -128,14 +141,13 @@ const Releasing = () => {
         </ContainerComponent>
 
         <ModalComponent
+          steps={steps}
+          activeStep={activeStep}
+          setActiveStep={setActiveStep}
           isOpen={isDialogOpen}
           handleClose={handleDialogClose}
-          content={<FormDialog />}
-          leftButtonLabel={'Cancel'}
-          leftButtonAction={handleDialogClose}
-          rightButtonLabel={'Save'}
-          rightButtonAction={handleSaveRIS}
-          title="Record a new Requisition and Issue slip"
+          content={<FormDialog handleNext={handleNext} handleBack={handleBack} steps={steps} activeStep={activeStep} />}
+          title={`Record a new Requisition and Issue slip`}
           description={"Describe how would you like to release items from your inventory. All fields are required."}
         />
       </Stack>

@@ -2,9 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 import * as Yup from 'yup';
 
-import { BASE_URL, PATH } from '../Services/API'
-
-const { RELEASING, STOCKOUT } = PATH
+import { API, BASE_URL } from "../Services/Config";
 
 const useReleasingHook = create((set) => ({
 
@@ -35,8 +33,8 @@ const useReleasingHook = create((set) => ({
     //fetch the fata of stock out / releasing list
     getStockOut: async () => {
         try {
-            console.log(`${BASE_URL}/${RELEASING}`)
-            const response = await axios.get(`${BASE_URL}/${RELEASING}`);
+            // console.log(`${BASE_URL}/${RELEASING}`)
+            const response = await axios.get(`${BASE_URL.development}/${API.RELEASING}`);
             return response.data
         } catch (error) {
             error.message;
@@ -44,15 +42,25 @@ const useReleasingHook = create((set) => ({
     },
 
     // Create stock out with POST request
-    createStockOut: async (stockOutData) => {
+    createStockOut: async (formData) => {
         try {
-            const response = await axios.post(`${BASE_URL}/${STOCKOUT}`, stockOutData);
+            const response = await axios.post(`${BASE_URL.development}/${API.STOCKOUT}`, formData);
             return response.data;
         } catch (error) {
             console.error("Error creating stock out:", error.message);
             throw error;
         }
-    }
+    },
+
+    getBrandRegular: async (id) => {
+        try {
+            // console.log(`${BASE_URL}/${RELEASING}`)
+            const response = await axios.get(`${BASE_URL.development}/${API.BRAND_REGULAR}/${id}`);
+            return response.data
+        } catch (error) {
+            error.message;
+        }
+    },
 
 
 }));

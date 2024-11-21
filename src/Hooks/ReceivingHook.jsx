@@ -25,7 +25,11 @@ const useReceivingHook = create((set) => ({
         poNumber: Yup.number().required('PO Number is required'),
         iarNumber: Yup.string().required('IAR Number is required'),
         dateDelivered: Yup.date().required('Delivery Date is required'),
-        expiryDate: Yup.date().required('Expiry Date is required'),
+        expiryDate: Yup.mixed().nullable().test(
+            'valid-expiry-date',
+            'Please select a valid expiry date or "N/A"',
+            (value) => value === null || value === 'N/A' || Yup.date().isValidSync(value)
+        ).required('Expiry Date is required'),
         brand: Yup.string().required('Brand is required'),
         supplier: Yup.string().required('Supplier is required'),
     }),
