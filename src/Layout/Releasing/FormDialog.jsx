@@ -1,7 +1,7 @@
 import { useMemo, useEffect, useState } from 'react';
 import { Box, Stack, Grid, Divider, Alert, Button, Typography } from "@mui/joy";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useFormik } from 'formik';
+import moment from 'moment';
 
 //stepper components
 import Step1Form from './Stepper/Step1Form';
@@ -21,18 +21,17 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
     const queryClient = useQueryClient()
 
     // local state
-    const [selectedId, setSelectedId] = useState()
-    const [selectedQuantity, setSelectedQuantity] = useState("")
+    const [selectedQuantity, setSelectedQuantity] = useState('')
 
     //form state
-    const [itemName, setItemName] = useState(null);
+    const [selectedId, setSelectedId] = useState() //Supply Master List ID
     const [regularBrands, setRegularBrands] = useState([{ brandId: '', quantity: '' }]);
     const [dontationBrands, setDonationBrands] = useState([{ brandId: '', quantity: '' }]);
-    const [area, setArea] = useState("")
-    const [quantity, setQuantity] = useState("")
-    const [date, setDate] = useState(null)
-    const [risNo, setRisNo] = useState("")
-    const [remarks, setRemarks] = useState("")
+    const [requestingOffice, setRequestingOffice] = useState() //Step 2 Requesting Office
+    const [qtyRequest, setQtyRequest] = useState() //Step 2 Qty Requested
+    const [risDate, setRisDate] = useState(moment().format('YYYY-M-D')) //Step 2 RIS Date
+    const [risNo, setRisNo] = useState('') //Step 2 RIS Number
+    const [remarks, setRemarks] = useState('') //Step 2 Remarks
 
     // Hooks for data fetching functions
     const { getAreas } = useAreasHook();
@@ -72,8 +71,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
             showSnackbar("Form submitted successfully", 'success'); // Show success notification
             queryClient.invalidateQueries('stocks');
 
-            // Reset Formik form values after submission
-            // formik.resetForm(); // Reset form to initial values
         },
         onError: (error) => {
             console.error("Error submitting form:", error);
@@ -117,19 +114,29 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log('submit')
+
+        const formData = {
+            regularBrands,
+            requestingOffice,
+            qtyRequest,
+            risDate,
+            risNo,
+            remarks,
+        };
+
+        console.log('Form Submission Data:', formData);
 
         // const formData = new FormData;
 
-        // formData.append("supplies_masterlist_id", values.itemName);
-        // formData.append("quantity", values.quantityServed);
-        // formData.append("requested_quantity", values.quantityRequested);
-        // formData.append("transaction_type", values.transactionType);
-        // formData.append("ris_no", values.risNumber);
-        // formData.append("ris_date", values.risDate);
-        // formData.append("remarks", values.remarks);
-        // formData.append("area_id", values.area);
-        // formData.append("source_id", values.source);
+        // formData.append("supplies_masterlist_id", selectedId);
+        // formData.append("regular_brands", regularBrands);
+        // //DONATION
+        // formData.append("area_id", requestingOffice);
+        // formData.append("requested_quantity", qtyRequest);
+        // formData.append("ris_no", risNo);
+        // formData.append("ris_date", risDate);
+        // formData.append("remarks", remarks);
+        // formData.append("transaction_type", "Stock-out");
     }
 
     return (
@@ -140,10 +147,10 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
                         <Grid item xs={12}>
                             {/* Step 1 form */}
                             <Step1Form
-                                itemName={itemName}
-                                selectedQuantity={selectedQuantity}
+                                selectedId={selectedId}
                                 setSelectedId={setSelectedId}
-                                accordionData={accordionData}
+                                selectedQuantity={selectedQuantity}
+                                accordionData={accordionData} // step 1 form appending regular brand
                                 suppliesOptions={suppliesOptions}
                                 isSuppliesLoading={isSuppliesLoading}
                             />
@@ -152,6 +159,16 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
                     {activeStep === 2 &&
                         <Step2Form
+                            requestingOffice={requestingOffice}
+                            setRequestingOffice={setRequestingOffice}
+                            qtyRequest={qtyRequest}
+                            setQtyRequest={setQtyRequest}
+                            risDate={risDate}
+                            setRisDate={setRisDate}
+                            risNo={risNo}
+                            setRisNo={setRisNo}
+                            remarks={remarks}
+                            setRemarks={setRemarks}
                             areaOptions={areaOptions}
                             isAreasLoading={isAreasLoading}
                         />

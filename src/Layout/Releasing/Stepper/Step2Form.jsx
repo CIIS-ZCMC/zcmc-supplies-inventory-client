@@ -8,22 +8,19 @@ import InputComponent from '../../../Components/Form/InputComponent'
 import DatePickerComponent from '../../../Components/Form/DatePickerComponent'
 import TextAreaComponent from '../../../Components/Form/TextAreaComponent'
 
-const Step2Form = ({ areaOptions, isAreasLoading }) => {
+const Step2Form = ({ areaOptions, isAreasLoading, requestingOffice, setRequestingOffice, qtyRequest, setQtyRequest, risDate, setRisDate, risNo, setRisNo, remarks, setRemarks }) => {
     return (
         <div>
             <Grid container spacing={2}>
 
                 <Grid item xs={12} md={6}>
                     <AutoCompleteComponent
-                        name={'area'}
                         placeholder="Search area..."
                         label="Requesting Office"
                         options={areaOptions}
                         loading={isAreasLoading}
-                        value={areaOptions.find(option => option.id === formik.values.area) || null}
-                        // onChange={(event, value) => formik.setFieldValue("area", value ? value.id : '')}
-                        // error={formik.touched.area && Boolean(formik.errors.area)}
-                        // helperText={formik.touched.area && formik.errors.area}
+                        value={areaOptions.find(option => option.id === requestingOffice) || null}
+                        onChange={(e, value) => { setRequestingOffice(value?.id || null); }}
                         fullWidth={true}
                     />
                 </Grid>
@@ -33,23 +30,17 @@ const Step2Form = ({ areaOptions, isAreasLoading }) => {
                         label="Quantity Requested"
                         placeholder="xxx.xxx.xxx"
                         fullWidth={true}
-                        name={'quantityRequested'}
-                    // value={formik.values.quantityRequested}
-                    // onChange={formik.handleChange}
-                    // error={formik.touched.quantityRequested && Boolean(formik.errors.quantityRequested)}
-                    // helperText={formik.touched.quantityRequested && formik.errors.quantityRequested}
+                        value={qtyRequest}
+                        onChange={(e) => { setQtyRequest(e.target.value); }}
                     />
                 </Grid>
 
                 <Grid item xs={12} md={6}>
                     <DatePickerComponent
-                        name={"risDate"}
                         label="RIS date"
                         placeholder="xxxx.xx.xx"
-                    // value={formik.values.risDate}
-                    // onChange={(date) => formik.setFieldValue("risDate", date)}
-                    // error={formik.touched.risDate && Boolean(formik.errors.risDate)}
-                    // helperText={formik.touched.risDate && formik.errors.risDate}
+                        value={risDate}
+                        onChange={(date) => setRisDate(date)}
                     />
                 </Grid>
 
@@ -59,11 +50,8 @@ const Step2Form = ({ areaOptions, isAreasLoading }) => {
                         label="RIS number"
                         placeholder="xxx.xxx.xxx"
                         fullWidth={true}
-                        name={'risNumber'}
-                    // value={formik.values.risNumber}
-                    // onChange={formik.handleChange}
-                    // error={formik.touched.risNumber && Boolean(formik.errors.risNumber)}
-                    // helperText={formik.touched.risNumber && formik.errors.risNumber}
+                        value={risNo}
+                        onChange={(e) => { setRisNo(e.target.value); }}
                     />
                 </Grid>
 
@@ -71,17 +59,11 @@ const Step2Form = ({ areaOptions, isAreasLoading }) => {
                     <TextAreaComponent
                         label={'Remarks'}
                         placeholder={'Enter Remarks'}
-                        name={'remarks'}
-                    // value={formik.values.remarks}
-                    // onChange={formik.handleChange}
-                    // error={formik.touched.remarks && Boolean(formik.errors.remarks)}
-                    // helperText={formik.touched.remarks && formik.errors.remarks}
+                        value={remarks}
+                        onChange={(e) => { setRemarks(e.target.value); }}
                     />
                 </Grid>
             </Grid>
-
-
-
         </div>
     )
 }

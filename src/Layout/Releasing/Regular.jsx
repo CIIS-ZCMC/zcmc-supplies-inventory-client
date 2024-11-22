@@ -88,10 +88,9 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
 
     const [regularBrand, setRegularBrand] = useState();
     const [regularQty, setRegularQty] = useState("");
-    const [brandsList, setBrandsList] = useState([{ brandId: '', quantity: '' }]);
 
     const handleAddBrand = () => {
-        setBrandsList((prevList) => [
+        setRegularBrands((prevList) => [
             ...prevList,
             { brandId: regularBrand, quantity: regularQty }
         ]);
@@ -101,12 +100,12 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
     };
 
     const handleRemoveBrand = (index) => {
-        const updatedList = brandsList.filter((_, i) => i !== index);
-        setBrandsList(updatedList);
+        const updatedList = regularBrands.filter((_, i) => i !== index);
+        setRegularBrands(updatedList);
     };
 
     const handleSubmit = (e) => {
-        console.log("Submitted Brands and Quantities:", brandsList);
+        console.log("Submitted Brands and Quantities:", regularBrands);
     };
 
     return (
@@ -121,7 +120,7 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
             }}
         >
 
-            {brandsList.map((item, index) => (
+            {regularBrands.map((item, index) => (
                 <> <Grid container spacing={2} >
                     {/* Brand Selection */}
                     <Grid item md={12} lg={7}>
@@ -133,9 +132,9 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                             loading={isBrandRegularloading}
                             value={brandRegularOptions.find(option => option.id === item.brandId) || null}
                             onChange={(e, value) => {
-                                const updatedList = [...brandsList];
+                                const updatedList = [...regularBrands];
                                 updatedList[index].brandId = value?.id || null;
-                                setBrandsList(updatedList);
+                                setRegularBrands(updatedList);
                             }}
                             fullWidth={true}
                         />
@@ -152,9 +151,9 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                             size="lg"
                             value={item.quantity}
                             onChange={(e) => {
-                                const updatedList = [...brandsList];
+                                const updatedList = [...regularBrands];
                                 updatedList[index].quantity = e.target.value;
-                                setBrandsList(updatedList);
+                                setRegularBrands(updatedList);
                             }}
                         />
                     </Grid>

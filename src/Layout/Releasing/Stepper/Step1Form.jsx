@@ -6,23 +6,17 @@ import { CircleAlert } from 'lucide-react';
 import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent';
 import AccordionComponent from '../../../Components/AccordionComponent';
 
-const Step1Form = ({ itemName, setItemName, formik, accordionData, suppliesOptions, isSuppliesLoading, setSelectedId, selectedId, selectedQuantity }) => {
-
-    useEffect(() => {
-        setSelectedId(itemName)
-    }, [itemName])
+const Step1Form = ({ accordionData, suppliesOptions, isSuppliesLoading, setSelectedId, selectedId, selectedQuantity }) => {
 
     return (
         <div>
             <AutoCompleteComponent
-                name={'itemName'}
-                placeholder="Search Item..."
                 label={'Item Name'}
+                placeholder="Search Item..."
                 options={suppliesOptions}
                 loading={isSuppliesLoading}
-                value={suppliesOptions?.find(option => option.id === itemName) || null}
-                onChange={
-                    (event, value) => { setItemName(value?.id || null); }}
+                value={suppliesOptions?.find(option => option.id === selectedId) || null}
+                onChange={(e, value) => { setSelectedId(value?.id || null); }}
                 // error={ }
                 // helperText={ }
                 fullWidth={true}
