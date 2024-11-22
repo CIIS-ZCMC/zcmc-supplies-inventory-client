@@ -24,16 +24,17 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
     });
 
     const mapOptions = (data, labelKey) =>
-        data?.map(item => ({ id: item.inventory_stock_id, label: item[labelKey], quantity: item.quantity })) || [];
+        data?.map(item => ({
+            id: item.inventory_stock_id,
+            label: item[labelKey],
+            source_id: item.source_id,
+            quantity: item.quantity,
+            expiration_date: item.expiration_date
+        })) || [];
 
     const brandRegularOptions = useMemo(() => mapOptions(brandRegularData, 'concatenated_info'), [brandRegularData])
 
     // const selectedBrand = brandRegularOptions.find(option => option.id === formik.values.brandRegular);
-
-    const options = brandRegularOptions.map((data) => ({
-        id: data.id,
-        label: data.label,
-    }));
 
     // Safely parse and validate inputs
     // const inputQuantity = Number();
@@ -86,26 +87,31 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
     //     );
     // };
 
-    const [regularBrand, setRegularBrand] = useState();
-    const [regularQty, setRegularQty] = useState("");
+    const [regularBrand, setRegularBrand] = useState(); //Value is ID
+    const [regularSource, setRegularSource] = useState(); //Value is ID
+    const [regularQuantity, setRegularQuantity] = useState();
+    const [regularExpirationDate, setRegularExpirationDate] = useState();
 
     const handleAddBrand = () => {
         setRegularBrands((prevList) => [
             ...prevList,
-            { brandId: regularBrand, quantity: regularQty }
+            {
+                brand_id: regularBrand,
+                source_id: regularSource,
+                quantity: regularQuantity,
+                expiration_date: regularExpirationDate
+            }
         ]);
         // Reset the state for brand and quantity inputs
-        setRegularBrand(null);
-        setRegularQty("");
+        setRegularBrand();
+        setRegularSource();
+        setRegularQuantity("");
+        setRegularExpirationDate("");
     };
 
     const handleRemoveBrand = (index) => {
         const updatedList = regularBrands.filter((_, i) => i !== index);
         setRegularBrands(updatedList);
-    };
-
-    const handleSubmit = (e) => {
-        console.log("Submitted Brands and Quantities:", regularBrands);
     };
 
     return (
@@ -130,10 +136,12 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                             label={'Brand'}
                             options={brandRegularOptions}
                             loading={isBrandRegularloading}
-                            value={brandRegularOptions.find(option => option.id === item.brandId) || null}
+                            value={brandRegularOptions.find(option => option.id === item.brand_id) || null}
                             onChange={(e, value) => {
                                 const updatedList = [...regularBrands];
-                                updatedList[index].brandId = value?.id || null;
+                                updatedList[index].brand_id = value?.id || null;
+                                updatedList[index].source_id = value?.source_id || null;
+                                updatedList[index].expiration_date = value?.expiration_date || null;
                                 setRegularBrands(updatedList);
                             }}
                             fullWidth={true}
@@ -186,14 +194,6 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                 label="Add another brand"
                 onClick={handleAddBrand} // Trigger appending
                 endDecorator={<Plus size={20} />}
-            />
-
-            <ButtonComponent
-                type="button"
-                variant="contained"
-                label="Submit"
-                onClick={handleSubmit}
-                sx={{ mt: 2 }}
             />
         </Box >
     )

@@ -25,8 +25,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
     //form state
     const [selectedId, setSelectedId] = useState() //Supply Master List ID
-    const [regularBrands, setRegularBrands] = useState([{ brandId: '', quantity: '' }]);
-    const [dontationBrands, setDonationBrands] = useState([{ brandId: '', quantity: '' }]);
+    const [regularBrands, setRegularBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
+    const [donationBrands, setDonationBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
     const [requestingOffice, setRequestingOffice] = useState() //Step 2 Requesting Office
     const [qtyRequest, setQtyRequest] = useState() //Step 2 Qty Requested
     const [risDate, setRisDate] = useState(moment().format('YYYY-M-D')) //Step 2 RIS Date
@@ -108,35 +108,34 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
     },
     {
         summary: 'Donation',
-        details: <Donation />
+        details: <Donation
+            selectedId={selectedId}
+            donationBrands={donationBrands}
+            setDonationBrands={setDonationBrands}
+        />
     }]
 
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        const brandSource = [...regularBrands, ...donationBrands];
 
-        const formData = {
-            regularBrands,
-            requestingOffice,
-            qtyRequest,
-            risDate,
-            risNo,
-            remarks,
-        };
+        const formData = new FormData;
 
-        console.log('Form Submission Data:', formData);
+        formData.append("supplies_masterlist_id", selectedId);
+        formData.append("brand_source_pairs", JSON.stringify(brandSource));
+        formData.append("area_id", requestingOffice);
+        formData.append("requested_quantity", qtyRequest);
+        formData.append("ris_no", risNo);
+        formData.append("ris_date", risDate);
+        formData.append("remarks", remarks);
 
-        // const formData = new FormData;
+        // Log the contents of FormData for debugging
+        for (const [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+        }
 
-        // formData.append("supplies_masterlist_id", selectedId);
-        // formData.append("regular_brands", regularBrands);
-        // //DONATION
-        // formData.append("area_id", requestingOffice);
-        // formData.append("requested_quantity", qtyRequest);
-        // formData.append("ris_no", risNo);
-        // formData.append("ris_date", risDate);
-        // formData.append("remarks", remarks);
-        // formData.append("transaction_type", "Stock-out");
+        createStockOut(formData);
     }
 
     return (

@@ -46,6 +46,7 @@ export const API = {
 
   RELEASING: "releasing-list",
   BRAND_REGULAR: 'selected-supply-brand-regular',
+  BRAND_DONATION: 'selected-supply-brand-donation',
 
   STOCKOUT: 'stock-out',
   STOCKIN: 'stock-in',
