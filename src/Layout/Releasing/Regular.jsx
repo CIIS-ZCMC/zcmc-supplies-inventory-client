@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Grid, Typography, Stack, Box, } from '@mui/joy';
+import { Grid, Typography, Stack, Box, Divider } from '@mui/joy';
 
 import { Trash, Plus, } from 'lucide-react';
 
@@ -11,7 +11,7 @@ import ButtonComponent from '../../Components/ButtonComponent';
 
 import useReleasingHook from '../../Hooks/ReleasingHook';
 
-const Regular = ({ formik, selectedId, setSelectedQuantity }) => {
+const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBrands }) => {
 
     const { getBrandRegular } = useReleasingHook();
 
@@ -28,7 +28,7 @@ const Regular = ({ formik, selectedId, setSelectedQuantity }) => {
 
     const brandRegularOptions = useMemo(() => mapOptions(brandRegularData, 'concatenated_info'), [brandRegularData])
 
-    const selectedBrand = brandRegularOptions.find(option => option.id === formik.values.brandRegular);
+    // const selectedBrand = brandRegularOptions.find(option => option.id === formik.values.brandRegular);
 
     const options = brandRegularOptions.map((data) => ({
         id: data.id,
@@ -36,59 +36,59 @@ const Regular = ({ formik, selectedId, setSelectedQuantity }) => {
     }));
 
     // Safely parse and validate inputs
-    const inputQuantity = Number(formik.values.quantity);
-    const availableQuantity = Number(selectedBrand?.quantity);
+    // const inputQuantity = Number();
+    // const availableQuantity = Number(selectedBrand?.quantity);
 
-    const isInputValid = !isNaN(inputQuantity) && inputQuantity >= 0;
-    const isAvailableValid = !isNaN(availableQuantity) && availableQuantity >= 0;
+    // const isInputValid = !isNaN(inputQuantity) && inputQuantity >= 0;
+    // const isAvailableValid = !isNaN(availableQuantity) && availableQuantity >= 0;
 
     // Calculate the quantity counter only if inputs are valid
-    const quantityCounter = isInputValid && isAvailableValid ? availableQuantity - inputQuantity : null;
+    // const quantityCounter = isInputValid && isAvailableValid ? availableQuantity - inputQuantity : null;
 
-    useEffect(() => {
-        setSelectedQuantity(quantityCounter);
-    }, [quantityCounter, selectedBrand]);
+    // useEffect(() => {
+    //     setSelectedQuantity(quantityCounter);
+    // }, [quantityCounter, selectedBrand]);
 
-    const renderQuantityStatus = () => {
+    // const renderQuantityStatus = () => {
 
-        if (!isInputValid || !isAvailableValid) {
-            return <Typography color="danger" level="body-sm">Invalid input or no item selected</Typography>;
-        }
+    //     if (!isInputValid || !isAvailableValid) {
+    //         return <Typography color="danger" level="body-sm">Invalid input or no item selected</Typography>;
+    //     }
 
-        if (availableQuantity === 0) {
-            return <Typography color="danger" level="body-sm">No stock available</Typography>;
-        }
+    //     if (availableQuantity === 0) {
+    //         return <Typography color="danger" level="body-sm">No stock available</Typography>;
+    //     }
 
 
-        if (inputQuantity > availableQuantity) {
-            return (
-                <Typography color="danger" level="body-sm">
-                    Quantity input exceeded: {inputQuantity} / {availableQuantity}
-                </Typography>
-            );
-        }
+    //     if (inputQuantity > availableQuantity) {
+    //         return (
+    //             <Typography color="danger" level="body-sm">
+    //                 Quantity input exceeded: {inputQuantity} / {availableQuantity}
+    //             </Typography>
+    //         );
+    //     }
 
-        if (quantityCounter <= 0) {
-            return (
-                <Typography color="danger" level="body-sm">
-                    {inputQuantity} / 0 left
-                </Typography>
-            );
-        }
+    //     if (quantityCounter <= 0) {
+    //         return (
+    //             <Typography color="danger" level="body-sm">
+    //                 {inputQuantity} / 0 left
+    //             </Typography>
+    //         );
+    //     }
 
-        return (
-            <Stack direction="row">
-                <Typography level="body-sm">Qty:</Typography>
-                <Typography ml={1} fontWeight={700}>
-                    {inputQuantity} / {quantityCounter} left
-                </Typography>
-            </Stack>
-        );
-    };
+    //     return (
+    //         <Stack direction="row">
+    //             <Typography level="body-sm">Qty:</Typography>
+    //             <Typography ml={1} fontWeight={700}>
+    //                 {inputQuantity} / {quantityCounter} left
+    //             </Typography>
+    //         </Stack>
+    //     );
+    // };
 
     const [regularBrand, setRegularBrand] = useState();
     const [regularQty, setRegularQty] = useState("");
-    const [brandsList, setBrandsList] = useState([]);
+    const [brandsList, setBrandsList] = useState([{ brandId: '', quantity: '' }]);
 
     const handleAddBrand = () => {
         setBrandsList((prevList) => [
@@ -120,104 +120,66 @@ const Regular = ({ formik, selectedId, setSelectedQuantity }) => {
                 borderRadius: '8px',
             }}
         >
-            {/* <Grid container spacing={2}>
-                <Grid item md={12} lg={7}>
-                    <AutoCompleteComponent
-                        name={'brandRegular'}
-                        placeholder="Search brand..."
-                        label="Brand"
-                        options={brandRegularOptions}
-                        loading={isBrandRegularloading}
-                        value={brandRegularOptions.find(option => option.id === formik.values.brandRegular) || null}
-                        onChange={(event, value) => formik.setFieldValue("brandRegular", value ? value.id : '')}
-                        error={formik.touched.brandRegular && Boolean(formik.errors.brandRegular)}
-                        helperText={formik.touched.brandRegular && formik.errors.brandRegular}
-                        fullWidth={true}
-                    />
-                </Grid>
-                <Grid item md={12} lg={5}>
-                    <InputComponent
-                        label={'Quantity'}
-                        placeholder="xxx.xxx.xxx"
-                        fullWidth={true}
-                        name={'quantity'}
-                        size={'lg'}
-                        value={formik.values.quantity}
-                        onChange={formik.handleChange}
-                        error={
-                            (formik.touched.quantity && Boolean(formik.errors.quantity)) || quantityCounter <= 0
-                        }
-                        helperText={
-                            formik.touched.quantity && formik.errors.quantity
-                                ? formik.errors.quantity
-                                : quantityCounter <= 0
-                                    ? ''
-                                    : ''
-                        }
-                    />
-                    <Stack mt={1} direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        {renderQuantityStatus()}
+
+            {brandsList.map((item, index) => (
+                <> <Grid container spacing={2} >
+                    {/* Brand Selection */}
+                    <Grid item md={12} lg={7}>
+                        <AutoCompleteComponent
+                            name={'brandRegular'}
+                            placeholder="Search brand..."
+                            label={'Brand'}
+                            options={brandRegularOptions}
+                            loading={isBrandRegularloading}
+                            value={brandRegularOptions.find(option => option.id === item.brandId) || null}
+                            onChange={(e, value) => {
+                                const updatedList = [...brandsList];
+                                updatedList[index].brandId = value?.id || null;
+                                setBrandsList(updatedList);
+                            }}
+                            fullWidth={true}
+                        />
+                    </Grid>
+
+                    {/* Quantity Input */}
+                    <Grid item md={12} lg={4}>
+                        <InputComponent
+                            width={100}
+                            label="Quantity"
+                            placeholder="xxx.xxx.xxx"
+                            fullWidth={true}
+                            name={`quantity-${index}`}
+                            size="lg"
+                            value={item.quantity}
+                            onChange={(e) => {
+                                const updatedList = [...brandsList];
+                                updatedList[index].quantity = e.target.value;
+                                setBrandsList(updatedList);
+                            }}
+                        />
+                    </Grid>
+
+                    <Grid
+                        item
+                        md={12}
+                        lg={1}
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="end"
+                    >
                         <IconButtonComponent
+                            color='danger'
                             icon={Trash}
                             iconSize={16}
+                            onClick={() => handleRemoveBrand(index)}
                         />
-                    </Stack>
-                </Grid>
-            </Grid>
-
-            <ButtonComponent type={"button"} variant={'contained'} label={'Add another brand'} onClick={handleAddBrand} endDecorator={<Plus size={20} />} /> */}
-
-            <Grid container spacing={2}>
-                {brandsList.map((item, index) => (
-                    <Grid container spacing={2} key={index}>
-                        {/* Brand Selection */}
-                        <Grid item md={12} lg={7}>
-                            <AutoCompleteComponent
-                                name={'brandRegular'}
-                                placeholder="Search brand..."
-                                label="Brand"
-                                options={brandRegularOptions}
-                                loading={isBrandRegularloading}
-                                value={brandRegularOptions.find(option => option.id === item.brandId) || null}
-                                onChange={(e, value) => {
-                                    const updatedList = [...brandsList];
-                                    updatedList[index].brandId = value?.id || null;
-                                    setBrandsList(updatedList);
-                                }}
-                                fullWidth={true}
-                            />
-                        </Grid>
-
-                        {/* Quantity Input */}
-                        <Grid item md={12} lg={4}>
-                            <InputComponent
-                                width={100}
-                                label="Quantity"
-                                placeholder="xxx.xxx.xxx"
-                                fullWidth={true}
-                                name={`quantity-${index}`}
-                                size="lg"
-                                value={item.quantity}
-                                onChange={(e) => {
-                                    const updatedList = [...brandsList];
-                                    updatedList[index].quantity = e.target.value;
-                                    setBrandsList(updatedList);
-                                }}
-                            />
-                        </Grid>
-
-                        {/* Remove Button */}
-                        <Grid item>
-                            <IconButtonComponent
-                                icon={Trash}
-                                iconSize={16}
-                                onClick={() => handleRemoveBrand(index)} // Remove the selected brand and quantity
-                            />
-                        </Grid>
                     </Grid>
-                ))}
 
-            </Grid>
+                </Grid>
+                    <Divider sx={{ my: 2 }} />
+                </>
+
+            ))}
 
             <ButtonComponent
                 type="button"

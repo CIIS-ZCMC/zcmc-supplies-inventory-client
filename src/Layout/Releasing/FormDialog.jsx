@@ -7,7 +7,7 @@ import { useFormik } from 'formik';
 import Step1Form from './Stepper/Step1Form';
 import Step2Form from './Stepper/Step2Form';
 import Summary from './Stepper/Summary';
-
+``
 // hooks
 import useAreasHook from '../../Hooks/AreasHook';
 import useSuppliesHook from '../../Hooks/SuppliesHook';
@@ -22,7 +22,17 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
     // local state
     const [selectedId, setSelectedId] = useState()
-    const [selectedQuantity, setSelectedQuantity] = useState()
+    const [selectedQuantity, setSelectedQuantity] = useState("")
+
+    //form state
+    const [itemName, setItemName] = useState(null);
+    const [regularBrands, setRegularBrands] = useState([{ brandId: '', quantity: '' }]);
+    const [dontationBrands, setDonationBrands] = useState([{ brandId: '', quantity: '' }]);
+    const [area, setArea] = useState("")
+    const [quantity, setQuantity] = useState("")
+    const [date, setDate] = useState(null)
+    const [risNo, setRisNo] = useState("")
+    const [remarks, setRemarks] = useState("")
 
     // Hooks for data fetching functions
     const { getAreas } = useAreasHook();
@@ -39,11 +49,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         useQuery({ queryKey: [key], queryFn: fn })
     );
 
-    // useEffect(() => {
-    //     console.log("Selected ID:", selectedId);
-    // }, [selectedId]);
-
-    // Destructure data and loading states from queries for cleaner access
     const [
         { data: suppliesData, isLoading: isSuppliesLoading },
         { data: areasData, isLoading: isAreasLoading },
@@ -68,7 +73,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
             queryClient.invalidateQueries('stocks');
 
             // Reset Formik form values after submission
-            formik.resetForm(); // Reset form to initial values
+            // formik.resetForm(); // Reset form to initial values
         },
         onError: (error) => {
             console.error("Error submitting form:", error);
@@ -89,34 +94,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
             handleDialogClose(); // Close dialog only if mutation is not in progress
         }
     };
-    const formik = useFormik({
-        initialValues: initialValues,
-        validationSchema: validationSchema,
-        onSubmit: async (values) => {
-            // Create a new FormData object
-            const formData = new FormData();
-
-            // Map formik values to the expected API field names
-            formData.append("supplies_masterlist_id", values.itemName);
-            formData.append("quantity", values.quantityServed);
-            formData.append("requested_quantity", values.quantityRequested);
-            formData.append("transaction_type", values.transactionType);
-            formData.append("ris_no", values.risNumber);
-            formData.append("ris_date", values.risDate);
-            formData.append("remarks", values.remarks);
-            formData.append("area_id", values.area);
-            formData.append("source_id", values.source);
-
-            // Log all FormData entries to the console for testing only 
-            // for (let [key, value] of formData.entries()) {
-            //     console.log(`${key}: ${value}`);
-            // }
-
-            // Send formData to the API
-            await mutation.mutate(formData); // Assuming this is your API call function
-            console.log("Form submitted successfully",);
-        }
-    })
 
     const accordionData = [{
         summary: <>
@@ -127,7 +104,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         </>,
         details: <Regular
             selectedId={selectedId}
-            formik={formik}
+            regularBrands={regularBrands}
+            setRegularBrands={setRegularBrands}
             setSelectedQuantity={setSelectedQuantity}
         />
     },
@@ -136,26 +114,33 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         details: <Donation />
     }]
 
-    const submit = () => {
-        console.log("Selected ID:", selectedId);
-        console.log("Accordion Data:", accordionData);
-    }
 
-    // useEffect(() => {
-    //     if (selectedId) {
-    //         getBrandRegular(selectedId).then(data => console.log(data));
-    //     }
-    // }, [selectedId]);
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        console.log('submit')
+
+        // const formData = new FormData;
+
+        // formData.append("supplies_masterlist_id", values.itemName);
+        // formData.append("quantity", values.quantityServed);
+        // formData.append("requested_quantity", values.quantityRequested);
+        // formData.append("transaction_type", values.transactionType);
+        // formData.append("ris_no", values.risNumber);
+        // formData.append("ris_date", values.risDate);
+        // formData.append("remarks", values.remarks);
+        // formData.append("area_id", values.area);
+        // formData.append("source_id", values.source);
+    }
 
     return (
         <>
-            <form onSubmit={submit}>
+            <form onSubmit={(e) => handleSubmit(e)} >
                 <Box>
                     {activeStep === 1 &&
                         <Grid item xs={12}>
                             {/* Step 1 form */}
                             <Step1Form
-                                formik={formik}
+                                itemName={itemName}
                                 selectedQuantity={selectedQuantity}
                                 setSelectedId={setSelectedId}
                                 accordionData={accordionData}
@@ -167,7 +152,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
                     {activeStep === 2 &&
                         <Step2Form
-                            formik={formik}
                             areaOptions={areaOptions}
                             isAreasLoading={isAreasLoading}
                         />
@@ -206,7 +190,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
                         </Button>
                     )}
                 </Stack>
-            </form>
+            </form >
+
         </>
     );
 };

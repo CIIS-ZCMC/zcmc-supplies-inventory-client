@@ -6,32 +6,31 @@ import { CircleAlert } from 'lucide-react';
 import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent';
 import AccordionComponent from '../../../Components/AccordionComponent';
 
-const Step1Form = ({ formik, accordionData, suppliesOptions, isSuppliesLoading, setSelectedId, selectedQuantity }) => {
+const Step1Form = ({ itemName, setItemName, formik, accordionData, suppliesOptions, isSuppliesLoading, setSelectedId, selectedId, selectedQuantity }) => {
 
-    // Update `selectedId` only when `formik.values.itemName` changes
     useEffect(() => {
-        setSelectedId(formik.values.itemName || null); // Ensure `null` for empty values
-    }, [formik.values.itemName, setSelectedId]);
+        setSelectedId(itemName)
+    }, [itemName])
 
     return (
         <div>
-            {/* Supplies Autocomplete */}
             <AutoCompleteComponent
                 name={'itemName'}
                 placeholder="Search Item..."
-                label="Item Name"
+                label={'Item Name'}
                 options={suppliesOptions}
                 loading={isSuppliesLoading}
-                value={suppliesOptions?.find(option => option.id === formik.values.itemName) || null}
-                onChange={(event, value) => formik.setFieldValue("itemName", value ? value.id : '')}
-                error={formik.touched.itemName && Boolean(formik.errors.itemName)}
-                helperText={formik.touched.itemName && formik.errors.itemName}
+                value={suppliesOptions?.find(option => option.id === itemName) || null}
+                onChange={
+                    (event, value) => { setItemName(value?.id || null); }}
+                // error={ }
+                // helperText={ }
                 fullWidth={true}
             />
 
             <Stack my={1}>
                 <Typography level={'body-sm'}>
-                    Item's current stock level: value remaining
+                    Item's current stock level: value remaining {selectedId}
                 </Typography>
                 <Divider sx={{ my: 1 }}></Divider>
                 <Alert
