@@ -25,7 +25,7 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
 
     const mapOptions = (data, labelKey) =>
         data?.map(item => ({
-            id: item.inventory_stock_id,
+            id: item.brand_id,
             label: item[labelKey],
             source_id: item.source_id,
             quantity: item.quantity,
@@ -136,12 +136,12 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                             label={'Brand'}
                             options={brandRegularOptions}
                             loading={isBrandRegularloading}
-                            value={brandRegularOptions.find(option => option.id === item.brand_id) || null}
+                            value={brandRegularOptions.find(option => option.id === item.brand_id)}
                             onChange={(e, value) => {
                                 const updatedList = [...regularBrands];
-                                updatedList[index].brand_id = value?.id || null;
-                                updatedList[index].source_id = value?.source_id || null;
-                                updatedList[index].expiration_date = value?.expiration_date || null;
+                                updatedList[index].brand_id = value?.id;
+                                updatedList[index].source_id = value?.source_id;
+                                updatedList[index].expiration_date = value?.expiration_date;
                                 setRegularBrands(updatedList);
                             }}
                             fullWidth={true}

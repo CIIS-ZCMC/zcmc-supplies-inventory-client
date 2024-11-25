@@ -25,7 +25,7 @@ const Donation = ({ selectedId, donationBrands, setDonationBrands }) => {
 
     const mapOptions = (data, labelKey) =>
         data?.map(item => ({
-            id: item.inventory_stock_id,
+            id: item.brand_id,
             label: item[labelKey],
             source_id: item.source_id,
             quantity: item.quantity,

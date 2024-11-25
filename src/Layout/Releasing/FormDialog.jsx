@@ -142,13 +142,21 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
         const formData = new FormData;
 
+
         formData.append("supplies_masterlist_id", selectedId);
-        formData.append("brand_source_pairs", JSON.stringify(brandSource));
         formData.append("area_id", requestingOffice);
         formData.append("requested_quantity", qtyRequest);
         formData.append("ris_no", risNo);
         formData.append("ris_date", risDate);
         formData.append("remarks", remarks);
+
+        // Append each item of the array as a properly indexed key
+        brandSource.forEach((item, index) => {
+            formData.append(`brand_source_pairs[${index}][brand_id]`, item.brand_id);
+            formData.append(`brand_source_pairs[${index}][source_id]`, item.source_id);
+            formData.append(`brand_source_pairs[${index}][expiration_date]`, item.expiration_date === null ? "" : item.expiration_date);
+            formData.append(`brand_source_pairs[${index}][quantity]`, item.quantity);
+        });
 
         // Log the contents of FormData for debugging
         for (const [key, value] of formData.entries()) {
