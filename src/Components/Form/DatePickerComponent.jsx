@@ -14,6 +14,7 @@ const DatePickerComponent = ({
   startDecorator,
   type = "date",
   actions,
+  disabled,
 }) => {
   const handleChange = (e) => {
     if (onChange) {

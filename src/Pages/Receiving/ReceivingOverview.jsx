@@ -184,10 +184,7 @@ const ReceivingOverview = () => {
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
                 content={<FormDialog snackbar={snackbar} handleDialogClose={handleDialogClose} setSnackbar={setSnackbar} />}
-                leftButtonLabel={'Cancel'}
-                leftButtonAction={handleDialogClose}
-                rightButtonLabel={'Save'}
-                rightButtonAction={handleSaveRIS}
+                actionBtns={false}
                 title="Record a new Requisition and Issue slip"
                 description={"Describe how would you like to release items from your inventory. All fields are required."}
             />

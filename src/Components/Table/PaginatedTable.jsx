@@ -106,7 +106,7 @@ function PaginatedTable({
         <Box display="flex" justifyContent="center" py={5}>
           <CircularProgress />
         </Box>
-      ) : rows.length > 0 ? (
+      ) : rows?.length > 0 ? (
         <>
           <Table stripe="odd" borderAxis="both">
             <thead>

@@ -298,9 +298,8 @@ function Reports(props) {
     const currentDate = new Date();
     const year = currentDate.getFullYear(); // 2024
     const currentMonth = currentDate.getMonth() + 1; // 11 (November)
-    const currentMonthYear = `${year}-${
-      currentMonth < 10 ? "0" + currentMonth : currentMonth
-    }`; // "2024-11"
+    const currentMonthYear = `${year}-${currentMonth < 10 ? "0" + currentMonth : currentMonth
+      }`; // "2024-11"
     // Assuming this is how you define currentMonthYear
     switch (selectedTabIndex) {
       case 0:
@@ -507,6 +506,7 @@ function Reports(props) {
       <ModalComponent
         isOpen={isOpen}
         handleClose={closeModal}
+        actionBtns={true}
         leftButtonLabel={"Close"}
         leftButtonAction={closeModal}
         rightButtonAction={generateExcel}
