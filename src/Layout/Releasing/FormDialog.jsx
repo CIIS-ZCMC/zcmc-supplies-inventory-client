@@ -47,7 +47,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         setRemarks('');
     }
 
-
     // Hooks for data fetching functions
     const { getAreas } = useAreasHook();
     const { getSupplies } = useSuppliesHook();

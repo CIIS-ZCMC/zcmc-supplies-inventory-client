@@ -50,7 +50,9 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
     //     setSelectedQuantity(quantityCounter);
     // }, [quantityCounter, selectedBrand]);
 
-    // const renderQuantityStatus = () => {
+    const renderQuantityStatus = () => {
+
+    }
 
     //     if (!isInputValid || !isAvailableValid) {
     //         return <Typography color="danger" level="body-sm">Invalid input or no item selected</Typography>;
@@ -69,22 +71,6 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
     //         );
     //     }
 
-    //     if (quantityCounter <= 0) {
-    //         return (
-    //             <Typography color="danger" level="body-sm">
-    //                 {inputQuantity} / 0 left
-    //             </Typography>
-    //         );
-    //     }
-
-    //     return (
-    //         <Stack direction="row">
-    //             <Typography level="body-sm">Qty:</Typography>
-    //             <Typography ml={1} fontWeight={700}>
-    //                 {inputQuantity} / {quantityCounter} left
-    //             </Typography>
-    //         </Stack>
-    //     );
     // };
 
     const [regularBrand, setRegularBrand] = useState(); //Value is ID
@@ -125,7 +111,6 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                 borderRadius: '8px',
             }}
         >
-
             {regularBrands.map((item, index) => (
                 <> <Grid container spacing={2} >
                     {/* Brand Selection */}
@@ -149,7 +134,7 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                     </Grid>
 
                     {/* Quantity Input */}
-                    <Grid item xs={11} md={4} lg={4}>
+                    <Grid item xs={11} md={5} lg={5}>
                         <InputComponent
                             label="Quantity"
                             placeholder="xxx.xxx.xxx"
@@ -163,23 +148,32 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                                 setRegularBrands(updatedList);
                             }}
                         />
-                    </Grid>
 
-                    <Grid
-                        item
-                        xs={1}
-                        md={1}
-                        lg={1}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="end"
-                    >
-                        <IconButtonComponent
-                            color='danger'
-                            icon={Trash}
-                            iconSize={16}
-                            onClick={() => handleRemoveBrand(index)}
-                        />
+                        {(() => {
+                            return (
+                                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                                    <Typography level="body-xs" sx={{ mt: 1 }}>
+                                        {item.brand_id ? (
+                                            item.quantity > (brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0) ? (
+                                                <span style={{ color: 'red' }}>Quantity exceeded / {brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0}</span>
+                                            ) : (
+                                                `${item.quantity || 0} specified / ${brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0} left`
+                                            )
+                                        ) : (
+                                            'Please select a brand first'
+                                        )}
+                                    </Typography>
+
+                                    <IconButtonComponent
+                                        color='danger'
+                                        icon={Trash}
+                                        iconSize={16}
+                                        onClick={() => handleRemoveBrand(index)}
+                                    />
+                                </Stack>
+                            );
+                        })()}
+
                     </Grid>
 
                 </Grid>
