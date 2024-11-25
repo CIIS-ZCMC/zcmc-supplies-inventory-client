@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/joy";
+import { Box, Stack, Typography, useTheme } from "@mui/joy";
 import { ChevronRight } from "lucide-react";
 
 import BreadcrumbsComponent from "../../Components/BreadcrumbsComponent";
@@ -28,6 +28,7 @@ const FlexContainer = ({
 );
 
 const Header = ({ pageDetails, data }) => {
+  const theme = useTheme();
   return (
     <FlexContainer
       direction="row"
@@ -56,7 +57,12 @@ const Header = ({ pageDetails, data }) => {
               ? pageDetails?.pageTitle
               : pageDetails.title}
           </Typography>
-          <Typography level="body-sm">{pageDetails.description}</Typography>
+          <Typography
+            level="body-sm"
+            sx={{ color: theme.palette.custom.fontReg }}
+          >
+            {pageDetails.description}
+          </Typography>
         </Stack>
       </Box>
 

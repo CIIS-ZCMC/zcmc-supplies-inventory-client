@@ -10,11 +10,12 @@ ContainerComponent.propTypes = {
   actions: PropTypes.node,
 };
 
-const CustomSheet = styled(Sheet)(({ theme }) => ({
+const CustomSheet = styled(Sheet)(({ theme, marginTop }) => ({
   backgroundColor: "white",
   borderRadius: 12,
   padding: theme.spacing(3),
   boxShadow: theme.shadow.md,
+  marginTop: marginTop,
 }));
 
 function ContainerComponent({
@@ -24,10 +25,11 @@ function ContainerComponent({
   scrollable,
   contentMaxHeight,
   actions,
+  marginTop,
   ...props
 }) {
   return (
-    <CustomSheet {...props}>
+    <CustomSheet {...props} marginTop={marginTop}>
       {title && (
         <Stack gap={1.5} mb={2}>
           <Stack
@@ -35,8 +37,10 @@ function ContainerComponent({
             sx={{ alignItems: "center", justifyContent: "space-between" }}
           >
             <Box>
-              <Typography fontWeight={600}>{title}</Typography>
-              <Typography level="body-xs" fontWeight={400}>
+              <Typography fontWeight={600} level="title-lg">
+                {title}
+              </Typography>
+              <Typography level="body-sm" fontWeight={400}>
                 {description}
               </Typography>
             </Box>

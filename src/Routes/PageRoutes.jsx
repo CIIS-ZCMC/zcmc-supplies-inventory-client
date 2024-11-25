@@ -8,28 +8,42 @@ import {
   ClipboardList,
   LayoutGrid,
 } from "lucide-react";
-import ViewDetails from "../Pages/ViewDetails";
+
+import { BiCategory } from "react-icons/bi";
+import { GrDocument } from "react-icons/gr";
+import ViewItemDetails from "../Pages/Reports/ViewItemDetails";
 
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
 //Releasing/Stock Out
-const ReleasingOverview = lazy(() => import("../Pages/Releasing/ReleasingOveriew"));
-const ReleasingDetails = lazy(() => import("../Pages/Releasing/ReleasingDetails"));
+const ReleasingOverview = lazy(() =>
+  import("../Pages/Releasing/ReleasingOveriew")
+);
+const ReleasingDetails = lazy(() =>
+  import("../Pages/Releasing/ReleasingDetails")
+);
 
 //Receiving/Stock in
-const ReceivingOverview = lazy(() => import('../Pages/Receiving/ReceivingOverview'));
-const ReceivingDetails = lazy(() => import("../Pages/Receiving/ReceivingDetails"));
+const ReceivingOverview = lazy(() =>
+  import("../Pages/Receiving/ReceivingOverview")
+);
+const ReceivingDetails = lazy(() =>
+  import("../Pages/Receiving/ReceivingDetails")
+);
 
+// const ItemReview = lazy(() => import("../Pages/ItemReview"));
 const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
+const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
+const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
 
-const Inventory = lazy(() => import("../Pages/Libraries/Inventory"));
+const Reports = lazy(() => import("../Pages/Reports/Reports"));
 
 export const sidebarRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
     element: <Dashboard />,
-    icon: <CircleGauge />,
+    icon: <BiCategory />,
     permissions: ["view"],
   },
   {
@@ -54,13 +68,18 @@ export const sidebarRoutes = [
     icon: <ArrowDownToLine />,
     permissions: ["view"],
   },
-
+  {
+    path: "/reports",
+    name: "Reports",
+    element: <Reports />,
+    icon: <GrDocument />,
+    permissions: ["view"],
+  },
 ];
 
 export const childrenRoutes = [
-
   {
-    path: 'libraries',
+    path: "libraries",
     element: <Libraries />,
     permission: ["view"],
   },
@@ -81,8 +100,14 @@ export const childrenRoutes = [
 
   {
     path: "/inventory/:id",
-    name: "Manage",
     element: <ViewDetails />,
+    icon: null,
+    permissions: ["view"],
+  },
+
+  {
+    path: "/reports/:id",
+    element: <ViewItemDetails />,
     icon: null,
     permissions: ["view"],
   },

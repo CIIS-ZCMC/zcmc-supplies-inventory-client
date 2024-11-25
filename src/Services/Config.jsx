@@ -21,35 +21,45 @@ export const ROOT_PATH = "/dashboard";
  */
 export const API = {
   AREAS: "areas",
-  AREA_STORE: 'area-store',
+  AREA_STORE: "area-store",
 
   BRANDS: "brands",
-  BRAND_STORE: 'brand-store',
+  BRAND_STORE: "brand-store",
 
   SUPPLIERS: "suppliers",
-  SUPPLIER_STORE: 'supplier-store',
+  SUPPLIER_STORE: "supplier-store",
 
   UNITS: "units",
-  UNIT_STORE: 'unit-store',
+  UNIT_STORE: "unit-store",
 
   SOURCES: "sources",
-  SOURCE_STORE: 'source-store',
+  SOURCE_STORE: "source-store",
 
   CATEGORIES: "categories",
-  CATEGORY_STORE: 'category-store',
+  CATEGORY_STORE: "category-store",
 
   SUPPLIES: "supplies",
-  SUPPLY_STORE: 'supply-store',
+  SUPPLY_STORE: "supply-store",
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",
 
   RELEASING: "releasing-list",
-  BRAND_REGULAR: 'selected-supply-brand-regular',
-  BRAND_DONATION: 'selected-supply-brand-donation',
-
-  STOCKOUT: 'stock-out',
-  STOCKIN: 'stock-in',
+  STOCKOUT: "stock-out",
+  STOCKIN: "stock-in",
+  REPORTS_DATE: "get-date",
+  REPORTS_NEAR_EXP: "get-near-expiration",
+  REPORTS_DISPOSAL: "get-disposed-items",
+  REPORTS_STARTING_BAL: "get-starting-balance",
+  REPORTS_ITEM_COUNT: "get-item-count",
+  REPORTS_ZERO_STOCKS: "get-zero-stocks",
+  REPORTS_CONSUMED: "get-most-consumed",
+  REPORTS_UNCONSUMED: "get-without-transaction",
+  REPORTS_SUFFICIENT: "get-sufficient-supply",
+  REPORTS_REORDER: "get-reorder-supply",
+  REPORTS_ITEM_COUNT_BREAKDOWN: "get-item-breakdown",
+  REPORTS_ITEM_COUNT_TOTAL: "get-item-total",
+  REPORTS_ITEM_COUNT_IAR: "get-item-iar",
 };
 
 /**

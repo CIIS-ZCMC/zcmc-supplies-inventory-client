@@ -10,7 +10,7 @@ const useInventoryHook = create((set) => ({
   getInventory: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.development}${API.INVENTORY}`
+        `${BASE_URL.development}/${API.INVENTORY}`
       );
       set({ inventory: response.data.data });
       return response.data;
@@ -23,7 +23,7 @@ const useInventoryHook = create((set) => ({
     try {
       // Include the id in the API request URL
       const response = await axios.get(
-        `${BASE_URL.development}${API.INVENTORY}/${id}`
+        `${BASE_URL.development}/${API.INVENTORY}/${id}`
       );
 
       // Update the state with the fetched data

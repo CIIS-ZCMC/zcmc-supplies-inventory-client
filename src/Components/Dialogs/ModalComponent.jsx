@@ -104,14 +104,12 @@ function ModalComponent({
         <Divider sx={{ mx: 0.2 }} />
 
         {/* CONTENT */}
-        <DialogContent sx={{ p: 1 }}>
-          {content}
-        </DialogContent>
+        <DialogContent sx={{ p: 1 }}>{content}</DialogContent>
 
         {/* FOOTER */}
         {/* <Divider sx={{ mx: 0.2 }} /> */}
 
-        {/* <DialogActions>
+        <DialogActions>
           <ButtonComponent
             label={rightButtonLabel}
             fullWidth
@@ -124,8 +122,7 @@ function ModalComponent({
             fullWidth
             onClick={leftButtonAction}
           />
-        </DialogActions> */}
-
+        </DialogActions>
       </ModalDialog>
     </Modal>
   );

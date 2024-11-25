@@ -1,5 +1,11 @@
 import PropTypes from "prop-types";
-import { FormControl, Typography, FormLabel, Input } from "@mui/joy";
+import {
+  FormControl,
+  Typography,
+  FormLabel,
+  Input,
+  FormHelperText,
+} from "@mui/joy";
 
 InputComponent.propTypes = {
   label: PropTypes.string.isRequired,
@@ -26,7 +32,7 @@ function InputComponent({
   width,
   onChange,
   error,
-  size
+  size,
 }) {
   return (
     <FormControl fullWidth>
@@ -41,10 +47,10 @@ function InputComponent({
         placeholder={placeholder}
         value={value}
         fullWidth={fullWidth}
-        onChange={onChange}
-        sx={{ marginTop: 1, fontWeight: fontWeight }}
+        onChange={(e) => setValue(e.target.value)}
+        sx={{ marginTop: 1, fontWeight: fontWeight, width: width }}
       />
-      {error && <Typography variant="body2" color="danger" sx={{ marginTop: 1 }}>{helperText}</Typography>}
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   );
 }
