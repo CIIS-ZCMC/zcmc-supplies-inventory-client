@@ -129,7 +129,7 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
             {regularBrands.map((item, index) => (
                 <> <Grid container spacing={2} >
                     {/* Brand Selection */}
-                    <Grid item md={12} lg={7}>
+                    <Grid item md={7} lg={7}>
                         <AutoCompleteComponent
                             name={'brandRegular'}
                             placeholder="Search brand..."
@@ -149,9 +149,8 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                     </Grid>
 
                     {/* Quantity Input */}
-                    <Grid item md={12} lg={4}>
+                    <Grid item xs={11} md={4} lg={4}>
                         <InputComponent
-                            width={100}
                             label="Quantity"
                             placeholder="xxx.xxx.xxx"
                             fullWidth={true}
@@ -168,7 +167,8 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
 
                     <Grid
                         item
-                        md={12}
+                        xs={1}
+                        md={1}
                         lg={1}
                         display="flex"
                         justifyContent="center"

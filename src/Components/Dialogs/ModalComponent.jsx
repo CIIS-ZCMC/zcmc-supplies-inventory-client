@@ -79,7 +79,7 @@ function ModalComponent({
 
             {steps &&
               <Typography level="body-sm" color="primary" >
-                Step {activeStep} of {steps.length}
+                Step {activeStep + 1} of {steps.length}
               </Typography>
             }
 

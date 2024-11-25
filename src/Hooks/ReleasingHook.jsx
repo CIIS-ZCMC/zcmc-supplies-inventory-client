@@ -19,6 +19,10 @@ const useReleasingHook = create((set) => ({
         remarks: '',
     },
 
+    resetForm: () => {
+        set(initialValues)
+    },
+
     validationSchema: Yup.object({
         itemName: Yup.string().required('Item Name is required'),
         source: Yup.string().required('Source is required'),

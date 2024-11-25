@@ -18,13 +18,15 @@ import Donation from './Donation'
 
 const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handleBack, handleNext }) => {
 
+    const [btnType, setBtnType] = useState('button');
+
     const queryClient = useQueryClient()
 
     // local state
     const [selectedQuantity, setSelectedQuantity] = useState('')
 
     //form state
-    const [selectedId, setSelectedId] = useState() //Supply Master List ID
+    const [selectedId, setSelectedId] = useState(null) //Supply Master List ID
     const [regularBrands, setRegularBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
     const [donationBrands, setDonationBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
     const [requestingOffice, setRequestingOffice] = useState() //Step 2 Requesting Office
@@ -32,6 +34,19 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
     const [risDate, setRisDate] = useState(moment().format('YYYY-M-D')) //Step 2 RIS Date
     const [risNo, setRisNo] = useState('') //Step 2 RIS Number
     const [remarks, setRemarks] = useState('') //Step 2 Remarks
+
+
+    const resetForm = () => {
+        setSelectedId(null);
+        setRegularBrands([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
+        setDonationBrands([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
+        setRequestingOffice(null);
+        setQtyRequest(null);
+        setRisDate(moment().format('YYYY-M-D')); // Reset to today's date
+        setRisNo('');
+        setRemarks('');
+    }
+
 
     // Hooks for data fetching functions
     const { getAreas } = useAreasHook();
@@ -60,37 +75,33 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
     // Memoized options to avoid recalculating on every render
     const suppliesOptions = useMemo(() => mapOptions(suppliesData?.data, 'name'), [suppliesData]);
     const areaOptions = useMemo(() => mapOptions(areasData?.data, 'area_name'), [areasData]);
-    // const brandRegularOptions = useMemo(() => mapOptions(brandRegularData?.data, 'concatenated_info'), [brandRegularData])
 
     // Define create the mutation for stockout
     const mutation = useMutation({
         mutationFn: createStockOut,
         onSuccess: () => {
-            ``
-            // Only show success notification and close dialog after mutation is successful
             showSnackbar("Form submitted successfully", 'success'); // Show success notification
             queryClient.invalidateQueries('stocks');
-
+            resetForm()
         },
         onError: (error) => {
             console.error("Error submitting form:", error);
             showSnackbar("Failed to submit form", 'danger'); // Show error notification
         },
         onSettled: () => {
-            // Always close the dialog after the mutation is finished (whether successful or error)
-            handleCloseDialog();
+            closeDialog();
         }
     });
 
-    // Track if the mutation is loading
     const isSubmitting = mutation.isLoading;
 
-    // Now you can use `isSubmitting` to disable the close button or prevent closing the dialog
-    const handleCloseDialog = () => {
-        if (!isSubmitting) {
-            handleDialogClose(); // Close dialog only if mutation is not in progress
+    useEffect(() => {
+        if (activeStep === 2) {
+            return setBtnType('submit');
         }
-    };
+
+        setBtnType('button');
+    }, [activeStep])
 
     const accordionData = [{
         summary: <>
@@ -107,7 +118,12 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         />
     },
     {
-        summary: 'Donation',
+        summary: <>
+            <Stack>
+                <Typography>Donation</Typography>
+                <Typography level='body-sm'>Total quantity to be released from Regular: 0 / 1400 left</Typography>
+            </Stack>
+        </>,
         details: <Donation
             selectedId={selectedId}
             donationBrands={donationBrands}
@@ -115,6 +131,10 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         />
     }]
 
+    const closeDialog = () => {
+        handleDialogClose()
+        resetForm()
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -135,14 +155,15 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
             console.log(`${key}:`, value);
         }
 
-        createStockOut(formData);
+        mutation.mutate(formData);
+
     }
 
     return (
         <>
             <form onSubmit={(e) => handleSubmit(e)} >
                 <Box>
-                    {activeStep === 1 &&
+                    {activeStep === 0 &&
                         <Grid item xs={12}>
                             {/* Step 1 form */}
                             <Step1Form
@@ -156,7 +177,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
                         </Grid>
                     }
 
-                    {activeStep === 2 &&
+                    {activeStep === 1 &&
                         <Step2Form
                             requestingOffice={requestingOffice}
                             setRequestingOffice={setRequestingOffice}
@@ -173,7 +194,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
                         />
                     }
 
-                    {activeStep === 3 &&
+                    {activeStep === 2 &&
                         <Summary />
                     }
                 </Box>
@@ -183,28 +204,13 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
                 <Stack direction={'row'} spacing={2}>
 
                     {/* display only on step 1 */}
-                    {activeStep === 1 && (
-                        <Button onClick={handleCloseDialog} variant="outlined" fullWidth>
-                            Cancel
-                        </Button>
-                    )}
+                    <Button onClick={activeStep === 0 ? closeDialog : handleBack} variant="outlined" fullWidth>
+                        {activeStep === 0 ? "Cancel" : "Back"}
+                    </Button>
 
-                    {activeStep > 1 && (
-                        <Button onClick={handleBack} variant="outlined" fullWidth>
-                            Back
-                        </Button>
-                    )}
-
-                    {activeStep < steps.length - 0 ? (
-                        // selectedQuantity here para hindi man proceed si el quantity <= 0
-                        <Button type='button' disabled={selectedQuantity < 0} onClick={handleNext} variant="solid" fullWidth>
-                            Next
-                        </Button>
-                    ) : (
-                        <Button type="submit" variant="solid" fullWidth>
-                            Submit
-                        </Button>
-                    )}
+                    <Button type={btnType} disabled={selectedQuantity < 0} onClick={handleNext} variant="solid" fullWidth>
+                        {activeStep === 2 ? "Submit" : "Next"}
+                    </Button>
                 </Stack>
             </form >
 

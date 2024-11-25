@@ -47,7 +47,7 @@ function InputComponent({
         placeholder={placeholder}
         value={value}
         fullWidth={fullWidth}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={onChange ? onChange : (e) => setValue(e.target.value)}
         sx={{ marginTop: 1, fontWeight: fontWeight, width: width }}
       />
       {helperText && <FormHelperText>{helperText}</FormHelperText>}

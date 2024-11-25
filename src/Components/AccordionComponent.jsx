@@ -8,7 +8,7 @@ const AccordionComponent = ({ accordionData }) => {
 
             <AccordionGroup sx={{ borderRadius: '5px' }} variant='outlined' size='lg'>
                 {accordionData.map(({ summary, details }, index) => (
-                    <Accordion key={index} defaultExpanded={index === 0} >
+                    <Accordion key={index}>
                         <AccordionSummary>{summary}</AccordionSummary>
                         <AccordionDetails>
                             {details}

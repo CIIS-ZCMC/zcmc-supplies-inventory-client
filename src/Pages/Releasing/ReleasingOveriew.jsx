@@ -43,14 +43,9 @@ const sortFilter = [
 
 const Releasing = () => {
 
-  // local States
-  const [activeStep, setActiveStep] = useState(1);
-  const [formData, setFormData] = useState({
-    step1: '',
-    step2: '',
-    step3: '',
-  });
 
+  // local States
+  const [activeStep, setActiveStep] = useState(0);
   const steps = ['Step 1', 'Step 2', 'Step 3'];
 
   const { getStockOut } = useReleasingHook();
@@ -70,20 +65,26 @@ const Releasing = () => {
   }
 
   const handleDialogOpen = () => {
-    setIsDialogOpen(true);
+    setIsDialogOpen(true)
   };
 
   const handleDialogClose = () => {
     setIsDialogOpen(false)
+    setActiveStep(0);
   }
 
   const handleNext = () => {
-    setActiveStep((prevStep) => prevStep + 1);
+    if (activeStep < steps.length - 1) {
+      setActiveStep((prevStep) => prevStep + 1);
+    }
   };
 
   const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1);
+    if (activeStep > 0) {
+      setActiveStep((prevStep) => prevStep - 1);
+    }
   };
+
 
   const FilterOptions = () => (
     <>
@@ -146,7 +147,7 @@ const Releasing = () => {
           setActiveStep={setActiveStep}
           isOpen={isDialogOpen}
           handleClose={handleDialogClose}
-          content={<FormDialog handleNext={handleNext} handleBack={handleBack} steps={steps} activeStep={activeStep} />}
+          content={<FormDialog handleNext={handleNext} handleBack={handleBack} steps={steps} activeStep={activeStep} handleDialogClose={handleDialogClose} />}
           title={`Record a new Requisition and Issue slip`}
           description={"Describe how would you like to release items from your inventory. All fields are required."}
         />
