@@ -184,7 +184,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
                     {/* display only on step 1 */}
                     {activeStep === 1 && (
-                        <Button onClick={handleNext} variant="outlined" fullWidth>
+                        <Button onClick={handleCloseDialog} variant="outlined" fullWidth>
                             Cancel
                         </Button>
                     )}
@@ -197,7 +197,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
                     {activeStep < steps.length - 0 ? (
                         // selectedQuantity here para hindi man proceed si el quantity <= 0
-                        <Button disabled={selectedQuantity < 0} onClick={handleNext} variant="solid" fullWidth>
+                        <Button type='button' disabled={selectedQuantity < 0} onClick={handleNext} variant="solid" fullWidth>
                             Next
                         </Button>
                     ) : (
