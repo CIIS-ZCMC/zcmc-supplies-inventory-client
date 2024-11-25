@@ -80,13 +80,13 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
     const mutation = useMutation({
         mutationFn: createStockOut,
         onSuccess: () => {
-            showSnackbar("Form submitted successfully", 'success'); // Show success notification
+            showSnackbar("Form submitted successfully", 'success');
             queryClient.invalidateQueries('stocks');
-            resetForm()
+            closeDialog();
         },
         onError: (error) => {
             console.error("Error submitting form:", error);
-            showSnackbar("Failed to submit form", 'danger'); // Show error notification
+            showSnackbar("Failed to submit form", 'danger');
         },
         onSettled: () => {
             closeDialog();
@@ -216,7 +216,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
                         {activeStep === 0 ? "Cancel" : "Back"}
                     </Button>
 
-                    <Button type={btnType} disabled={selectedQuantity < 0} onClick={handleNext} variant="solid" fullWidth>
+                    <Button type={btnType} disabled={selectedQuantity < 0} onClick={handleNext} variant="solid" fullWidth loading={isSubmitting}>
                         {activeStep === 2 ? "Submit" : "Next"}
                     </Button>
                 </Stack>
