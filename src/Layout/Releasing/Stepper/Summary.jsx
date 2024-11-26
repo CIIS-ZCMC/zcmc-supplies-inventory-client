@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Grid, Typography, Divider, Box } from '@mui/joy'
 
-const Summary = () => {
+const Summary = ({ requestingOffice, totalRegularQtyBrands, totalDonationQtyBrands, qtyRequest, risNo }) => {
+
+    // variable for total regualr and donation brands
+    const totalBothSources = (totalRegularQtyBrands + totalDonationQtyBrands)
+
+    useEffect(() => {
+        console.log(qtyRequest)
+    }, [qtyRequest])
+
     return (
         <div>
 
@@ -24,7 +32,7 @@ const Summary = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={6}>
                             <Typography variant="h5" fontWeight="bold">
-                                1,000
+                                {totalRegularQtyBrands ? totalRegularQtyBrands : 0}
                             </Typography>
                             <Typography variant="body2">
                                 Total quantity to be released from{' '}
@@ -43,7 +51,7 @@ const Summary = () => {
 
                         <Grid item xs={12} md={6}>
                             <Typography variant="h5" fontWeight="bold">
-                                400
+                                {totalDonationQtyBrands ? totalDonationQtyBrands : 0}
                             </Typography>
                             <Typography variant="body2">
                                 Total quantity to be released from{' '}
@@ -61,7 +69,7 @@ const Summary = () => {
                             Total quantity from both sources:
                         </Typography>
                         <Typography variant="body2" fontWeight="bold">
-                            1,400 out of 1,400 requested
+                            {totalBothSources} out of {qtyRequest} requested
                         </Typography>
                     </Box>
                 </Box>
@@ -79,12 +87,12 @@ const Summary = () => {
                     </Typography>
 
                     <Typography level={'body-md'} gutterBottom>
-                        Requested by "Sample office name-01", "RIS #: 01-23456789"
+                        Requested by {requestingOffice}, "RIS #:{risNo}"
                     </Typography>
 
-                    <Typography level={'body-md'} gutterBottom>
+                    {/* <Typography level={'body-md'} gutterBottom>
                         Includes stocks from 4 brands (2 regular, 2 donation)
-                    </Typography>
+                    </Typography> */}
                 </Box>
 
 

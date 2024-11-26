@@ -6,8 +6,7 @@ import { CircleAlert } from 'lucide-react';
 import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent';
 import AccordionComponent from '../../../Components/AccordionComponent';
 
-const Step1Form = ({ accordionData, suppliesOptions, isSuppliesLoading, setSelectedId, selectedId, selectedQuantity }) => {
-
+const Step1Form = ({ errors, accordionData, suppliesOptions, isSuppliesLoading, setSelectedId, selectedId, selectedQuantity }) => {
     return (
         <div>
             <AutoCompleteComponent
@@ -17,8 +16,10 @@ const Step1Form = ({ accordionData, suppliesOptions, isSuppliesLoading, setSelec
                 loading={isSuppliesLoading}
                 value={suppliesOptions?.find(option => option.id === selectedId) || null}
                 onChange={(e, value) => { setSelectedId(value?.id || null); }}
-                // error={ }
-                // helperText={ }
+                error={!selectedId && errors.selectedId}
+                helperText={
+                    !selectedId && <Typography color='danger' level='body-xs'>{errors.selectedId}</Typography>
+                }
                 fullWidth={true}
             />
 

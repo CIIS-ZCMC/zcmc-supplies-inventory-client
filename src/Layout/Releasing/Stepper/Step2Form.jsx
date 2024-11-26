@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-import { Grid } from '@mui/joy'
+import { Grid, Typography } from '@mui/joy'
 
 //custom components
 import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent'
@@ -8,7 +8,7 @@ import InputComponent from '../../../Components/Form/InputComponent'
 import DatePickerComponent from '../../../Components/Form/DatePickerComponent'
 import TextAreaComponent from '../../../Components/Form/TextAreaComponent'
 
-const Step2Form = ({ areaOptions, isAreasLoading, requestingOffice, setRequestingOffice, qtyRequest, setQtyRequest, risDate, setRisDate, risNo, setRisNo, remarks, setRemarks }) => {
+const Step2Form = ({ errors, areaOptions, isAreasLoading, requestingOffice, setRequestingOffice, qtyRequest, setQtyRequest, risDate, setRisDate, risNo, setRisNo, remarks, setRemarks }) => {
     return (
         <div>
             <Grid container spacing={2}>
@@ -22,6 +22,10 @@ const Step2Form = ({ areaOptions, isAreasLoading, requestingOffice, setRequestin
                         value={areaOptions.find(option => option.id === requestingOffice) || null}
                         onChange={(e, value) => { setRequestingOffice(value?.id || null); }}
                         fullWidth={true}
+                        error={!requestingOffice && errors.requestingOffice}
+                        helperText={
+                            !requestingOffice && <Typography color='danger' level='body-xs'>{errors.requestingOffice}</Typography>
+                        }
                     />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -32,7 +36,12 @@ const Step2Form = ({ areaOptions, isAreasLoading, requestingOffice, setRequestin
                         fullWidth={true}
                         value={qtyRequest}
                         onChange={(e) => { setQtyRequest(e.target.value); }}
+                        error={!qtyRequest && errors.qtyRequest}
+                        helperText={
+                            !qtyRequest && <Typography color='danger' level='body-xs'>{errors.qtyRequest}</Typography>
+                        }
                     />
+
                 </Grid>
 
                 <Grid item xs={12} md={6}>
@@ -52,6 +61,10 @@ const Step2Form = ({ areaOptions, isAreasLoading, requestingOffice, setRequestin
                         fullWidth={true}
                         value={risNo}
                         onChange={(e) => { setRisNo(e.target.value); }}
+                        error={!risNo && errors.risNo}
+                        helperText={
+                            !risNo && <Typography color='danger' level='body-xs'>{errors.risNo}</Typography>
+                        }
                     />
                 </Grid>
 

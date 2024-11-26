@@ -11,7 +11,13 @@ import ButtonComponent from '../../Components/ButtonComponent';
 
 import useReleasingHook from '../../Hooks/ReleasingHook';
 
-const Donation = ({ selectedId, donationBrands, setDonationBrands }) => {
+const Donation = ({ setTotalDonationQtyBrands, selectedId, donationBrands, setDonationBrands }) => {
+
+    const totalDonationBrands = donationBrands?.reduce((acc, donation) => acc + Number(donation.quantity || 0), 0);
+
+    useEffect(() => {
+        setTotalDonationQtyBrands(totalDonationBrands)
+    }, [totalDonationBrands])
 
     const { getBrandDonation } = useReleasingHook();
 
@@ -75,7 +81,7 @@ const Donation = ({ selectedId, donationBrands, setDonationBrands }) => {
             {donationBrands.map((item, index) => (
                 <> <Grid container spacing={2} >
                     {/* Brand Selection */}
-                    <Grid item md={12} lg={7}>
+                    <Grid item md={7} lg={7}>
                         <AutoCompleteComponent
                             name={'brandDonation'}
                             placeholder="Search brand..."
@@ -95,9 +101,8 @@ const Donation = ({ selectedId, donationBrands, setDonationBrands }) => {
                     </Grid>
 
                     {/* Quantity Input */}
-                    <Grid item md={12} lg={4}>
+                    <Grid item xs={11} md={5} lg={5}>
                         <InputComponent
-                            width={100}
                             label="Quantity"
                             placeholder="xxx.xxx.xxx"
                             fullWidth={true}

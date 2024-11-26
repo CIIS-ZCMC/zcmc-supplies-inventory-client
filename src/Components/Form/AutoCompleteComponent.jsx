@@ -8,6 +8,7 @@ const AutoCompleteComponent = ({ name, placeholder, label, options = [], width, 
             <FormControl fullWidth>
                 <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
                 <Autocomplete
+                    filterSelectedOptions
                     error={error}
                     name={name}
                     sx={{ marginTop: 1, width }}

@@ -11,7 +11,13 @@ import ButtonComponent from '../../Components/ButtonComponent';
 
 import useReleasingHook from '../../Hooks/ReleasingHook';
 
-const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBrands }) => {
+const Regular = ({ errors, selectedId, setTotalRegularQtyBrands, setSelectedQuantity, regularBrands, setRegularBrands }) => {
+
+    const totalRegularBrands = regularBrands?.reduce((acc, regular) => acc + Number(regular.quantity || 0), 0);
+
+    useEffect(() => {
+        setTotalRegularQtyBrands(totalRegularBrands)
+    }, [totalRegularBrands])
 
     const { getBrandRegular } = useReleasingHook();
 
@@ -33,45 +39,6 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
         })) || [];
 
     const brandRegularOptions = useMemo(() => mapOptions(brandRegularData, 'concatenated_info'), [brandRegularData])
-
-    // const selectedBrand = brandRegularOptions.find(option => option.id === formik.values.brandRegular);
-
-    // Safely parse and validate inputs
-    // const inputQuantity = Number();
-    // const availableQuantity = Number(selectedBrand?.quantity);
-
-    // const isInputValid = !isNaN(inputQuantity) && inputQuantity >= 0;
-    // const isAvailableValid = !isNaN(availableQuantity) && availableQuantity >= 0;
-
-    // Calculate the quantity counter only if inputs are valid
-    // const quantityCounter = isInputValid && isAvailableValid ? availableQuantity - inputQuantity : null;
-
-    // useEffect(() => {
-    //     setSelectedQuantity(quantityCounter);
-    // }, [quantityCounter, selectedBrand]);
-
-    const renderQuantityStatus = () => {
-
-    }
-
-    //     if (!isInputValid || !isAvailableValid) {
-    //         return <Typography color="danger" level="body-sm">Invalid input or no item selected</Typography>;
-    //     }
-
-    //     if (availableQuantity === 0) {
-    //         return <Typography color="danger" level="body-sm">No stock available</Typography>;
-    //     }
-
-
-    //     if (inputQuantity > availableQuantity) {
-    //         return (
-    //             <Typography color="danger" level="body-sm">
-    //                 Quantity input exceeded: {inputQuantity} / {availableQuantity}
-    //             </Typography>
-    //         );
-    //     }
-
-    // };
 
     const [regularBrand, setRegularBrand] = useState(); //Value is ID
     const [regularSource, setRegularSource] = useState(); //Value is ID
@@ -130,6 +97,10 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                                 setRegularBrands(updatedList);
                             }}
                             fullWidth={true}
+                            error={!item.brand_id && errors.brand_id}
+                            helperText={
+                                !item.brand_id && <Typography color='danger' level='body-xs'>{errors.brand_id}</Typography>
+                            }
                         />
                     </Grid>
 
@@ -142,7 +113,7 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                             name={`quantity-${index}`}
                             size="lg"
                             value={item.quantity}
-                            isRequired
+                            error={!item.quantity && errors.quantity}
                             onChange={(e) => {
                                 const updatedList = [...regularBrands];
                                 updatedList[index].quantity = e.target.value;
@@ -158,10 +129,17 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                                             item.quantity > (brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0) ? (
                                                 <span style={{ color: 'red' }}>Quantity exceeded / {brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0}</span>
                                             ) : (
-                                                `${item.quantity || 0} specified / ${brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0} left`
+                                                <span
+                                                    style={{
+                                                        color: (!item.quantity || item.quantity === 0) ? 'red' : 'inherit'
+                                                    }}
+                                                >
+                                                    {`${item.quantity || 0} specified / ${brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0} left`}
+                                                </span>
+
                                             )
                                         ) : (
-                                            'Please select a brand first'
+                                            <span style={{ color: 'red' }}>'Please select a brand first'</span>
                                         )}
                                     </Typography>
 

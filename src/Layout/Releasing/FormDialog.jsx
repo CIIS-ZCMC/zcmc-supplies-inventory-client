@@ -24,10 +24,12 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
 
     // local state
     const [selectedQuantity, setSelectedQuantity] = useState('')
-    const [errors, setErros] = useState({});
+    const [totalRegularQtyBrands, setTotalRegularQtyBrands] = useState(null)
+    const [totalDonationQtyBrands, setTotalDonationQtyBrands] = useState(null)
+    const [errors, setErrors] = useState({});
 
     //form state
-    const [selectedId, setSelectedId] = useState(null)
+    const [selectedId, setSelectedId] = useState()
     const [regularBrands, setRegularBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
     const [donationBrands, setDonationBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
     const [requestingOffice, setRequestingOffice] = useState()
@@ -36,36 +38,42 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
     const [risNo, setRisNo] = useState('')
     const [remarks, setRemarks] = useState('')
 
+    // useEffect(() => {
+    //     console.log(errors.qtyRequest)
+    // }, [errors])
 
     //validation function
     const validateStep = () => {
         const newErrors = {};
 
         if (activeStep === 0) {
-            if (!selectedId) newErrors.selectedId = "Supply selection is required.";
-            if (!regularBrands[0].quantity && !donationBrands[0].quantity) {
-                newErrors.quantity = "At least one quantity is required.";
-            }
-        }
-
-        if (activeStep === 1) {
             if (!requestingOffice) newErrors.requestingOffice = "Requesting office is required.";
             if (!qtyRequest || qtyRequest <= 0) newErrors.qtyRequest = "Requested quantity must be greater than 0.";
             if (!risNo) newErrors.risNo = "RIS Number is required.";
         }
 
-        if (activeStep === 2) {
-            // You can add step 2-specific validations here
+        if (activeStep === 1) {
+            if (!selectedId) newErrors.selectedId = "Supply selection is required.";
+            if (!regularBrands[0].brand_id && !regularBrands[0].brand_id) {
+                newErrors.brand_id = "At least one brand is selected.";
+            }
+            if (!regularBrands[0].quantity && !donationBrands[0].quantity) {
+                newErrors.quantity = "At least one quantity is required.";
+            }
         }
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Return true if no errors
+        return Object.keys(newErrors).length === 0;
     };
 
-    const onHandleNext = () => {
-        const isValid = false
-    }
 
+    const onHandleNext = () => {
+        const isValid = (validateStep())
+        if (isValid) {
+            handleNext()
+        }
+        console.log(isValid)
+    }
 
     const resetForm = () => {
         setSelectedId(null);
@@ -128,10 +136,6 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
         resetForm()
     }
 
-    useEffect(() => {
-        console.log(handleDialogClose)
-    }, [handleDialogClose])
-
     const isSubmitting = mutation.isLoading;
 
     useEffect(() => {
@@ -150,8 +154,10 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
             </Stack>
         </>,
         details: <Regular
+            errors={errors}
             selectedId={selectedId}
             regularBrands={regularBrands}
+            setTotalRegularQtyBrands={setTotalRegularQtyBrands}
             setRegularBrands={setRegularBrands}
             setSelectedQuantity={setSelectedQuantity}
         />
@@ -164,13 +170,13 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
             </Stack>
         </>,
         details: <Donation
+            errors={errors}
             selectedId={selectedId}
             donationBrands={donationBrands}
+            setTotalDonationQtyBrands={setTotalDonationQtyBrands}
             setDonationBrands={setDonationBrands}
         />
     }]
-
-
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -197,14 +203,12 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
             console.log(`${key}:`, value);
         }
         mutation.mutate(formData);
-
     }
 
     return (
         <>
             <form onSubmit={(e) => handleSubmit(e)} >
                 <Box>
-
                     {activeStep === 0 &&
                         // step 1 form dont mind the naming
                         <Step2Form
@@ -220,6 +224,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
                             setRemarks={setRemarks}
                             areaOptions={areaOptions}
                             isAreasLoading={isAreasLoading}
+                            errors={errors}
                         />
                     }
 
@@ -233,12 +238,19 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
                                 accordionData={accordionData}
                                 suppliesOptions={suppliesOptions}
                                 isSuppliesLoading={isSuppliesLoading}
+                                errors={errors}
                             />
                         </Grid>
                     }
 
                     {activeStep === 2 &&
-                        <Summary />
+                        <Summary
+                            qtyRequest={qtyRequest}
+                            risNo={risNo}
+                            requestingOffice={requestingOffice}
+                            totalRegularQtyBrands={totalRegularQtyBrands}
+                            totalDonationQtyBrands={totalDonationQtyBrands}
+                        />
                     }
                 </Box>
 
@@ -251,7 +263,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
                         {activeStep === 0 ? "Cancel" : "Back"}
                     </Button>
 
-                    <Button type={btnType} disabled={selectedQuantity < 0} onClick={handleNext} variant="solid" fullWidth loading={isSubmitting}>
+                    <Button type={btnType} disabled={selectedQuantity < 0} onClick={onHandleNext} variant="solid" fullWidth loading={isSubmitting}>
                         {activeStep === 2 ? "Submit" : "Next"}
                     </Button>
                 </Stack>

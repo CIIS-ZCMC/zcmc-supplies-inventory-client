@@ -63,7 +63,6 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
     const mutation = useMutation({
         mutationFn: createStockIn,
         onSuccess: () => {
-            ``
             // Only show success notification and close dialog after mutation is successful
             setSnackbar({ open: true, color: 'success', message: 'Stockin Success' })
             queryClient.invalidateQueries('stockin');
