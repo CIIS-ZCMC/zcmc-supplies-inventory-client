@@ -142,6 +142,7 @@ const Regular = ({ selectedId, setSelectedQuantity, regularBrands, setRegularBra
                             name={`quantity-${index}`}
                             size="lg"
                             value={item.quantity}
+                            isRequired
                             onChange={(e) => {
                                 const updatedList = [...regularBrands];
                                 updatedList[index].quantity = e.target.value;

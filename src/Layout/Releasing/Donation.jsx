@@ -110,22 +110,32 @@ const Donation = ({ selectedId, donationBrands, setDonationBrands }) => {
                                 setDonationBrands(updatedList);
                             }}
                         />
-                    </Grid>
 
-                    <Grid
-                        item
-                        md={12}
-                        lg={1}
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="end"
-                    >
-                        <IconButtonComponent
-                            color='danger'
-                            icon={Trash}
-                            iconSize={16}
-                            onClick={() => handleRemoveBrand(index)}
-                        />
+                        {(() => {
+                            return (
+                                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+                                    <Typography level="body-xs" sx={{ mt: 1 }}>
+                                        {item.brand_id ? (
+                                            item.quantity > (brandDonationOptions.find(option => option.id === item.brand_id)?.quantity || 0) ? (
+                                                <span style={{ color: 'red' }}>Quantity exceeded / {brandDonationOptions.find(option => option.id === item.brand_id)?.quantity || 0}</span>
+                                            ) : (
+                                                `${item.quantity || 0} specified / ${brandDonationOptions.find(option => option.id === item.brand_id)?.quantity || 0} left`
+                                            )
+                                        ) : (
+                                            'Please select a brand first'
+                                        )}
+                                    </Typography>
+
+                                    <IconButtonComponent
+                                        color='danger'
+                                        icon={Trash}
+                                        iconSize={16}
+                                        onClick={() => handleRemoveBrand(index)}
+                                    />
+                                </Stack>
+                            );
+                        })()}
+
                     </Grid>
 
                 </Grid>

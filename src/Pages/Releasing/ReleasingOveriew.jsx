@@ -23,7 +23,8 @@ import FormDialog from "../../Layout/Releasing/FormDialog";
 import SnackbarComponent from "../../Components/SnackbarComponent";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import ButtonComponent from "../../Components/ButtonComponent";
-import ContainerComponent from '../../Components/Container/ContainerComponent'
+import ContainerComponent from '../../Components/Container/ContainerComponent';
+
 
 //datas
 import { items, user } from '../../Data/index';
@@ -47,6 +48,7 @@ const Releasing = () => {
   // local States
   const [activeStep, setActiveStep] = useState(0);
   const steps = ['Step 1', 'Step 2', 'Step 3'];
+  const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
 
   const { getStockOut } = useReleasingHook();
 
@@ -62,6 +64,10 @@ const Releasing = () => {
   const pageDetails = {
     title: "Requisition and issue slip",
     description: "this is a sample description"
+  }
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ open: false })
   }
 
   const handleDialogOpen = () => {
@@ -147,9 +153,18 @@ const Releasing = () => {
           setActiveStep={setActiveStep}
           isOpen={isDialogOpen}
           handleClose={handleDialogClose}
-          content={<FormDialog handleNext={handleNext} handleBack={handleBack} steps={steps} activeStep={activeStep} handleDialogClose={handleDialogClose} />}
+          content={<FormDialog handleNext={handleNext} handleBack={handleBack} steps={steps} activeStep={activeStep} handleDialogClose={handleDialogClose} setSnackbar={setSnackbar} snackbar={snackbar} />}
           title={`Record a new Requisition and Issue slip`}
           description={"Describe how would you like to release items from your inventory. All fields are required."}
+        />
+
+        <SnackbarComponent
+          open={snackbar.open}
+          onClose={handleSnackbarClose}
+          color={snackbar.color}
+          message={snackbar.message}
+          variant='solid'
+          anchor={{ vertical: 'top', horizontal: 'right' }}
         />
       </Stack>
     </>

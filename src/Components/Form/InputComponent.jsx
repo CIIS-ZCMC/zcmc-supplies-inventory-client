@@ -16,6 +16,7 @@ InputComponent.propTypes = {
   autoFocus: PropTypes.bool,
   fontWeight: PropTypes.number,
   startIcon: PropTypes.object,
+  isRequired: PropTypes.bool,
 };
 
 function InputComponent({
@@ -33,11 +34,13 @@ function InputComponent({
   onChange,
   error,
   size,
+  isRequired
 }) {
   return (
     <FormControl fullWidth>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Input
+        required={isRequired}
         width={width}
         name={name}
         size={size}

@@ -74,7 +74,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         },
         onError: (error) => {
             setSnackbar({ open: true, color: 'danger', message: `${error}` })
-            console.error("Error submitting form:", error);
+            console.error("Error stockin form:", error);
         },
         onSettled: () => {
             // Always close the dialog after the mutation is finished (whether successful or error)

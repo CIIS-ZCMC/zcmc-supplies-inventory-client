@@ -16,7 +16,7 @@ import useReleasingHook from "../../Hooks/ReleasingHook";
 import Regular from './Regular';
 import Donation from './Donation'
 
-const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handleBack, handleNext }) => {
+const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleBack, handleNext }) => {
 
     const [btnType, setBtnType] = useState('button');
 
@@ -24,16 +24,47 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
 
     // local state
     const [selectedQuantity, setSelectedQuantity] = useState('')
+    const [errors, setErros] = useState({});
 
     //form state
-    const [selectedId, setSelectedId] = useState(null) //Supply Master List ID
+    const [selectedId, setSelectedId] = useState(null)
     const [regularBrands, setRegularBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
     const [donationBrands, setDonationBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
-    const [requestingOffice, setRequestingOffice] = useState() //Step 2 Requesting Office
-    const [qtyRequest, setQtyRequest] = useState() //Step 2 Qty Requested
-    const [risDate, setRisDate] = useState(moment().format('YYYY-M-D')) //Step 2 RIS Date
-    const [risNo, setRisNo] = useState('') //Step 2 RIS Number
-    const [remarks, setRemarks] = useState('') //Step 2 Remarks
+    const [requestingOffice, setRequestingOffice] = useState()
+    const [qtyRequest, setQtyRequest] = useState()
+    const [risDate, setRisDate] = useState(moment().format('YYYY-M-D'))
+    const [risNo, setRisNo] = useState('')
+    const [remarks, setRemarks] = useState('')
+
+
+    //validation function
+    const validateStep = () => {
+        const newErrors = {};
+
+        if (activeStep === 0) {
+            if (!selectedId) newErrors.selectedId = "Supply selection is required.";
+            if (!regularBrands[0].quantity && !donationBrands[0].quantity) {
+                newErrors.quantity = "At least one quantity is required.";
+            }
+        }
+
+        if (activeStep === 1) {
+            if (!requestingOffice) newErrors.requestingOffice = "Requesting office is required.";
+            if (!qtyRequest || qtyRequest <= 0) newErrors.qtyRequest = "Requested quantity must be greater than 0.";
+            if (!risNo) newErrors.risNo = "RIS Number is required.";
+        }
+
+        if (activeStep === 2) {
+            // You can add step 2-specific validations here
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // Return true if no errors
+    };
+
+    const onHandleNext = () => {
+        const isValid = false
+    }
 
 
     const resetForm = () => {
@@ -42,7 +73,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         setDonationBrands([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
         setRequestingOffice(null);
         setQtyRequest(null);
-        setRisDate(moment().format('YYYY-M-D')); // Reset to today's date
+        setRisDate(moment().format('YYYY-M-D'));
         setRisNo('');
         setRemarks('');
     }
@@ -79,18 +110,27 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
     const mutation = useMutation({
         mutationFn: createStockOut,
         onSuccess: () => {
-            showSnackbar("Form submitted successfully", 'success');
+            setSnackbar({ open: true, color: 'success', message: 'Stockout Success' })
             queryClient.invalidateQueries('stocks');
             closeDialog();
         },
         onError: (error) => {
-            console.error("Error submitting form:", error);
-            showSnackbar("Failed to submit form", 'danger');
+            setSnackbar({ open: true, color: 'danger', message: `${error}` })
+            setSnackbar("Failed to stockout", 'danger');
         },
         onSettled: () => {
             closeDialog();
         }
     });
+
+    const closeDialog = () => {
+        handleDialogClose()
+        resetForm()
+    }
+
+    useEffect(() => {
+        console.log(handleDialogClose)
+    }, [handleDialogClose])
 
     const isSubmitting = mutation.isLoading;
 
@@ -130,18 +170,13 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         />
     }]
 
-    const closeDialog = () => {
-        handleDialogClose()
-        resetForm()
-    }
+
 
     const handleSubmit = (e) => {
         e.preventDefault()
         const brandSource = [...regularBrands, ...donationBrands];
 
         const formData = new FormData;
-
-
         formData.append("supplies_masterlist_id", selectedId);
         formData.append("area_id", requestingOffice);
         formData.append("requested_quantity", qtyRequest);
@@ -161,7 +196,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         for (const [key, value] of formData.entries()) {
             console.log(`${key}:`, value);
         }
-
         mutation.mutate(formData);
 
     }
@@ -170,21 +204,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
         <>
             <form onSubmit={(e) => handleSubmit(e)} >
                 <Box>
-                    {activeStep === 0 &&
-                        <Grid item xs={12}>
-                            {/* Step 1 form */}
-                            <Step1Form
-                                selectedId={selectedId}
-                                setSelectedId={setSelectedId}
-                                selectedQuantity={selectedQuantity}
-                                accordionData={accordionData} // step 1 form appending regular brand
-                                suppliesOptions={suppliesOptions}
-                                isSuppliesLoading={isSuppliesLoading}
-                            />
-                        </Grid>
-                    }
 
-                    {activeStep === 1 &&
+                    {activeStep === 0 &&
+                        // step 1 form dont mind the naming
                         <Step2Form
                             requestingOffice={requestingOffice}
                             setRequestingOffice={setRequestingOffice}
@@ -199,6 +221,20 @@ const FormDialog = ({ handleDialogClose, showSnackbar, activeStep, steps, handle
                             areaOptions={areaOptions}
                             isAreasLoading={isAreasLoading}
                         />
+                    }
+
+                    {activeStep === 1 &&
+                        <Grid item xs={12}>
+                            {/* Step 2 form dont mind the naming */}
+                            <Step1Form
+                                selectedId={selectedId}
+                                setSelectedId={setSelectedId}
+                                selectedQuantity={selectedQuantity}
+                                accordionData={accordionData}
+                                suppliesOptions={suppliesOptions}
+                                isSuppliesLoading={isSuppliesLoading}
+                            />
+                        </Grid>
                     }
 
                     {activeStep === 2 &&
