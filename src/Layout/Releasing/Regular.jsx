@@ -11,13 +11,17 @@ import ButtonComponent from '../../Components/ButtonComponent';
 
 import useReleasingHook from '../../Hooks/ReleasingHook';
 
-const Regular = ({ errors, selectedId, setTotalRegularQtyBrands, setSelectedQuantity, regularBrands, setRegularBrands }) => {
+const Regular = ({ qtyRequest, errors, selectedId, setTotalRegularQtyBrands, setSelectedQuantity, regularBrands, setRegularBrands }) => {
 
     const totalRegularBrands = regularBrands?.reduce((acc, regular) => acc + Number(regular.quantity || 0), 0);
 
     useEffect(() => {
         setTotalRegularQtyBrands(totalRegularBrands)
     }, [totalRegularBrands])
+
+    useEffect(() => {
+        console.log(errors)
+    }, [errors])
 
     const { getBrandRegular } = useReleasingHook();
 
@@ -119,9 +123,20 @@ const Regular = ({ errors, selectedId, setTotalRegularQtyBrands, setSelectedQuan
                                 updatedList[index].quantity = e.target.value;
                                 setRegularBrands(updatedList);
                             }}
+                            helperText={
+                                <Stack direction={'row'} alignItems={'center'} justifyContent={'end'}>
+                                    <Typography color='danger' level='body-xs'>{errors.quantity}</Typography>
+                                    {/* {!item.quantity && <Typography color='danger' level='body-xs'>{errors.quantity}</Typography>} */}
+                                    <IconButtonComponent
+                                        color='danger'
+                                        icon={Trash}
+                                        iconSize={16}
+                                        onClick={() => handleRemoveBrand(index)}
+                                    />
+                                </Stack>
+                            }
                         />
-
-                        {(() => {
+                        {/* {(() => {
                             return (
                                 <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
                                     <Typography level="body-xs" sx={{ mt: 1 }}>
@@ -151,7 +166,7 @@ const Regular = ({ errors, selectedId, setTotalRegularQtyBrands, setSelectedQuan
                                     />
                                 </Stack>
                             );
-                        })()}
+                        })()} */}
 
                     </Grid>
 

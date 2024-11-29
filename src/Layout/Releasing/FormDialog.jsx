@@ -32,11 +32,12 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
     const [selectedId, setSelectedId] = useState()
     const [regularBrands, setRegularBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
     const [donationBrands, setDonationBrands] = useState([{ brand_id: '', source_id: '', quantity: '', expiration_date: '' }]);
-    const [requestingOffice, setRequestingOffice] = useState()
-    const [qtyRequest, setQtyRequest] = useState()
-    const [risDate, setRisDate] = useState(moment().format('YYYY-M-D'))
-    const [risNo, setRisNo] = useState('')
-    const [remarks, setRemarks] = useState('')
+    const [requestingOffice, setRequestingOffice] = useState();
+    const [qtyRequest, setQtyRequest] = useState();
+    const [risDate, setRisDate] = useState(moment().format('YYYY-M-D'));
+    const [risNo, setRisNo] = useState('');
+    const [remarks, setRemarks] = useState('');
+    const [isValid, setIsValid] = useState('');
 
     // useEffect(() => {
     //     console.log(errors.qtyRequest)
@@ -54,11 +55,29 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
 
         if (activeStep === 1) {
             if (!selectedId) newErrors.selectedId = "Supply selection is required.";
-            if (!regularBrands[0].brand_id && !regularBrands[0].brand_id) {
-                newErrors.brand_id = "At least one brand is selected.";
+
+            if (
+                !regularBrands.some((brand) => brand.brand_id) &&
+                !donationBrands.some((brand) => brand.brand_id)
+            ) {
+                newErrors.brand_id = "At least one brand is required.";
             }
-            if (!regularBrands[0].quantity && !donationBrands[0].quantity) {
-                newErrors.quantity = "At least one quantity is required.";
+
+            if (
+                !regularBrands.some((brand) => brand.quantity > 0) &&
+                !donationBrands.some((brand) => brand.quantity > 0)
+            ) {
+                newErrors.quantity = "Please enter quantity";
+            }
+
+            // Check if any brand's quantity exceeds its available quantity
+            const exceededBrand = [
+                ...regularBrands,
+                ...donationBrands,
+            ].find((brand) => brand.brand_id && brand.quantity > (brand.brandQuantity || 0));
+
+            if (exceededBrand.quantity > qtyRequest) {
+                newErrors.quantity = 'Quanity inputted exceeds the current available quantity'
             }
         }
 
@@ -72,7 +91,6 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
         if (isValid) {
             handleNext()
         }
-        console.log(isValid)
     }
 
     const resetForm = () => {
@@ -263,7 +281,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
                         {activeStep === 0 ? "Cancel" : "Back"}
                     </Button>
 
-                    <Button type={btnType} disabled={selectedQuantity < 0} onClick={onHandleNext} variant="solid" fullWidth loading={isSubmitting}>
+                    <Button type={btnType} disabled={isValid} onClick={onHandleNext} variant="solid" fullWidth loading={isSubmitting}>
                         {activeStep === 2 ? "Submit" : "Next"}
                     </Button>
                 </Stack>
