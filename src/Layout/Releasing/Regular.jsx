@@ -1,194 +1,162 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Grid, Typography, Stack, Box, Divider } from '@mui/joy';
+import React, { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Grid, Typography, Stack, Box, Divider } from "@mui/joy";
 
-import { Trash, Plus, } from 'lucide-react';
+import { Trash, Plus } from "lucide-react";
 
-import AutoCompleteComponent from '../../Components/Form/AutoCompleteComponent';
-import InputComponent from '../../Components/Form/InputComponent';
-import IconButtonComponent from '../../Components/IconButtonComponent';
-import ButtonComponent from '../../Components/ButtonComponent';
+import ButtonComponent from "../../Components/ButtonComponent";
 
-import useReleasingHook from '../../Hooks/ReleasingHook';
+import useReleasingHook from "../../Hooks/ReleasingHook";
+import BrandInput from "./BrandInput/BrandInput";
 
-const Regular = ({ setIsValid, qtyRequest, errors, selectedId, setTotalRegularQtyBrands, setSelectedQuantity, regularBrands, setRegularBrands }) => {
+const Regular = ({
+  qtyRequest,
+  errors,
+  selectedId,
+  setTotalRegularQtyBrands,
+  regularBrands,
+  setRegularBrands,
+  exceed,
+}) => {
+  const totalRegularBrands = regularBrands?.reduce(
+    (acc, regular) => acc + Number(regular.quantity || 0),
+    0
+  );
 
-    useEffect(() => {
-        console.log(typeof qtyRequest, qtyRequest);
-    }, [qtyRequest])
+  useEffect(() => {
+    setTotalRegularQtyBrands(totalRegularBrands);
+  }, [totalRegularBrands]);
 
-    const totalRegularBrands = regularBrands?.reduce((acc, regular) => acc + Number(regular.quantity || 0), 0);
+  const { getBrandRegular } = useReleasingHook();
 
-    useEffect(() => {
-        setTotalRegularQtyBrands(totalRegularBrands)
-    }, [totalRegularBrands])
+  const { data: brandRegularData, isLoading: isBrandRegularloading } = useQuery(
+    {
+      queryKey: ["brand-regular", selectedId],
+      queryFn: () => getBrandRegular(selectedId),
+      enabled: selectedId != null && selectedId !== "", // Ensure selectedId is not null or empty
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    }
+  );
 
-    const { getBrandRegular } = useReleasingHook();
+  const mapOptions = (data, labelKey) =>
+    data?.map((item) => ({
+      id: item.brand_id,
+      label: item[labelKey],
+      source_id: item.source_id,
+      quantity: item.quantity,
+      expiration_date: item.expiration_date,
+    })) || [];
 
-    const { data: brandRegularData, isLoading: isBrandRegularloading } = useQuery({
-        queryKey: ['brand-regular', selectedId],
-        queryFn: () => getBrandRegular(selectedId),
-        enabled: selectedId != null && selectedId !== "", // Ensure selectedId is not null or empty
-        staleTime: Infinity,
-        cacheTime: Infinity,
-    });
+  const brandRegularOptions = useMemo(
+    () => mapOptions(brandRegularData, "concatenated_info"),
+    [brandRegularData]
+  );
 
-    const mapOptions = (data, labelKey) =>
-        data?.map(item => ({
-            id: item.brand_id,
-            label: item[labelKey],
-            source_id: item.source_id,
-            quantity: item.quantity,
-            expiration_date: item.expiration_date
-        })) || [];
+  const [regularBrand, setRegularBrand] = useState(null); //Primary key of Regular Brand Product
+  const [regularSource, setRegularSource] = useState(null); // ID: Identify as Donation[2] or Regular[1]
+  const [regularQuantity, setRegularQuantity] = useState(1);
+  const [regularExpirationDate, setRegularExpirationDate] = useState(null);
 
-    const brandRegularOptions = useMemo(() => mapOptions(brandRegularData, 'concatenated_info'), [brandRegularData])
+  function currentTotatlQuantity() {
+    return regularBrands.reduce((total, brand) => {
+      const quantity = parseFloat(brand.quantity) || 0;
 
-    const [regularBrand, setRegularBrand] = useState(); //Value is ID
-    const [regularSource, setRegularSource] = useState(); //Value is ID
-    const [regularQuantity, setRegularQuantity] = useState();
-    const [regularExpirationDate, setRegularExpirationDate] = useState();
+      return total + quantity;
+    }, 0);
+  }
 
-    const handleAddBrand = () => {
-        setRegularBrands((prevList) => [
-            ...prevList,
-            {
-                brand_id: regularBrand,
-                source_id: regularSource,
-                quantity: regularQuantity,
-                expiration_date: regularExpirationDate
-            }
-        ]);
-        // Reset the state for brand and quantity inputs
-        setRegularBrand();
-        setRegularSource();
-        setRegularQuantity("");
-        setRegularExpirationDate("");
-    };
+  function checkOnExceedQuantityRequest() {
+    const exceed =
+      regularBrands.length > 0 && currentTotatlQuantity() + 1 > qtyRequest;
 
-    const handleRemoveBrand = (index) => {
-        const updatedList = regularBrands.filter((_, i) => i !== index);
-        setRegularBrands(updatedList);
-    };
+    return exceed;
+  }
 
-    return (
-        <Box
-            sx={{
-                maxHeight: '400px',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                padding: 2,
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-            }}
-        >
-            {regularBrands.map((item, index) => (
-                <> <Grid container spacing={2} >
-                    {/* Brand Selection */}
-                    <Grid item md={7} lg={7}>
-                        <AutoCompleteComponent
-                            name={'brandRegular'}
-                            placeholder="Search brand..."
-                            label={'Brand'}
-                            options={brandRegularOptions}
-                            loading={isBrandRegularloading}
-                            value={brandRegularOptions.find(option => option.id === item.brand_id)}
-                            onChange={(e, value) => {
-                                const updatedList = [...regularBrands];
-                                updatedList[index].brand_id = value?.id;
-                                updatedList[index].source_id = value?.source_id;
-                                updatedList[index].expiration_date = value?.expiration_date;
-                                setRegularBrands(updatedList);
-                            }}
-                            fullWidth={true}
-                            error={!item.brand_id && errors.brand_id}
-                            helperText={
-                                !item.brand_id && <Typography color='danger' level='body-xs'>{errors.brand_id}</Typography>
-                            }
-                        />
-                    </Grid>
+  const handleAddBrand = () => {
+    let initialQty = 1;
 
-                    {/* Quantity Input */}
-                    <Grid item xs={11} md={5} lg={5}>
-                        <InputComponent
-                            label="Quantity"
-                            placeholder="xxx.xxx.xxx"
-                            fullWidth={true}
-                            name={`quantity-${index}`}
-                            size="lg"
-                            value={item.quantity}
-                            error={!item.quantity && errors.quantity}
-                            onChange={(e) => {
-                                const updatedList = [...regularBrands];
-                                const parsedValue = parseFloat(e.target.value) || 0;
-                                updatedList[index].quantity = parsedValue;
-                                setRegularBrands(updatedList);
+    setRegularBrands((prevList) => [
+      ...prevList,
+      {
+        brand_id: regularBrand,
+        source_id: regularSource,
+        quantity: regularQuantity,
+        expiration_date: regularExpirationDate,
+        exceed: false,
+      },
+    ]);
+    // Reset the state for brand and quantity inputs
+    setRegularBrand(null);
+    setRegularSource(null);
+    setRegularQuantity(initialQty);
+    setRegularExpirationDate(null);
+  };
 
-                                if (updatedList[index].quantity > qtyRequest) {
-                                    setIsValid(true);   // Valid, allow proceeding
-                                } else {
-                                    setIsValid(false);  // Invalid, prevent proceeding
-                                }
-                            }}
+  const handleRemoveBrand = (index) => {
+    const updatedList = regularBrands.filter((_, i) => i !== index);
+    setRegularBrands(updatedList);
+  };
 
-                            helperText={
-                                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                    {
-                                        !item.quantity ? (
-                                            <Typography color="danger" level="body-xs">
-                                                {errors.quantity}
-                                            </Typography>
-                                        ) : (
-                                            <Typography level="body-xs" sx={{ mt: 1 }}>
-                                                {item.brand_id ? (
-                                                    item.quantity > qtyRequest ? (
-                                                        <span style={{ color: 'red' }}>
-                                                            Quantity inputted exceeds quantity requested ({qtyRequest})
-                                                        </span>
-                                                    ) : (
-                                                        <span
-                                                            style={{
-                                                                color: !item.quantity || item.quantity === 0 ? 'red' : 'inherit',
-                                                            }}
-                                                        >
-                                                            {`${item.quantity || 0} specified / ${brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0
-                                                                } left`}
-                                                        </span>
-                                                    )
-                                                ) : (
-                                                    <span style={{ color: 'red' }}>Please select a brand first</span>
-                                                )}
-                                            </Typography>
-                                        )
-                                    }
+  function handleQuantityValueChange(e, index) {
+    const newQuantityValue = parseFloat(e.target.value) || 0;
 
-                                    {/* Trash Icon Button */}
-                                    <IconButtonComponent
-                                        color="danger"
-                                        icon={Trash}
-                                        iconSize={16}
-                                        onClick={() => handleRemoveBrand(index)}
-                                    />
-                                </Stack>
-                            }
-                        />
-                    </Grid>
+    const updatedList = [...regularBrands];
 
-                </Grid >
-                    <Divider sx={{ my: 2 }} />
-                </>
-            ))
-            }
+    const currentTotatlQuantity = regularBrands.reduce((total, brand) => {
+      const quantity = parseFloat(brand.quantity) || 0;
+      return total + quantity;
+    }, 0);
 
-            <ButtonComponent
-                type="button"
-                variant="contained"
-                label="Add another brand"
-                onClick={handleAddBrand} // Trigger appending
-                endDecorator={<Plus size={20} />}
-            />
-        </Box >
-    )
-}
+    if (newQuantityValue + currentTotatlQuantity > qtyRequest) {
+      updatedList[index].quantity = 0;
+      updatedList[index].exceed = true;
+    } else {
+      updatedList[index].quantity = newQuantityValue;
+      updatedList[index].exceed = false;
+    }
 
-export default Regular
+    setRegularBrands(updatedList);
+  }
+
+  return (
+    <Box
+      sx={{
+        maxHeight: "400px",
+        overflowY: "auto",
+        overflowX: "hidden",
+        padding: 2,
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+      }}
+    >
+      {regularBrands.map((item, index) => (
+        <BrandInput
+          index={index}
+          item={item}
+          qtyRequest={qtyRequest}
+          brandRegularOptions={brandRegularOptions}
+          isBrandRegularloading={isBrandRegularloading}
+          regularBrands={regularBrands}
+          setRegularBrands={setRegularBrands}
+          handleQuantityValueChange={handleQuantityValueChange}
+          handleRemoveBrand={handleRemoveBrand}
+          errors={errors}
+          currentTotatlQuantity={currentTotatlQuantity()}
+        />
+      ))}
+
+      {!checkOnExceedQuantityRequest() && !exceed && (
+        <ButtonComponent
+          type="button"
+          variant="contained"
+          label="Add another brand"
+          onClick={handleAddBrand} // Trigger appending
+          endDecorator={<Plus size={20} />}
+        />
+      )}
+    </Box>
+  );
+};
+
+export default Regular;

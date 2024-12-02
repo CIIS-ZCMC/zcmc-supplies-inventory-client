@@ -1,190 +1,164 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Grid, Typography, Stack, Box, Divider } from '@mui/joy';
+import React, { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Box } from "@mui/joy";
 
-import { Trash, Plus, } from 'lucide-react';
+import { Plus } from "lucide-react";
+import ButtonComponent from "../../Components/ButtonComponent";
 
-import AutoCompleteComponent from '../../Components/Form/AutoCompleteComponent';
-import InputComponent from '../../Components/Form/InputComponent';
-import IconButtonComponent from '../../Components/IconButtonComponent';
-import ButtonComponent from '../../Components/ButtonComponent';
+import useReleasingHook from "../../Hooks/ReleasingHook";
+import BrandInput from "./BrandInput/BrandInput";
 
-import useReleasingHook from '../../Hooks/ReleasingHook';
+const Donation = ({
+  setIsValid,
+  qtyRequest,
+  errors,
+  setTotalDonationQtyBrands,
+  selectedId,
+  donationBrands,
+  setDonationBrands,
+  exceed,
+}) => {
+  const totalDonationBrands = donationBrands?.reduce(
+    (acc, donation) => acc + Number(donation.quantity || 0),
+    0
+  );
 
-const Donation = ({ setIsValid, qtyRequest, errors, setTotalDonationQtyBrands, selectedId, donationBrands, setDonationBrands }) => {
+  useEffect(() => {
+    setTotalDonationQtyBrands(totalDonationBrands);
+  }, [totalDonationBrands]);
 
-    const totalDonationBrands = donationBrands?.reduce((acc, donation) => acc + Number(donation.quantity || 0), 0);
+  const { getBrandDonation } = useReleasingHook();
 
-    useEffect(() => {
-        setTotalDonationQtyBrands(totalDonationBrands)
-    }, [totalDonationBrands])
-
-    const { getBrandDonation } = useReleasingHook();
-
-    const { data: brandDonationData, isLoading: isBrandDonationloading } = useQuery({
-        queryKey: ['brand-donation', selectedId],
-        queryFn: () => getBrandDonation(selectedId),
-        enabled: selectedId != null && selectedId !== "", // Ensure selectedId is not null or empty
-        staleTime: Infinity,
-        cacheTime: Infinity,
+  const { data: brandDonationData, isLoading: isBrandDonationloading } =
+    useQuery({
+      queryKey: ["brand-donation", selectedId],
+      queryFn: () => getBrandDonation(selectedId),
+      enabled: selectedId != null && selectedId !== "", // Ensure selectedId is not null or empty
+      staleTime: Infinity,
+      cacheTime: Infinity,
     });
 
-    const mapOptions = (data, labelKey) =>
-        data?.map(item => ({
-            id: item.brand_id,
-            label: item[labelKey],
-            source_id: item.source_id,
-            quantity: item.quantity,
-            expiration_date: item.expiration_date
-        })) || [];
+  const mapOptions = (data, labelKey) =>
+    data?.map((item) => ({
+      id: item.brand_id,
+      label: item[labelKey],
+      source_id: item.source_id,
+      quantity: item.quantity,
+      expiration_date: item.expiration_date,
+    })) || [];
 
-    const brandDonationOptions = useMemo(() => mapOptions(brandDonationData, 'concatenated_info'), [brandDonationData])
+  const brandDonationOptions = useMemo(
+    () => mapOptions(brandDonationData, "concatenated_info"),
+    [brandDonationData]
+  );
 
-    const [donationBrand, setDonationBrand] = useState(); //Value is ID
-    const [donationSource, setDonationSource] = useState(); //Value is ID
-    const [donationQuantity, setDonationQuantity] = useState();
-    const [donationExpirationDate, setDonationExpirationDate] = useState();
+  const [donationBrand, setDonationBrand] = useState(null); //Primary key of Donation Brand Product
+  const [donationSource, setDonationSource] = useState(null); // ID: Identify as Donation[2] or Regular[1]
+  const [donationQuantity, setDonationQuantity] = useState(1);
+  const [donationExpirationDate, setDonationExpirationDate] = useState(null);
 
-    const handleAddBrand = () => {
-        setDonationBrands((prevList) => [
-            ...prevList,
-            {
-                brand_id: donationBrand,
-                source_id: donationSource,
-                quantity: donationQuantity,
-                expiration_date: donationExpirationDate
-            }]);
+  function currentTotatlQuantity() {
+    return donationBrands.reduce((total, brand) => {
+      const quantity = parseFloat(brand.quantity) || 0;
 
-        // Reset the state for brand and quantity inputs
-        setDonationBrand();
-        setDonationSource();
-        setDonationQuantity("");
-        setDonationExpirationDate("");
-    };
+      return total + quantity;
+    }, 0);
+  }
 
-    const handleRemoveBrand = (index) => {
-        const updatedList = donationBrands.filter((_, i) => i !== index);
-        setDonationBrands(updatedList);
-    };
+  function checkOnExceedQuantityRequest() {
+    const exceed =
+      donationBrands.length > 0 && currentTotatlQuantity() + 1 > qtyRequest;
 
-    return (
-        <Box
-            sx={{
-                maxHeight: '400px',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                padding: 2,
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-            }}
-        >
-            {donationBrands.map((item, index) => (
-                <> <Grid container spacing={2} >
-                    {/* Brand Selection */}
-                    <Grid item md={7} lg={7}>
-                        <AutoCompleteComponent
-                            name={'brandDonation'}
-                            placeholder="Search brand..."
-                            label={'Brand'}
-                            options={brandDonationOptions}
-                            loading={isBrandDonationloading}
-                            value={brandDonationOptions.find(option => option.id === item.brand_id) || null}
-                            onChange={(e, value) => {
-                                const updatedList = [...donationBrands];
-                                updatedList[index].brand_id = value?.id || null;
-                                updatedList[index].source_id = value?.source_id || null;
-                                updatedList[index].expiration_date = value?.expiration_date || null;
-                                setDonationBrands(updatedList);
-                            }}
-                            fullWidth={true}
-                            error={!item.brand_id && errors.brand_id}
-                            helperText={
-                                !item.brand_id && <Typography color='danger' level='body-xs'>{errors.brand_id}</Typography>
-                            }
-                        />
-                    </Grid>
+    return exceed;
+  }
 
-                    {/* Quantity Input */}
-                    <Grid item xs={11} md={5} lg={5}>
-                        <InputComponent
-                            label="Quantity"
-                            placeholder="xxx.xxx.xxx"
-                            fullWidth={true}
-                            name={`quantity-${index}`}
-                            size="lg"
-                            value={item.quantity}
-                            onChange={(e) => {
-                                const updatedList = [...donationBrands];
-                                const parsedValue = parseFloat(e.target.value) || 0;
-                                updatedList[index].quantity = parsedValue;
-                                setDonationBrands(updatedList);
+  const handleAddBrand = () => {
+    let initialQty = 1;
 
-                                if (updatedList[index].quantity > qtyRequest) {
-                                    setIsValid(true);   // Valid, allow proceeding
-                                } else {
-                                    setIsValid(false);  // Invalid, prevent proceeding
-                                }
+    setDonationBrands((prevList) => [
+      ...prevList,
+      {
+        brand_id: donationBrand,
+        source_id: donationSource,
+        quantity: donationQuantity,
+        expiration_date: donationExpirationDate,
+        exceed: false,
+      },
+    ]);
 
-                                // console.log(typeof updatedList[index].quantity); // Optionally log the type of the quantity
-                            }}
-                            helperText={
-                                <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                    {
-                                        !item.quantity ? (
-                                            <Typography color="danger" level="body-xs">
-                                                {errors.quantity}
-                                            </Typography>
-                                        ) : (
-                                            <Typography level="body-xs" sx={{ mt: 1 }}>
-                                                {item.brand_id ? (
-                                                    item.quantity > qtyRequest ? (
-                                                        <span style={{ color: 'red' }}>
-                                                            Quantity inputted exceeds quantity requested ({qtyRequest})
-                                                        </span>
-                                                    ) : (
-                                                        <span
-                                                            style={{
-                                                                color: !item.quantity || item.quantity === 0 ? 'red' : 'inherit',
-                                                            }}
-                                                        >
-                                                            {`${item.quantity || 0} specified / ${brandDonationOptions.find(option => option.id === item.brand_id)?.quantity || 0
-                                                                } left`}
-                                                        </span>
-                                                    )
-                                                ) : (
-                                                    <span style={{ color: 'red' }}>Please select a brand first</span>
-                                                )}
-                                            </Typography>
-                                        )
-                                    }
+    // Reset the state for brand and quantity inputs
+    setDonationBrand(null);
+    setDonationSource(null);
+    setDonationQuantity(initialQty);
+    setDonationExpirationDate(null);
+  };
 
-                                    {/* Trash Icon Button */}
-                                    <IconButtonComponent
-                                        color="danger"
-                                        icon={Trash}
-                                        iconSize={16}
-                                        onClick={() => handleRemoveBrand(index)}
-                                    />
-                                </Stack>
-                            }
-                        />
-                    </Grid>
+  const handleRemoveBrand = (index) => {
+    const updatedList = donationBrands.filter((_, i) => i !== index);
+    setDonationBrands(updatedList);
+  };
 
-                </Grid>
-                    <Divider sx={{ my: 2 }} />
-                </>
+  function handleQuantityValueChange(e, index) {
+    const newQuantityValue = parseFloat(e.target.value) || 0;
 
-            ))}
+    const updatedList = [...donationBrands];
 
-            <ButtonComponent
-                type="button"
-                variant="contained"
-                label="Add another brand"
-                onClick={handleAddBrand} // Trigger appending
-                endDecorator={<Plus size={20} />}
-            />
-        </Box >
-    )
-}
+    const currentTotatlQuantity = donationBrands.reduce((total, brand) => {
+      const quantity = parseFloat(brand.quantity) || 0;
+      return total + quantity;
+    }, 0);
 
-export default Donation
+    if (newQuantityValue + currentTotatlQuantity > qtyRequest) {
+      setIsValid(true);
+      updatedList[index].quantity = 0;
+      updatedList[index].exceed = true;
+    } else {
+      setIsValid(false);
+      updatedList[index].quantity = newQuantityValue;
+      updatedList[index].exceed = false;
+    }
+
+    setDonationBrands(updatedList);
+  }
+
+  return (
+    <Box
+      sx={{
+        maxHeight: "400px",
+        overflowY: "auto",
+        overflowX: "hidden",
+        padding: 2,
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+      }}
+    >
+      {donationBrands.map((item, index) => (
+        <BrandInput
+          index={index}
+          item={item}
+          qtyRequest={qtyRequest}
+          brandRegularOptions={brandDonationOptions}
+          isBrandRegularloading={isBrandDonationloading}
+          regularBrands={donationBrands}
+          setRegularBrands={setDonationBrands}
+          handleQuantityValueChange={handleQuantityValueChange}
+          handleRemoveBrand={handleRemoveBrand}
+          currentTotatlQuantity={currentTotatlQuantity()}
+          errors={errors}
+        />
+      ))}
+
+      {!checkOnExceedQuantityRequest() && !exceed && (
+        <ButtonComponent
+          type="button"
+          variant="contained"
+          label="Add another brand"
+          onClick={handleAddBrand} // Trigger appending
+          endDecorator={<Plus size={20} />}
+        />
+      )}
+    </Box>
+  );
+};
+
+export default Donation;

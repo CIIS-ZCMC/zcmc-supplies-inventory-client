@@ -14,7 +14,6 @@ import Header from "../../Layout/Header/Header";
 import SearchFilter from "../../Layout/SearchFilter/SearchFilter";
 import Table from "../../Layout/Table/Table";
 
-
 //custom components
 import DatePickerComponent from "../../Components/Form/DatePickerComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
@@ -23,12 +22,11 @@ import FormDialog from "../../Layout/Releasing/FormDialog";
 import SnackbarComponent from "../../Components/SnackbarComponent";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import ButtonComponent from "../../Components/ButtonComponent";
-import ContainerComponent from '../../Components/Container/ContainerComponent';
-
+import ContainerComponent from "../../Components/Container/ContainerComponent";
 
 //datas
-import { items, user } from '../../Data/index';
-import { releasingHeader } from '../../Data/TableHeader';
+import { items, user } from "../../Data/index";
+import { releasingHeader } from "../../Data/TableHeader";
 
 const categoryFilter = [
   { name: "Option 1", value: "option 1" },
@@ -37,47 +35,49 @@ const categoryFilter = [
 ];
 
 const sortFilter = [
-  { name: 'sort option 1', value: 'sort option 1' },
-  { name: 'sort option 2', value: 'sort option 2' },
-  { name: 'sort option 3', value: 'sort option 3' }
-]
+  { name: "sort option 1", value: "sort option 1" },
+  { name: "sort option 2", value: "sort option 2" },
+  { name: "sort option 3", value: "sort option 3" },
+];
 
 const Releasing = () => {
-
-
   // local States
   const [activeStep, setActiveStep] = useState(0);
-  const steps = ['Step 1', 'Step 2', 'Step 3'];
-  const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
+  const steps = ["Step 1", "Step 2", "Step 3"];
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    color: "",
+    message: "",
+  });
 
   const { getStockOut } = useReleasingHook();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['stockout'],
+    queryKey: ["stockout"],
     queryFn: getStockOut,
-  })
+  });
 
-  const stockoutData = data?.data
+  const stockoutData = data?.data;
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const pageDetails = {
     title: "Requisition and issue slip",
-    description: "this is a sample description"
-  }
+    description: "this is a sample description",
+  };
 
   const handleSnackbarClose = () => {
-    setSnackbar({ open: false })
-  }
+    setSnackbar({ open: false });
+  };
 
   const handleDialogOpen = () => {
-    setIsDialogOpen(true)
+    setIsDialogOpen(true);
   };
 
   const handleDialogClose = () => {
-    setIsDialogOpen(false)
+    setIsDialogOpen(false);
     setActiveStep(0);
-  }
+  };
 
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
@@ -90,7 +90,6 @@ const Releasing = () => {
       setActiveStep((prevStep) => prevStep - 1);
     }
   };
-
 
   const FilterOptions = () => (
     <>
@@ -116,7 +115,6 @@ const Releasing = () => {
     <>
       <Header pageDetails={pageDetails} data={user} />
       <Stack gap={2} mt={2}>
-
         {/* search and filter */}
         <ContainerComponent>
           <SearchFilter>
@@ -153,9 +151,21 @@ const Releasing = () => {
           setActiveStep={setActiveStep}
           isOpen={isDialogOpen}
           handleClose={handleDialogClose}
-          content={<FormDialog handleNext={handleNext} handleBack={handleBack} steps={steps} activeStep={activeStep} handleDialogClose={handleDialogClose} setSnackbar={setSnackbar} snackbar={snackbar} />}
+          content={
+            <FormDialog
+              handleNext={handleNext}
+              handleBack={handleBack}
+              steps={steps}
+              activeStep={activeStep}
+              handleDialogClose={handleDialogClose}
+              setSnackbar={setSnackbar}
+              snackbar={snackbar}
+            />
+          }
           title={`Record a new Requisition and Issue slip`}
-          description={"Describe how would you like to release items from your inventory. All fields are required."}
+          description={
+            "Describe how would you like to release items from your inventory. All fields are required."
+          }
         />
 
         <SnackbarComponent
@@ -163,12 +173,12 @@ const Releasing = () => {
           onClose={handleSnackbarClose}
           color={snackbar.color}
           message={snackbar.message}
-          variant='solid'
-          anchor={{ vertical: 'top', horizontal: 'right' }}
+          variant="solid"
+          anchor={{ vertical: "top", horizontal: "right" }}
         />
       </Stack>
     </>
-  )
-}
+  );
+};
 
-export default Releasing
+export default Releasing;

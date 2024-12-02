@@ -1,57 +1,124 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
-import { Stack, Typography, Divider, Alert } from '@mui/joy';
-import { CircleAlert } from 'lucide-react';
+import { Grid, Typography } from "@mui/joy";
 
-import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent';
-import AccordionComponent from '../../../Components/AccordionComponent';
+//custom components
+import AutoCompleteComponent from "../../../Components/Form/AutoCompleteComponent";
+import InputComponent from "../../../Components/Form/InputComponent";
+import DatePickerComponent from "../../../Components/Form/DatePickerComponent";
+import TextAreaComponent from "../../../Components/Form/TextAreaComponent";
 
-const Step1Form = ({ errors, accordionData, suppliesOptions, isSuppliesLoading, setSelectedId, selectedId, selectedQuantity }) => {
-
-    const itemCurrentStockLevel = suppliesOptions?.find(item => item.id === selectedId);
-
-    useEffect(() => {
-        if (itemCurrentStockLevel) {
-            console.log(itemCurrentStockLevel?.quantity);
-        }
-    }, [itemCurrentStockLevel]);
-
-    return (
-        <div>
-            <AutoCompleteComponent
-                label={'Item Name'}
-                placeholder="Search Item..."
-                options={suppliesOptions}
-                loading={isSuppliesLoading}
-                value={suppliesOptions?.find(option => option.id === selectedId) || null}
-                onChange={(e, value) => { setSelectedId(value?.id || null); }}
-                error={!selectedId && errors.selectedId}
-                helperText={
-                    !selectedId && <Typography color='danger' level='body-xs'>{errors.selectedId}</Typography>
-                }
-                fullWidth={true}
-            />
-
-            <Stack my={1}>
-                <Typography level={'body-sm'}>
-                    Item's current stock level: value remaining: ( <span style={{ fontWeight: 'bold' }}>{itemCurrentStockLevel?.quantity || 0} </span>)
+const Step1Form = ({
+  errors,
+  areaOptions,
+  isAreasLoading,
+  requestingOffice,
+  setRequestingOffice,
+  qtyRequest,
+  setQtyRequest,
+  risDate,
+  setRisDate,
+  risNo,
+  setRisNo,
+  remarks,
+  setRemarks,
+}) => {
+  return (
+    <div>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <AutoCompleteComponent
+            placeholder="Search area..."
+            label="Requesting Office"
+            options={areaOptions}
+            loading={isAreasLoading}
+            value={
+              areaOptions.find((option) => option.id === requestingOffice) ||
+              null
+            }
+            onChange={(e, value) => {
+              setRequestingOffice(value?.id || null);
+            }}
+            fullWidth={true}
+            error={!requestingOffice && errors.requestingOffice}
+            helperText={
+              !requestingOffice && (
+                <Typography color="danger" level="body-xs">
+                  {errors.requestingOffice}
                 </Typography>
+              )
+            }
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <InputComponent
+            size={"lg"}
+            label="Quantity Requested"
+            placeholder="xxx.xxx.xxx"
+            fullWidth={true}
+            value={qtyRequest}
+            onChange={(e) => {
+              const numericValue = parseFloat(e.target.value) || 0;
+              setQtyRequest(numericValue);
+            }}
+            // onChange={
+            //     (e) => { setQtyRequest(e.target.value); }
+            // }
+            error={!qtyRequest && errors.qtyRequest}
+            helperText={
+              !qtyRequest && (
+                <Typography color="danger" level="body-xs">
+                  {errors.qtyRequest}
+                </Typography>
+              )
+            }
+          />
+        </Grid>
 
-                <Divider sx={{ my: 1 }}></Divider>
-                <Alert
-                    variant="soft"
-                    color="neutral"
-                    size="sm"
-                    startDecorator={<CircleAlert size={16} />}
-                    sx={{ borderRadius: 10 }}
-                >
-                    You can separately add an item with multiple brands both on Regular and Donation sources and submit it once.
-                </Alert>
-            </Stack>
+        <Grid item xs={12} md={6}>
+          <DatePickerComponent
+            size={"lg"}
+            label="RIS date"
+            placeholder="xxxx.xx.xx"
+            value={risDate}
+            onChange={(date) => setRisDate(date)}
+          />
+        </Grid>
 
-            <AccordionComponent accordionData={accordionData} />
-        </div>
-    );
+        <Grid item xs={12} md={6}>
+          <InputComponent
+            size={"lg"}
+            label="RIS number"
+            placeholder="xxx.xxx.xxx"
+            fullWidth={true}
+            value={risNo}
+            onChange={(e) => {
+              setRisNo(e.target.value);
+            }}
+            error={!risNo && errors.risNo}
+            helperText={
+              !risNo && (
+                <Typography color="danger" level="body-xs">
+                  {errors.risNo}
+                </Typography>
+              )
+            }
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextAreaComponent
+            label={"Remarks"}
+            placeholder={"Enter Remarks"}
+            value={remarks}
+            onChange={(e) => {
+              setRemarks(e.target.value);
+            }}
+          />
+        </Grid>
+      </Grid>
+    </div>
+  );
 };
 
 export default Step1Form;
