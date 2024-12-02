@@ -21,7 +21,7 @@ const AutoCompleteComponent = ({ name, placeholder, label, options = [], width, 
                     isOptionEqualToValue={(option, value) => option?.id === value?.id}
                     getOptionLabel={(option) => option.label || ''} // Safely retrieve the label
                 />
-                {error && <Typography variant="body2" color="danger" sx={{ marginTop: 1 }}>{helperText}</Typography>}
+                {error && <Typography variant="body2" color="danger">{helperText}</Typography>}
             </FormControl>
         </Box>
     );

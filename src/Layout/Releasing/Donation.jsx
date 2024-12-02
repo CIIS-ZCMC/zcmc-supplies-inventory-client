@@ -11,7 +11,7 @@ import ButtonComponent from '../../Components/ButtonComponent';
 
 import useReleasingHook from '../../Hooks/ReleasingHook';
 
-const Donation = ({ setTotalDonationQtyBrands, selectedId, donationBrands, setDonationBrands }) => {
+const Donation = ({ setIsValid, qtyRequest, errors, setTotalDonationQtyBrands, selectedId, donationBrands, setDonationBrands }) => {
 
     const totalDonationBrands = donationBrands?.reduce((acc, donation) => acc + Number(donation.quantity || 0), 0);
 
@@ -97,6 +97,10 @@ const Donation = ({ setTotalDonationQtyBrands, selectedId, donationBrands, setDo
                                 setDonationBrands(updatedList);
                             }}
                             fullWidth={true}
+                            error={!item.brand_id && errors.brand_id}
+                            helperText={
+                                !item.brand_id && <Typography color='danger' level='body-xs'>{errors.brand_id}</Typography>
+                            }
                         />
                     </Grid>
 
@@ -111,36 +115,59 @@ const Donation = ({ setTotalDonationQtyBrands, selectedId, donationBrands, setDo
                             value={item.quantity}
                             onChange={(e) => {
                                 const updatedList = [...donationBrands];
-                                updatedList[index].quantity = e.target.value;
+                                const parsedValue = parseFloat(e.target.value) || 0;
+                                updatedList[index].quantity = parsedValue;
                                 setDonationBrands(updatedList);
+
+                                if (updatedList[index].quantity > qtyRequest) {
+                                    setIsValid(true);   // Valid, allow proceeding
+                                } else {
+                                    setIsValid(false);  // Invalid, prevent proceeding
+                                }
+
+                                // console.log(typeof updatedList[index].quantity); // Optionally log the type of the quantity
                             }}
-                        />
-
-                        {(() => {
-                            return (
-                                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                                    <Typography level="body-xs" sx={{ mt: 1 }}>
-                                        {item.brand_id ? (
-                                            item.quantity > (brandDonationOptions.find(option => option.id === item.brand_id)?.quantity || 0) ? (
-                                                <span style={{ color: 'red' }}>Quantity exceeded / {brandDonationOptions.find(option => option.id === item.brand_id)?.quantity || 0}</span>
-                                            ) : (
-                                                `${item.quantity || 0} specified / ${brandDonationOptions.find(option => option.id === item.brand_id)?.quantity || 0} left`
-                                            )
+                            helperText={
+                                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                    {
+                                        !item.quantity ? (
+                                            <Typography color="danger" level="body-xs">
+                                                {errors.quantity}
+                                            </Typography>
                                         ) : (
-                                            'Please select a brand first'
-                                        )}
-                                    </Typography>
+                                            <Typography level="body-xs" sx={{ mt: 1 }}>
+                                                {item.brand_id ? (
+                                                    item.quantity > qtyRequest ? (
+                                                        <span style={{ color: 'red' }}>
+                                                            Quantity inputted exceeds quantity requested ({qtyRequest})
+                                                        </span>
+                                                    ) : (
+                                                        <span
+                                                            style={{
+                                                                color: !item.quantity || item.quantity === 0 ? 'red' : 'inherit',
+                                                            }}
+                                                        >
+                                                            {`${item.quantity || 0} specified / ${brandDonationOptions.find(option => option.id === item.brand_id)?.quantity || 0
+                                                                } left`}
+                                                        </span>
+                                                    )
+                                                ) : (
+                                                    <span style={{ color: 'red' }}>Please select a brand first</span>
+                                                )}
+                                            </Typography>
+                                        )
+                                    }
 
+                                    {/* Trash Icon Button */}
                                     <IconButtonComponent
-                                        color='danger'
+                                        color="danger"
                                         icon={Trash}
                                         iconSize={16}
                                         onClick={() => handleRemoveBrand(index)}
                                     />
                                 </Stack>
-                            );
-                        })()}
-
+                            }
+                        />
                     </Grid>
 
                 </Grid>

@@ -37,11 +37,8 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
     const [risDate, setRisDate] = useState(moment().format('YYYY-M-D'));
     const [risNo, setRisNo] = useState('');
     const [remarks, setRemarks] = useState('');
-    const [isValid, setIsValid] = useState('');
+    const [isValid, setIsValid] = useState(false);
 
-    // useEffect(() => {
-    //     console.log(errors.qtyRequest)
-    // }, [errors])
 
     //validation function
     const validateStep = () => {
@@ -71,20 +68,25 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
             }
 
             // Check if any brand's quantity exceeds its available quantity
-            const exceededBrand = [
-                ...regularBrands,
-                ...donationBrands,
-            ].find((brand) => brand.brand_id && brand.quantity > (brand.brandQuantity || 0));
+            // const exceededBrand = [
+            //     ...regularBrands,
+            //     ...donationBrands,
+            // ].find((brand) => brand.brand_id && brand.quantity > (brand.brandQuantity || 0));
 
-            if (exceededBrand.quantity > qtyRequest) {
-                newErrors.quantity = 'Quanity inputted exceeds the current available quantity'
-            }
+            // if (exceededBrand.quantity > qtyRequest) {
+            //     newErrors.quantity = 'Quanity inputted exceeds the current available quantity'
+            // }
         }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
+
+    const onHandleBack = () => {
+        setIsValid(false)
+        handleBack()
+    }
 
     const onHandleNext = () => {
         const isValid = (validateStep())
@@ -126,11 +128,18 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
 
     // Helper function for mapping options
     const mapOptions = (data, labelKey) =>
-        data?.map(item => ({ label: item[labelKey], id: item.id })) || [];
+        data?.map(item => ({ label: item[labelKey], id: item.id, quantity: item.quantity })) || [];
 
     // Memoized options to avoid recalculating on every render
     const suppliesOptions = useMemo(() => mapOptions(suppliesData?.data, 'name'), [suppliesData]);
     const areaOptions = useMemo(() => mapOptions(areasData?.data, 'area_name'), [areasData]);
+
+    // useEffect(() => {
+    //     const specificItem = suppliesOptions.find(item => item.id === someId);
+    //     if (specificItem) {
+    //         console.log(specificItem.quantity);
+    //     }
+    // }, [suppliesOptions]);
 
     // Define create the mutation for stockout
     const mutation = useMutation({
@@ -178,6 +187,8 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
             setTotalRegularQtyBrands={setTotalRegularQtyBrands}
             setRegularBrands={setRegularBrands}
             setSelectedQuantity={setSelectedQuantity}
+            qtyRequest={qtyRequest}
+            setIsValid={setIsValid}
         />
     },
     {
@@ -193,6 +204,8 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
             donationBrands={donationBrands}
             setTotalDonationQtyBrands={setTotalDonationQtyBrands}
             setDonationBrands={setDonationBrands}
+            qtyRequest={qtyRequest}
+            setIsValid={setIsValid}
         />
     }]
 
@@ -277,7 +290,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, activeStep, steps, handleB
                 <Stack direction={'row'} spacing={2}>
 
                     {/* display only on step 1 */}
-                    <Button onClick={activeStep === 0 ? closeDialog : handleBack} variant="outlined" fullWidth>
+                    <Button onClick={activeStep === 0 ? closeDialog : onHandleBack} variant="outlined" fullWidth>
                         {activeStep === 0 ? "Cancel" : "Back"}
                     </Button>
 

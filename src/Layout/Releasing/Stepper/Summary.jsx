@@ -7,9 +7,9 @@ const Summary = ({ requestingOffice, totalRegularQtyBrands, totalDonationQtyBran
     // variable for total regualr and donation brands
     const totalBothSources = (totalRegularQtyBrands + totalDonationQtyBrands)
 
-    useEffect(() => {
-        console.log(qtyRequest)
-    }, [qtyRequest])
+    // useEffect(() => {
+    //     console.log(qtyRequest)
+    // }, [qtyRequest])
 
     return (
         <div>

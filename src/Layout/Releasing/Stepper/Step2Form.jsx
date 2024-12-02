@@ -35,17 +35,23 @@ const Step2Form = ({ errors, areaOptions, isAreasLoading, requestingOffice, setR
                         placeholder="xxx.xxx.xxx"
                         fullWidth={true}
                         value={qtyRequest}
-                        onChange={(e) => { setQtyRequest(e.target.value); }}
+                        onChange={(e) => {
+                            const numericValue = parseFloat(e.target.value) || 0;
+                            setQtyRequest(numericValue);
+                        }}
+                        // onChange={
+                        //     (e) => { setQtyRequest(e.target.value); }
+                        // }
                         error={!qtyRequest && errors.qtyRequest}
                         helperText={
                             !qtyRequest && <Typography color='danger' level='body-xs'>{errors.qtyRequest}</Typography>
                         }
                     />
-
                 </Grid>
 
                 <Grid item xs={12} md={6}>
                     <DatePickerComponent
+                        size={'lg'}
                         label="RIS date"
                         placeholder="xxxx.xx.xx"
                         value={risDate}

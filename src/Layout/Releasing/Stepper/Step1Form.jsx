@@ -7,6 +7,15 @@ import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponen
 import AccordionComponent from '../../../Components/AccordionComponent';
 
 const Step1Form = ({ errors, accordionData, suppliesOptions, isSuppliesLoading, setSelectedId, selectedId, selectedQuantity }) => {
+
+    const itemCurrentStockLevel = suppliesOptions?.find(item => item.id === selectedId);
+
+    useEffect(() => {
+        if (itemCurrentStockLevel) {
+            console.log(itemCurrentStockLevel?.quantity);
+        }
+    }, [itemCurrentStockLevel]);
+
     return (
         <div>
             <AutoCompleteComponent
@@ -25,8 +34,9 @@ const Step1Form = ({ errors, accordionData, suppliesOptions, isSuppliesLoading, 
 
             <Stack my={1}>
                 <Typography level={'body-sm'}>
-                    Item's current stock level: value remaining {selectedId}
+                    Item's current stock level: value remaining: ( <span style={{ fontWeight: 'bold' }}>{itemCurrentStockLevel?.quantity || 0} </span>)
                 </Typography>
+
                 <Divider sx={{ my: 1 }}></Divider>
                 <Alert
                     variant="soft"

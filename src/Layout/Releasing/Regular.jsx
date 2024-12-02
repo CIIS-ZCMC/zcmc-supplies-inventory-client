@@ -11,17 +11,17 @@ import ButtonComponent from '../../Components/ButtonComponent';
 
 import useReleasingHook from '../../Hooks/ReleasingHook';
 
-const Regular = ({ qtyRequest, errors, selectedId, setTotalRegularQtyBrands, setSelectedQuantity, regularBrands, setRegularBrands }) => {
+const Regular = ({ setIsValid, qtyRequest, errors, selectedId, setTotalRegularQtyBrands, setSelectedQuantity, regularBrands, setRegularBrands }) => {
+
+    useEffect(() => {
+        console.log(typeof qtyRequest, qtyRequest);
+    }, [qtyRequest])
 
     const totalRegularBrands = regularBrands?.reduce((acc, regular) => acc + Number(regular.quantity || 0), 0);
 
     useEffect(() => {
         setTotalRegularQtyBrands(totalRegularBrands)
     }, [totalRegularBrands])
-
-    useEffect(() => {
-        console.log(errors)
-    }, [errors])
 
     const { getBrandRegular } = useReleasingHook();
 
@@ -120,15 +120,51 @@ const Regular = ({ qtyRequest, errors, selectedId, setTotalRegularQtyBrands, set
                             error={!item.quantity && errors.quantity}
                             onChange={(e) => {
                                 const updatedList = [...regularBrands];
-                                updatedList[index].quantity = e.target.value;
+                                const parsedValue = parseFloat(e.target.value) || 0;
+                                updatedList[index].quantity = parsedValue;
                                 setRegularBrands(updatedList);
+
+                                if (updatedList[index].quantity > qtyRequest) {
+                                    setIsValid(true);   // Valid, allow proceeding
+                                } else {
+                                    setIsValid(false);  // Invalid, prevent proceeding
+                                }
                             }}
+
                             helperText={
-                                <Stack direction={'row'} alignItems={'center'} justifyContent={'end'}>
-                                    <Typography color='danger' level='body-xs'>{errors.quantity}</Typography>
-                                    {/* {!item.quantity && <Typography color='danger' level='body-xs'>{errors.quantity}</Typography>} */}
+                                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                    {
+                                        !item.quantity ? (
+                                            <Typography color="danger" level="body-xs">
+                                                {errors.quantity}
+                                            </Typography>
+                                        ) : (
+                                            <Typography level="body-xs" sx={{ mt: 1 }}>
+                                                {item.brand_id ? (
+                                                    item.quantity > qtyRequest ? (
+                                                        <span style={{ color: 'red' }}>
+                                                            Quantity inputted exceeds quantity requested ({qtyRequest})
+                                                        </span>
+                                                    ) : (
+                                                        <span
+                                                            style={{
+                                                                color: !item.quantity || item.quantity === 0 ? 'red' : 'inherit',
+                                                            }}
+                                                        >
+                                                            {`${item.quantity || 0} specified / ${brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0
+                                                                } left`}
+                                                        </span>
+                                                    )
+                                                ) : (
+                                                    <span style={{ color: 'red' }}>Please select a brand first</span>
+                                                )}
+                                            </Typography>
+                                        )
+                                    }
+
+                                    {/* Trash Icon Button */}
                                     <IconButtonComponent
-                                        color='danger'
+                                        color="danger"
                                         icon={Trash}
                                         iconSize={16}
                                         onClick={() => handleRemoveBrand(index)}
@@ -136,45 +172,13 @@ const Regular = ({ qtyRequest, errors, selectedId, setTotalRegularQtyBrands, set
                                 </Stack>
                             }
                         />
-                        {/* {(() => {
-                            return (
-                                <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                                    <Typography level="body-xs" sx={{ mt: 1 }}>
-                                        {item.brand_id ? (
-                                            item.quantity > (brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0) ? (
-                                                <span style={{ color: 'red' }}>Quantity exceeded / {brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0}</span>
-                                            ) : (
-                                                <span
-                                                    style={{
-                                                        color: (!item.quantity || item.quantity === 0) ? 'red' : 'inherit'
-                                                    }}
-                                                >
-                                                    {`${item.quantity || 0} specified / ${brandRegularOptions.find(option => option.id === item.brand_id)?.quantity || 0} left`}
-                                                </span>
-
-                                            )
-                                        ) : (
-                                            <span style={{ color: 'red' }}>'Please select a brand first'</span>
-                                        )}
-                                    </Typography>
-
-                                    <IconButtonComponent
-                                        color='danger'
-                                        icon={Trash}
-                                        iconSize={16}
-                                        onClick={() => handleRemoveBrand(index)}
-                                    />
-                                </Stack>
-                            );
-                        })()} */}
-
                     </Grid>
 
-                </Grid>
+                </Grid >
                     <Divider sx={{ my: 2 }} />
                 </>
-
-            ))}
+            ))
+            }
 
             <ButtonComponent
                 type="button"
