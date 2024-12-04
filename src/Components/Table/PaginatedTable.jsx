@@ -26,6 +26,7 @@ PaginatedTable.propTypes = {
   tableTitle: PropTypes.string,
   tableDesc: PropTypes.string,
   showChip: PropTypes.bool,
+  handleDialogOpen: PropTypes.func,
 };
 function PaginatedTable({
   rowsPage = 10,
@@ -41,6 +42,8 @@ function PaginatedTable({
   desc,
   btn,
   loading,
+  viewModal = false,
+  viewModalContent,
 }) {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
@@ -74,6 +77,13 @@ function PaginatedTable({
   const startIdx = (page - 1) * rowsPerPage;
   const endIdx = Math.min(startIdx + rowsPerPage, rows?.length);
   const currentRows = rows?.slice(startIdx, startIdx + rowsPerPage);
+
+  const handleModalOpen = (row) => {
+    setSelectedRow(row); // Set the selected row
+    if (viewModalContent) {
+      viewModalContent(row); // Call passed function to handle the modal open logic
+    }
+  };
 
   return (
     <Box>
@@ -130,7 +140,7 @@ function PaginatedTable({
                         <ButtonComponent
                           size={"sm"}
                           variant="plain"
-                          onClick={() => handleNavigate(row)}
+                          onClick={() => viewModal ? handleModalOpen(row) : handleNavigate(row)}
                           startDecorator={
                             <SquareArrowOutUpRight size={"1rem"} />
                           }

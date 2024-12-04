@@ -5,7 +5,7 @@ const LabelComponent = ({ label, value }) => {
     return (
         <Stack direction="row" spacing={2} alignItems="center">
             <Typography sx={{ fontSize: '1rem', width: 150 }}>{label}</Typography>
-            <Typography sx={{ fontSize: '1.25rem', fontWeight: 'medium' }}>
+            <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>
                 {value === null ? "N/A" : value}
             </Typography>
         </Stack>

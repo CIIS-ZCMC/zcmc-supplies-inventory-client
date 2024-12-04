@@ -8,9 +8,9 @@ import useReceivingHook from '../../Hooks/ReceivingHook'
 import Header from '../../Layout/Header/Header';
 import LabelComponent from '../../Components/Typography/LabelComponent';
 
-const ReceivingDetails = () => {
+const ReceivingDetails = ({ urlId }) => {
 
-    const { id: urlId } = useParams(); // Get the `id` from the URL
+    // const { id: urlId } = useParams(); // Get the `id` from the URL
 
     const { getStockIn } = useReceivingHook();
 
@@ -38,70 +38,38 @@ const ReceivingDetails = () => {
         unit_name
     } = filteredItems?.[0] || {};
 
-    const pageDetails = {
-        title: "Transaction Overview",
-        description: "Complete information about an IAR. This record cannot be edited."
-    }
-
     return (
         <>
-            <Header pageDetails={pageDetails} data={user} />
+            <Stack pr={4}>
+                <Grid container spacing={2}>
+                    {/* Group 1 */}
+                    <Grid item width={"100%"}>
+                        <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>Transaction Information</Typography>
 
-            <Stack pt={2} pr={4}>
-                <Sheet
-                    variant="outlined"
-                    sx={{
-                        p: 2,
-                        borderRadius: '10px',
-                        width: '100%'
-                    }}
-                >
-
-
-                    <Stack direction="row" spacing={2} alignItems="center" pb={2}>
-                        <Button variant="outlined" onClick={() => { }}>
-                            Back
-                        </Button>
-
-                        <Typography level="h4">Item Details</Typography>
-                    </Stack>
-
-
-                    <Divider />
-
-                    <Grid container spacing={2} mt={2}>
-                        {/* Group 1 */}
-                        <Grid item width={"100%"}>
-                            <Card sx={{ p: 2 }}>
-                                <LabelComponent label="PO Number:" value={purchase_order_no} />
-                                <LabelComponent label="Item Name:" value={supply_name} />
-                                <LabelComponent label="Item Brand:" value={brand_name} />
-                            </Card>
-                        </Grid>
-
-                        {/* Group 2 */}
-                        <Grid item xs={12} md={6}>
-                            <Card sx={{ p: 2 }}>
-                                <LabelComponent label="IAR Number:" value={iar_no} />
-                                <LabelComponent label="Category:" value={category_name} />
-                                <LabelComponent label="Source:" value={source_name} />
-                                <LabelComponent label="Supplier:" value={supplier_name} />
-                            </Card>
-                        </Grid>
-
-                        {/* Group 3 */}
-                        <Grid item xs={12} md={6}>
-                            <Card sx={{ p: 2 }}>
-                                <LabelComponent label="Unit:" value={unit_name} />
-                                <LabelComponent label="Quantity:" value={quantity} />
-                                <LabelComponent label="Expiry Date:" value={expiry_date} />
-                                <LabelComponent label="Date Delivered:" value={delivery_date} />
-                            </Card>
-                        </Grid>
+                        <Card sx={{ p: 2 }}>
+                            <LabelComponent label="PO Number:" value={purchase_order_no} />
+                            <LabelComponent label="IAR Number:" value={iar_no} />
+                            <LabelComponent label="Source:" value={source_name} />
+                            <LabelComponent label="Date Delivered:" value={delivery_date} />
+                        </Card>
                     </Grid>
 
-                </Sheet>
-            </Stack>
+                    {/* Group 2 */}
+                    <Grid item width={"100%"}>
+                        <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>Product Information</Typography>
+
+                        <Card sx={{ p: 2 }}>
+                            <LabelComponent label="Item Name:" value={supply_name} />
+                            <LabelComponent label="Item Brand:" value={brand_name} />
+                            <LabelComponent label="Category:" value={category_name} />
+                            <LabelComponent label="Supplier:" value={supplier_name} />
+                            <LabelComponent label="Unit:" value={unit_name} />
+                            <LabelComponent label="Quantity:" value={quantity} />
+                            <LabelComponent label="Expiry Date:" value={expiry_date} />
+                        </Card>
+                    </Grid>
+                </Grid>
+            </Stack >
         </>
     )
 }

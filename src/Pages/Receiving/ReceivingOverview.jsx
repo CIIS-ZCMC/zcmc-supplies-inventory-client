@@ -27,6 +27,8 @@ import InputComponent from "../../Components/Form/InputComponent";
 //datas
 import { items, user } from '../../Data/index';
 import { receivingHeader } from '../../Data/TableHeader';
+import { GiConsoleController } from "react-icons/gi";
+import ReceivingDetails from "./ReceivingDetails";
 
 const categoryFilter = [
     { name: "Option 1", value: "option 1" },
@@ -52,6 +54,8 @@ const ReceivingOverview = () => {
 
     const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+    const [selectedRow, setSelectedRow] = useState(null);
 
     const pageDetails = {
         title: "Receiving (IAR Management)",
@@ -68,6 +72,15 @@ const ReceivingOverview = () => {
 
     const handleDialogClose = () => {
         setIsDialogOpen(false)
+    }
+
+    const handleViewDialogOpen = (row) => {
+        setSelectedRow(row.id)
+        setIsViewDialogOpen(true);
+    };
+
+    const handleViewDialogClose = (row) => {
+        setIsViewDialogOpen(false)
     }
 
     const handleSaveRIS = () => {
@@ -167,16 +180,12 @@ const ReceivingOverview = () => {
                                 <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
                             </Stack>
                         }
+                        viewModal={true}
+                        viewModalContent={handleViewDialogOpen}
                     />
                 </ContainerComponent>
             </Stack>
 
-            {/* <ModalComponent
-                isOpen={isViewDialogOpen}
-                handle={() => setIsViewDialogOpen(true)}
-                content={<ViewDialog />}
-                title={'Transaction Overview'}
-            /> */}
 
 
             {/* stock in form */}
@@ -187,6 +196,16 @@ const ReceivingOverview = () => {
                 actionBtns={false}
                 title="Record a new Requisition and Issue slip"
                 description={"Describe how would you like to release items from your inventory. All fields are required."}
+            />
+
+            {/* modal overview */}
+            <ModalComponent
+                isOpen={isViewDialogOpen}
+                handleClose={handleViewDialogClose}
+                content={<ReceivingDetails urlId={selectedRow} />}
+                actionBtns={false}
+                title={'Transaction Overview'}
+                description={"Complete information about an IAR. This record cannot be edited."}
             />
 
             <SnackbarComponent
