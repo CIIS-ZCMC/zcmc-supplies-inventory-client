@@ -23,3 +23,9 @@ export const user = {
     email: "email@domain.com",
     src: "https://mui.com/static/images/avatar/1.jpg"
 };
+
+export const categoryFilter = [
+    { name: "Janitorial", value: "Janitorial" },
+    { name: "Medical", value: "Medical" },
+    { name: "Office", value: "Office" },
+];

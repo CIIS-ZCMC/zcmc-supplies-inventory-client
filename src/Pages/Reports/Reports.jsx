@@ -34,6 +34,8 @@ import { InfoIcon } from "lucide-react";
 import { BsInfoCircle } from "react-icons/bs";
 import { MdOfflineBolt, MdOutlineOfflineBolt } from "react-icons/md";
 
+import { categoryFilter } from "../../Data/index"; // from index data
+
 export const FilterInfo = ({ label }) => {
   return (
     <Box display="flex" alignItems="center">
@@ -104,11 +106,12 @@ function Reports(props) {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const currentMonthYear = getCurrentMonthYear();
 
-  const categoryFilter = [
-    { name: "Janitorial", value: "Janitorial" },
-    { name: "Medical", value: "Medical" },
-    { name: "Office", value: "Office" },
-  ];
+  // made the category filter global
+  // const categoryFilter = [
+  //   { name: "Janitorial", value: "Janitorial" },
+  //   { name: "Medical", value: "Medical" },
+  //   { name: "Office", value: "Office" },
+  // ];
 
   const tabsData = [
     {
