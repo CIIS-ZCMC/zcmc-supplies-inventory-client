@@ -17,7 +17,7 @@ import useSuppliersHook from '../../Hooks/SuppliersHook';
 import useBrandsHook from '../../Hooks/BrandsHook';
 import useReceivingHook from '../../Hooks/ReceivingHook';
 
-const FormDialog = ({ handleDialogClose, setSnackbar }) => {
+const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
     const queryClient = useQueryClient()
 
@@ -64,7 +64,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         mutationFn: createStockIn,
         onSuccess: () => {
             // Only show success notification and close dialog after mutation is successful
-            setSnackbar({ open: true, color: 'success', message: 'Stockin Success' })
+            showSnackbar("Stockin Success!", "success", "filled");
             queryClient.invalidateQueries('stockin');
 
             // Reset Formik form values after submission
@@ -72,7 +72,12 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
         },
         onError: (error) => {
-            setSnackbar({ open: true, color: 'danger', message: `${error}` })
+
+            showSnackbar(
+                `Stockin failed!. Please try again. ${error}`,
+                "danger",
+                "filled"
+            );
             console.error("Error stockin form:", error);
         },
         onSettled: () => {
@@ -85,7 +90,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            console.log(values)
+            // console.log(values)
 
             // Create a new FormData object
             const formData = new FormData();

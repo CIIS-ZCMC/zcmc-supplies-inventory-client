@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 
 import { Grid, Box, Typography, Stack } from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
+import * as XLSX from 'xlsx'
 
 import { ViewIcon, SearchIcon } from "lucide-react";
 
 //hooks
 import useReceivingHook from "../../Hooks/ReceivingHook";
+import useSnackbarHook from "../../Hooks/AlertHook";
+import useFilterHook from "../../Hooks/FilterHook";
 
 //layouts
 import Header from "../../Layout/Header/Header";
@@ -25,23 +28,15 @@ import SnackbarComponent from "../../Components/SnackbarComponent";
 import InputComponent from "../../Components/Form/InputComponent";
 
 //datas
-import { items, user } from '../../Data/index';
+import { user } from '../../Data/index';
 import { receivingHeader } from '../../Data/TableHeader';
-
-const categoryFilter = [
-    { name: "Option 1", value: "option 1" },
-    { name: "Option 2", value: "option 2" },
-    { name: "Option 3", value: "option 3" },
-];
-
-const sortFilter = [
-    { name: 'sort option 1', value: 'sort option 1' },
-    { name: 'sort option 2', value: 'sort option 2' },
-    { name: 'sort option 3', value: 'sort option 3' }
-]
+import ReceivingDetails from "./ReceivingDetails";
+import { categoryFilter } from "../../Data/index";
 
 const ReceivingOverview = () => {
     const { getStockIn } = useReceivingHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar, } = useSnackbarHook();
+    const { selectedCategory, setCategory, filteredInventory, clearFilters, setSearchTerm, searchTerm } = useFilterHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['stockin'],
@@ -52,6 +47,8 @@ const ReceivingOverview = () => {
 
     const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+    const [selectedRow, setSelectedRow] = useState(null);
 
     const pageDetails = {
         title: "Receiving (IAR Management)",
@@ -70,31 +67,52 @@ const ReceivingOverview = () => {
         setIsDialogOpen(false)
     }
 
-    const handleSaveRIS = () => {
-        alert('RIS TO BE SAVED')
-        setIsDialogOpen(false)
-        //add snackbar indication item was saved
+    const handleViewDialogOpen = (row) => {
+        setSelectedRow(row.id)
+        setIsViewDialogOpen(true);
+    };
+
+    const handleViewDialogClose = (row) => {
+        setIsViewDialogOpen(false)
     }
 
-    const FilterOptions = () => (
-        <>
-            <Box mr={2}>
-                <DatePickerComponent />
-            </Box>
-            <Box mr={2}>
-                <DatePickerComponent />
-            </Box>
-            <Box mr={2}>
-                <SelectComponent
-                    placeholder="Select Category"
-                    options={categoryFilter}
-                />
-            </Box>
-            <Box>
-                <SelectComponent placeholder="Sort By" options={sortFilter} />
-            </Box>
-        </>
-    );
+    const generateReport = () => {
+        try {
+            const worksheet = XLSX.utils.json_to_sheet(stockinData); //convert jsonData to worksheet
+
+            const columnWidth = { wpx: 150 }; // Set desired column width in pixels
+
+            //Set the same column width for all columns
+            worksheet["!cols"] = new Array(
+                data[0] ? Object.keys(data[0]).length : 0
+            ).fill(columnWidth);
+
+            // Enable text wrap for all header cells
+            const header = worksheet["!cols"] ? worksheet["!cols"] : [];
+            header.forEach((col, index) => {
+                if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
+            });
+
+            const workbook = XLSX.utils.book_new()
+            XLSX.utils.book_append_sheet(
+                workbook,
+                worksheet
+            )
+
+            XLSX.writeFile(
+                workbook,
+                `stockin_repost.xlsx`
+            )
+
+            showSnackbar("Report generated successfully!", "success", "filled");
+        } catch (error) {
+            showSnackbar(
+                "Failed to generate the report. Please try again.",
+                "danger",
+                "filled"
+            );
+        }
+    }
 
     return (
         <>
@@ -103,13 +121,6 @@ const ReceivingOverview = () => {
 
                 {/* search and filter */}
                 <ContainerComponent>
-                    {/* <SearchFilter>
-                        <FilterOptions
-                        categoryOptions={categoryFilter}
-                        sortOptions={sortFilter}
-                        />
-                    </SearchFilter> */}
-
                     <Stack
                         direction="row"
                         justifyContent="space-between"
@@ -120,31 +131,33 @@ const ReceivingOverview = () => {
                             label="Find a slip"
                             placeholder="Find by PO, number, IAR number or date"
                             startIcon={<SearchIcon />}
-                            // value={searchTerm}
-                            // setValue={setSearchTerm}
+                            value={searchTerm}
+                            setValue={setSearchTerm}
                             width={300}
                         />
                         <Box display="flex" gap={1}>
                             <SelectComponent
                                 startIcon={"Sort by:"}
                                 placeholder={"category"}
-                            // options={categoryFilter}
-                            // value={selectedCategory}
-                            // onChange={setCategory}
+                                options={categoryFilter}
+                                value={selectedCategory}
+                                onChange={setCategory}
                             />
-                            <SelectComponent
+
+                            {/* <SelectComponent
                                 startIcon={"Sort by:"}
                                 placeholder={"highest"}
-                            // options={sortFilter}
-                            // value={sortOrder}
-                            // onChange={setSortOrder}
-                            />
-                            {/* <ButtonComponent
+                                options={sortFilter}
+                                value={sortOrder}
+                                onChange={setSortOrder}
+                            /> */}
+
+                            <ButtonComponent
                                 size="sm"
                                 variant={"outlined"}
                                 label={"Clear Filters"}
                                 onClick={clearFilters}
-                            /> */}
+                            />
                         </Box>
                     </Stack>
 
@@ -153,9 +166,9 @@ const ReceivingOverview = () => {
                 <ContainerComponent>
                     <PaginatedTable
                         tableTitle={"List of stock-in transactions"}
-                        tableDesc={"Sample Table Desription"}
+                        tableDesc={"All your IARs are shown here. You may open each one to see more information."}
                         columns={receivingHeader}
-                        rows={stockinData}
+                        rows={filteredInventory(stockinData)}
                         actions={<ViewIcon />}
                         actionBtns={
                             <Stack direction="row" spacing={1}>
@@ -163,39 +176,45 @@ const ReceivingOverview = () => {
                                     variant={"outlined"}
                                     label="Generate report"
                                     size="lg"
+                                    onClick={generateReport}
                                 />
                                 <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
                             </Stack>
                         }
+                        viewModal={true}
+                        viewModalContent={handleViewDialogOpen}
                     />
                 </ContainerComponent>
             </Stack>
-
-            {/* <ModalComponent
-                isOpen={isViewDialogOpen}
-                handle={() => setIsViewDialogOpen(true)}
-                content={<ViewDialog />}
-                title={'Transaction Overview'}
-            /> */}
-
 
             {/* stock in form */}
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
-                content={<FormDialog snackbar={snackbar} handleDialogClose={handleDialogClose} setSnackbar={setSnackbar} />}
+                // open, message, color, variant, anchor, showSnackbar, closeSnackbar
+                content={<FormDialog open={open} message={message} color={color} showSnackbar={showSnackbar} handleDialogClose={handleDialogClose} />}
                 actionBtns={false}
                 title="Record a new Requisition and Issue slip"
                 description={"Describe how would you like to release items from your inventory. All fields are required."}
             />
 
+            {/* modal overview */}
+            <ModalComponent
+                isOpen={isViewDialogOpen}
+                handleClose={handleViewDialogClose}
+                content={<ReceivingDetails urlId={selectedRow} />}
+                actionBtns={false}
+                title={'Transaction Overview'}
+                description={"Complete information about an IAR. This record cannot be edited."}
+            />
+
             <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant='solid'
-                anchor={{ vertical: 'top', horizontal: 'right' }}
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
             />
         </>
     )

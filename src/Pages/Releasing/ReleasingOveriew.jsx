@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 
 import { Grid, Box, Typography, Stack } from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
-
-import { ViewIcon } from "lucide-react";
+import * as XLSX from 'xlsx'
+import { ViewIcon, SearchIcon } from "lucide-react";
 
 //hooks
 import useSuppliesHook from "../../Hooks/SuppliesHook";
 import useReleasingHook from "../../Hooks/ReleasingHook";
+import useSnackbarHook from "../../Hooks/AlertHook";
+import useFilterHook from "../../Hooks/FilterHook";
 
 //layouts
 import Header from "../../Layout/Header/Header";
@@ -23,22 +25,12 @@ import SnackbarComponent from "../../Components/SnackbarComponent";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import ButtonComponent from "../../Components/ButtonComponent";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
+import InputComponent from "../../Components/Form/InputComponent";
 
 //datas
 import { items, user } from "../../Data/index";
 import { releasingHeader } from "../../Data/TableHeader";
-
-const categoryFilter = [
-  { name: "Option 1", value: "option 1" },
-  { name: "Option 2", value: "option 2" },
-  { name: "Option 3", value: "option 3" },
-];
-
-const sortFilter = [
-  { name: "sort option 1", value: "sort option 1" },
-  { name: "sort option 2", value: "sort option 2" },
-  { name: "sort option 3", value: "sort option 3" },
-];
+import { categoryFilter } from "../../Data/index";
 
 const Releasing = () => {
   // local States
@@ -51,6 +43,8 @@ const Releasing = () => {
   });
 
   const { getStockOut } = useReleasingHook();
+  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
+  const { selectedCategory, setCategory, filteredInventory, clearFilters, searchTerm, setSearchTerm } = useFilterHook();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["stockout"],
@@ -91,25 +85,42 @@ const Releasing = () => {
     }
   };
 
-  const FilterOptions = () => (
-    <>
-      <Box mr={2}>
-        <DatePickerComponent />
-      </Box>
-      <Box mr={2}>
-        <DatePickerComponent />
-      </Box>
-      <Box mr={2}>
-        <SelectComponent
-          placeholder="Select Category"
-          options={categoryFilter}
-        />
-      </Box>
-      <Box>
-        <SelectComponent placeholder="Sort By" options={sortFilter} />
-      </Box>
-    </>
-  );
+  const generateReport = () => {
+
+    try {
+      const worksheet = XLSX.utils.json_to_sheet(stockoutData); //convert jsonData to worksheet
+      const columnWidth = { wpx: 150 }; // Set desired column width in pixels
+
+      //Set the same column width for all columns
+      worksheet["!cols"] = new Array(
+        data[0] ? Object.keys(data[0]).length : 0
+      ).fill(columnWidth);
+
+      // Enable text wrap for all header cells
+      const header = worksheet["!cols"] ? worksheet["!cols"] : [];
+      header.forEach((col, index) => {
+        if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
+      });
+
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet
+      )
+
+      XLSX.writeFile(
+        workbook,
+        `stockout_repost.xlsx`
+      )
+      showSnackbar("Report generated successfully!", "success", "filled");
+    } catch (error) {
+      showSnackbar(
+        "Failed to generate the report. Please try again.",
+        "danger",
+        "filled"
+      );
+    }
+  }
 
   return (
     <>
@@ -117,12 +128,45 @@ const Releasing = () => {
       <Stack gap={2} mt={2}>
         {/* search and filter */}
         <ContainerComponent>
-          <SearchFilter>
-            <FilterOptions
-              categoryOptions={categoryFilter}
-              sortOptions={sortFilter}
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+          >
+            {/* search*/}
+            <InputComponent
+              label="Find a slip"
+              placeholder="Find by RIS number, office or date"
+              startIcon={<SearchIcon />}
+              value={searchTerm}
+              setValue={setSearchTerm}
+              width={300}
             />
-          </SearchFilter>
+            <Box display="flex" gap={1}>
+              <SelectComponent
+                startIcon={"Sort by:"}
+                placeholder={"category"}
+                options={categoryFilter}
+                value={selectedCategory}
+                onChange={setCategory}
+              />
+
+              {/* <SelectComponent
+                  startIcon={"Sort by:"}
+                  placeholder={"highest"}
+                  options={sortFilter}
+                  value={sortOrder}
+                  onChange={setSortOrder}
+              /> */}
+
+              <ButtonComponent
+                size="sm"
+                variant={"outlined"}
+                label={"Clear Filters"}
+                onClick={clearFilters}
+              />
+            </Box>
+          </Stack>
         </ContainerComponent>
 
         <ContainerComponent>
@@ -130,7 +174,7 @@ const Releasing = () => {
             tableTitle={"List of stock-out transactions"}
             tableDesc={"Sample Table Desription"}
             columns={releasingHeader}
-            rows={stockoutData}
+            rows={filteredInventory(stockoutData)}
             actions={<ViewIcon />}
             actionBtns={
               <Stack direction="row" spacing={1}>
@@ -138,6 +182,7 @@ const Releasing = () => {
                   variant={"outlined"}
                   label="Generate report"
                   size="lg"
+                  onClick={generateReport}
                 />
                 <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
               </Stack>
@@ -153,13 +198,15 @@ const Releasing = () => {
           handleClose={handleDialogClose}
           content={
             <FormDialog
+              open={open}
+              message={message}
+              color={color}
+              showSnackbar={showSnackbar}
               handleNext={handleNext}
               handleBack={handleBack}
               steps={steps}
               activeStep={activeStep}
               handleDialogClose={handleDialogClose}
-              setSnackbar={setSnackbar}
-              snackbar={snackbar}
             />
           }
           title={`Record a new Requisition and Issue slip`}
@@ -168,14 +215,24 @@ const Releasing = () => {
           }
         />
 
-        <SnackbarComponent
+        {/* <SnackbarComponent
           open={snackbar.open}
           onClose={handleSnackbarClose}
           color={snackbar.color}
           message={snackbar.message}
           variant="solid"
           anchor={{ vertical: "top", horizontal: "right" }}
+        /> */}
+
+        <SnackbarComponent
+          open={open}
+          onClose={closeSnackbar}
+          anchor={anchor}
+          color={color}
+          variant={variant}
+          message={message}
         />
+
       </Stack>
     </>
   );

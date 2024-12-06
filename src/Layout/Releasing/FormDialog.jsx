@@ -17,8 +17,8 @@ import Regular from "./Regular";
 import Donation from "./Donation";
 
 const FormDialog = ({
+  showSnackbar,
   handleDialogClose,
-  setSnackbar,
   activeStep,
   steps,
   handleBack,
@@ -207,17 +207,20 @@ const FormDialog = ({
   const mutation = useMutation({
     mutationFn: createStockOut,
     onSuccess: () => {
-      setSnackbar({
-        open: true,
-        color: "success",
-        message: "Stockout Success",
-      });
+      showSnackbar("Stockout Success!", "success", "filled");
       queryClient.invalidateQueries("stocks");
       closeDialog();
     },
     onError: (error) => {
-      setSnackbar({ open: true, color: "danger", message: `${error}` });
+      showSnackbar
+      // setSnackbar({ open: true, color: "danger", message: `${error}` });
       setSnackbar("Failed to stockout", "danger");
+
+      showSnackbar(
+        `Stockout failed!. Please try again. ${error}`,
+        "danger",
+        "filled"
+      );
     },
     onSettled: () => {
       closeDialog();
@@ -391,11 +394,11 @@ const FormDialog = ({
             disabled={
               activeStep === 0
                 ? !(
-                    requestingOffice !== null &&
-                    qtyRequest > 0 &&
-                    risNo !== null &&
-                    risNo !== ""
-                  )
+                  requestingOffice !== null &&
+                  qtyRequest > 0 &&
+                  risNo !== null &&
+                  risNo !== ""
+                )
                 : dissableOnRegularOrDonationEmptyItems()
             }
             onClick={onHandleNext}
