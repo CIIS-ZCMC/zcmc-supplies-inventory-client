@@ -102,6 +102,10 @@ const Regular = ({
     const newQuantityValue = parseFloat(e.target.value) || 0;
 
     const updatedList = [...regularBrands];
+    const selectedProduct = brandRegularOptions.find(
+      (value) => value.id === updatedList[index].brand_id
+    );
+
     updatedList[index].quantity = newQuantityValue;
 
     const currentTotatlQuantity = regularBrands.reduce((total, brand) => {
@@ -109,13 +113,10 @@ const Regular = ({
       return total + quantity;
     }, 0);
 
-    console.log(
-      `${currentTotatlQuantity} > ${qtyRequest} = ${
-        currentTotatlQuantity > qtyRequest
-      }`
-    );
-
-    if (currentTotatlQuantity > qtyRequest) {
+    if (
+      currentTotatlQuantity > qtyRequest ||
+      newQuantityValue > selectedProduct.quantity
+    ) {
       updatedList[index].quantity = 0;
       updatedList[index].exceed = true;
     } else {
