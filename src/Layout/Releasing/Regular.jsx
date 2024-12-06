@@ -102,17 +102,23 @@ const Regular = ({
     const newQuantityValue = parseFloat(e.target.value) || 0;
 
     const updatedList = [...regularBrands];
+    updatedList[index].quantity = newQuantityValue;
 
     const currentTotatlQuantity = regularBrands.reduce((total, brand) => {
       const quantity = parseFloat(brand.quantity) || 0;
       return total + quantity;
     }, 0);
 
-    if (newQuantityValue + currentTotatlQuantity > qtyRequest) {
+    console.log(
+      `${currentTotatlQuantity} > ${qtyRequest} = ${
+        currentTotatlQuantity > qtyRequest
+      }`
+    );
+
+    if (currentTotatlQuantity > qtyRequest) {
       updatedList[index].quantity = 0;
       updatedList[index].exceed = true;
     } else {
-      updatedList[index].quantity = newQuantityValue;
       updatedList[index].exceed = false;
     }
 
