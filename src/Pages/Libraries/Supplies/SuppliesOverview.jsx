@@ -76,7 +76,7 @@ const SuppliersOverview = () => {
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>
-                            <ButtonComponent label="Add new source" onClick={handleDialogOpen} />
+                            <ButtonComponent label="Add new item" onClick={handleDialogOpen} />
                         </Stack>
                     }
                 />

@@ -43,6 +43,8 @@ const columns = [
 ];
 
 const Inventory = () => {
+
+  const navigate = useNavigate()
   const { inventory, getInventory } = useInventoryHook();
   const {
     filteredInventory,
@@ -64,6 +66,10 @@ const Inventory = () => {
   };
 
   const [loading, setLoading] = useState(true);
+
+  const navigateToItemSupplies = () => {
+    navigate('/libraries')
+  }
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -135,7 +141,7 @@ const Inventory = () => {
                   label="Generate report"
                   size="lg"
                 />
-                <ButtonComponent label="Add new item name" />
+                <ButtonComponent label="Add new item name" onClick={navigateToItemSupplies} />
               </Stack>
             }
             icon={
@@ -153,7 +159,7 @@ const Inventory = () => {
             label={"Fill-up your inventory by creating a New item"}
             desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
 inventory items in filling-up IARs and RIS requests.`}
-            btn={<ButtonComponent label={"Create new item"} onClick={`/`} />}
+            btn={<ButtonComponent label={"Create new item"} onClick={'/'} />}
           />
         </ContainerComponent>
       </Stack>
