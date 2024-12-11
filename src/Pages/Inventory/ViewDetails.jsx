@@ -111,6 +111,7 @@ function ViewDetails(props) {
             categoryName={selectedRow?.unit_name}
             categoryTitle={"Type of unit"}
           />
+
         </Stack>
       </Stack>
       <ContainerComponent>
