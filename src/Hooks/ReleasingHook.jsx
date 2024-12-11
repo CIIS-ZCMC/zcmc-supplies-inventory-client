@@ -45,6 +45,15 @@ const useReleasingHook = create((set) => ({
         }
     },
 
+    getSelectedReleasingList: async (id) => {
+        try {
+            const response = await axios.get(`${BASE_URL.development}/${API.SELECTED_RELEASING_LIST}/${id}`);
+            return response.data
+        } catch (error) {
+            error.message;
+        }
+    },
+
     // Create stock out with POST request
     createStockOut: async (formData) => {
         try {

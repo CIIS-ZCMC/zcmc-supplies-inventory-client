@@ -29,3 +29,25 @@ export const categoryFilter = [
     { name: "Medical", value: "Medical" },
     { name: "Office", value: "Office" },
 ];
+
+export const legends = [
+    {
+        backgroundColor: '#D32F2F',
+        title: 'Out of stocks'
+    },
+
+    {
+        backgroundColor: '#F57C00',
+        title: 'Low Stock'
+    },
+
+    {
+        backgroundColor: '#FFE347',
+        title: 'Moderate'
+    },
+
+    {
+        backgroundColor: '#388E3C',
+        title: 'Sufficient'
+    },
+]

@@ -45,6 +45,8 @@ export const API = {
   RECEIVING: "receiving-list",
 
   RELEASING: "releasing-list",
+  SELECTED_RELEASING_LIST: "selected-releasing-list",
+
   BRAND_REGULAR: 'selected-supply-brand-regular',
   BRAND_DONATION: 'selected-supply-brand-donation',
 
