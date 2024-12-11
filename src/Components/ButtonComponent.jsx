@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { Button, useTheme } from "@mui/joy";
 
 ButtonComponent.propTypes = {
-
   size: PropTypes.string,
   label: PropTypes.string,
   onClick: PropTypes.func,
@@ -18,7 +17,7 @@ ButtonComponent.propTypes = {
 };
 
 function ButtonComponent({
-  size,
+  size = "lg",
   label,
   onClick,
   variant,
@@ -29,10 +28,12 @@ function ButtonComponent({
   customOutlined,
   type,
   loading,
+  width
 }) {
   const theme = useTheme();
 
   const sxStyles = {
+    width: width,
     fontWeight: 500,
     fontSize: 13,
     py: 1,
@@ -58,7 +59,7 @@ function ButtonComponent({
   return (
     <Button
       type={type}
-      size='lg'
+      size={size}
       variant={variant}
       color={color}
       fullWidth={fullWidth}

@@ -27,6 +27,7 @@ ModalComponent.propTypes = {
   rightButtonAction: PropTypes.func,
   leftButtonLabel: PropTypes.string,
   leftButtonAction: PropTypes.func,
+  actionBtns: PropTypes.bool,
 };
 
 function ModalComponent({
@@ -43,6 +44,9 @@ function ModalComponent({
   leftButtonAction,
   withProgress,
   progressValue,
+  steps,
+  activeStep,
+  actionBtns = false,
 }) {
   const handleCloseModal = (event, reason) => {
     // Prevent closing the modal when backdrop is clicked
@@ -72,6 +76,13 @@ function ModalComponent({
           sx={{ alignItems: "start", justifyContent: "space-between" }}
         >
           <Stack gap={0.4}>
+
+            {steps &&
+              <Typography level="body-sm" color="primary" >
+                Step {activeStep + 1} of {steps.length}
+              </Typography>
+            }
+
             <Typography level="title-lg" fontWeight={600}>
               {title}
             </Typography>
@@ -95,27 +106,25 @@ function ModalComponent({
         <Divider sx={{ mx: 0.2 }} />
 
         {/* CONTENT */}
-        <DialogContent sx={{ p: 1 }}>
-          {content}
-        </DialogContent>
+        <DialogContent sx={{ p: 1 }}>{content}</DialogContent>
 
         {/* FOOTER */}
         {/* <Divider sx={{ mx: 0.2 }} /> */}
-
-        {/* <DialogActions>
-          <ButtonComponent
-            label={rightButtonLabel}
-            fullWidth
-            onClick={rightButtonAction}
-          />
-          <ButtonComponent
-            variant="outlined"
-            color="danger"
-            label={leftButtonLabel}
-            fullWidth
-            onClick={leftButtonAction}
-          />
-        </DialogActions> */}
+        {actionBtns &&
+          <DialogActions>
+            <ButtonComponent
+              label={rightButtonLabel}
+              fullWidth
+              onClick={rightButtonAction}
+            />
+            <ButtonComponent
+              variant="outlined"
+              color="danger"
+              label={leftButtonLabel}
+              fullWidth
+              onClick={leftButtonAction}
+            />
+          </DialogActions>}
 
       </ModalDialog>
     </Modal>

@@ -3,9 +3,12 @@ import { Box } from "@mui/joy";
 
 BoxComponent.propTypes = {
   children: PropTypes.element,
+  display: PropTypes.string,
+  justifyContent: PropTypes.string,
+  alignItems: PropTypes.string,
 };
 
-function BoxComponent({ children }) {
+function BoxComponent({ children, display, justifyContent, alignItems }) {
   return (
     <Box
       sx={{
@@ -15,6 +18,9 @@ function BoxComponent({ children }) {
         bgcolor: "white",
         borderRadius: 10,
         p: 1,
+        display: display,
+        justifyContent: justifyContent,
+        alignItems: alignItems,
       }}
     >
       {children}

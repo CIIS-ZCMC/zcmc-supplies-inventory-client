@@ -9,10 +9,13 @@ import {
   LayoutGrid,
 } from "lucide-react";
 
+import { BiCategory } from "react-icons/bi";
+import { GrDocument } from "react-icons/gr";
+import ViewItemDetails from "../Pages/Reports/ViewItemDetails";
+
 // Lazy load each page component
 const Dashboard = lazy(() => import("../Pages/Dashboard"));
-const Receiving = lazy(() => import("../Pages/Receiving"));
-
+//Releasing/Stock Out
 const ReleasingOverview = lazy(() =>
   import("../Pages/Releasing/ReleasingOveriew")
 );
@@ -20,20 +23,34 @@ const ReleasingDetails = lazy(() =>
   import("../Pages/Releasing/ReleasingDetails")
 );
 
+//Receiving/Stock in
+const ReceivingOverview = lazy(() =>
+  import("../Pages/Receiving/ReceivingOverview")
+);
+const ReceivingDetails = lazy(() =>
+  import("../Pages/Receiving/ReceivingDetails")
+);
+
 // const ItemReview = lazy(() => import("../Pages/ItemReview"));
-const Categories = lazy(() => import("../Pages/Categories"));
-const Suppliers = lazy(() => import("../Pages/Suppliers"));
-const Brands = lazy(() => import("../Pages/Brands"));
-const ManageRequest = lazy(() => import("../Pages/ManageRequest"));
-const Inventory = lazy(() => import("../Pages/Inventory"));
-const MainPage = lazy(() => import("../Pages/End-User/MainPage"));
+const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
+const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
+const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
+
+const Reports = lazy(() => import("../Pages/Reports/Reports"));
 
 export const sidebarRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
     element: <Dashboard />,
-    icon: <CircleGauge />,
+    icon: <BiCategory />,
+    permissions: ["view"],
+  },
+  {
+    path: "/inventory",
+    name: "Inventory",
+    element: <Inventory />,
+    icon: <ClipboardList />,
     permissions: ["view"],
   },
   {
@@ -45,6 +62,36 @@ export const sidebarRoutes = [
   },
 
   {
+    path: "/receiving",
+    name: "Receiving (IAR)",
+    element: <ReceivingOverview />,
+    icon: <ArrowDownToLine />,
+    permissions: ["view"],
+  },
+  {
+    path: "/reports",
+    name: "Reports",
+    element: <Reports />,
+    icon: <GrDocument />,
+    permissions: ["view"],
+  },
+];
+
+export const childrenRoutes = [
+  {
+    path: "libraries",
+    element: <Libraries />,
+    permission: ["view"],
+  },
+
+  {
+    path: "/receiving/:id",
+    // name: "Releasing Details",
+    element: <ReceivingDetails />,
+    permissions: ["view"],
+  },
+
+  {
     path: "/releasing/:id",
     // name: "Releasing Details",
     element: <ReleasingDetails />,
@@ -52,52 +99,16 @@ export const sidebarRoutes = [
   },
 
   {
-    path: "/receiving",
-    name: "Receiving (IAR)",
-    element: <Receiving />,
-    icon: <ArrowDownToLine />,
-    permissions: ["view"],
-  },
-
-  {
-    path: "/inventory",
-    name: "Inventory",
-    element: <Inventory />,
-    icon: <ClipboardList />,
-    // code: "PRM-REQ",
-    permissions: ["view"],
-  },
-
-  {
-    path: "/categories",
-    name: "Categories",
-    element: <Categories />,
-    icon: <LayoutGrid />,
-    permissions: ["view"],
-  },
-  {
-    path: "/suppliers",
-    name: "Suppliers",
-    element: <Suppliers />,
-    icon: <BaggageClaim />,
-    permissions: ["view"],
-  },
-  {
-    path: "/brands",
-    name: "Brands",
-    element: <Brands />,
-    icon: <Tag />,
-    permissions: ["view"],
-  },
-];
-
-export const childrenRoutes = [
-  {
-    path: "/transactions/manage-pr",
-    name: "Manage",
-    element: <ManageRequest />,
+    path: "/inventory/:id",
+    element: <ViewDetails />,
     icon: null,
-    code: "PRM-REQ",
+    permissions: ["view"],
+  },
+
+  {
+    path: "/reports/:id",
+    element: <ViewItemDetails />,
+    icon: null,
     permissions: ["view"],
   },
 ];

@@ -15,6 +15,8 @@ const theme = extendTheme({
           lighter: "#E5FBF5",
           lightBg: "#F2F8F6",
           buttonBg: "#1D70BC",
+          fontLight: "#667085",
+          fontReg: "#666666",
           active: "rgba(249, 250, 251, 0.12)",
         },
       },
@@ -40,7 +42,6 @@ function App() {
         <AnimatedRoutes />
       </CssVarsProvider>
     </QueryClientProvider>
-
   );
 }
 
