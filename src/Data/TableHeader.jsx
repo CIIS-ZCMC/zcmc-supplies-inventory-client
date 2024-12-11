@@ -398,3 +398,49 @@ export const unitHeader = [
     label: "Created at",
   },
 ];
+
+
+export const dashboardHeader = [
+  {
+    id: "id",
+    numeric: true,
+    disablePadding: true,
+    label: "#",
+  },
+
+  {
+    id: "supply_name",
+    numeric: true,
+    disablePadding: true,
+    label: "Items",
+  },
+
+  {
+    id: "months_left_to_consume",
+    numeric: true,
+    disablePadding: true,
+    label: "Month(s) left to consume",
+  },
+
+  {
+    id: "monthly_consumption",
+    numeric: true,
+    disablePadding: true,
+    label: "Monthly consumption",
+  },
+
+  {
+    id: "quantity",
+    numeric: true,
+    disablePadding: true,
+    label: "Current balance",
+  },
+
+  {
+    id: "starting_balance",
+    numeric: true,
+    disablePadding: true,
+    label: "This year's starting balance",
+  },
+
+]
