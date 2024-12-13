@@ -5,9 +5,11 @@ import Header from '../../Layout/Header/Header';
 import ContainerComponent from '../../Components/Container/ContainerComponent';
 import InputComponent from '../../Components/Form/InputComponent';
 import ButtonGroupComponent from '../../Components/ButtonGroupComponent';
+import SelectComponent from '../../Components/Form/SelectComponent';
+import ButtonComponent from '../../Components/ButtonComponent';
 
 import { SearchIcon } from 'lucide-react';
-import { user } from '../../Data/index';
+import { user, sortFilter } from '../../Data/index';
 
 import AreasOverview from './Areas/AreasOverview';
 import BrandsOverview from './Brands/BrandsOverview';
@@ -18,7 +20,8 @@ import SuppliesOverview from './Supplies/SuppliesOverview'
 import UnitsOverview from './Units/UnitsOverview'
 
 const Libraries = () => {
-    const [selectedOption, setSelectedOption] = useState('Areas'); // Initial view
+    const [selectedOption, setSelectedOption] = useState('Areas');
+    const [selectedSortFilter, setSelectedSortFilter] = useState()
 
     const pageDetails = {
         title: "Dynamic libraries",
@@ -55,9 +58,22 @@ const Libraries = () => {
             <Stack gap={2} mt={2}>
                 {/* Search and filter */}
                 <ContainerComponent>
+
+                    <Stack my={2}>
+                        <Box>
+                            <ButtonGroupComponent
+                                buttonOptions={buttonOptions}
+                                selectedOption={selectedOption}
+                                onOptionChange={setSelectedOption}
+                            />
+                        </Box>
+                    </Stack>
+
                     <Stack
                         direction="row"
-                        alignItems="flex-end"
+                        justifyContent={'space-between'}
+                        alignItems="center"
+                        spacing={2}
                     >
                         {/* Search */}
                         <InputComponent
@@ -66,13 +82,33 @@ const Libraries = () => {
                             startIcon={<SearchIcon />}
                             width={500}
                         />
-                        <Box ml={2}>
-                            <ButtonGroupComponent
-                                buttonOptions={buttonOptions}
-                                selectedOption={selectedOption}
-                                onOptionChange={setSelectedOption}
+
+                        <Box display="flex" gap={1}>
+                            <SelectComponent
+                                startIcon={"Sort by:"}
+                                placeholder={"category"}
+                                options={sortFilter}
+                            // value={selectedCategory}
+                            // onChange={setCategory}
                             />
+
+                            {/* <SelectComponent
+                                startIcon={"Sort by:"}
+                                placeholder={"highest"}
+                                options={sortFilter}
+                                value={sortOrder}
+                                onChange={setSortOrder}
+                            /> */}
+
+                            {/* <ButtonComponent
+                                size="sm"
+                                variant={"outlined"}
+                                label={"Clear Filters"}
+                                onClick={clearFilters}
+                            /> */}
                         </Box>
+
+
                     </Stack>
                 </ContainerComponent>
 

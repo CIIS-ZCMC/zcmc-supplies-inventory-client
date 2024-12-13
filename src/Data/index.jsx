@@ -30,6 +30,13 @@ export const categoryFilter = [
     { name: "Office", value: "Office" },
 ];
 
+export const sortFilter = [
+    { name: "Alphabetical (A-Z)", value: "asc" },
+    { name: "Alphabetical (Z-A)", value: "desc" },
+    { name: "By Date (Newest First)", value: "date_desc" },
+    { name: "By Date (Oldest First)", value: "date_asc" },
+];
+
 export const legends = [
     {
         backgroundColor: '#D32F2F',
