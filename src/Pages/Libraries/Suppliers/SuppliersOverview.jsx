@@ -15,7 +15,7 @@ import useSuppliersHook from '../../../Hooks/SuppliersHook';
 
 import { supplierHeader } from '../../../Data/TableHeader';
 
-const SuppliersOverview = () => {
+const SuppliersOverview = ({ filter }) => {
 
   const { getSuppliers } = useSuppliersHook();
 
@@ -40,7 +40,6 @@ const SuppliersOverview = () => {
   const handleSnackbarClose = () => {
     setSnackbar({ open: false })
   }
-
 
   return (
     <div>
@@ -73,7 +72,7 @@ const SuppliersOverview = () => {
           tableTitle={"Supplies"}
           // tableDesc={"Sample Table Desription"}
           columns={supplierHeader}
-          rows={suppliersData}
+          rows={filter(suppliersData)}
           actions={<ViewIcon />}
           actionBtns={
             <Stack>

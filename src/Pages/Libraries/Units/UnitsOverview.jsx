@@ -15,7 +15,7 @@ import useUnitsHook from '../../../Hooks/UnitsHook'
 
 import { unitHeader } from '../../../Data/TableHeader';
 
-const SuppliersOverview = () => {
+const SuppliersOverview = ({ filter }) => {
 
     const { getUnits } = useUnitsHook();
 
@@ -72,7 +72,8 @@ const SuppliersOverview = () => {
                     tableTitle={"Supplies"}
                     // tableDesc={"Sample Table Desription"}
                     columns={unitHeader}
-                    rows={unitsData}
+                    rows={filter(unitsData)}
+                    loading={isLoading}
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>

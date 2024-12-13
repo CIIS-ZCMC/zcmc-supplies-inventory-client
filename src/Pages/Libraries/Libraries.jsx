@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stack, Box } from '@mui/joy';
+import { Stack, Box, Divider } from '@mui/joy';
 
 import Header from '../../Layout/Header/Header';
 import ContainerComponent from '../../Components/Container/ContainerComponent';
@@ -19,9 +19,13 @@ import SourceOverview from './Source/SourceOverview';
 import SuppliesOverview from './Supplies/SuppliesOverview'
 import UnitsOverview from './Units/UnitsOverview'
 
+import useFilterHook from '../../Hooks/FilterHook';
+
 const Libraries = () => {
+
+    const { sortOrder, setSortOrder, searchTerm, setSearchTerm, filteredInventory } = useFilterHook();
+
     const [selectedOption, setSelectedOption] = useState('Areas');
-    const [selectedSortFilter, setSelectedSortFilter] = useState()
 
     const pageDetails = {
         title: "Dynamic libraries",
@@ -34,19 +38,19 @@ const Libraries = () => {
     const renderContent = () => {
         switch (selectedOption) {
             case 'Areas':
-                return <div><AreasOverview /></div>;
+                return <div><AreasOverview filter={filteredInventory} /></div>;
             case 'Brands':
-                return <div><BrandsOverview /></div>;
+                return <div><BrandsOverview filter={filteredInventory} /></div>;
             case 'Suppliers':
-                return <div><SuppliersOverview /></div>;
+                return <div><SuppliersOverview filter={filteredInventory} /></div>;
             case 'Categories':
-                return <div><CategoriesOverview /></div>;
+                return <div><CategoriesOverview filter={filteredInventory} /></div>;
             case 'Units':
-                return <div><UnitsOverview /></div>;
+                return <div><UnitsOverview filter={filteredInventory} /></div>;
             case 'Source':
-                return <div><SourceOverview /></div>;
+                return <div><SourceOverview filter={filteredInventory} /></div>;
             case 'Item Names':
-                return <div><SuppliesOverview /></div>;
+                return <div><SuppliesOverview filter={filteredInventory} /></div>;
             default:
                 return null;
         }
@@ -58,7 +62,6 @@ const Libraries = () => {
             <Stack gap={2} mt={2}>
                 {/* Search and filter */}
                 <ContainerComponent>
-
                     <Stack my={2}>
                         <Box>
                             <ButtonGroupComponent
@@ -69,37 +72,32 @@ const Libraries = () => {
                         </Box>
                     </Stack>
 
+                    <Divider></Divider>
+
                     <Stack
                         direction="row"
                         justifyContent={'space-between'}
                         alignItems="center"
                         spacing={2}
+                        my={1}
                     >
                         {/* Search */}
                         <InputComponent
-                            label="Find a record"
+                            // label="Find a record"
                             placeholder="Find by names, brands, categories, etc."
                             startIcon={<SearchIcon />}
                             width={500}
+                            value={searchTerm}
+                            setValue={setSearchTerm}
                         />
-
-                        <Box display="flex" gap={1}>
+                        <Box>
                             <SelectComponent
                                 startIcon={"Sort by:"}
                                 placeholder={"category"}
                                 options={sortFilter}
-                            // value={selectedCategory}
-                            // onChange={setCategory}
-                            />
-
-                            {/* <SelectComponent
-                                startIcon={"Sort by:"}
-                                placeholder={"highest"}
-                                options={sortFilter}
                                 value={sortOrder}
                                 onChange={setSortOrder}
-                            /> */}
-
+                            />
                             {/* <ButtonComponent
                                 size="sm"
                                 variant={"outlined"}
