@@ -1,23 +1,20 @@
 import { create } from "zustand";
 import axios from "axios";
-import * as Yup from 'yup'
+import * as Yup from "yup";
 import { API, BASE_URL } from "../Services/Config";
 
 const useSourceHook = create((set) => ({
-
   initialValues: {
-    sourceName: '',
+    sourceName: "",
   },
 
   validationSchema: Yup.object({
-    sourceName: Yup.string().required('Source name is required'),
+    sourceName: Yup.string().required("Source name is required"),
   }),
 
   getSources: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.SOURCES}`
-      );
+      const response = await axios.get(`${BASE_URL.production}/${API.SOURCES}`);
       return response.data;
     } catch (error) {
       error.message;
@@ -27,14 +24,16 @@ const useSourceHook = create((set) => ({
   // Create Area in with POST request
   createSource: async (formData) => {
     try {
-      const response = await axios.post(`${BASE_URL.development}/${API.SOURCE_STORE}`, formData);
+      const response = await axios.post(
+        `${BASE_URL.production}/${API.SOURCE_STORE}`,
+        formData
+      );
       return response.data;
     } catch (error) {
       console.error("Error creating Source:", error.message);
       throw error;
     }
-  }
-
+  },
 }));
 
 export default useSourceHook;
