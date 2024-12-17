@@ -1,11 +1,11 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { Box, Stack, Divider, Typography, Chip } from "@mui/joy";
 import { Info, SquareArrowOutUpRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import PageTitle from "../Components/PageSetup/PageTitle";
 import Header from "../Layout/Header/Header";
 
 import ContainerComponent from "../Components/Container/ContainerComponent";
@@ -14,9 +14,32 @@ import BoxComponent from "../Components/Container/BoxComponent";
 import PaginatedTable from "../Components/Table/PaginatedTable";
 import ButtonComponent from "../Components/ButtonComponent";
 
+import useDashboardHook from "../Hooks/DashboardHook";
+
 import { user, legends } from '../Data/index';
+import { dashboardHeader } from "../Data/TableHeader";
 
 function Dashboard() {
+
+  const { getDashboardTotal, getDashboardSupplies } = useDashboardHook();
+
+  const { data: dashboardTotal, isLoading, error } = useQuery({
+    queryKey: ['dashboard-total'],
+    queryFn: getDashboardTotal,
+  })
+
+  const { data: dashboardSupplies, isLoading: dashboardLoading } = useQuery({
+    queryKey: ['dashboard-supplies'],
+    queryFn: getDashboardSupplies,
+  })
+
+  const { items_for_disposal, most_consumed_items, not_consumed_without_ris, reorder_items, sufficient_but_not_consumed, zero_stocks } = dashboardTotal || {}
+
+  const dashboardSuppiesData = dashboardSupplies || []
+
+  // useEffect(() => {
+  //   console.log(dashboardSuppiesData)
+  // }, [dashboardSuppiesData])
 
   const [selectedOption, setSelectedOption] = useState('All areas'); // Initial view
 
@@ -27,49 +50,47 @@ function Dashboard() {
 
   const statistics = [
     {
-      count: 144,
+      count: reorder_items,
       title: "Reorder items",
       link: '',
       label: 'Go to reordered items'
     },
 
     {
-      count: 32,
+      count: most_consumed_items,
       title: "Most consumed items",
       link: '',
       label: 'Go to consumed items'
     },
 
     {
-      count: 24,
+      count: items_for_disposal,
       title: "items for disposal ",
       link: '',
       label: 'Go to items for disposal'
     },
 
     {
-      count: 18,
+      count: zero_stocks,
       title: "Zero stock since start of year",
       link: '',
       label: 'Go to zero-stock items'
     },
 
     {
-      count: 48,
+      count: sufficient_but_not_consumed,
       title: "Sufficient but not consumed",
       link: '',
       label: 'Go to unconsumed items'
     },
 
     {
-      count: 48,
+      count: not_consumed_without_ris,
       title: "Not consumed without ris",
       link: '',
       label: 'Go to unconsumed items'
     },
   ]
-
-
   const buttonOptions = ['All areas', 'Medical', 'Janitorial', 'Office'];
 
   return (
@@ -78,7 +99,7 @@ function Dashboard() {
       <Stack gap={2} mt={2}>
 
         <ContainerComponent>
-          <Stack mb={1}>
+          {/* <Stack mb={1}>
             <Box >
               <ButtonGroupComponent
                 buttonOptions={buttonOptions}
@@ -87,10 +108,9 @@ function Dashboard() {
               />
             </Box>
 
-            {/* filters */}
           </Stack>
 
-          <Divider />
+          <Divider /> */}
 
           <Stack my={2} direction="row" spacing={2}>
             {statistics.map(({ count, title, link, label }, index) => (
@@ -163,9 +183,9 @@ function Dashboard() {
           <PaginatedTable
             tableTitle={"Inventory monitoring"}
             tableDesc={"See how resource supplies were accumulated and consumed in your organization’s inventory."}
-            // loading={isLoading}
-            // columns={columns}
-            // rows={releasedItems}
+            loading={dashboardLoading}
+            columns={dashboardHeader}
+            rows={dashboardSuppiesData}
             actionBtns={
               <Stack direction="row" spacing={1}>
                 <ButtonComponent

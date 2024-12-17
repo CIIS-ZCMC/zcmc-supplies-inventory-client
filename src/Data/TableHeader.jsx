@@ -225,12 +225,12 @@ export const receivingHeader = [
 ];
 
 export const areaHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "area_name",
@@ -239,21 +239,21 @@ export const areaHeader = [
     label: "Name of area",
   },
 
-  {
-    id: "created_at",
-    numeric: false,
-    disablePadding: false,
-    label: "Created at",
-  },
+  // {
+  //   id: "created_at",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Created at",
+  // },
 ];
 
 export const brandHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "brand_name",
@@ -262,21 +262,21 @@ export const brandHeader = [
     label: "Name of area",
   },
 
-  {
-    id: "created_at",
-    numeric: false,
-    disablePadding: false,
-    label: "Created at",
-  },
+  // {
+  //   id: "created_at",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Created at",
+  // },
 ];
 
 export const supplierHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "supplier_name",
@@ -285,21 +285,21 @@ export const supplierHeader = [
     label: "Supplier Name",
   },
 
-  {
-    id: "created_at",
-    numeric: false,
-    disablePadding: false,
-    label: "Created at",
-  },
+  // {
+  //   id: "created_at",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Created at",
+  // },
 ];
 
 export const categoriesHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "category_name",
@@ -308,21 +308,21 @@ export const categoriesHeader = [
     label: "Supplier Name",
   },
 
-  {
-    id: "created_at",
-    numeric: false,
-    disablePadding: false,
-    label: "Created at",
-  },
+  // {
+  //   id: "created_at",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Created at",
+  // },
 ];
 
 export const sourceHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "source_name",
@@ -331,21 +331,21 @@ export const sourceHeader = [
     label: "Supplier Name",
   },
 
-  {
-    id: "created_at",
-    numeric: false,
-    disablePadding: false,
-    label: "Created at",
-  },
+  // {
+  //   id: "created_at",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Created at",
+  // },
 ];
 
 export const supplyHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "name",
@@ -368,21 +368,21 @@ export const supplyHeader = [
     label: "Category",
   },
 
-  {
-    id: "created_at",
-    numeric: false,
-    disablePadding: false,
-    label: "Created at",
-  },
+  // {
+  //   id: "created_at",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Created at",
+  // },
 ];
 
 export const unitHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "unit_name",
@@ -391,10 +391,56 @@ export const unitHeader = [
     label: "Supplier Name",
   },
 
-  {
-    id: "created_at",
-    numeric: false,
-    disablePadding: false,
-    label: "Created at",
-  },
+  // {
+  //   id: "created_at",
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: "Created at",
+  // },
 ];
+
+
+export const dashboardHeader = [
+  {
+    id: "id",
+    numeric: true,
+    disablePadding: true,
+    label: "#",
+  },
+
+  {
+    id: "supply_name",
+    numeric: true,
+    disablePadding: true,
+    label: "Items",
+  },
+
+  {
+    id: "months_left_to_consume",
+    numeric: true,
+    disablePadding: true,
+    label: "Month(s) left to consume",
+  },
+
+  {
+    id: "monthly_consumption",
+    numeric: true,
+    disablePadding: true,
+    label: "Monthly consumption",
+  },
+
+  {
+    id: "quantity",
+    numeric: true,
+    disablePadding: true,
+    label: "Current balance",
+  },
+
+  {
+    id: "starting_balance",
+    numeric: true,
+    disablePadding: true,
+    label: "This year's starting balance",
+  },
+
+]

@@ -287,6 +287,7 @@ export default Releasing
             tableDesc={"Sample Table Desription"}
             columns={releasingHeader}
             rows={filteredInventory(stockoutData)}
+            loading={isLoading}
             actions={<ViewIcon />}
             actionBtns={
               <Stack direction="row" spacing={1}>

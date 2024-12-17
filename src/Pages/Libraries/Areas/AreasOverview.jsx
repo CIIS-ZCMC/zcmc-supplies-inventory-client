@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Stack, Typography, Box } from '@mui/joy'
 import { CopyPlus, ViewIcon } from 'lucide-react'
@@ -15,7 +15,7 @@ import useAreasHook from '../../../Hooks/AreasHook'
 
 import { areaHeader } from '../../../Data/TableHeader'
 
-const AreasOverview = () => {
+const AreasOverview = ({ filter }) => {
 
     const { getAreas } = useAreasHook();
 
@@ -41,6 +41,9 @@ const AreasOverview = () => {
         setSnackbar({ open: false })
     }
 
+    useEffect(() => {
+        areaData
+    }, [areaData])
 
     return (
         <div>
@@ -72,8 +75,9 @@ const AreasOverview = () => {
                 <PaginatedTable
                     tableTitle={"Areas"}
                     // tableDesc={"Sample Table Desription"}
+                    loading={isLoading}
                     columns={areaHeader}
-                    rows={areaData}
+                    rows={filter(areaData)}
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>

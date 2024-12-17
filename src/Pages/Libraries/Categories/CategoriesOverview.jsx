@@ -14,7 +14,7 @@ import FormDialog from './FormDialog';
 import useCategoriesHook from '../../../Hooks/CategoriesHook'
 import { categoriesHeader } from '../../../Data/TableHeader';
 
-const SuppliersOverview = () => {
+const SuppliersOverview = ({ filter }) => {
 
     const { getCategories } = useCategoriesHook();
 
@@ -71,7 +71,7 @@ const SuppliersOverview = () => {
                     tableTitle={"Supplies"}
                     // tableDesc={"Sample Table Desription"}
                     columns={categoriesHeader}
-                    rows={categoriesData}
+                    rows={filter(categoriesData)}
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>

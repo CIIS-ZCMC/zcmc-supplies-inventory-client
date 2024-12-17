@@ -13,7 +13,7 @@ ContainerComponent.propTypes = {
 const CustomSheet = styled(Sheet)(({ theme, marginTop }) => ({
   backgroundColor: "white",
   borderRadius: 12,
-  padding: theme.spacing(3),
+  padding: theme.spacing(2),
   boxShadow: theme.shadow.md,
   marginTop: marginTop,
 }));

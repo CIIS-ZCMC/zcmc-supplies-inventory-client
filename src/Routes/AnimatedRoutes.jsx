@@ -20,7 +20,11 @@ const router = createBrowserRouter([
   },
   {
     // path: "/releasing",
-    element: <Layout />, // Parent component that renders common layout
+    element: (
+      <ProtectedRoutes>
+        <Layout />
+      </ProtectedRoutes>
+    ), // Parent component that renders common layout
     children: childrenRoutes, // Custom page routes
   },
   {

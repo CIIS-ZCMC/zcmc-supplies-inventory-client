@@ -15,7 +15,7 @@ import useSourceHook from '../../../Hooks/SourceHook';
 
 import { sourceHeader } from '../../../Data/TableHeader';
 
-const SuppliersOverview = () => {
+const SuppliersOverview = ({ filter }) => {
 
     const { getSources } = useSourceHook();
 
@@ -72,7 +72,8 @@ const SuppliersOverview = () => {
                     tableTitle={"Supplies"}
                     // tableDesc={"Sample Table Desription"}
                     columns={sourceHeader}
-                    rows={sourcesData}
+                    rows={filter(sourcesData)}
+                    loading={isLoading}
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>

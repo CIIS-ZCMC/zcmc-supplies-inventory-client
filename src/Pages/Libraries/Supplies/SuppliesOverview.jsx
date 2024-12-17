@@ -15,7 +15,7 @@ import useSuppliesHook from '../../../Hooks/SuppliesHook'
 
 import { supplyHeader } from '../../../Data/TableHeader';
 
-const SuppliersOverview = () => {
+const SuppliersOverview = ({ filter }) => {
 
     const { getSupplies } = useSuppliesHook();
 
@@ -72,7 +72,8 @@ const SuppliersOverview = () => {
                     tableTitle={"Supplies"}
                     // tableDesc={"Sample Table Desription"}
                     columns={supplyHeader}
-                    rows={suppliesData}
+                    loading={isLoading}
+                    rows={filter(suppliesData)}
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>

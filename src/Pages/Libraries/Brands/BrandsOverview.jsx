@@ -15,7 +15,7 @@ import useBrandsHook from '../../../Hooks/BrandsHook'
 
 import { brandHeader } from '../../../Data/TableHeader'
 
-const BrandsOverview = () => {
+const BrandsOverview = ({ filter }) => {
 
     const { getBrands } = useBrandsHook();
 
@@ -72,7 +72,7 @@ const BrandsOverview = () => {
                     tableTitle={"Brands"}
                     // tableDesc={"Sample Table Desription"}
                     columns={brandHeader}
-                    rows={brandsData}
+                    rows={filter(brandsData)}
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>

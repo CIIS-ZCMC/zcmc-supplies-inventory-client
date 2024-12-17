@@ -5,6 +5,8 @@ import BreadcrumbsComponent from "../../Components/BreadcrumbsComponent";
 import AvatarComponent from "../../Components/AvatarComponent";
 import SheetComponent from "../../Components/SheetComponent";
 import ButtonComponent from "../../Components/ButtonComponent";
+import useUserHook from "../../hooks/UserHook";
+import SignOut from "../../Components/Signout";
 
 const FlexContainer = ({
   children,
@@ -29,6 +31,8 @@ const FlexContainer = ({
 
 const Header = ({ pageDetails, data }) => {
   const theme = useTheme();
+  const { user } = useUserHook();
+
   return (
     <FlexContainer
       direction="row"
@@ -43,7 +47,7 @@ const Header = ({ pageDetails, data }) => {
             <AvatarComponent />
           )}
           <BreadcrumbsComponent
-            name={data.name}
+            name={user?.name ?? ""}
             pageTitle={pageDetails.title}
             pagePath={pageDetails?.pagePath}
             subPath={pageDetails?.subPath}
@@ -78,23 +82,24 @@ const Header = ({ pageDetails, data }) => {
             justifyContent="start"
           >
             <Box mr={2}>
-              {data ? (
-                <AvatarComponent alt={data.name} src={data.src} />
+              {user ? (
+                <AvatarComponent
+                  alt={user?.name ?? ""}
+                  src={user?.url ?? null}
+                />
               ) : (
                 <AvatarComponent />
               )}
             </Box>
 
             <Stack>
-              <Typography level="body-lg" fontWeight={600}>
-                {data.name}
+              <Typography level="body-md" fontWeight={600}>
+                {user?.name ?? ""}
               </Typography>
-              <Typography level="body-sm">{data.email}</Typography>
+              <Typography level="body-xs">{data.email}</Typography>
             </Stack>
 
-            <Box ml={2}>
-              <ChevronRight />
-            </Box>
+            <SignOut />
           </FlexContainer>
         </SheetComponent>
 
