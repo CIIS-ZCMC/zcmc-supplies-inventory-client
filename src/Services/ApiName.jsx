@@ -12,7 +12,7 @@ import { BASE_URL } from "./Config";
  * File [umis_api]
  */
 const api_name = new axios.create({
-  baseURL: BASE_URL.development,
+  baseURL: BASE_URL.production_landing_page,
   withCredentials: true,
   headers: {
     Accept: "application/json",
