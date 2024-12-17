@@ -87,13 +87,13 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         onSubmit: async (values) => {
             // Create a new FormData object
             console.log(values)
-            // const formData = new FormData();
+            const formData = new FormData();
 
-            // formData.append("supply_name", values.supplyName);
-            // formData.append("category_id", values.category);
-            // formData.append("unit_id", values.unit);
+            formData.append("supply_name", values.supplyName);
+            formData.append("category_id", values.category);
+            formData.append("unit_id", values.unit);
 
-            // await mutation.mutate(formData)
+            await mutation.mutate(formData)
         }
     })
 
