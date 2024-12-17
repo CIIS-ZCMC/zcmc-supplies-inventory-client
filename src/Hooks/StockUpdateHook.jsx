@@ -9,7 +9,8 @@ const useStockUpdateHook = create((set) => ({
     initialValues: {
         itemName: '',
         sources: [],
-        brand_id: ''
+        brand_id: '',
+        remarks: ''
     },
 
     validationSchema: Yup.object({
