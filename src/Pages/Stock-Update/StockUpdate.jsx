@@ -1,38 +1,31 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Box, Stack } from '@mui/joy';
 
-import { Box, Stack } from "@mui/joy";
-import { useQuery } from "@tanstack/react-query";
-import * as XLSX from 'xlsx'
-
-import { ViewIcon, SearchIcon } from "lucide-react";
+import { SearchIcon, ViewIcon } from 'lucide-react';
 
 //hooks
-import useReceivingHook from "../../Hooks/ReceivingHook";
-import useSnackbarHook from "../../Hooks/AlertHook";
-import useFilterHook from "../../Hooks/FilterHook";
+import useFilterHook from '../../Hooks/FilterHook';
+import useSnackbarHook from '../../Hooks/AlertHook';
+import useReceivingHook from '../../Hooks/ReceivingHook';
 
 //layouts
-import Header from "../../Layout/Header/Header";
-import SearchFilter from "../../Layout/SearchFilter/SearchFilter";
-import Table from "../../Layout/Table/Table";
-import PaginatedTable from "../../Components/Table/PaginatedTable";
-import ButtonComponent from "../../Components/ButtonComponent";
-import ContainerComponent from "../../Components/Container/ContainerComponent";
+import Header from '../../Layout/Header/Header';
+import ContainerComponent from '../../Components/Container/ContainerComponent';
+import InputComponent from '../../Components/Form/InputComponent';
+import SelectComponent from '../../Components/Form/SelectComponent';
+import ButtonComponent from '../../Components/ButtonComponent';
+import PaginatedTable from '../../Components/Table/PaginatedTable';
+import ModalComponent from '../../Components/Dialogs/ModalComponent';
+import SnackbarComponent from '../../Components/SnackbarComponent';
 
-//custom components
-import DatePickerComponent from "../../Components/Form/DatePickerComponent";
-import SelectComponent from "../../Components/Form/SelectComponent";
-import ModalComponent from "../../Components/Dialogs/ModalComponent";
-import FormDialog from "../../Layout/Receiving/FormDialog";
-import SnackbarComponent from "../../Components/SnackbarComponent";
-import InputComponent from "../../Components/Form/InputComponent";
+// custom components
+import FormDialog from '../../Layout/StockUpdate/FormDialog';
 
-//datas
 import { user, categoryFilter } from '../../Data/index';
 import { receivingHeader } from '../../Data/TableHeader';
-import ReceivingDetails from "./ReceivingDetails";
 
-const ReceivingOverview = () => {
+const StockUpdate = () => {
     const { getStockIn } = useReceivingHook();
     const { open, message, color, variant, anchor, showSnackbar, closeSnackbar, } = useSnackbarHook();
     const { selectedCategory, setCategory, filteredInventory, clearFilters, setSearchTerm, searchTerm } = useFilterHook();
@@ -42,20 +35,12 @@ const ReceivingOverview = () => {
         queryFn: getStockIn,
     })
 
-    const stockinData = data?.data
-
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
+    //local states
     const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
-    const [selectedRow, setSelectedRow] = useState(null);
 
     const pageDetails = {
-        title: "Receiving (IAR Management)",
-        description: "all your IARs are shown here, you may open each ont to see more information"
-    }
-
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
+        title: 'Stock Update',
+        description: ""
     }
 
     const handleDialogOpen = () => {
@@ -66,52 +51,11 @@ const ReceivingOverview = () => {
         setIsDialogOpen(false)
     }
 
-    const handleViewDialogOpen = (row) => {
-        setSelectedRow(row.id)
-        setIsViewDialogOpen(true);
-    };
+    const stockinData = useMemo(() => data?.data || [], [data]);
 
-    const handleViewDialogClose = (row) => {
-        setIsViewDialogOpen(false)
-    }
-
-    const generateReport = () => {
-        try {
-            const worksheet = XLSX.utils.json_to_sheet(stockinData); //convert jsonData to worksheet
-
-            const columnWidth = { wpx: 150 }; // Set desired column width in pixels
-
-            //Set the same column width for all columns
-            worksheet["!cols"] = new Array(
-                data[0] ? Object.keys(data[0]).length : 0
-            ).fill(columnWidth);
-
-            // Enable text wrap for all header cells
-            const header = worksheet["!cols"] ? worksheet["!cols"] : [];
-            header.forEach((col, index) => {
-                if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
-            });
-
-            const workbook = XLSX.utils.book_new()
-            XLSX.utils.book_append_sheet(
-                workbook,
-                worksheet
-            )
-
-            XLSX.writeFile(
-                workbook,
-                `stockin_repost.xlsx`
-            )
-
-            showSnackbar("Report generated successfully!", "success", "filled");
-        } catch (error) {
-            showSnackbar(
-                "Failed to generate the report. Please try again.",
-                "danger",
-                "filled"
-            );
-        }
-    }
+    // useEffect(() => {
+    //     console.log(stockinData)
+    // }, [stockinData])
 
     return (
         <>
@@ -170,43 +114,35 @@ const ReceivingOverview = () => {
                         columns={receivingHeader}
                         rows={filteredInventory(stockinData)}
                         actions={<ViewIcon />}
+                        loading={isLoading}
                         actionBtns={
                             <Stack direction="row" spacing={1}>
-                                <ButtonComponent
+                                {/* <ButtonComponent
                                     variant={"outlined"}
                                     label="Generate report"
                                     size="lg"
                                     onClick={generateReport}
-                                />
-                                <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
+                                /> */}
+                                <ButtonComponent label="New Stock Update" onClick={handleDialogOpen} />
                             </Stack>
                         }
                         viewModal={true}
-                        viewModalContent={handleViewDialogOpen}
+                    // viewModalContent={handleViewDialogOpen}
                     />
                 </ContainerComponent>
             </Stack>
 
-            {/* stock in form */}
+            {/* stock update form */}
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
                 // open, message, color, variant, anchor, showSnackbar, closeSnackbar
                 content={<FormDialog open={open} message={message} color={color} showSnackbar={showSnackbar} handleDialogClose={handleDialogClose} />}
                 actionBtns={false}
-                title="Record a new Requisition and Issue slip"
-                description={"Describe how would you like to release items from your inventory. All fields are required."}
+                title="Stock update"
+            // description={"Describe how would you like to release items from your inventory. All fields are required."}
             />
 
-            {/* modal overview */}
-            <ModalComponent
-                isOpen={isViewDialogOpen}
-                handleClose={handleViewDialogClose}
-                content={<ReceivingDetails urlId={selectedRow} />}
-                actionBtns={false}
-                title={'Transaction Overview'}
-                description={"Complete information about an IAR. This record cannot be edited."}
-            />
 
             <SnackbarComponent
                 open={open}
@@ -220,4 +156,4 @@ const ReceivingOverview = () => {
     )
 }
 
-export default ReceivingOverview
+export default StockUpdate
