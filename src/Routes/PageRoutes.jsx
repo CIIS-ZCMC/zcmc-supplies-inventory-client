@@ -7,6 +7,7 @@ import {
   Tag,
   ClipboardList,
   LayoutGrid,
+  ChartCandlestick,
 } from "lucide-react";
 
 import { BiCategory } from "react-icons/bi";
@@ -37,6 +38,7 @@ const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
 const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
 
 const Reports = lazy(() => import("../Pages/Reports/Reports"));
+const StockUpdate = lazy(() => import("../Pages/Stock-Update/StockUpdate"));
 
 export const sidebarRoutes = [
   {
@@ -73,6 +75,13 @@ export const sidebarRoutes = [
     name: "Reports",
     element: <Reports />,
     icon: <GrDocument />,
+    permissions: ["view"],
+  },
+  {
+    path: "/stock-update",
+    name: "Stock-Update",
+    element: <StockUpdate />,
+    icon: <ChartCandlestick />,
     permissions: ["view"],
   },
 ];

@@ -9,6 +9,8 @@ const useSuppliesHook = create((set) => ({
         supplyName: '',
         category: '',
         unit: '',
+        source: '',
+        quntity: '',
         // description: '',
     },
 

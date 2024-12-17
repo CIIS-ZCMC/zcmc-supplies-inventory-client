@@ -401,12 +401,12 @@ export const unitHeader = [
 
 
 export const dashboardHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "supply_name",

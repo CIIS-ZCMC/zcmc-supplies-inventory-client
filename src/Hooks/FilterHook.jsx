@@ -49,7 +49,7 @@ const useFilterHook = create((set) => ({
 
     // Filter by selected category
     let filtered = data?.filter((item) => {
-      console.log("Current item:", item); // Log each item being processed
+      // console.log("Current item:", item); // Log each item being processed
 
       const matchesCategory =
         !selectedCategory || item.category_name === selectedCategory;

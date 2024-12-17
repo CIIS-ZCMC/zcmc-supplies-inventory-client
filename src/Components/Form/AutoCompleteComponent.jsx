@@ -26,7 +26,7 @@ const AutoCompleteComponent = ({
           filterSelectedOptions
           error={error}
           name={name}
-          sx={{ marginTop: 1, width }}
+          sx={{ width }}
           options={options}
           placeholder={placeholder}
           size="lg"

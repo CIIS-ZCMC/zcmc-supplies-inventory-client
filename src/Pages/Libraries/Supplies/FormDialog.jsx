@@ -1,17 +1,18 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react';
 
-import { useFormik } from 'formik'
-import { Grid, Divider, Stack, Typography } from '@mui/joy'
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+import { useFormik } from 'formik';
+import { Grid, Divider, Stack, Typography, Checkbox } from '@mui/joy';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 
-import ButtonComponent from '../../../Components/ButtonComponent'
-import InputComponent from '../../../Components/Form/InputComponent'
-import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent'
-import AccordionComponent from '../../../Components/AccordionComponent'
+import ButtonComponent from '../../../Components/ButtonComponent';
+import InputComponent from '../../../Components/Form/InputComponent';
+import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent';
+import AccordionComponent from '../../../Components/AccordionComponent';
 
-import useSuppliesHook from '../../../Hooks/SuppliesHook'
-import useCategoriesHook from '../../../Hooks/CategoriesHook'
-import useUnitsHook from '../../../Hooks/UnitsHook'
+import useSuppliesHook from '../../../Hooks/SuppliesHook';
+import useCategoriesHook from '../../../Hooks/CategoriesHook';
+import useUnitsHook from '../../../Hooks/UnitsHook';
+import useSourceHook from '../../../Hooks/SourceHook';
 
 const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
@@ -20,11 +21,20 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
     const { getCategories } = useCategoriesHook();
     const { getUnits } = useUnitsHook();
+    const { getSources } = useSourceHook();
+
+    // localStates
+    const [isEnabled, setIsEnabled] = useState(false)
+
+    useEffect(() => {
+        console.log(isEnabled)
+    }, [isEnabled])
 
     // Array of queries to manage multiple fetching in a cleaner way
     const queryConfigs = [
         { key: 'units', fn: getUnits },
         { key: 'categories', fn: getCategories },
+        { key: 'sources', fn: getSources },
     ];
 
     const queries = queryConfigs.map(({ key, fn }) =>
@@ -35,6 +45,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
     const [
         { data: unitsData, isLoading: isUnitsLoading },
         { data: categoriesData, isLoading: isCategoriesLoading },
+        { data: sourcesData, isLoading: isSourcesLoading },
     ] = queries;
 
     // Helper function for mapping options
@@ -43,6 +54,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
     const unitsOptions = useMemo(() => mapOptions(unitsData?.data, 'unit_name'), [categoriesData]);
     const categoriesOptions = useMemo(() => mapOptions(categoriesData?.data, 'category_name'), [categoriesData]);
+    const sourcesOptions = useMemo(() => mapOptions(sourcesData?.data, 'source_name'), [sourcesData]);
 
     // Define create the mutation for stockout
     const mutation = useMutation({
@@ -65,18 +77,23 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         }
     });
 
+    const handleEnabled = () => {
+        setIsEnabled((prevState) => !prevState);
+    };
+
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             // Create a new FormData object
-            const formData = new FormData();
+            console.log(values)
+            // const formData = new FormData();
 
-            formData.append("supply_name", values.supplyName);
-            formData.append("category_id", values.category);
-            formData.append("unit_id", values.unit);
+            // formData.append("supply_name", values.supplyName);
+            // formData.append("category_id", values.category);
+            // formData.append("unit_id", values.unit);
 
-            await mutation.mutate(formData)
+            // await mutation.mutate(formData)
         }
     })
 
@@ -132,6 +149,55 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                         />
                     </Grid>
 
+                    <Grid xs={12}>
+                        {/* Checkbox for No Expiry Date */}
+                        <Checkbox
+                            label="Enable Source and Donation"
+                            checked={isEnabled}
+                            onChange={handleEnabled}
+                            size="lg"
+                            sx={{
+                                mt: 1,
+                                color: "primary.500",
+                                "&.Mui-checked": {
+                                    color: "primary.700",
+                                },
+                            }}
+                        />
+                    </Grid>
+
+                    {/* {isEnabled &&
+                        <>
+                            <Grid xs={6}>
+                                <AutoCompleteComponent
+                                    name={'source'}
+                                    placeholder="Search source..."
+                                    label="Source"
+                                    options={sourcesOptions}
+                                    loading={isSourcesLoading}
+                                    value={sourcesOptions.find(option => option.id === formik.values.source) || null}
+                                    onChange={(event, value) => formik.setFieldValue("source", value ? value.id : '')}
+                                    error={formik.touched.source && Boolean(formik.errors.source)}
+                                    helperText={formik.touched.source && formik.errors.source}
+                                    fullWidth={true}
+                                />
+                            </Grid>
+                            <Grid xs={6}>
+                                <InputComponent
+                                    name={'quantity'}
+                                    size='lg'
+                                    label="Quantity"
+                                    placeholder="xxx.xxx"
+                                    fullWidth={true}
+                                    value={formik.values.quantity}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+                                    helperText={formik.touched.quantity && formik.errors.quantity}
+                                />
+                            </Grid>
+                        </>
+                    } */}
+
                 </Grid>
 
                 <Divider sx={{ marginY: 3 }} />  {/* Horizontal Divider */}
@@ -153,7 +219,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                         loading={mutation.isPending}
                     />
                 </Stack>
-            </form>
+            </form >
         </>
     )
 }
