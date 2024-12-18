@@ -22,7 +22,10 @@ const useSuppliesHook = create((set) => ({
   getSupplies: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.SUPPLIES}`
+        `${BASE_URL.production}/${API.SUPPLIES}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -35,7 +38,10 @@ const useSuppliesHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.SUPPLY_STORE}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

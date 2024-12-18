@@ -38,7 +38,10 @@ const useReleasingHook = create((set) => ({
     try {
       // console.log(`${BASE_URL}/${RELEASING}`)
       const response = await axios.get(
-        `${BASE_URL.production}/${API.RELEASING}`
+        `${BASE_URL.production}/${API.RELEASING}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -49,7 +52,10 @@ const useReleasingHook = create((set) => ({
   getSelectedReleasingList: async (id) => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.SELECTED_RELEASING_LIST}/${id}`
+        `${BASE_URL.production}/${API.SELECTED_RELEASING_LIST}/${id}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -62,7 +68,10 @@ const useReleasingHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.STOCKOUT}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -75,7 +84,10 @@ const useReleasingHook = create((set) => ({
     try {
       // console.log(`${BASE_URL}/${RELEASING}`)
       const response = await axios.get(
-        `${BASE_URL.production}/${API.BRAND_REGULAR}/${id}`
+        `${BASE_URL.production}/${API.BRAND_REGULAR}/${id}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -87,7 +99,10 @@ const useReleasingHook = create((set) => ({
     try {
       // console.log(`${BASE_URL}/${RELEASING}`)
       const response = await axios.get(
-        `${BASE_URL.production}/${API.BRAND_DONATION}/${id}`
+        `${BASE_URL.production}/${API.BRAND_DONATION}/${id}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

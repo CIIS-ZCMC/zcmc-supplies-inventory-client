@@ -14,7 +14,9 @@ const useBrandsHook = create((set) => ({
 
   getBrands: async () => {
     try {
-      const response = await axios.get(`${BASE_URL.production}/${API.BRANDS}`);
+      const response = await axios.get(`${BASE_URL.production}/${API.BRANDS}`, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       error.message;
@@ -26,7 +28,10 @@ const useBrandsHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.BRAND_STORE}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

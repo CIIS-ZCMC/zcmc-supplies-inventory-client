@@ -16,7 +16,10 @@ const useSuppliersHook = create((set) => ({
   getSuppliers: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.SUPPLIERS}`
+        `${BASE_URL.production}/${API.SUPPLIERS}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -29,7 +32,10 @@ const useSuppliersHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.SUPPLIER_STORE}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

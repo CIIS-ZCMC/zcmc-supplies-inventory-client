@@ -41,7 +41,10 @@ const useReceivingHook = create((set) => ({
   getStockIn: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.RECEIVING}`
+        `${BASE_URL.production}/${API.RECEIVING}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -54,7 +57,10 @@ const useReceivingHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.STOCKIN}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

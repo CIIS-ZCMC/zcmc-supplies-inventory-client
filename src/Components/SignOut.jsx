@@ -16,7 +16,7 @@ const SignOut = () => {
         return console.log(feedback);
       }
 
-      window.location.href = BASE_URL.development_landing_page;
+      window.location.href = BASE_URL.production_landing_page;
     });
   }
 

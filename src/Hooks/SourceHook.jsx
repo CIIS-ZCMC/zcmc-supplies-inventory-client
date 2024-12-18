@@ -14,7 +14,12 @@ const useSourceHook = create((set) => ({
 
   getSources: async () => {
     try {
-      const response = await axios.get(`${BASE_URL.production}/${API.SOURCES}`);
+      const response = await axios.get(
+        `${BASE_URL.production}/${API.SOURCES}`,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
       error.message;
@@ -26,7 +31,10 @@ const useSourceHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.SOURCE_STORE}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

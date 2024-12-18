@@ -21,7 +21,9 @@ const useAreasHook = create((set) => ({
 
   getAreas: async () => {
     try {
-      const response = await axios.get(`${BASE_URL.production}/${API.AREAS}`);
+      const response = await axios.get(`${BASE_URL.production}/${API.AREAS}`, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       error.message;
@@ -33,7 +35,10 @@ const useAreasHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.AREA_STORE}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

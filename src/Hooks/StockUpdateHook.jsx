@@ -17,7 +17,10 @@ const useStockUpdateHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.STOCK_UPDATE}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

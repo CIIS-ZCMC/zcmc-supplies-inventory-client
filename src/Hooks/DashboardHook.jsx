@@ -6,7 +6,10 @@ const useDashboardHook = create((set) => ({
   getDashboardTotal: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.DASHBOARD_TOTAL}`
+        `${BASE_URL.production}/${API.DASHBOARD_TOTAL}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -17,7 +20,10 @@ const useDashboardHook = create((set) => ({
   getDashboardSupplies: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.DASHBOARD_SUPPLIES}`
+        `${BASE_URL.production}/${API.DASHBOARD_SUPPLIES}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

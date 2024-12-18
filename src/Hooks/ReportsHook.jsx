@@ -21,7 +21,10 @@ const useReportsHook = create((set) => ({
   getItemCount: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_ITEM_COUNT}`
+        `${BASE_URL.production}/${API.REPORTS_ITEM_COUNT}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ item_count: response.data });
       console.log(response.data);
@@ -34,7 +37,10 @@ const useReportsHook = create((set) => ({
   getStartingBal: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_STARTING_BAL}`
+        `${BASE_URL.production}/${API.REPORTS_STARTING_BAL}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ starting_bal: response.data });
       return response.data;
@@ -46,7 +52,10 @@ const useReportsHook = create((set) => ({
   getNearExp: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_NEAR_EXP}`
+        `${BASE_URL.production}/${API.REPORTS_NEAR_EXP}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ near_exp: response.data.data });
       return response.data;
@@ -58,7 +67,10 @@ const useReportsHook = create((set) => ({
   getZeroStocks: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_ZERO_STOCKS}`
+        `${BASE_URL.production}/${API.REPORTS_ZERO_STOCKS}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ zero_stocks: response.data });
       return response.data;
@@ -71,7 +83,10 @@ const useReportsHook = create((set) => ({
     try {
       console.log(year);
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_CONSUMED}/${year}`
+        `${BASE_URL.production}/${API.REPORTS_CONSUMED}/${year}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ consumed: response.data });
       console.log(response.data);
@@ -84,7 +99,10 @@ const useReportsHook = create((set) => ({
   getSufficient: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_SUFFICIENT}`
+        `${BASE_URL.production}/${API.REPORTS_SUFFICIENT}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ sufficient_sup: response.data });
       return response.data;
@@ -97,7 +115,10 @@ const useReportsHook = create((set) => ({
     try {
       console.log(year);
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_UNCONSUMED}/${year}`
+        `${BASE_URL.production}/${API.REPORTS_UNCONSUMED}/${year}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ unconsumed: response.data });
       console.log(response.data);
@@ -111,7 +132,10 @@ const useReportsHook = create((set) => ({
     try {
       console.log(month);
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_REORDER}/${month}`
+        `${BASE_URL.production}/${API.REPORTS_REORDER}/${month}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ reorder: response.data });
       return response.data;
@@ -123,7 +147,10 @@ const useReportsHook = create((set) => ({
   getDisposal: async (month) => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_DISPOSAL}/${month}`
+        `${BASE_URL.production}/${API.REPORTS_DISPOSAL}/${month}`,
+        {
+          withCredentials: true,
+        }
       );
       set({ disposal: response.data });
       return response.data;
@@ -136,7 +163,10 @@ const useReportsHook = create((set) => ({
     try {
       // Include the id in the API request URL
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_ITEM_COUNT_BREAKDOWN}/${id}`
+        `${BASE_URL.production}/${API.REPORTS_ITEM_COUNT_BREAKDOWN}/${id}`,
+        {
+          withCredentials: true,
+        }
       );
 
       // Update the state with the fetched data
@@ -152,7 +182,10 @@ const useReportsHook = create((set) => ({
     try {
       // Include the id in the API request URL
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_ITEM_COUNT_TOTAL}/${id}`
+        `${BASE_URL.production}/${API.REPORTS_ITEM_COUNT_TOTAL}/${id}`,
+        {
+          withCredentials: true,
+        }
       );
 
       // Update the state with the fetched data
@@ -167,7 +200,10 @@ const useReportsHook = create((set) => ({
     try {
       // Include the id in the API request URL
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_ITEM_COUNT_IAR}/${id}`
+        `${BASE_URL.production}/${API.REPORTS_ITEM_COUNT_IAR}/${id}`,
+        {
+          withCredentials: true,
+        }
       );
 
       // Update the state with the fetched data
@@ -182,7 +218,10 @@ const useReportsHook = create((set) => ({
     try {
       // Include the id in the API request URL
       const response = await axios.get(
-        `${BASE_URL.production}/${API.REPORTS_DATE}`
+        `${BASE_URL.production}/${API.REPORTS_DATE}`,
+        {
+          withCredentials: true,
+        }
       );
 
       // Update the state with the fetched data

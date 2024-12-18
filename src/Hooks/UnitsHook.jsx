@@ -14,7 +14,9 @@ const useUnitsHook = create((set) => ({
 
   getUnits: async () => {
     try {
-      const response = await axios.get(`${BASE_URL.production}/${API.UNITS}`);
+      const response = await axios.get(`${BASE_URL.production}/${API.UNITS}`, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       error.message;
@@ -26,7 +28,10 @@ const useUnitsHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.UNIT_STORE}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {

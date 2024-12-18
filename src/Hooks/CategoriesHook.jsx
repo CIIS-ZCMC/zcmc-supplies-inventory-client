@@ -15,7 +15,10 @@ const useCategoriesHook = create((set) => ({
   getCategories: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.production}/${API.CATEGORIES}`
+        `${BASE_URL.production}/${API.CATEGORIES}`,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
@@ -28,7 +31,10 @@ const useCategoriesHook = create((set) => ({
     try {
       const response = await axios.post(
         `${BASE_URL.production}/${API.CATEGORY_STORE}`,
-        formData
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       return response.data;
     } catch (error) {
