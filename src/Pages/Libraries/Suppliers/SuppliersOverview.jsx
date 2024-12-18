@@ -52,16 +52,16 @@ const SuppliersOverview = ({ filter }) => {
           </Box>
 
           <Typography my={2} level='title-lg' fontSize={24} gutterBottom>
-            Get started by creating an Area
+            Get started by creating an suppliers
           </Typography>
 
           <Typography width={600} my={2} level='body-md' textAlign={'center'} gutterBottom>
-            You’ll use registered areas in this library to fill-up RIS requests and IARs as a pre-defined
+            You’ll use registered suppliers in this library to fill-up RIS requests and IARs as a pre-defined
             selection to minimize typographical errors.
           </Typography>
 
           <ButtonComponent
-            label={'Create an area'}
+            label={'Create an supplier'}
             fullWidth={false}
             width={150}
             onClick={handleDialogOpen}
@@ -69,21 +69,22 @@ const SuppliersOverview = ({ filter }) => {
         </Stack>
         :
         <PaginatedTable
-          tableTitle={"Supplies"}
+          tableTitle={"Suppliers"}
           // tableDesc={"Sample Table Desription"}
           columns={supplierHeader}
           rows={filter(suppliersData)}
           actions={<ViewIcon />}
+          loading={isLoading}
           actionBtns={
             <Stack>
-              <ButtonComponent label="Add new area" onClick={handleDialogOpen} />
+              <ButtonComponent label="Add new supplier" onClick={handleDialogOpen} />
             </Stack>
           }
         />
       }
       <ModalComponent
         isOpen={isDialogOpen}
-        title="Create a new area record"
+        title="Create a new supplier record"
         description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
         handleClose={handleDialogClose}
         content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}

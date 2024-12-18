@@ -71,19 +71,20 @@ export const sidebarRoutes = [
     permissions: ["view"],
   },
   {
-    path: "/reports",
-    name: "Reports",
-    element: <Reports />,
-    icon: <GrDocument />,
-    permissions: ["view"],
-  },
-  {
     path: "/stock-update",
     name: "Stock-Update",
     element: <StockUpdate />,
     icon: <ChartCandlestick />,
     permissions: ["view"],
   },
+  {
+    path: "/reports",
+    name: "Reports",
+    element: <Reports />,
+    icon: <GrDocument />,
+    permissions: ["view"],
+  },
+
 ];
 
 export const childrenRoutes = [

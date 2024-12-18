@@ -56,7 +56,7 @@ const BrandsOverview = ({ filter }) => {
                     </Typography>
 
                     <Typography width={600} my={2} level='body-md' textAlign={'center'} gutterBottom>
-                        You’ll use registered areas in this library to fill-up RIS requests and IARs as a pre-defined
+                        You’ll use registered brands in this library to fill-up RIS requests and IARs as a pre-defined
                         selection to minimize typographical errors.
                     </Typography>
 
@@ -74,6 +74,7 @@ const BrandsOverview = ({ filter }) => {
                     columns={brandHeader}
                     rows={filter(brandsData)}
                     actions={<ViewIcon />}
+                    loading={isLoading}
                     actionBtns={
                         <Stack>
                             <ButtonComponent label="Add new brand" onClick={handleDialogOpen} />

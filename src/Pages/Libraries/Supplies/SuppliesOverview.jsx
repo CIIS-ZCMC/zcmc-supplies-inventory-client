@@ -52,16 +52,16 @@ const SuppliersOverview = ({ filter }) => {
                     </Box>
 
                     <Typography my={2} level='title-lg' fontSize={24} gutterBottom>
-                        Get started by creating an Area
+                        Get started by creating an supply
                     </Typography>
 
                     <Typography width={600} my={2} level='body-md' textAlign={'center'} gutterBottom>
-                        You’ll use registered areas in this library to fill-up RIS requests and IARs as a pre-defined
+                        You’ll use registered supplies in this library to fill-up RIS requests and IARs as a pre-defined
                         selection to minimize typographical errors.
                     </Typography>
 
                     <ButtonComponent
-                        label={'Create an area'}
+                        label={'Create an supply'}
                         fullWidth={false}
                         width={150}
                         onClick={handleDialogOpen}

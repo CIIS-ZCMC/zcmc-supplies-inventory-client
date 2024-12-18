@@ -20,13 +20,27 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
         onSuccess: () => {
             // Show success notification, close dialog, and invalidate areas cache
             setSnackbar({ open: true, color: 'success', message: 'Supplier created successfully' });
-            queryClient.invalidateQueries('supplies');
+            queryClient.invalidateQueries('suppliers');
             // Reset Formik form values after submission
             formik.resetForm(); // Reset form to initial values
             // setInitialValues;  // Reset the initial state in the store
         },
         onError: (error) => {
-            setSnackbar({ open: true, color: 'danger', message: `${error}` })
+            if (error?.response?.status === 409) {
+                setSnackbar({
+                    open: true,
+                    color: 'danger',
+                    message: error.response.data.message || 'Conflict: The resource already exists.',
+                });
+            } else {
+                // Handle other errors
+                setSnackbar({
+                    open: true,
+                    color: 'danger',
+                    message: `${error.message || 'An error occurred. Please try again.'}`,
+                });
+            }
+
             console.error("Error submitting form:", error);
         },
         onSettled: () => {
