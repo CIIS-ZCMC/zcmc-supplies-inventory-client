@@ -9,12 +9,6 @@ const useStockUpdateHook = create((set) => ({
     itemName: "",
     sources: [],
     brand_id: "",
-  },
-
-  initialValues: {
-    itemName: "",
-    sources: [],
-    brand_id: "",
     remarks: "",
   },
 
