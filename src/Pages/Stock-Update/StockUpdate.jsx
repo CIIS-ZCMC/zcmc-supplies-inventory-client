@@ -8,6 +8,7 @@ import { SearchIcon, ViewIcon } from 'lucide-react';
 import useFilterHook from '../../Hooks/FilterHook';
 import useSnackbarHook from '../../Hooks/AlertHook';
 import useReceivingHook from '../../Hooks/ReceivingHook';
+import useStockUpdateHook from '../../Hooks/StockUpdateHook';
 
 //layouts
 import Header from '../../Layout/Header/Header';
@@ -23,16 +24,16 @@ import SnackbarComponent from '../../Components/SnackbarComponent';
 import FormDialog from '../../Layout/StockUpdate/FormDialog';
 
 import { user, categoryFilter } from '../../Data/index';
-import { receivingHeader } from '../../Data/TableHeader';
+import { updateStockHeader } from '../../Data/TableHeader';
 
 const StockUpdate = () => {
-    const { getStockIn } = useReceivingHook();
+    const { getStockUpdateList } = useStockUpdateHook();
     const { open, message, color, variant, anchor, showSnackbar, closeSnackbar, } = useSnackbarHook();
     const { selectedCategory, setCategory, filteredInventory, clearFilters, setSearchTerm, searchTerm } = useFilterHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['stockin'],
-        queryFn: getStockIn,
+        queryFn: getStockUpdateList,
     })
 
     //local states
@@ -53,9 +54,9 @@ const StockUpdate = () => {
 
     const stockinData = useMemo(() => data?.data || [], [data]);
 
-    // useEffect(() => {
-    //     console.log(stockinData)
-    // }, [stockinData])
+    useEffect(() => {
+        console.log(stockinData)
+    }, [stockinData])
 
     return (
         <>
@@ -111,7 +112,7 @@ const StockUpdate = () => {
                     <PaginatedTable
                         tableTitle={"List of stock-in transactions"}
                         tableDesc={"All your IARs are shown here. You may open each one to see more information."}
-                        columns={receivingHeader}
+                        columns={updateStockHeader}
                         rows={filteredInventory(stockinData)}
                         actions={<ViewIcon />}
                         loading={isLoading}

@@ -20,7 +20,16 @@ const useStockUpdateHook = create((set) => ({
         // year: Yup.number().required('Year is required'),
     }),
 
-    // Create stock in with POST request
+
+    getStockUpdateList: async () => {
+        try {
+            const response = await axios.get(`${BASE_URL.development}/${API.STOCK_UPDATE_LIST}`);
+            return response.data;
+        } catch (error) {
+            error.message;
+        }
+    },
+
     createStockUpdate: async (formData) => {
         try {
             const response = await axios.post(`${BASE_URL.development}/${API.STOCK_UPDATE}`, formData);
