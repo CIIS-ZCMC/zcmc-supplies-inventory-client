@@ -26,7 +26,21 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
             // setInitialValues;  // Reset the initial state in the store
         },
         onError: (error) => {
-            setSnackbar({ open: true, color: 'danger', message: `${error}` })
+            if (error?.response?.status === 409) {
+                setSnackbar({
+                    open: true,
+                    color: 'danger',
+                    message: error.response.data.message || 'Conflict: The resource already exists.',
+                });
+            } else {
+                // Handle other errors
+                setSnackbar({
+                    open: true,
+                    color: 'danger',
+                    message: `${error.message || 'An error occurred. Please try again.'}`,
+                });
+            }
+
             console.error("Error submitting form:", error);
         },
         onSettled: () => {
