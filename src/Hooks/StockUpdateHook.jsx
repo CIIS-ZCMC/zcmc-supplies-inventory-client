@@ -11,12 +11,12 @@ const useStockUpdateHook = create((set) => ({
     brand_id: "",
   },
 
-  validationSchema: Yup.object({
-    itemName: Yup.string().required("Item Name is required"),
-    // regularQuantity: Yup.string().required('Regular Quantity is required'),
-    // donationQuantity: Yup.string().required('Donation Quantity is required'),
-    // year: Yup.number().required('Year is required'),
-  }),
+  initialValues: {
+    itemName: "",
+    sources: [],
+    brand_id: "",
+    remarks: "",
+  },
 
   // Create stock in with POST request
   createStockUpdate: async (formData) => {

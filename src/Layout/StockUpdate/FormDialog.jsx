@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
 import InputComponent from "../../Components/Form/InputComponent";
 import ButtonComponent from '../../Components/ButtonComponent';
+import TextAreaComponent from '../../Components/Form/TextAreaComponent';
 
 // hooks
 import useSuppliesHook from '../../Hooks/SuppliesHook';
@@ -67,6 +68,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
 
+            console.log(values)
+
             const sources = [
                 { source_id: 1, quantity: values.regularQuantity ? Number(values.regularQuantity) : 0 },
                 { source_id: 2, quantity: values.donationQuantity ? Number(values.donationQuantity) : 0 }
@@ -77,6 +80,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             formData.append("supplies_masterlist_id", values.itemName);
             formData.append("sources", JSON.stringify(sources));
             formData.append("brand_id", 1);
+            formData.append('remarks', values.remarks)
 
             // Log all FormData entries to the console for testing only 
             for (let [key, value] of formData.entries()) {
@@ -150,6 +154,15 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                             />
                         </Grid>
 
+                        <Grid xs={12} >
+                            <TextAreaComponent
+                                name={'remarks'}
+                                label={"Remarks"}
+                                placeholder={"Enter Remarks"}
+                                value={formik.values.remarks}
+                                onChange={formik.handleChange}
+                            />
+                        </Grid>
 
                         {/* <Grid xs={12}>
                             <InputComponent

@@ -136,7 +136,6 @@ const StockUpdate = () => {
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
-                // open, message, color, variant, anchor, showSnackbar, closeSnackbar
                 content={<FormDialog open={open} message={message} color={color} showSnackbar={showSnackbar} handleDialogClose={handleDialogClose} />}
                 actionBtns={false}
                 title="Stock update"
