@@ -171,12 +171,63 @@ export const releasingHeader = [
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
+export const updateStockHeader = [
+  {
+    id: "id",
+    numeric: true,
+    disablePadding: true,
+    label: "#",
+  },
+
+  {
+    id: "source_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Source",
+  },
+
+  {
+    id: "supply_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Supply Name",
+  },
+
+  {
+    id: "category_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Category",
+  },
+
+  {
+    id: "unit_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Unit Name",
+  },
+
+  {
+    id: "quantity",
+    numeric: false,
+    disablePadding: false,
+    label: "Quantity",
+  },
+]
+
 export const receivingHeader = [
   {
     id: "id",
     numeric: true,
     disablePadding: true,
     label: "#",
+  },
+
+  {
+    id: "source_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Source",
   },
 
   {

@@ -53,6 +53,7 @@ export const API = {
   STOCKOUT: "stock-out",
   STOCKIN: "stock-in",
   STOCK_UPDATE: "stock-in-backlogs",
+  STOCK_UPDATE_LIST: "backlog-list",
 
   DASHBOARD_TOTAL: "get-dashboard-total",
   DASHBOARD_SUPPLIES: "get-dashboard-supplies",
