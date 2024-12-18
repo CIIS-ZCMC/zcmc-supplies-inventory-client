@@ -20,7 +20,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
         onSuccess: () => {
             // Show success notification, close dialog, and invalidate areas cache
             setSnackbar({ open: true, color: 'success', message: 'Supplier created successfully' });
-            queryClient.invalidateQueries('supplies');
+            queryClient.invalidateQueries('suppliers');
             // Reset Formik form values after submission
             formik.resetForm(); // Reset form to initial values
             // setInitialValues;  // Reset the initial state in the store

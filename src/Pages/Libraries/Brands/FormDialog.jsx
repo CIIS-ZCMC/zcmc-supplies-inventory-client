@@ -19,8 +19,8 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
         mutationFn: createBrand,
         onSuccess: () => {
             // Show success notification, close dialog, and invalidate areas cache
-            setSnackbar({ open: true, color: 'success', message: 'Area Created Successfully' });
-            queryClient.invalidateQueries('areas');
+            setSnackbar({ open: true, color: 'success', message: 'Brand Created Successfully' });
+            queryClient.invalidateQueries('brands');
             // Reset Formik form values after submission
             formik.resetForm(); // Reset form to initial values
             // setInitialValues;  // Reset the initial state in the store

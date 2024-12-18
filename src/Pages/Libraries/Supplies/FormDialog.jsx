@@ -61,7 +61,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         mutationFn: createSupply,
         onSuccess: () => {
             // Show success notification, close dialog, and invalidate areas cache
-            setSnackbar({ open: true, color: 'success', message: 'Source created successfully' });
+            setSnackbar({ open: true, color: 'success', message: 'Supply created successfully' });
             queryClient.invalidateQueries('supplies');
             // Reset Formik form values after submission
             formik.resetForm(); // Reset form to initial values
@@ -149,8 +149,8 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                         />
                     </Grid>
 
-                    <Grid xs={12}>
-                        {/* Checkbox for No Expiry Date */}
+                    {/* <Grid xs={12}>
+
                         <Checkbox
                             label="Enable Source and Donation"
                             checked={isEnabled}
@@ -164,7 +164,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                                 },
                             }}
                         />
-                    </Grid>
+                    </Grid> */}
 
                     {/* {isEnabled &&
                         <>
