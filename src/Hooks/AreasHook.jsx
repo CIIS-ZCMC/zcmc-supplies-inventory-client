@@ -1,23 +1,33 @@
 import { create } from "zustand";
 import axios from "axios";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
 import { API, BASE_URL } from "../Services/Config";
 
 const useAreasHook = create((set) => ({
-
   initialValues: {
-    areaName: '',
+    id: null,
+    areaName: "",
   },
 
   validationSchema: Yup.object({
-    areaName: Yup.string().required('Area Name is required'),
+    areaName: Yup.string().required("Area Name is required"),
   }),
 
   // Method to reset initial values
-  setInitialValues: () => set({
-    initialValues: { areaName: '' }
-  }),
+  setInitialValues: (values) => {
+    if (values === null || values === undefined) {
+      return set({
+        initialValues: { id: null, areaName: "" },
+      });
+    }
+
+    console.log(values.area_name);
+
+    set({
+      initialValues: { id: values.id, areaName: values.area_name },
+    });
+  },
 
   getAreas: async () => {
     try {
@@ -30,7 +40,9 @@ const useAreasHook = create((set) => ({
 
   getArea: async (id) => {
     try {
-      const response = await axios.get(`${BASE_URL.development}/${API.AREA_SHOW}/${id}`);
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.AREA_SHOW}/${id}`
+      );
       return response.data;
     } catch (error) {
       error.message;
@@ -40,7 +52,10 @@ const useAreasHook = create((set) => ({
   // Create Area in with POST request
   createArea: async (formData) => {
     try {
-      const response = await axios.post(`${BASE_URL.development}/${API.AREA_STORE}`, formData);
+      const response = await axios.post(
+        `${BASE_URL.development}/${API.AREA_STORE}`,
+        formData
+      );
       return response.data;
     } catch (error) {
       console.error("Error creating area:", error.message);
@@ -51,14 +66,16 @@ const useAreasHook = create((set) => ({
   // Update Area with PUT or PATCH request
   updateArea: async (id, formData) => {
     try {
-      const response = await axios.put(`${BASE_URL.development}/${API.AREA_UPDATE}/${id}`, formData);
+      const response = await axios.put(
+        `${BASE_URL.development}/${API.AREA_UPDATE}/${id}`,
+        formData
+      );
       return response.data;
     } catch (error) {
       console.error("Error updating area:", error.message);
       throw error;
     }
-  }
-
+  },
 }));
 
 export default useAreasHook;

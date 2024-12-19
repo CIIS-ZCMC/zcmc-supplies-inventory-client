@@ -21,6 +21,7 @@ import { MdOutlineLibraryAdd } from "react-icons/md";
 import ModalComponent from "../Dialogs/ModalComponent";
 
 import usePaginatedTableHook from "../../Hooks/PaginatedTableHook";
+import useAreasHook from "../../Hooks/AreasHook";
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -30,6 +31,7 @@ PaginatedTable.propTypes = {
   tableDesc: PropTypes.string,
   showChip: PropTypes.bool,
   handleDialogOpen: PropTypes.func,
+  editRow: PropTypes.func,
 };
 function PaginatedTable({
   rowsPage = 10,
@@ -48,9 +50,9 @@ function PaginatedTable({
   viewModal = false,
   viewModalContent,
   modalContent,
+  editRow,
 }) {
-
-  const [isOpenDialog, setIsDialogOpen] = useState(false)
+  const [isOpenDialog, setIsDialogOpen] = useState(false);
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
@@ -94,15 +96,15 @@ function PaginatedTable({
   };
 
   const handleDialogClose = () => {
-    setIsDialogOpen(false)
-    resetState()
-  }
+    setIsDialogOpen(false);
+    resetState();
+  };
 
-  const handleEdit = (id) => {
-    setIsUpdate(true)
-    setId(id)
-    setIsDialogOpen(true)
-  }
+  const handleEdit = (data) => {
+    editRow(data);
+    setIsUpdate(true);
+    setIsDialogOpen(true);
+  };
 
   return (
     <>
@@ -161,7 +163,11 @@ function PaginatedTable({
                             <ButtonComponent
                               size={"sm"}
                               variant="plain"
-                              onClick={() => viewModal ? handleModalOpen(row) : handleNavigate(row)}
+                              onClick={() =>
+                                viewModal
+                                  ? handleModalOpen(row)
+                                  : handleNavigate(row)
+                              }
                               startDecorator={
                                 <SquareArrowOutUpRight size={"1rem"} />
                               }
@@ -170,13 +176,10 @@ function PaginatedTable({
                             <ButtonComponent
                               size={"sm"}
                               variant="plain"
-                              onClick={() => handleEdit(row.id)}
-                              startDecorator={
-                                <Pencil size={"1rem"} />
-                              }
+                              onClick={() => handleEdit(row)}
+                              startDecorator={<Pencil size={"1rem"} />}
                             />
                           </>
-
                         ) : (
                           row[column?.id] ?? `${startIdx + index + 1}`
                         )}
@@ -245,13 +248,13 @@ function PaginatedTable({
       <ModalComponent
         isOpen={isOpenDialog}
         title="Update a new area record"
-        description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
+        description={
+          "Library records allows for a more streamlined and dynamic form-filling experiences."
+        }
         handleClose={handleDialogClose}
         content={modalContent}
       />
     </>
-
-
   );
 }
 
