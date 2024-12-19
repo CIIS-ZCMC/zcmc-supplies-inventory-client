@@ -84,6 +84,7 @@ const AreasOverview = ({ filter }) => {
                             <ButtonComponent label="Add new area" onClick={handleDialogOpen} />
                         </Stack>
                     }
+                    modalContent={<FormDialog setSnackbar={setSnackbar} />}
                 />
             }
             <ModalComponent

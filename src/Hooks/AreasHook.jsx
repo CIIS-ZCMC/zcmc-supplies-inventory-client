@@ -28,6 +28,15 @@ const useAreasHook = create((set) => ({
     }
   },
 
+  getArea: async (id) => {
+    try {
+      const response = await axios.get(`${BASE_URL.development}/${API.AREA_SHOW}/${id}`);
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
+
   // Create Area in with POST request
   createArea: async (formData) => {
     try {
@@ -35,6 +44,17 @@ const useAreasHook = create((set) => ({
       return response.data;
     } catch (error) {
       console.error("Error creating area:", error.message);
+      throw error;
+    }
+  },
+
+  // Update Area with PUT or PATCH request
+  updateArea: async (id, formData) => {
+    try {
+      const response = await axios.put(`${BASE_URL.development}/${API.AREA_UPDATE}/${id}`, formData);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating area:", error.message);
       throw error;
     }
   }

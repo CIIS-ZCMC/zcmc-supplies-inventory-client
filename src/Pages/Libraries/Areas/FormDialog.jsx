@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useFormik } from 'formik'
 import { Grid, Divider, Stack, Typography } from '@mui/joy'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 
 import useAreasHook from '../../../Hooks/AreasHook'
+import usePaginatedTableHook from '../../../Hooks/PaginatedTableHook'
 
 import ButtonComponent from '../../../Components/ButtonComponent'
 import InputComponent from '../../../Components/Form/InputComponent'
@@ -12,7 +13,19 @@ import InputComponent from '../../../Components/Form/InputComponent'
 const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialogOpen }) => {
 
     const queryClient = useQueryClient()
+    const { isUpdate, id, getArea } = usePaginatedTableHook();
     const { initialValues, setInitalValues, validationSchema, createArea } = useAreasHook();
+
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['area', id],
+        queryFn: () => getArea(id),
+    });
+
+    useEffect(() => {
+        console.log(id)
+        console.log(isUpdate)
+        console.log(data?.data)
+    }, [id, isUpdate, data])
 
     // Define create the mutation for stockout
     const mutation = useMutation({
