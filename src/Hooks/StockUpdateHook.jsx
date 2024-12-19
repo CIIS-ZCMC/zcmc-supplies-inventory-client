@@ -22,7 +22,7 @@ const useStockUpdateHook = create((set) => ({
   getStockUpdateList: async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL.development}/${API.STOCK_UPDATE_LIST}`,
+        `${BASE_URL.production}/${API.STOCK_UPDATE_LIST}`,
         {
           withCredentials: true,
         }
@@ -36,7 +36,7 @@ const useStockUpdateHook = create((set) => ({
   createStockUpdate: async (formData) => {
     try {
       const response = await axios.post(
-        `${BASE_URL.development}/${API.STOCK_UPDATE}`,
+        `${BASE_URL.production}/${API.STOCK_UPDATE}`,
         formData,
         {
           withCredentials: true,
