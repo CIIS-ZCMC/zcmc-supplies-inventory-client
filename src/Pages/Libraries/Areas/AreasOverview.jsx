@@ -16,128 +16,128 @@ import useAreasHook from "../../../Hooks/AreasHook";
 import { areaHeader } from "../../../Data/TableHeader";
 
 const AreasOverview = ({ filter }) => {
-  const { getAreas, setInitialValues } = useAreasHook();
+    const { getAreas, setInitialValues } = useAreasHook();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["areas"],
-    queryFn: getAreas,
-  });
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["areas"],
+        queryFn: getAreas,
+    });
 
-  const areaData = data?.data;
+    const areaData = data?.data;
 
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    color: "",
-    message: "",
-  });
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        color: "",
+        message: "",
+    });
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleDialogOpen = () => {
-    setIsDialogOpen(true);
-  };
+    const handleDialogOpen = () => {
+        setIsDialogOpen(true);
+    };
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-  };
+    const handleDialogClose = () => {
+        setIsDialogOpen(false);
+    };
 
-  const handleSnackbarClose = () => {
-    setSnackbar({ open: false });
-  };
+    const handleSnackbarClose = () => {
+        setSnackbar({ open: false });
+    };
 
-  function handleEditRow(data) {
-    setInitialValues(data);
-  }
+    function handleEditRow(data) {
+        setInitialValues(data);
+    }
 
-  useEffect(() => {
-    areaData;
-  }, [areaData]);
+    useEffect(() => {
+        areaData;
+    }, [areaData]);
 
-  return (
-    <div>
-      {areaData?.length < 0 ? (
-        <Stack
-          height={750}
-          direction={"column"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <Box
-            sx={{
-              my: 2,
-            }}
-          >
-            <CopyPlus size={32} />
-          </Box>
+    return (
+        <div>
+            {areaData?.length < 0 ? (
+                <Stack
+                    height={750}
+                    direction={"column"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                >
+                    <Box
+                        sx={{
+                            my: 2,
+                        }}
+                    >
+                        <CopyPlus size={32} />
+                    </Box>
 
-          <Typography my={2} level="title-lg" fontSize={24} gutterBottom>
-            Get started by creating an Area
-          </Typography>
+                    <Typography my={2} level="title-lg" fontSize={24} gutterBottom>
+                        Get started by creating an Area
+                    </Typography>
 
-          <Typography
-            width={600}
-            my={2}
-            level="body-md"
-            textAlign={"center"}
-            gutterBottom
-          >
-            You’ll use registered areas in this library to fill-up RIS requests
-            and IARs as a pre-defined selection to minimize typographical
-            errors.
-          </Typography>
+                    <Typography
+                        width={600}
+                        my={2}
+                        level="body-md"
+                        textAlign={"center"}
+                        gutterBottom
+                    >
+                        You’ll use registered areas in this library to fill-up RIS requests
+                        and IARs as a pre-defined selection to minimize typographical
+                        errors.
+                    </Typography>
 
-          <ButtonComponent
-            label={"Create an area"}
-            fullWidth={false}
-            width={150}
-            onClick={handleDialogOpen}
-          />
-        </Stack>
-      ) : (
-        <PaginatedTable
-          tableTitle={"Areas"}
-          // tableDesc={"Sample Table Desription"}
-          loading={isLoading}
-          columns={areaHeader}
-          rows={filter(areaData)}
-          actions={<ViewIcon />}
-          actionBtns={
-            <Stack>
-              <ButtonComponent
-                label="Add new area"
-                onClick={handleDialogOpen}
-              />
-            </Stack>
-          }
-          editRow={handleEditRow}
-          modalContent={<FormDialog setSnackbar={setSnackbar} />}
-        />
-      )}
-      <ModalComponent
-        isOpen={isDialogOpen}
-        title="Create a new area record"
-        description={
-          "Library records allows for a more streamlined and dynamic form-filling experiences."
-        }
-        handleClose={handleDialogClose}
-        content={
-          <FormDialog
-            handleDialogClose={handleDialogClose}
-            isDialogOpen={isDialogOpen}
-            setSnackbar={setSnackbar}
-          />
-        }
-      />
+                    <ButtonComponent
+                        label={"Create an area"}
+                        fullWidth={false}
+                        width={150}
+                        onClick={handleDialogOpen}
+                    />
+                </Stack>
+            ) : (
+                <PaginatedTable
+                    tableTitle={"Areas"}
+                    // tableDesc={"Sample Table Desription"}
+                    loading={isLoading}
+                    columns={areaHeader}
+                    rows={filter(areaData)}
+                    actions={<ViewIcon />}
+                    actionBtns={
+                        <Stack>
+                            <ButtonComponent
+                                label="Add new area"
+                                onClick={handleDialogOpen}
+                            />
+                        </Stack>
+                    }
+                    editRow={handleEditRow}
+                    modalContent={<FormDialog setSnackbar={setSnackbar} />}
+                />
+            )}
+            <ModalComponent
+                isOpen={isDialogOpen}
+                title="Create a new area record"
+                description={
+                    "Library records allows for a more streamlined and dynamic form-filling experiences."
+                }
+                handleClose={handleDialogClose}
+                content={
+                    <FormDialog
+                        handleDialogClose={handleDialogClose}
+                        isDialogOpen={isDialogOpen}
+                        setSnackbar={setSnackbar}
+                    />
+                }
+            />
 
-      <SnackbarComponent
-        open={snackbar.open}
-        onClose={handleSnackbarClose}
-        color={snackbar.color}
-        message={snackbar.message}
-        variant="solid"
-        anchor={{ vertical: "top", horizontal: "right" }}
-      />
-    </div>
-  );
+            <SnackbarComponent
+                open={snackbar.open}
+                onClose={handleSnackbarClose}
+                color={snackbar.color}
+                message={snackbar.message}
+                variant="solid"
+                anchor={{ vertical: "top", horizontal: "right" }}
+            />
+        </div>
+    );
 };
 
 export default AreasOverview;

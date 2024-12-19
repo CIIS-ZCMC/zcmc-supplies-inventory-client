@@ -66,7 +66,7 @@ const useAreasHook = create((set) => ({
   // Update Area with PUT or PATCH request
   updateArea: async (id, formData) => {
     try {
-      const response = await axios.put(
+      const response = await axios.post(
         `${BASE_URL.development}/${API.AREA_UPDATE}/${id}`,
         formData
       );
