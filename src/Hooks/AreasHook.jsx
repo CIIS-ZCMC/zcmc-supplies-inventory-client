@@ -22,8 +22,6 @@ const useAreasHook = create((set) => ({
       });
     }
 
-    console.log(values.area_name);
-
     set({
       initialValues: { id: values.id, areaName: values.area_name },
     });

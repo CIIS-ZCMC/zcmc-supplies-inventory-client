@@ -23,16 +23,14 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
         onSubmit: async (values) => {
             const formData = new FormData();
             formData.append('area_name', values.areaName);
-            await mutation.mutate(isUpdate ? { 'area_name': values.area_name } : formData); // Submit form
+            await mutation.mutate(isUpdate ? { 'area_name': values.areaName } : formData); // Submit form
         },
     });
 
-    const isInputFilled = Boolean(formik.values.areaName); // Returns true if areaName has a value
-
-    useEffect(() => {
-        console.log("Formik values updated:", formik.values);
-        console.log("Is Input Filled:", isInputFilled);
-    }, [formik.values, isInputFilled]);
+    // useEffect(() => {
+    //     console.log("Formik values updated:", formik.values);
+    //     console.log("Is Input Filled:", isInputFilled);
+    // }, [formik.values, isInputFilled]);
 
     // Load data when editing (update mode)
     useEffect(() => {
@@ -42,8 +40,8 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
                     const areaData = await getArea(id);
                     // Correctly set initial values and reset form
                     const updatedValues = {
-                        id: areaData?.id || null,
-                        areaName: areaData?.area_name || "", // Ensure area_name maps correctly
+                        id: areaData?.data?.id || null,
+                        areaName: areaData?.data.area_name || "", // Ensure area_name maps correctly
                     };
                     formik.setValues(updatedValues); // Directly set values instead of resetting form
                 } catch (error) {
@@ -65,13 +63,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
         mutationFn: async (formData) =>
             isUpdate ? updateArea(id, formData) : createArea(formData),
         onSuccess: () => {
-            setSnackbar({
-                open: true,
-                color: 'success',
-                message: isUpdate
-                    ? 'Area Updated Successfully'
-                    : 'Area Created Successfully',
-            });
+            setSnackbar(isUpdate ? 'Area Updated Successfully' : 'Area Created Successfully', "success", "filled");
             queryClient.invalidateQueries('areas'); // Refresh areas query
             formik.resetForm();
         },
@@ -114,6 +106,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
 
                 <Stack direction="row" spacing={2}>
                     <ButtonComponent
+                        type="button"
                         label="Cancel"
                         variant="outlined"
                         color="danger"

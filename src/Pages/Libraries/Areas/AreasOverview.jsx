@@ -12,11 +12,13 @@ import SnackbarComponent from "../../../Components/SnackbarComponent";
 import FormDialog from "./FormDialog";
 
 import useAreasHook from "../../../Hooks/AreasHook";
+import useSnackbarHook from "../../../Hooks/AlertHook";
 
 import { areaHeader } from "../../../Data/TableHeader";
 
 const AreasOverview = ({ filter }) => {
     const { getAreas, setInitialValues } = useAreasHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ["areas"],
@@ -109,7 +111,6 @@ const AreasOverview = ({ filter }) => {
                         </Stack>
                     }
                     editRow={handleEditRow}
-                    modalContent={<FormDialog setSnackbar={setSnackbar} />}
                 />
             )}
             <ModalComponent
@@ -123,18 +124,18 @@ const AreasOverview = ({ filter }) => {
                     <FormDialog
                         handleDialogClose={handleDialogClose}
                         isDialogOpen={isDialogOpen}
-                        setSnackbar={setSnackbar}
+                        setSnackbar={showSnackbar}
                     />
                 }
             />
 
             <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant="solid"
-                anchor={{ vertical: "top", horizontal: "right" }}
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
             />
         </div>
     );

@@ -19,9 +19,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import NoRows from "../../Pages/NoRows";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import ModalComponent from "../Dialogs/ModalComponent";
+import SnackbarComponent from "../SnackbarComponent";
 
 import usePaginatedTableHook from "../../Hooks/PaginatedTableHook";
+import useSnackbarHook from "../../Hooks/AlertHook";
+
 import useAreasHook from "../../Hooks/AreasHook";
+
+import FormDialog from "../../Pages/Libraries/Areas/FormDialog";
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -59,6 +64,7 @@ function PaginatedTable({
   const totalPages = Math.ceil(rows?.length / rowsPerPage);
 
   const { setSelectedRow } = useSelectedRow();
+  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
   const { setIsUpdate, setId, resetState } = usePaginatedTableHook();
 
   const navigate = useNavigate();
@@ -81,6 +87,10 @@ function PaginatedTable({
   const handleRowsPerPageChange = (event, newValue) => {
     setRowsPerPage(newValue);
     setPage(1); // Reset to the first page when changing rows per page
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ open: false });
   };
 
   // Calculate the subset of data to display
@@ -253,7 +263,16 @@ function PaginatedTable({
           "Library records allows for a more streamlined and dynamic form-filling experiences."
         }
         handleClose={handleDialogClose}
-        content={modalContent}
+        content={<FormDialog open={open} message={message} color={color} setSnackbar={showSnackbar} handleDialogClose={handleDialogClose} />}
+      />
+
+      <SnackbarComponent
+        open={open}
+        onClose={closeSnackbar}
+        anchor={anchor}
+        color={color}
+        variant={variant}
+        message={message}
       />
     </>
   );

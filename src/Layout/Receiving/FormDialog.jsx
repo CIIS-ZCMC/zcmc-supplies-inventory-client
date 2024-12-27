@@ -72,7 +72,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
         },
         onError: (error) => {
-
             showSnackbar(
                 `Stockin failed!. Please try again. ${error}`,
                 "danger",
