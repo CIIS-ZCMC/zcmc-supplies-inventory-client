@@ -76,9 +76,15 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
             console.error('Error submitting form:', error);
         },
         onSettled: () => {
-            handleDialogClose();
+
+
         },
     });
+
+    function handleClose() {
+        setInitialValues(null); // Reset the initial values
+        handleDialogClose();    // Close the dialog
+    }
 
     return (
         <>

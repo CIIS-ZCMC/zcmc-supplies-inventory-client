@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 import ButtonComponent from "../ButtonComponent";
 import { SquareArrowOutUpRight, Pencil } from "lucide-react";
 import useSelectedRow from "../../Store/SelectedRowStore";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useActionData, useLocation, useNavigate } from "react-router-dom";
 import NoRows from "../../Pages/NoRows";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import ModalComponent from "../Dialogs/ModalComponent";
@@ -64,6 +64,7 @@ function PaginatedTable({
   const totalPages = Math.ceil(rows?.length / rowsPerPage);
 
   const { setSelectedRow } = useSelectedRow();
+  const { initialValues, setInitialValues } = useAreasHook();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
   const { setIsUpdate, setId, resetState } = usePaginatedTableHook();
 
@@ -71,6 +72,11 @@ function PaginatedTable({
   const location = useLocation();
 
   const currentPath = location.pathname;
+
+
+  useEffect(() => {
+    console.log(initialValues)
+  }, [initialValues])
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -107,6 +113,7 @@ function PaginatedTable({
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
+    setInitialValues(null);
     resetState();
   };
 
