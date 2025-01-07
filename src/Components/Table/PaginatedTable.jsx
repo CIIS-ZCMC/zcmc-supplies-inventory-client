@@ -26,9 +26,11 @@ import useSnackbarHook from "../../Hooks/AlertHook";
 
 import useAreasHook from "../../Hooks/AreasHook";
 import useBrandsHook from "../../Hooks/BrandsHook";
+import useSuppliersHook from "../../Hooks/SuppliersHook";
 
 import AreasForm from "../../Pages/Libraries/Areas/FormDialog";
-import BrandsForm from '../../Pages/Libraries/Brands/FormDialog'
+import BrandForm from '../../Pages/Libraries/Brands/FormDialog';
+import SupplierForm from '../../Pages/Libraries/Suppliers/FormDialog';
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -67,7 +69,7 @@ function PaginatedTable({
 
   const { initialValues: areas, setInitialValues: setAreasValues } = useAreasHook();
   const { initialValues: brands, setInitialValues: setBrandsValues } = useBrandsHook();
-
+  const { initialValues: suppliers, setInitialValues: setSuppliersValues } = useSuppliersHook();
 
   const { setSelectedRow } = useSelectedRow();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
@@ -80,9 +82,10 @@ function PaginatedTable({
 
   useEffect(() => {
     // console.log(areas)
-    console.log(brands)
+    // console.log(brands)
     // console.log(currentPath)
-  }, [areas, brands])
+    console.log(suppliers)
+  }, [areas, brands, suppliers])
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -121,7 +124,7 @@ function PaginatedTable({
     setIsDialogOpen(false);
     setAreasValues(null)
     setBrandsValues(null)
-    console.log("Brands values reset to null");
+    setSuppliersValues(null)
     resetState();
   };
 
@@ -288,14 +291,23 @@ function PaginatedTable({
               handleDialogClose={handleDialogClose}
             />
           ) : currentPath === '/libraries/brands' ? (
-            <BrandsForm
+            <BrandForm
               open={open}
               message={message}
               color={color}
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : null // Fallback if none of the conditions match
+          ) : currentPath === '/libraries/suppliers' ? (
+            <SupplierForm
+              open={open}
+              message={message}
+              color={color}
+              setSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
+          )
+            : null // Fallback if none of the conditions match
         }
       />
 

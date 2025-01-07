@@ -26,7 +26,6 @@ const AreasOverview = ({ filter }) => {
     });
 
     const areaData = data?.data;
-
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleDialogOpen = () => {

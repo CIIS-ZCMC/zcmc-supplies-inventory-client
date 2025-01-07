@@ -12,12 +12,14 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 import FormDialog from './FormDialog';
 
 import useSuppliersHook from '../../../Hooks/SuppliersHook';
+import useSnackbarHook from '../../../Hooks/AlertHook'
 
 import { supplierHeader } from '../../../Data/TableHeader';
 
 const SuppliersOverview = ({ filter }) => {
 
-  const { getSuppliers } = useSuppliersHook();
+  const { getSuppliers, setInitialValues } = useSuppliersHook();
+  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['suppliers'],
@@ -26,7 +28,6 @@ const SuppliersOverview = ({ filter }) => {
 
   const suppliersData = data?.data
 
-  const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleDialogOpen = () => {
@@ -39,6 +40,10 @@ const SuppliersOverview = ({ filter }) => {
 
   const handleSnackbarClose = () => {
     setSnackbar({ open: false })
+  }
+
+  function handleEditRow(data) {
+    setInitialValues(data);
   }
 
   return (
@@ -71,15 +76,18 @@ const SuppliersOverview = ({ filter }) => {
         <PaginatedTable
           tableTitle={"Suppliers"}
           // tableDesc={"Sample Table Desription"}
+          loading={isLoading}
           columns={supplierHeader}
           rows={filter(suppliersData)}
           actions={<ViewIcon />}
-          loading={isLoading}
           actionBtns={
             <Stack>
-              <ButtonComponent label="Add new supplier" onClick={handleDialogOpen} />
+              <ButtonComponent
+                label="Add new supplier"
+                onClick={handleDialogOpen} />
             </Stack>
           }
+          editRow={handleEditRow}
         />
       }
       <ModalComponent
@@ -87,17 +95,18 @@ const SuppliersOverview = ({ filter }) => {
         title="Create a new supplier record"
         description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
         handleClose={handleDialogClose}
-        content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}
+        content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}
       />
 
       <SnackbarComponent
-        open={snackbar.open}
-        onClose={handleSnackbarClose}
-        color={snackbar.color}
-        message={snackbar.message}
-        variant='solid'
-        anchor={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        onClose={closeSnackbar}
+        anchor={anchor}
+        color={color}
+        variant={variant}
+        message={message}
       />
+
 
     </div>
   )

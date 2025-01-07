@@ -17,7 +17,6 @@ const useBrandsHook = create((set) => ({
 
     // Method to reset initial values
     setInitialValues: (values) => {
-        console.log("setBrandsValues called with:", values);
         if (values === null || values === undefined) {
             return set({
                 initialValues: { id: null, brandName: "" },

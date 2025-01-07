@@ -27,8 +27,6 @@ const BrandsOverview = ({ filter }) => {
     })
 
     const brandsData = data?.data
-
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const handleDialogOpen = () => {
@@ -37,10 +35,6 @@ const BrandsOverview = ({ filter }) => {
 
     const handleDialogClose = () => {
         setIsDialogOpen(false)
-    }
-
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
     }
 
     function handleEditRow(data) {
@@ -54,7 +48,11 @@ const BrandsOverview = ({ filter }) => {
     return (
         <div>
             {brandsData?.length < 0 ?
-                <Stack height={750} direction={'column'} alignItems={'center'} justifyContent={'center'}>
+                <Stack height={750}
+                    direction={'column'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                >
                     <Box sx={{
                         my: 2
                     }}>
@@ -101,16 +99,16 @@ const BrandsOverview = ({ filter }) => {
                 title="Create a new brand record"
                 description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
                 handleClose={handleDialogClose}
-                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}
+                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}
             />
 
             <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant='solid'
-                anchor={{ vertical: 'top', horizontal: 'right' }}
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
             />
 
         </div>

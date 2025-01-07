@@ -340,6 +340,8 @@ export const supplierHeader = [
     label: "Supplier Name",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -363,6 +365,8 @@ export const categoriesHeader = [
     label: "Supplier Name",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -385,6 +389,8 @@ export const sourceHeader = [
     disablePadding: false,
     label: "Supplier Name",
   },
+
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 
   // {
   //   id: "created_at",
@@ -423,6 +429,8 @@ export const supplyHeader = [
     label: "Category",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -445,6 +453,8 @@ export const unitHeader = [
     disablePadding: false,
     label: "Supplier Name",
   },
+
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 
   // {
   //   id: "created_at",

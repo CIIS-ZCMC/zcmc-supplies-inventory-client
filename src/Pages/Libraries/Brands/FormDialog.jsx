@@ -27,7 +27,6 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
         }
     })
 
-    // Load data when editing (update mode)
     useEffect(() => {
         if (isUpdate && id) {
             const fetchData = async () => {
@@ -40,11 +39,11 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
                     };
                     formik.setValues(updatedValues);
                 } catch (error) {
-                    console.error('Error fetching area:', error.message);
+                    console.error('Error fetching brand:', error.message);
                     setSnackbar({
                         open: true,
                         color: 'danger',
-                        message: 'Failed to load area details. Please try again.',
+                        message: 'Failed to load brand details. Please try again.',
                     });
                 }
             };
@@ -57,29 +56,17 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
         mutationFn: async (formData) =>
             isUpdate ? updateBrand(id, formData) : createBrand(formData),
         onSuccess: () => {
-            // Show success notification, close dialog, and invalidate 
             setSnackbar(isUpdate ? 'Brand Updated Successfully' : 'Brand Created Successfully', "success", "filled");
             queryClient.invalidateQueries('brands');
-            // Reset Formik form values after submission
-            formik.resetForm(); // Reset form to initial values
-            // setInitialValues;  // Reset the initial state in the store
+            formik.resetForm();
         },
         onError: (error) => {
             if (error?.response?.status === 409) {
-                setSnackbar({
-                    open: true,
-                    color: 'danger',
-                    message: error.response.data.message || 'Conflict: The resource already exists.',
-                });
+                setSnackbar(`${error.response.data.message}` || 'Conflict: The resource already exists.', "danger", "filled");
             } else {
                 // Handle other errors
-                setSnackbar({
-                    open: true,
-                    color: 'danger',
-                    message: `${error.message || 'An error occurred. Please try again.'}`,
-                });
+                setSnackbar(`${error.message}` || 'An error occurred. Please try again.', "danger", "filled");
             }
-
             console.error("Error submitting form:", error);
         },
         onSettled: () => {

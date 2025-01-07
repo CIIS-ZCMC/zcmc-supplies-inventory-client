@@ -1,25 +1,66 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useFormik } from 'formik'
 import { Grid, Divider, Stack, Typography } from '@mui/joy'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import useSuppliersHook from '../../../Hooks/SuppliersHook'
+import usePaginatedTableHook from '../../../Hooks/PaginatedTableHook'
 
 import ButtonComponent from '../../../Components/ButtonComponent'
 import InputComponent from '../../../Components/Form/InputComponent'
 
-const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialogOpen }) => {
+const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
 
-    const queryClient = useQueryClient()
-    const { initialValues, validationSchema, createSupplier } = useSuppliersHook();
+    const queryClient = useQueryClient();
+    const { isUpdate, id } = usePaginatedTableHook();
+    const { initialValues, setInitialValues, validationSchema, getSupplier, updateSupplier, createSupplier } = useSuppliersHook();
+
+    const formik = useFormik({
+        initialValues: initialValues,
+        validationSchema: validationSchema,
+        enableReinitialize: true,
+        onSubmit: async (values) => {
+            // Create a new FormData object
+            const formData = new FormData();
+            formData.append("supplier_name", values.supplierName);
+            await mutation.mutate(isUpdate ? { 'supplier_name': values.supplierName } : formData);
+        }
+    })
+
+    // Load data when editing (update mode)
+    useEffect(() => {
+        if (isUpdate && id) {
+            const fetchData = async () => {
+                try {
+                    const supplierData = await getSupplier(id);
+                    // Correctly set initial values and reset form
+                    const updatedValues = {
+                        id: supplierData?.data?.id || null,
+                        brandName: supplierData?.data.supplier_name || "",
+                    };
+                    formik.setValues(updatedValues);
+                } catch (error) {
+                    console.error('Error fetching supplier:', error.message);
+                    setSnackbar({
+                        open: true,
+                        color: 'danger',
+                        message: 'Failed to load supplier details. Please try again.',
+                    });
+                }
+            };
+            fetchData();
+        }
+    }, [isUpdate, id, getSupplier, setSnackbar]);
+
 
     // Define create the mutation for stockout
     const mutation = useMutation({
-        mutationFn: createSupplier,
+        mutationFn: async (formData) =>
+            isUpdate ? updateSupplier(id, formData) : createSupplier(formData),
         onSuccess: () => {
             // Show success notification, close dialog, and invalidate areas cache
-            setSnackbar({ open: true, color: 'success', message: 'Supplier created successfully' });
+            setSnackbar(isUpdate ? 'Supplier Updated Successfully' : 'Supplier Created Successfully', "success", "filled");
             queryClient.invalidateQueries('suppliers');
             // Reset Formik form values after submission
             formik.resetForm(); // Reset form to initial values
@@ -45,22 +86,14 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
         },
         onSettled: () => {
             // Always close the dialog after the mutation is finished (whether successful or error)
-            handleDialogClose();
+            handleClose();
         }
     });
 
-    const formik = useFormik({
-        initialValues: initialValues,
-        validationSchema: validationSchema,
-        onSubmit: async (values) => {
-            // Create a new FormData object
-            const formData = new FormData();
-
-            formData.append("supplier_name", values.supplierName);
-
-            await mutation.mutate(formData)
-        }
-    })
+    function handleClose() {
+        setInitialValues(null)
+        handleDialogClose()
+    }
 
     return (
         <>
@@ -90,6 +123,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
 
                 <Stack direction={'row'} spacing={2}>
                     <ButtonComponent
+                        type={'button'}
                         label={'Cancel'}
                         variant="outlined"
                         color="danger"
