@@ -22,24 +22,32 @@ export const ROOT_PATH = "/dashboard";
 export const API = {
   AREAS: "areas",
   AREA_STORE: "area-store",
+  AREA_UPDATE: 'area-update',
+  AREA_SHOW: 'area-view',
 
   BRANDS: "brands",
   BRAND_STORE: "brand-store",
+  BRAND_UPDATE: 'brand-update',
 
   SUPPLIERS: "suppliers",
   SUPPLIER_STORE: "supplier-store",
+  SUPPLIER_UPDATE: 'supplier-update',
 
   UNITS: "units",
   UNIT_STORE: "unit-store",
+  UNIT_UPDATE: "unit-update",
 
   SOURCES: "sources",
   SOURCE_STORE: "source-store",
+  SOURCE_UPDATE: 'source-update',
 
   CATEGORIES: "categories",
   CATEGORY_STORE: "category-store",
+  CATEGORY_UPDATE: 'category-update',
 
   SUPPLIES: "supplies",
   SUPPLY_STORE: "supply-store",
+  SUPPLY_UPDATE: 'supply-update',
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",

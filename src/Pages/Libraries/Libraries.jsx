@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Stack, Box, Divider } from '@mui/joy';
 
 import Header from '../../Layout/Header/Header';
@@ -6,9 +6,11 @@ import ContainerComponent from '../../Components/Container/ContainerComponent';
 import InputComponent from '../../Components/Form/InputComponent';
 import ButtonGroupComponent from '../../Components/ButtonGroupComponent';
 import SelectComponent from '../../Components/Form/SelectComponent';
-import ButtonComponent from '../../Components/ButtonComponent';
 
 import { SearchIcon } from 'lucide-react';
+
+import { useNavigate, useLocation, Routes, Route, } from 'react-router-dom';
+
 import { user, sortFilter } from '../../Data/index';
 
 import AreasOverview from './Areas/AreasOverview';
@@ -25,65 +27,61 @@ const Libraries = () => {
 
     const { sortOrder, setSortOrder, searchTerm, setSearchTerm, filteredInventory } = useFilterHook();
 
-    const [selectedOption, setSelectedOption] = useState('Areas');
+    const navigate = useNavigate()
+    const location = useLocation()
+
+
+    // Define the available routes and their corresponding components
+    const routes = {
+        areas: <AreasOverview filter={filteredInventory} />,
+        brands: <BrandsOverview filter={filteredInventory} />,
+        suppliers: <SuppliersOverview filter={filteredInventory} />,
+        categories: <CategoriesOverview filter={filteredInventory} />,
+        units: <UnitsOverview filter={filteredInventory} />,
+        source: <SourceOverview filter={filteredInventory} />,
+        "item-names": <SuppliesOverview filter={filteredInventory} />,
+    };
+
+    // Extract the current selected option from the URL
+    const currentPath = location.pathname.split("/").pop();
+    const defaultOption = "areas"; // Default option if no route is selected
+
+    useEffect(() => {
+        // Redirect to the default route if no child route is selected
+        if (location.pathname === "/libraries") {
+            navigate(`/libraries/${defaultOption}`);
+        }
+    }, [location.pathname, navigate, defaultOption]);
 
     const pageDetails = {
         title: "Dynamic libraries",
         description: "Set up dynamic and reusable values that you can use across different modules.",
     };
 
-    const buttonOptions = ['Areas', 'Brands', 'Suppliers', 'Categories', 'Units', 'Source', 'Item Names'];
-
-    // Conditionally render views based on the selected option
-    const renderContent = () => {
-        switch (selectedOption) {
-            case 'Areas':
-                return <div><AreasOverview filter={filteredInventory} /></div>;
-            case 'Brands':
-                return <div><BrandsOverview filter={filteredInventory} /></div>;
-            case 'Suppliers':
-                return <div><SuppliersOverview filter={filteredInventory} /></div>;
-            case 'Categories':
-                return <div><CategoriesOverview filter={filteredInventory} /></div>;
-            case 'Units':
-                return <div><UnitsOverview filter={filteredInventory} /></div>;
-            case 'Source':
-                return <div><SourceOverview filter={filteredInventory} /></div>;
-            case 'Item Names':
-                return <div><SuppliesOverview filter={filteredInventory} /></div>;
-            default:
-                return null;
-        }
-    };
-
     return (
         <>
             <Header pageDetails={pageDetails} data={user} />
             <Stack gap={2} mt={2}>
-                {/* Search and filter */}
                 <ContainerComponent>
                     <Stack my={2}>
                         <Box>
                             <ButtonGroupComponent
-                                buttonOptions={buttonOptions}
-                                selectedOption={selectedOption}
-                                onOptionChange={setSelectedOption}
+                                buttonOptions={Object.keys(routes).map((key) => key.charAt(0).toUpperCase() + key.slice(1).replace("-", " "))}
+                                selectedOption={currentPath || defaultOption}
+                                onOptionChange={(option) => {
+                                    // Navigate to the selected route
+                                    const formattedOption = option.toLowerCase().replace(" ", "-");
+                                    navigate(`/libraries/${formattedOption}`);
+                                }}
                             />
                         </Box>
                     </Stack>
 
                     <Divider></Divider>
 
-                    <Stack
-                        direction="row"
-                        justifyContent={'space-between'}
-                        alignItems="center"
-                        spacing={2}
-                        my={1}
-                    >
+                    <Stack direction="row" justifyContent={"space-between"} alignItems="center" spacing={2} my={1}>
                         {/* Search */}
                         <InputComponent
-                            // label="Find a record"
                             placeholder="Find by names, brands, categories, etc."
                             startIcon={<SearchIcon />}
                             width={500}
@@ -98,21 +96,17 @@ const Libraries = () => {
                                 value={sortOrder}
                                 onChange={setSortOrder}
                             />
-                            {/* <ButtonComponent
-                                size="sm"
-                                variant={"outlined"}
-                                label={"Clear Filters"}
-                                onClick={clearFilters}
-                            /> */}
                         </Box>
-
-
                     </Stack>
                 </ContainerComponent>
 
-                {/* Render the content based on selected option */}
+                {/* Render the content based on the current route */}
                 <ContainerComponent>
-                    {renderContent()}
+                    <Routes>
+                        {Object.entries(routes).map(([path, component]) => (
+                            <Route key={path} path={path} element={component} />
+                        ))}
+                    </Routes>
                 </ContainerComponent>
             </Stack>
         </>

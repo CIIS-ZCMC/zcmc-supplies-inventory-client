@@ -290,6 +290,8 @@ export const areaHeader = [
     label: "Name of area",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -312,6 +314,8 @@ export const brandHeader = [
     disablePadding: false,
     label: "Name of area",
   },
+
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 
   // {
   //   id: "created_at",

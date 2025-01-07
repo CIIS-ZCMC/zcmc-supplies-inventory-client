@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Stack, Typography, Box } from '@mui/joy'
 import { CopyPlus, ViewIcon } from 'lucide-react'
@@ -12,12 +12,14 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 import FormDialog from './FormDialog'
 
 import useBrandsHook from '../../../Hooks/BrandsHook'
+import useSnackbarHook from '../../../Hooks/AlertHook'
 
 import { brandHeader } from '../../../Data/TableHeader'
 
 const BrandsOverview = ({ filter }) => {
 
-    const { getBrands } = useBrandsHook();
+    const { getBrands, setInitialValues } = useBrandsHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['brands'],
@@ -40,6 +42,14 @@ const BrandsOverview = ({ filter }) => {
     const handleSnackbarClose = () => {
         setSnackbar({ open: false })
     }
+
+    function handleEditRow(data) {
+        setInitialValues(data);
+    }
+
+    useEffect(() => {
+        brandsData;
+    }, [brandsData])
 
     return (
         <div>
@@ -71,15 +81,19 @@ const BrandsOverview = ({ filter }) => {
                 <PaginatedTable
                     tableTitle={"Brands"}
                     // tableDesc={"Sample Table Desription"}
+                    loading={isLoading}
                     columns={brandHeader}
                     rows={filter(brandsData)}
                     actions={<ViewIcon />}
-                    loading={isLoading}
                     actionBtns={
                         <Stack>
-                            <ButtonComponent label="Add new brand" onClick={handleDialogOpen} />
+                            <ButtonComponent
+                                label="Add new brand"
+                                onClick={handleDialogOpen}
+                            />
                         </Stack>
                     }
+                    editRow={handleEditRow}
                 />
             }
             <ModalComponent
