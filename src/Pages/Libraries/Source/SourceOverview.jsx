@@ -15,7 +15,7 @@ import useSourceHook from '../../../Hooks/SourceHook';
 
 import { sourceHeader } from '../../../Data/TableHeader';
 
-const SuppliersOverview = ({ filter }) => {
+const SourceOverview = ({ filter }) => {
 
     const { getSources } = useSourceHook();
 
@@ -69,7 +69,7 @@ const SuppliersOverview = ({ filter }) => {
                 </Stack>
                 :
                 <PaginatedTable
-                    tableTitle={"Supplies"}
+                    tableTitle={"Source"}
                     // tableDesc={"Sample Table Desription"}
                     columns={sourceHeader}
                     rows={filter(sourcesData)}
@@ -103,4 +103,4 @@ const SuppliersOverview = ({ filter }) => {
     )
 }
 
-export default SuppliersOverview
+export default SourceOverview

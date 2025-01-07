@@ -63,8 +63,11 @@ function PaginatedTable({
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
   const totalPages = Math.ceil(rows?.length / rowsPerPage);
 
+  const { initialValues: areas, setInitialValues: setAreasValues } = useAreasHook();
+  const { initialValues: brands, setInitialValues: setBrandsValues } = useAreasHook();
+
+
   const { setSelectedRow } = useSelectedRow();
-  const { initialValues, setInitialValues } = useAreasHook();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
   const { setIsUpdate, setId, resetState } = usePaginatedTableHook();
 
@@ -73,10 +76,10 @@ function PaginatedTable({
 
   const currentPath = location.pathname;
 
-
   useEffect(() => {
-    console.log(initialValues)
-  }, [initialValues])
+    console.log(areas)
+    console.log(currentPath)
+  }, [areas])
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -113,7 +116,11 @@ function PaginatedTable({
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-    setInitialValues(null);
+
+    // condition here check for routes 
+    setAreasValues(null)
+    setBrandsValues(null)
+    // setInitialValues(null);
     resetState();
   };
 
@@ -265,7 +272,7 @@ function PaginatedTable({
 
       <ModalComponent
         isOpen={isOpenDialog}
-        title="Update a new area record"
+        title="Update a new record"
         description={
           "Library records allows for a more streamlined and dynamic form-filling experiences."
         }

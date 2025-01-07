@@ -31,7 +31,7 @@ export const API = {
 
   SUPPLIERS: "suppliers",
   SUPPLIER_STORE: "supplier-store",
-  BRAND_UPDATE: 'brand-update',
+  SUPPLIER_UPDATE: 'supplier-update',
 
   UNITS: "units",
   UNIT_STORE: "unit-store",

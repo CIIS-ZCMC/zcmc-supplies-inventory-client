@@ -27,11 +27,6 @@ const AreasOverview = ({ filter }) => {
 
     const areaData = data?.data;
 
-    const [snackbar, setSnackbar] = useState({
-        open: false,
-        color: "",
-        message: "",
-    });
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleDialogOpen = () => {
@@ -40,10 +35,6 @@ const AreasOverview = ({ filter }) => {
 
     const handleDialogClose = () => {
         setIsDialogOpen(false);
-    };
-
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false });
     };
 
     function handleEditRow(data) {
