@@ -14,12 +14,8 @@ const useSourceHook = create((set) => ({
 
   getSources: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.SOURCES}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.SOURCES}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -29,13 +25,11 @@ const useSourceHook = create((set) => ({
   // Create Area in with POST request
   createSource: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.production}/${API.SOURCE_STORE}`,
-        formData,
-        {
-          withCredentials: true,
-        }
+      const response = await inventory_api.post(
+        `/${API.SOURCE_STORE}`,
+        formData
       );
+
       return response.data;
     } catch (error) {
       console.error("Error creating Source:", error.message);

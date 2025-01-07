@@ -11,7 +11,7 @@ import { BASE_URL } from "./Config";
  * Directory [Umis.jsx]
  * File [umis_api]
  */
-const api_name = new axios.create({
+const inventory_api = new axios.create({
   baseURL: BASE_URL.production,
   withCredentials: true,
   headers: {
@@ -20,4 +20,4 @@ const api_name = new axios.create({
   },
 });
 
-export default api_name;
+export default inventory_api;

@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
 
-import { API, BASE_URL } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useAreasHook = create((set) => ({
   initialValues: {
@@ -29,9 +29,8 @@ const useAreasHook = create((set) => ({
 
   getAreas: async () => {
     try {
-      const response = await axios.get(`${BASE_URL.production}/${API.AREAS}`, {
-        withCredentials: true,
-      });
+      const response = await inventory_api.get(`/${API.AREAS}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -40,9 +39,8 @@ const useAreasHook = create((set) => ({
 
   getArea: async (id) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.AREA_SHOW}/${id}`
-      );
+      const response = await inventory_api.get(`/${API.AREA_SHOW}/${id}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -52,10 +50,8 @@ const useAreasHook = create((set) => ({
   // Create Area in with POST request
   createArea: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.development}/${API.AREA_STORE}`,
-        formData
-      );
+      const response = await inventory_api.post(`/${API.AREA_STORE}`, formData);
+
       return response.data;
     } catch (error) {
       console.error("Error creating area:", error.message);
@@ -66,10 +62,11 @@ const useAreasHook = create((set) => ({
   // Update Area with PUT or PATCH request
   updateArea: async (id, formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.development}/${API.AREA_UPDATE}/${id}`,
+      const response = await inventory_api.post(
+        `/${API.AREA_UPDATE}/${id}`,
         formData
       );
+
       return response.data;
     } catch (error) {
       console.error("Error updating area:", error.message);

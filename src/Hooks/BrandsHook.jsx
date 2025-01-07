@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
-import { BASE_URL, API } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useBrandsHook = create((set) => ({
   initialValues: {
@@ -28,7 +28,8 @@ const useBrandsHook = create((set) => ({
 
   getBrands: async () => {
     try {
-      const response = await axios.get(`${BASE_URL.development}/${API.BRANDS}`);
+      const response = await inventory_api.get(`/${API.BRANDS}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -37,9 +38,8 @@ const useBrandsHook = create((set) => ({
 
   getBrand: async (id) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.AREA_SHOW}/${id}`
-      );
+      const response = await inventory_api.get(`/${API.AREA_SHOW}/${id}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -49,10 +49,11 @@ const useBrandsHook = create((set) => ({
   // Create Area in with POST request
   createBrand: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.development}/${API.BRAND_STORE}`,
+      const response = await inventory_api.post(
+        `/${API.BRAND_STORE}`,
         formData
       );
+
       return response.data;
     } catch (error) {
       console.error("Error creating brands:", error.message);

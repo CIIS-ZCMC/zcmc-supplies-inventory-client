@@ -21,12 +21,8 @@ const useStockUpdateHook = create((set) => ({
 
   getStockUpdateList: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.STOCK_UPDATE_LIST}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.STOCK_UPDATE_LIST}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -35,13 +31,11 @@ const useStockUpdateHook = create((set) => ({
 
   createStockUpdate: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.production}/${API.STOCK_UPDATE}`,
-        formData,
-        {
-          withCredentials: true,
-        }
+      const response = await inventory_api.post(
+        `/${API.STOCK_UPDATE}`,
+        formData
       );
+
       return response.data;
     } catch (error) {
       console.error("Error creating stock out:", error.message);

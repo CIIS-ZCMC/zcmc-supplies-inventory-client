@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
 
-import { API, BASE_URL } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useReleasingHook = create((set) => ({
   initialValues: {
@@ -36,13 +36,8 @@ const useReleasingHook = create((set) => ({
   //fetch the fata of stock out / releasing list
   getStockOut: async () => {
     try {
-      // console.log(`${BASE_URL}/${RELEASING}`)
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.RELEASING}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.RELEASING}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -51,12 +46,8 @@ const useReleasingHook = create((set) => ({
 
   getSelectedReleasingList: async (id) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.SELECTED_RELEASING_LIST}/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.RELEASING}/${id}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -66,13 +57,8 @@ const useReleasingHook = create((set) => ({
   // Create stock out with POST request
   createStockOut: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.production}/${API.STOCKOUT}`,
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.post(`/${API.STOCKOUT}`, formData);
+
       return response.data;
     } catch (error) {
       console.error("Error creating stock out:", error.message);
@@ -82,13 +68,8 @@ const useReleasingHook = create((set) => ({
 
   getBrandRegular: async (id) => {
     try {
-      // console.log(`${BASE_URL}/${RELEASING}`)
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.BRAND_REGULAR}/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.BRAND_REGULAR}/${id}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -97,13 +78,8 @@ const useReleasingHook = create((set) => ({
 
   getBrandDonation: async (id) => {
     try {
-      // console.log(`${BASE_URL}/${RELEASING}`)
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.BRAND_DONATION}/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.BRAND_DONATION}/${id}`);
+
       return response.data;
     } catch (error) {
       error.message;

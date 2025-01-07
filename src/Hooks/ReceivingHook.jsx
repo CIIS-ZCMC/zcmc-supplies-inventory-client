@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
 
-import { BASE_URL, API } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useReceivingHook = create((set) => ({
   initialValues: {
@@ -16,26 +16,6 @@ const useReceivingHook = create((set) => ({
     brand: "",
     supplier: "",
   },
-
-  validationSchema: Yup.object({
-    itemName: Yup.string().required("Item Name is required"),
-    source: Yup.string().required("Source is required"),
-    quantity: Yup.number().required("Quantity is required"),
-    poNumber: Yup.number().required("PO Number is required"),
-    iarNumber: Yup.string().required("IAR Number is required"),
-    dateDelivered: Yup.date().required("Delivery Date is required"),
-    expiryDate: Yup.mixed()
-      .nullable()
-      .test(
-        "valid-expiry-date",
-        'Please select a valid expiry date or "N/A"',
-        (value) =>
-          value === null || value === "N/A" || Yup.date().isValidSync(value)
-      )
-      .required("Expiry Date is required"),
-    brand: Yup.string().required("Brand is required"),
-    supplier: Yup.string().required("Supplier is required"),
-  }),
 
   validationSchema: Yup.object({
     itemName: Yup.string().required("Item Name is required"),
@@ -65,9 +45,8 @@ const useReceivingHook = create((set) => ({
   //fetch the fata of stock into / receiving list
   getStockIn: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.RECEIVING}`
-      );
+      const response = await inventory_api.get(`/${API.RECEIVING}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -77,27 +56,8 @@ const useReceivingHook = create((set) => ({
   // Create stock in with POST request
   createStockIn: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.production}/${API.STOCKIN}`,
-        formData
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error creating stock out:", error.message);
-      throw error;
-    }
-  },
+      const response = await inventory_api.post(`/${API.STOCKIN}`, formData);
 
-  // Create stock in with POST request
-  createStockIn: async (formData) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL.production}/${API.STOCKIN}`,
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
       return response.data;
     } catch (error) {
       console.error("Error creating stock out:", error.message);

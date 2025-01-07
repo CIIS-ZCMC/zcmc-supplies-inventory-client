@@ -1,16 +1,12 @@
 import { create } from "zustand";
-import axios from "axios";
-import { BASE_URL, API } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useDashboardHook = create((set) => ({
   getDashboardTotal: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.DASHBOARD_TOTAL}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.DASHBOARD_TOTAL}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -19,12 +15,8 @@ const useDashboardHook = create((set) => ({
 
   getDashboardSupplies: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.DASHBOARD_SUPPLIES}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.DASHBOARD_SUPPLIES}`);
+
       return response.data;
     } catch (error) {
       error.message;

@@ -1,8 +1,6 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
-
-import { BASE_URL, API } from "../Services/Config";
+import { API } from "../Services/Config";
 
 const useSuppliersHook = create((set) => ({
   initialValues: {
@@ -15,12 +13,8 @@ const useSuppliersHook = create((set) => ({
 
   getSuppliers: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.SUPPLIERS}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.SUPPLIERS}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -30,13 +24,11 @@ const useSuppliersHook = create((set) => ({
   // Create Area in with POST request
   createSupplier: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.production}/${API.SUPPLIER_STORE}`,
-        formData,
-        {
-          withCredentials: true,
-        }
+      const response = await inventory_api.post(
+        `/${API.SUPPLIER_STORE}`,
+        formData
       );
+
       return response.data;
     } catch (error) {
       console.error("Error creating brands:", error.message);

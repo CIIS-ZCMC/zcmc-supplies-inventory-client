@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
-import { BASE_URL, API } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useSuppliesHook = create((set) => ({
   initialValues: {
@@ -21,12 +21,8 @@ const useSuppliesHook = create((set) => ({
 
   getSupplies: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.production}/${API.SUPPLIES}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await inventory_api.get(`/${API.SUPPLIES}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -36,13 +32,11 @@ const useSuppliesHook = create((set) => ({
   // Create Area in with POST request
   createSupply: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.production}/${API.SUPPLY_STORE}`,
-        formData,
-        {
-          withCredentials: true,
-        }
+      const response = await inventory_api.post(
+        `/${API.SUPPLY_STORE}`,
+        formData
       );
+
       return response.data;
     } catch (error) {
       console.error("Error creating unit:", error.message);
