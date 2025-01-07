@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
-import { API, BASE_URL } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useSourceHook = create((set) => ({
   initialValues: {
