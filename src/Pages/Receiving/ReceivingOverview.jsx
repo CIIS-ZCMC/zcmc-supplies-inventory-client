@@ -178,7 +178,7 @@ const ReceivingOverview = () => {
                                     size="lg"
                                     onClick={generateReport}
                                 />
-                                <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
+                                <ButtonComponent label="New IAR" onClick={handleDialogOpen} />
                             </Stack>
                         }
                         viewModal={true}

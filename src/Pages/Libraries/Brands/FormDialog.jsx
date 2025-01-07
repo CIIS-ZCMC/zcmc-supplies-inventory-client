@@ -1,25 +1,64 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useFormik } from 'formik'
 import { Grid, Divider, Stack, Typography } from '@mui/joy'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import useBrandsHook from '../../../Hooks/BrandsHook'
+import usePaginatedTableHook from '../../../Hooks/PaginatedTableHook'
 
 import ButtonComponent from '../../../Components/ButtonComponent'
 import InputComponent from '../../../Components/Form/InputComponent'
 
-const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialogOpen }) => {
+const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
 
-    const queryClient = useQueryClient()
-    const { initialValues, setInitalValues, validationSchema, createBrand } = useBrandsHook();
+    const queryClient = useQueryClient();
+    const { isUpdate, id } = usePaginatedTableHook();
+    const { initialValues, setInitialValues, validationSchema, getBrand, updateBrand, createBrand } = useBrandsHook();
+
+    const formik = useFormik({
+        initialValues: initialValues,
+        validationSchema: validationSchema,
+        enableReinitialize: true,
+        onSubmit: async (values) => {
+            const formData = new FormData();
+            formData.append("brand_name", values.brandName);
+            await mutation.mutate(isUpdate ? { 'brand_name': values.brandName } : formData);
+        }
+    })
+
+    // Load data when editing (update mode)
+    useEffect(() => {
+        if (isUpdate && id) {
+            const fetchData = async () => {
+                try {
+                    const brandData = await getBrand(id);
+                    // Correctly set initial values and reset form
+                    const updatedValues = {
+                        id: brandData?.data?.id || null,
+                        brandName: brandData?.data.brand_name || "",
+                    };
+                    formik.setValues(updatedValues);
+                } catch (error) {
+                    console.error('Error fetching area:', error.message);
+                    setSnackbar({
+                        open: true,
+                        color: 'danger',
+                        message: 'Failed to load area details. Please try again.',
+                    });
+                }
+            };
+            fetchData();
+        }
+    }, [isUpdate, id, getBrand, setSnackbar]);
 
     // Define create the mutation for stockout
     const mutation = useMutation({
-        mutationFn: createBrand,
+        mutationFn: async (formData) =>
+            isUpdate ? updateBrand(id, formData) : createBrand(formData),
         onSuccess: () => {
-            // Show success notification, close dialog, and invalidate areas cache
-            setSnackbar({ open: true, color: 'success', message: 'Brand Created Successfully' });
+            // Show success notification, close dialog, and invalidate 
+            setSnackbar(isUpdate ? 'Brand Updated Successfully' : 'Brand Created Successfully', "success", "filled");
             queryClient.invalidateQueries('brands');
             // Reset Formik form values after submission
             formik.resetForm(); // Reset form to initial values
@@ -45,22 +84,14 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
         },
         onSettled: () => {
             // Always close the dialog after the mutation is finished (whether successful or error)
-            handleDialogClose();
+            handleClose();
         }
     });
 
-    const formik = useFormik({
-        initialValues: initialValues,
-        validationSchema: validationSchema,
-        onSubmit: async (values) => {
-            // Create a new FormData object
-            const formData = new FormData();
-
-            formData.append("brand_name", values.brandName);
-
-            await mutation.mutate(formData)
-        }
-    })
+    function handleClose() {
+        setInitialValues(null)
+        handleDialogClose()
+    }
 
     return (
         <>
@@ -68,17 +99,16 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <InputComponent
-                            size={'lg'}
+                            size='lg'
                             label="Brand name"
                             placeholder="Enter brand name"
-                            fullWidth={true}
-                            name={'brandName'}
+                            fullWidth
+                            name='brandName'
                             value={formik.values.brandName}
                             onChange={formik.handleChange}
                             error={formik.touched.brandName && Boolean(formik.errors.brandName)}
                             helperText={formik.touched.brandName && formik.errors.brandName}
                         />
-
                         <Typography my={2} level={'body-sm'}>
                             Item’s name and type of unit can be combined together to simplify form fill-up and prevent typographical errors on input.
                         </Typography>
@@ -91,6 +121,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
                 <Stack direction={'row'} spacing={2}>
                     <ButtonComponent
                         label={'Cancel'}
+                        type={'button'}
                         variant="outlined"
                         color="danger"
                         onClick={handleDialogClose}

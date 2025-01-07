@@ -28,14 +28,17 @@ export const API = {
   BRANDS: "brands",
   BRAND_STORE: "brand-store",
   BRAND_UPDATE: 'brand-update',
+  BRAND_SHOW: 'brand-view',
 
   SUPPLIERS: "suppliers",
   SUPPLIER_STORE: "supplier-store",
   SUPPLIER_UPDATE: 'supplier-update',
+  SUPPLIER_SHOW: 'supplier-view',
 
   UNITS: "units",
   UNIT_STORE: "unit-store",
   UNIT_UPDATE: "unit-update",
+  UNIT_SHOW: "unit-view",
 
   SOURCES: "sources",
   SOURCE_STORE: "source-store",

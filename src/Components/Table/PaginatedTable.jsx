@@ -25,8 +25,10 @@ import usePaginatedTableHook from "../../Hooks/PaginatedTableHook";
 import useSnackbarHook from "../../Hooks/AlertHook";
 
 import useAreasHook from "../../Hooks/AreasHook";
+import useBrandsHook from "../../Hooks/BrandsHook";
 
-import FormDialog from "../../Pages/Libraries/Areas/FormDialog";
+import AreasForm from "../../Pages/Libraries/Areas/FormDialog";
+import BrandsForm from '../../Pages/Libraries/Brands/FormDialog'
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -64,7 +66,7 @@ function PaginatedTable({
   const totalPages = Math.ceil(rows?.length / rowsPerPage);
 
   const { initialValues: areas, setInitialValues: setAreasValues } = useAreasHook();
-  const { initialValues: brands, setInitialValues: setBrandsValues } = useAreasHook();
+  const { initialValues: brands, setInitialValues: setBrandsValues } = useBrandsHook();
 
 
   const { setSelectedRow } = useSelectedRow();
@@ -77,9 +79,10 @@ function PaginatedTable({
   const currentPath = location.pathname;
 
   useEffect(() => {
-    console.log(areas)
-    console.log(currentPath)
-  }, [areas])
+    // console.log(areas)
+    console.log(brands)
+    // console.log(currentPath)
+  }, [areas, brands])
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -116,11 +119,9 @@ function PaginatedTable({
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-
-    // condition here check for routes 
     setAreasValues(null)
     setBrandsValues(null)
-    // setInitialValues(null);
+    console.log("Brands values reset to null");
     resetState();
   };
 
@@ -277,7 +278,25 @@ function PaginatedTable({
           "Library records allows for a more streamlined and dynamic form-filling experiences."
         }
         handleClose={handleDialogClose}
-        content={<FormDialog open={open} message={message} color={color} setSnackbar={showSnackbar} handleDialogClose={handleDialogClose} />}
+        content={
+          currentPath === '/libraries/areas' ? (
+            <AreasForm
+              open={open}
+              message={message}
+              color={color}
+              setSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
+          ) : currentPath === '/libraries/brands' ? (
+            <BrandsForm
+              open={open}
+              message={message}
+              color={color}
+              setSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
+          ) : null // Fallback if none of the conditions match
+        }
       />
 
       <SnackbarComponent

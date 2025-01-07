@@ -14,8 +14,10 @@ const useBrandsHook = create((set) => ({
         brandName: Yup.string().required('Brand name is required'),
     }),
 
+
     // Method to reset initial values
     setInitialValues: (values) => {
+        console.log("setBrandsValues called with:", values);
         if (values === null || values === undefined) {
             return set({
                 initialValues: { id: null, brandName: "" },
@@ -39,7 +41,7 @@ const useBrandsHook = create((set) => ({
     getBrand: async (id) => {
         try {
             const response = await axios.get(
-                `${BASE_URL.development}/${API.AREA_SHOW}/${id}`
+                `${BASE_URL.development}/${API.BRAND_SHOW}/${id}`
             );
             return response.data;
         } catch (error) {
@@ -56,7 +58,22 @@ const useBrandsHook = create((set) => ({
             console.error("Error creating brands:", error.message);
             throw error;
         }
-    }
+    },
+
+    // Update with PUT or PATCH request
+    updateBrand: async (id, formData) => {
+        try {
+            const response = await axios.post(
+                `${BASE_URL.development}/${API.BRAND_UPDATE}/${id}`,
+                formData
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error updating brand:", error.message);
+            throw error;
+        }
+    },
+
 }));
 
 export default useBrandsHook

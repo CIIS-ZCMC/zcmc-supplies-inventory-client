@@ -23,7 +23,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
         onSubmit: async (values) => {
             const formData = new FormData();
             formData.append('area_name', values.areaName);
-            await mutation.mutate(isUpdate ? { 'area_name': values.areaName } : formData); // Submit form
+            await mutation.mutate(isUpdate ? { 'area_name': values.areaName } : formData);
         },
     });
 
@@ -56,7 +56,9 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
 
             fetchAreaData();
         }
-    }, [isUpdate, id, getArea, setSnackbar]);
+
+        console.log(formik.values.areaName)
+    }, [isUpdate, id, getArea, setSnackbar, formik.values.areaName]);
 
     // Define mutation for create and update actions
     const mutation = useMutation({
