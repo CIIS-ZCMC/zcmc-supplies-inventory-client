@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useInventoryHook = create((set) => ({
   inventory: [],
