@@ -22,7 +22,16 @@ const useReceivingHook = create((set) => ({
         itemName: Yup.string().required('Item Name is required'),
         source: Yup.string().required('Source is required'),
         quantity: Yup.number().required('Quantity is required'),
-        poNumber: Yup.number().required('PO Number is required'),
+        poNumber: Yup.string()
+            .nullable()
+            .test(
+                'po-number-required',
+                'PO Number is required',
+                function (value) {
+                    const { source } = this.parent; // Access other formik values
+                    return source === '2' || value !== undefined; // If source is 2, PO Number is not required
+                }
+            ),
         iarNumber: Yup.string().required('IAR Number is required'),
         dateDelivered: Yup.date().required('Delivery Date is required'),
         expiryDate: Yup.mixed().nullable().test(
