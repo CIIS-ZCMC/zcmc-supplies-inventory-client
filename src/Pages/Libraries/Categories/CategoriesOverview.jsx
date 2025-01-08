@@ -12,11 +12,14 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 import FormDialog from './FormDialog';
 
 import useCategoriesHook from '../../../Hooks/CategoriesHook'
+import useSnackbarHook from '../../../Hooks/AlertHook'
+
 import { categoriesHeader } from '../../../Data/TableHeader';
 
 const SuppliersOverview = ({ filter }) => {
 
-    const { getCategories } = useCategoriesHook();
+    const { getCategories, setInitialValues } = useCategoriesHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['categories'],
@@ -25,7 +28,6 @@ const SuppliersOverview = ({ filter }) => {
 
     const categoriesData = data?.data
 
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const handleDialogOpen = () => {
@@ -36,8 +38,8 @@ const SuppliersOverview = ({ filter }) => {
         setIsDialogOpen(false)
     }
 
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
+    function handleEditRow(data) {
+        setInitialValues(data);
     }
 
     return (
@@ -76,9 +78,13 @@ const SuppliersOverview = ({ filter }) => {
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>
-                            <ButtonComponent label="Add new category" onClick={handleDialogOpen} />
+                            <ButtonComponent
+                                label="Add new category"
+                                onClick={handleDialogOpen}
+                            />
                         </Stack>
                     }
+                    editRow={handleEditRow}
                 />
             }
             <ModalComponent
@@ -86,18 +92,17 @@ const SuppliersOverview = ({ filter }) => {
                 title="Create a new category record"
                 description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
                 handleClose={handleDialogClose}
-                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}
+                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}
             />
 
             <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant='solid'
-                anchor={{ vertical: 'top', horizontal: 'right' }}
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
             />
-
         </div>
     )
 }

@@ -60,6 +60,21 @@ const useBrandsHook = create((set) => ({
       throw error;
     }
   },
+
+  // Update with PUT or PATCH request
+  updateBrand: async (id, formData) => {
+    try {
+      const response = await inventory_api.post(
+        `/${API.BRAND_UPDATE}/${id}`,
+        formData
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error updating brand:", error.message);
+      throw error;
+    }
+  },
 }));
 
 export default useBrandsHook;

@@ -5,6 +5,7 @@ import inventory_api from "../Services/ApiName";
 
 const useCategoriesHook = create((set) => ({
   initialValues: {
+    id: null,
     categoryName: "",
   },
 
@@ -12,10 +13,34 @@ const useCategoriesHook = create((set) => ({
     categoryName: Yup.string().required("Category name is required"),
   }),
 
+  // Method to reset initial values
+  setInitialValues: (values) => {
+    if (values === null || values === undefined) {
+      return set({
+        initialValues: { id: null, categoryName: "" },
+      });
+    }
+
+    set({
+      initialValues: { id: values.id, brandName: values.category_name },
+    });
+  },
+
   getCategories: async () => {
     try {
       const response = await inventory_api.get(`/${API.CATEGORIES}`);
 
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
+
+  getCategory: async (id) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.CATEGORY_SHOW}/${id}`
+      );
       return response.data;
     } catch (error) {
       error.message;
@@ -33,6 +58,21 @@ const useCategoriesHook = create((set) => ({
       return response.data;
     } catch (error) {
       console.error("Error creating brands:", error.message);
+      throw error;
+    }
+  },
+
+  // Update with PUT or PATCH request
+  updateCategory: async (id, formData) => {
+    try {
+      const response = await inventory_api.post(
+        `/${API.CATEGORY_UPDATE}/${id}`,
+        formData
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error updating category:", error.message);
       throw error;
     }
   },

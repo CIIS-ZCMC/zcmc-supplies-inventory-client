@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { Stack, Typography, Box } from '@mui/joy'
 import { CopyPlus, ViewIcon } from 'lucide-react'
@@ -12,12 +12,14 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 import FormDialog from './FormDialog';
 
 import useSourceHook from '../../../Hooks/SourceHook';
+import useSnackbarHook from '../../../Hooks/AlertHook'
 
 import { sourceHeader } from '../../../Data/TableHeader';
 
 const SourceOverview = ({ filter }) => {
 
-    const { getSources } = useSourceHook();
+    const { getSources, setInitialValues } = useSourceHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['sources'],
@@ -25,8 +27,6 @@ const SourceOverview = ({ filter }) => {
     })
 
     const sourcesData = data?.data
-
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const handleDialogOpen = () => {
@@ -37,9 +37,13 @@ const SourceOverview = ({ filter }) => {
         setIsDialogOpen(false)
     }
 
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
+    function handleEditRow(data) {
+        setInitialValues(data);
     }
+
+    useEffect(() => {
+        sourcesData;
+    }, [sourcesData]);
 
     return (
         <div>
@@ -61,7 +65,7 @@ const SourceOverview = ({ filter }) => {
                     </Typography>
 
                     <ButtonComponent
-                        label={'Create an area'}
+                        label={'Create a source'}
                         fullWidth={false}
                         width={150}
                         onClick={handleDialogOpen}
@@ -80,6 +84,7 @@ const SourceOverview = ({ filter }) => {
                             <ButtonComponent label="Add new source" onClick={handleDialogOpen} />
                         </Stack>
                     }
+                    editRow={handleEditRow}
                 />
             }
             <ModalComponent
@@ -87,18 +92,17 @@ const SourceOverview = ({ filter }) => {
                 title="Create a new source record"
                 description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
                 handleClose={handleDialogClose}
-                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}
+                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}
             />
 
             <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant='solid'
-                anchor={{ vertical: 'top', horizontal: 'right' }}
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
             />
-
         </div>
     )
 }

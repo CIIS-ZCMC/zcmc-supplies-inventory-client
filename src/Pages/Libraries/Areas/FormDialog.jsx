@@ -23,16 +23,10 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
         onSubmit: async (values) => {
             const formData = new FormData();
             formData.append('area_name', values.areaName);
-            await mutation.mutate(isUpdate ? { 'area_name': values.areaName } : formData); // Submit form
+            await mutation.mutate(isUpdate ? { 'area_name': values.areaName } : formData);
         },
     });
 
-    // useEffect(() => {
-    //     console.log("Formik values updated:", formik.values);
-    //     console.log("Is Input Filled:", isInputFilled);
-    // }, [formik.values, isInputFilled]);
-
-    // Load data when editing (update mode)
     useEffect(() => {
         if (isUpdate && id) {
             const fetchAreaData = async () => {
@@ -46,17 +40,12 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
                     formik.setValues(updatedValues); // Directly set values instead of resetting form
                 } catch (error) {
                     console.error('Error fetching area:', error.message);
-                    setSnackbar({
-                        open: true,
-                        color: 'danger',
-                        message: 'Failed to load area details. Please try again.',
-                    });
+                    setSnackbar('Failed to load supplier details. Please try again.', 'danger', 'filled');
                 }
             };
-
             fetchAreaData();
         }
-    }, [isUpdate, id, getArea, setSnackbar]);
+    }, [isUpdate, id, getArea, setSnackbar,]);
 
     // Define mutation for create and update actions
     const mutation = useMutation({
@@ -68,12 +57,13 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
             formik.resetForm();
         },
         onError: (error) => {
-            setSnackbar({
-                open: true,
-                color: 'danger',
-                message: error?.response?.data?.message || 'An error occurred. Please try again.',
-            });
-            console.error('Error submitting form:', error);
+            if (error?.response?.status === 409) {
+                setSnackbar(`${error.response.data.message}` || 'Conflict: The resource already exists.', "danger", "filled");
+            } else {
+                // Handle other errors
+                setSnackbar(`${error.message}` || 'An error occurred. Please try again.', "danger", "filled");
+            }
+            console.error("Error submitting form:", error);
         },
         onSettled: () => {
             handleClose();

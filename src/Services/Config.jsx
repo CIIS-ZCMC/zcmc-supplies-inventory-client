@@ -28,26 +28,32 @@ export const API = {
   BRANDS: "brands",
   BRAND_STORE: "brand-store",
   BRAND_UPDATE: "brand-update",
+  BRAND_SHOW: "brand-view",
 
   SUPPLIERS: "suppliers",
   SUPPLIER_STORE: "supplier-store",
   SUPPLIER_UPDATE: "supplier-update",
+  SUPPLIER_SHOW: "supplier-view",
 
   UNITS: "units",
   UNIT_STORE: "unit-store",
   UNIT_UPDATE: "unit-update",
+  UNIT_SHOW: "unit-view",
 
   SOURCES: "sources",
   SOURCE_STORE: "source-store",
   SOURCE_UPDATE: "source-update",
+  SOURCE_SHOW: "source-view",
 
   CATEGORIES: "categories",
   CATEGORY_STORE: "category-store",
   CATEGORY_UPDATE: "category-update",
+  CATEGORY_SHOW: "category-view",
 
   SUPPLIES: "supplies",
   SUPPLY_STORE: "supply-store",
   SUPPLY_UPDATE: "supply-update",
+  SUPPLY_SHOW: "supply-view",
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",

@@ -5,6 +5,7 @@ import inventory_api from "../Services/ApiName";
 
 const useUnitsHook = create((set) => ({
   initialValues: {
+    id: null,
     unitName: "",
   },
 
@@ -30,6 +31,45 @@ const useUnitsHook = create((set) => ({
       return response.data;
     } catch (error) {
       console.error("Error creating unit:", error.message);
+      throw error;
+    }
+  },
+
+  // Method to reset initial values
+  setInitialValues: (values) => {
+    if (values === null || values === undefined) {
+      return set({
+        initialValues: { id: null, unitName: "" },
+      });
+    }
+
+    set({
+      initialValues: { id: values.id, unitName: values.unit_name },
+    });
+  },
+
+  getUnit: async (id) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.UNIT_SHOW}/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
+
+  // Update with PUT or PATCH request
+  updateUnit: async (id, formData) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.UNIT_UPDATE}/${id}`,
+        formData
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error updating unit:", error.message);
       throw error;
     }
   },

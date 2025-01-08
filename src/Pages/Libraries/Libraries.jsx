@@ -39,7 +39,7 @@ const Libraries = () => {
         categories: <CategoriesOverview filter={filteredInventory} />,
         units: <UnitsOverview filter={filteredInventory} />,
         source: <SourceOverview filter={filteredInventory} />,
-        "item-names": <SuppliesOverview filter={filteredInventory} />,
+        supplies: <SuppliesOverview filter={filteredInventory} />,
     };
 
     // Extract the current selected option from the URL
