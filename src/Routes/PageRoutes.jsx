@@ -42,14 +42,13 @@ const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
 const Reports = lazy(() => import("../Pages/Reports/Reports"));
 const StockUpdate = lazy(() => import("../Pages/Stock-Update/StockUpdate"));
 
-
 import AreasOverview from "../Pages/Libraries/Areas/AreasOverview";
 import BrandsOverview from "../Pages/Libraries/Brands/BrandsOverview";
 import SuppliersOverview from "../Pages/Libraries/Suppliers/SuppliersOverview";
 import CategoriesOverview from "../Pages/Libraries/Categories/CategoriesOverview";
 import SourceOverview from "../Pages/Libraries/Source/SourceOverview";
 import SuppliesOverview from "../Pages/Libraries/Supplies/SuppliesOverview";
-import UnitsOverview from "../Pages/Libraries/Units/UnitsOverview"
+import UnitsOverview from "../Pages/Libraries/Units/UnitsOverview";
 
 export const sidebarRoutes = [
   {
@@ -95,7 +94,6 @@ export const sidebarRoutes = [
     icon: <GrDocument />,
     permissions: ["view"],
   },
-
 ];
 
 export const childrenRoutes = [
@@ -114,7 +112,7 @@ export const childrenRoutes = [
       { path: "categories", element: <CategoriesOverview /> },
       { path: "units", element: <UnitsOverview /> },
       { path: "source", element: <SourceOverview /> },
-      { path: "item-names", element: <SuppliesOverview /> }
+      { path: "item-names", element: <SuppliesOverview /> },
     ],
   },
 
