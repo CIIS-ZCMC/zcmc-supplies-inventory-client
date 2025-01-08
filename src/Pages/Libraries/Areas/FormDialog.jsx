@@ -40,11 +40,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
                     formik.setValues(updatedValues); // Directly set values instead of resetting form
                 } catch (error) {
                     console.error('Error fetching area:', error.message);
-                    setSnackbar({
-                        open: true,
-                        color: 'danger',
-                        message: 'Failed to load area details. Please try again.',
-                    });
+                    setSnackbar('Failed to load supplier details. Please try again.', 'danger', 'filled');
                 }
             };
             fetchAreaData();

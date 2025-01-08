@@ -38,10 +38,6 @@ const SuppliersOverview = ({ filter }) => {
     setIsDialogOpen(false)
   }
 
-  const handleSnackbarClose = () => {
-    setSnackbar({ open: false })
-  }
-
   function handleEditRow(data) {
     setInitialValues(data);
   }
@@ -84,7 +80,8 @@ const SuppliersOverview = ({ filter }) => {
             <Stack>
               <ButtonComponent
                 label="Add new supplier"
-                onClick={handleDialogOpen} />
+                onClick={handleDialogOpen}
+              />
             </Stack>
           }
           editRow={handleEditRow}
@@ -106,8 +103,6 @@ const SuppliersOverview = ({ filter }) => {
         variant={variant}
         message={message}
       />
-
-
     </div>
   )
 }

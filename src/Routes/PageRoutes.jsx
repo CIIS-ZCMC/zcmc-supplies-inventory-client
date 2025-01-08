@@ -114,7 +114,7 @@ export const childrenRoutes = [
       { path: "categories", element: <CategoriesOverview /> },
       { path: "units", element: <UnitsOverview /> },
       { path: "source", element: <SourceOverview /> },
-      { path: "item-names", element: <SuppliesOverview /> }
+      { path: "supplies", element: <SuppliesOverview /> }
     ],
   },
 

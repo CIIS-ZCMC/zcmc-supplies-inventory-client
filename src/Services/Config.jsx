@@ -43,14 +43,17 @@ export const API = {
   SOURCES: "sources",
   SOURCE_STORE: "source-store",
   SOURCE_UPDATE: 'source-update',
+  SOURCE_SHOW: 'source-view',
 
   CATEGORIES: "categories",
   CATEGORY_STORE: "category-store",
   CATEGORY_UPDATE: 'category-update',
+  CATEGORY_SHOW: 'category-view',
 
   SUPPLIES: "supplies",
   SUPPLY_STORE: "supply-store",
   SUPPLY_UPDATE: 'supply-update',
+  SUPPLY_SHOW: 'supply-view',
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",

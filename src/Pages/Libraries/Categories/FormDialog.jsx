@@ -1,66 +1,82 @@
-import React from 'react'
+import { useEffect } from 'react'
 
 import { useFormik } from 'formik'
 import { Grid, Divider, Stack, Typography } from '@mui/joy'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import useCategoriesHook from '../../../Hooks/CategoriesHook'
+import usePaginatedTableHook from '../../../Hooks/PaginatedTableHook'
 
 import ButtonComponent from '../../../Components/ButtonComponent'
 import InputComponent from '../../../Components/Form/InputComponent'
 
 const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
-    const queryClient = useQueryClient()
-    const { initialValues, validationSchema, createCategory } = useCategoriesHook();
-
-    // Define create the mutation for stockout
-    const mutation = useMutation({
-        mutationFn: createCategory,
-        onSuccess: () => {
-            // Show success notification, close dialog, and invalidate areas cache
-            setSnackbar({ open: true, color: 'success', message: 'Categories created successfully' });
-            queryClient.invalidateQueries('categories');
-            // Reset Formik form values after submission
-            formik.resetForm(); // Reset form to initial values
-            // setInitialValues;  // Reset the initial state in the store
-        },
-        onError: (error) => {
-            if (error?.response?.status === 409) {
-                setSnackbar({
-                    open: true,
-                    color: 'danger',
-                    message: error.response.data.message || 'Conflict: The resource already exists.',
-                });
-            } else {
-                // Handle other errors
-                setSnackbar({
-                    open: true,
-                    color: 'danger',
-                    message: `${error.message || 'An error occurred. Please try again.'}`,
-                });
-            }
-
-            console.error("Error submitting form:", error);
-        },
-        onSettled: () => {
-            // Always close the dialog after the mutation is finished (whether successful or error)
-            handleDialogClose();
-        }
-    });
+    const queryClient = useQueryClient();
+    const { isUpdate, id } = usePaginatedTableHook();
+    const { initialValues, setInitialValues, validationSchema, createCategory, getCategory, updateCategory } = useCategoriesHook();
 
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: validationSchema,
+        enableReinitialize: true,
         onSubmit: async (values) => {
             // Create a new FormData object
             const formData = new FormData();
-
             formData.append("category_name", values.categoryName);
-
-            await mutation.mutate(formData)
+            await mutation.mutate(isUpdate ? { 'category_name': values.categoryName } : formData);
         }
     })
+
+    // Load data when editing (update mode)
+    useEffect(() => {
+        if (isUpdate && id) {
+            const fetchData = async () => {
+                try {
+                    const categoryData = await getCategory(id);
+                    // Correctly set initial values and reset form
+                    const updatedValues = {
+                        id: categoryData?.data?.id || null,
+                        categoryName: categoryData?.data.category_name || "",
+                    };
+                    formik.setValues(updatedValues);
+                } catch (error) {
+                    console.error('Error fetching category:', error.message);
+                    setSnackbar('Failed to load category details. Please try again.', 'danger', 'filled');
+                }
+            };
+            fetchData();
+        }
+    }, [isUpdate, id, getCategory, setSnackbar]);
+
+    // Define create the mutation for stockout
+    const mutation = useMutation({
+        mutationFn: async (formData) =>
+            isUpdate ? updateCategory(id, formData) : createCategory(formData),
+        onSuccess: () => {
+            setSnackbar(isUpdate ? 'Category updated successfully' : 'Category created successfully', "success", "filled");
+            queryClient.invalidateQueries('categories');
+            formik.resetForm();
+        },
+        onError: (error) => {
+            if (error?.response?.status === 409) {
+                setSnackbar(`${error.response.data.message}` || 'Conflict: The resource already exists.', "danger", "filled");
+            } else {
+                // Handle other errors
+                setSnackbar(`${error.message || 'An error occurred. Please try again.', 'danger', 'filled'}`);
+            }
+            console.error("Error submitting form:", error);
+        },
+        onSettled: () => {
+            // Always close the dialog after the mutation is finished (whether successful or error)
+            handleClose();
+        }
+    });
+
+    function handleClose() {
+        setInitialValues(null)
+        handleDialogClose()
+    }
 
     return (
         <>

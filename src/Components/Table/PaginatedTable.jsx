@@ -27,10 +27,18 @@ import useSnackbarHook from "../../Hooks/AlertHook";
 import useAreasHook from "../../Hooks/AreasHook";
 import useBrandsHook from "../../Hooks/BrandsHook";
 import useSuppliersHook from "../../Hooks/SuppliersHook";
+import useCategoriesHook from "../../Hooks/CategoriesHook";
+import useUnitsHook from "../../Hooks/UnitsHook";
+import useSourceHook from "../../Hooks/SourceHook";
+import useSuppliesHook from '../../Hooks/SuppliesHook';
 
 import AreasForm from "../../Pages/Libraries/Areas/FormDialog";
 import BrandForm from '../../Pages/Libraries/Brands/FormDialog';
 import SupplierForm from '../../Pages/Libraries/Suppliers/FormDialog';
+import CategoryForm from '../../Pages/Libraries/Categories/FormDialog';
+import UnitForm from '../../Pages/Libraries/Units/FormDialog';
+import SourceForm from "../../Pages/Libraries/Source/FormDialog";
+import SuppliesForm from '../../Pages/Libraries/Supplies/FormDialog';
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -67,9 +75,13 @@ function PaginatedTable({
   const [rowsPerPage, setRowsPerPage] = useState(rowsPage);
   const totalPages = Math.ceil(rows?.length / rowsPerPage);
 
-  const { initialValues: areas, setInitialValues: setAreasValues } = useAreasHook();
-  const { initialValues: brands, setInitialValues: setBrandsValues } = useBrandsHook();
-  const { initialValues: suppliers, setInitialValues: setSuppliersValues } = useSuppliersHook();
+  const { setInitialValues: setAreasValues } = useAreasHook();
+  const { setInitialValues: setBrandsValues } = useBrandsHook();
+  const { setInitialValues: setSuppliersValues } = useSuppliersHook();
+  const { setInitialValues: setCategoriesValues } = useCategoriesHook()
+  const { setInitialValues: setUnitsValues } = useUnitsHook();
+  const { setInitialValues: setSourceValues } = useSourceHook();
+  const { initialValues: supplies, setInitialValues: setSuppliesValues } = useSuppliesHook();
 
   const { setSelectedRow } = useSelectedRow();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
@@ -81,11 +93,8 @@ function PaginatedTable({
   const currentPath = location.pathname;
 
   useEffect(() => {
-    // console.log(areas)
-    // console.log(brands)
-    // console.log(currentPath)
-    console.log(suppliers)
-  }, [areas, brands, suppliers])
+    console.log(supplies)
+  }, [supplies])
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -125,6 +134,10 @@ function PaginatedTable({
     setAreasValues(null)
     setBrandsValues(null)
     setSuppliersValues(null)
+    setCategoriesValues(null)
+    setUnitsValues(null)
+    setSourceValues(null)
+    setSuppliesValues(null)
     resetState();
   };
 
@@ -300,6 +313,38 @@ function PaginatedTable({
             />
           ) : currentPath === '/libraries/suppliers' ? (
             <SupplierForm
+              open={open}
+              message={message}
+              color={color}
+              setSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
+          ) : currentPath === '/libraries/categories' ? (
+            <CategoryForm
+              open={open}
+              message={message}
+              color={color}
+              setSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
+          ) : currentPath === '/libraries/units' ? (
+            <UnitForm
+              open={open}
+              message={message}
+              color={color}
+              setSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
+          ) : currentPath === '/libraries/source' ? (
+            <SourceForm
+              open={open}
+              message={message}
+              color={color}
+              setSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
+          ) : currentPath === '/libraries/supplies' ? (
+            <SuppliesForm
               open={open}
               message={message}
               color={color}

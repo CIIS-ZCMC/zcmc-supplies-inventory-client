@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { Stack, Typography, Box } from '@mui/joy'
 import { CopyPlus, ViewIcon } from 'lucide-react'
@@ -12,12 +12,13 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 import FormDialog from './FormDialog';
 
 import useUnitsHook from '../../../Hooks/UnitsHook'
+import useSnackbarHook from '../../../Hooks/AlertHook'
 
 import { unitHeader } from '../../../Data/TableHeader';
 
-const SuppliersOverview = ({ filter }) => {
-
-    const { getUnits } = useUnitsHook();
+const UnitsOverview = ({ filter }) => {
+    const { getUnits, setInitialValues } = useUnitsHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['units'],
@@ -25,8 +26,6 @@ const SuppliersOverview = ({ filter }) => {
     })
 
     const unitsData = data?.data
-
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const handleDialogOpen = () => {
@@ -37,9 +36,13 @@ const SuppliersOverview = ({ filter }) => {
         setIsDialogOpen(false)
     }
 
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
+    function handleEditRow(data) {
+        setInitialValues(data);
     }
+
+    useEffect(() => {
+        unitsData;
+    }, [unitsData]);
 
     return (
         <div>
@@ -61,7 +64,7 @@ const SuppliersOverview = ({ filter }) => {
                     </Typography>
 
                     <ButtonComponent
-                        label={'Create an area'}
+                        label={'Create a unit'}
                         fullWidth={false}
                         width={150}
                         onClick={handleDialogOpen}
@@ -69,7 +72,7 @@ const SuppliersOverview = ({ filter }) => {
                 </Stack>
                 :
                 <PaginatedTable
-                    tableTitle={"Supplies"}
+                    tableTitle={"Units"}
                     // tableDesc={"Sample Table Desription"}
                     columns={unitHeader}
                     rows={filter(unitsData)}
@@ -80,6 +83,7 @@ const SuppliersOverview = ({ filter }) => {
                             <ButtonComponent label="Add new unit" onClick={handleDialogOpen} />
                         </Stack>
                     }
+                    editRow={handleEditRow}
                 />
             }
             <ModalComponent
@@ -87,20 +91,19 @@ const SuppliersOverview = ({ filter }) => {
                 title="Create a new unit record"
                 description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
                 handleClose={handleDialogClose}
-                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}
+                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}
             />
 
             <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant='solid'
-                anchor={{ vertical: 'top', horizontal: 'right' }}
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
             />
-
         </div>
     )
 }
 
-export default SuppliersOverview
+export default UnitsOverview

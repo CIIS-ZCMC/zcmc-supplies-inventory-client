@@ -59,12 +59,9 @@ const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
         mutationFn: async (formData) =>
             isUpdate ? updateSupplier(id, formData) : createSupplier(formData),
         onSuccess: () => {
-            // Show success notification, close dialog, and invalidate areas cache
             setSnackbar(isUpdate ? 'Supplier Updated Successfully' : 'Supplier Created Successfully', "success", "filled");
             queryClient.invalidateQueries('suppliers');
-            // Reset Formik form values after submission
-            formik.resetForm(); // Reset form to initial values
-            // setInitialValues;  // Reset the initial state in the store
+            formik.resetForm();
         },
         onError: (error) => {
             if (error?.response?.status === 409) {
