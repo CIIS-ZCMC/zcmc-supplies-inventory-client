@@ -60,21 +60,6 @@ const useSuppliersHook = create((set) => ({
     }
   },
 
-  // Create in with POST request
-  createSupplier: async (formData) => {
-    try {
-      const response = await inventory_api.post(
-        `/${API.SUPPLIER_STORE}`,
-        formData
-      );
-
-      return response.data;
-    } catch (error) {
-      console.error("Error creating brands:", error.message);
-      throw error;
-    }
-  },
-
   // Update with PUT or PATCH request
   updateSupplier: async (id, formData) => {
     try {
