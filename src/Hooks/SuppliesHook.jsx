@@ -73,21 +73,6 @@ const useSuppliesHook = create((set) => ({
     }
   },
 
-  // Create Area in with POST request
-  createSupply: async (formData) => {
-    try {
-      const response = await inventory_api.post(
-        `/${API.SUPPLY_STORE}`,
-        formData
-      );
-
-      return response.data;
-    } catch (error) {
-      console.error("Error creating unit:", error.message);
-      throw error;
-    }
-  },
-
   // Update with PUT or PATCH request
   updateSupply: async (id, formData) => {
     try {
