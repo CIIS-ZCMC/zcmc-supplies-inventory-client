@@ -1,3 +1,5 @@
+import { Navigate } from "react-router-dom";
+
 import { lazy } from "react";
 import {
   CircleGauge,
@@ -7,6 +9,7 @@ import {
   Tag,
   ClipboardList,
   LayoutGrid,
+  ChartCandlestick,
 } from "lucide-react";
 
 import { BiCategory } from "react-icons/bi";
@@ -37,6 +40,15 @@ const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
 const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
 
 const Reports = lazy(() => import("../Pages/Reports/Reports"));
+const StockUpdate = lazy(() => import("../Pages/Stock-Update/StockUpdate"));
+
+import AreasOverview from "../Pages/Libraries/Areas/AreasOverview";
+import BrandsOverview from "../Pages/Libraries/Brands/BrandsOverview";
+import SuppliersOverview from "../Pages/Libraries/Suppliers/SuppliersOverview";
+import CategoriesOverview from "../Pages/Libraries/Categories/CategoriesOverview";
+import SourceOverview from "../Pages/Libraries/Source/SourceOverview";
+import SuppliesOverview from "../Pages/Libraries/Supplies/SuppliesOverview";
+import UnitsOverview from "../Pages/Libraries/Units/UnitsOverview";
 
 export const sidebarRoutes = [
   {
@@ -69,6 +81,13 @@ export const sidebarRoutes = [
     permissions: ["view"],
   },
   {
+    path: "/stock-update",
+    name: "Stock-Update",
+    element: <StockUpdate />,
+    icon: <ChartCandlestick />,
+    permissions: ["view"],
+  },
+  {
     path: "/reports",
     name: "Reports",
     element: <Reports />,
@@ -82,6 +101,19 @@ export const childrenRoutes = [
     path: "libraries",
     element: <Libraries />,
     permission: ["view"],
+    // children: [
+    //   { path: "brands", element: <BrandsOverview /> },
+    // ]
+    children: [
+      { path: "", element: <Navigate to="areas" replace /> },
+      { path: "areas", element: <AreasOverview /> },
+      { path: "brands", element: <BrandsOverview /> },
+      { path: "suppliers", element: <SuppliersOverview /> },
+      { path: "categories", element: <CategoriesOverview /> },
+      { path: "units", element: <UnitsOverview /> },
+      { path: "source", element: <SourceOverview /> },
+      { path: "supplies", element: <SuppliesOverview /> },
+    ],
   },
 
   {

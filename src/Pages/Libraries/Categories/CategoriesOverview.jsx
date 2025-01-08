@@ -12,11 +12,14 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 import FormDialog from './FormDialog';
 
 import useCategoriesHook from '../../../Hooks/CategoriesHook'
+import useSnackbarHook from '../../../Hooks/AlertHook'
+
 import { categoriesHeader } from '../../../Data/TableHeader';
 
 const SuppliersOverview = ({ filter }) => {
 
-    const { getCategories } = useCategoriesHook();
+    const { getCategories, setInitialValues } = useCategoriesHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['categories'],
@@ -25,7 +28,6 @@ const SuppliersOverview = ({ filter }) => {
 
     const categoriesData = data?.data
 
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const handleDialogOpen = () => {
@@ -36,8 +38,8 @@ const SuppliersOverview = ({ filter }) => {
         setIsDialogOpen(false)
     }
 
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
+    function handleEditRow(data) {
+        setInitialValues(data);
     }
 
     return (
@@ -51,11 +53,11 @@ const SuppliersOverview = ({ filter }) => {
                     </Box>
 
                     <Typography my={2} level='title-lg' fontSize={24} gutterBottom>
-                        Get started by creating an Area
+                        Get started by creating an Category
                     </Typography>
 
                     <Typography width={600} my={2} level='body-md' textAlign={'center'} gutterBottom>
-                        You’ll use registered areas in this library to fill-up RIS requests and IARs as a pre-defined
+                        You’ll use registered categories in this library to fill-up RIS requests and IARs as a pre-defined
                         selection to minimize typographical errors.
                     </Typography>
 
@@ -68,35 +70,39 @@ const SuppliersOverview = ({ filter }) => {
                 </Stack>
                 :
                 <PaginatedTable
-                    tableTitle={"Supplies"}
+                    tableTitle={"Categories"}
                     // tableDesc={"Sample Table Desription"}
+                    loading={isLoading}
                     columns={categoriesHeader}
                     rows={filter(categoriesData)}
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>
-                            <ButtonComponent label="Add new area" onClick={handleDialogOpen} />
+                            <ButtonComponent
+                                label="Add new category"
+                                onClick={handleDialogOpen}
+                            />
                         </Stack>
                     }
+                    editRow={handleEditRow}
                 />
             }
             <ModalComponent
                 isOpen={isDialogOpen}
-                title="Create a new area record"
+                title="Create a new category record"
                 description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
                 handleClose={handleDialogClose}
-                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}
+                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}
             />
 
             <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant='solid'
-                anchor={{ vertical: 'top', horizontal: 'right' }}
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
             />
-
         </div>
     )
 }

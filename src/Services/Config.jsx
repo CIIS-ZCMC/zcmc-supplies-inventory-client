@@ -22,24 +22,38 @@ export const ROOT_PATH = "/dashboard";
 export const API = {
   AREAS: "areas",
   AREA_STORE: "area-store",
+  AREA_UPDATE: "area-update",
+  AREA_SHOW: "area-view",
 
   BRANDS: "brands",
   BRAND_STORE: "brand-store",
+  BRAND_UPDATE: "brand-update",
+  BRAND_SHOW: "brand-view",
 
   SUPPLIERS: "suppliers",
   SUPPLIER_STORE: "supplier-store",
+  SUPPLIER_UPDATE: "supplier-update",
+  SUPPLIER_SHOW: "supplier-view",
 
   UNITS: "units",
   UNIT_STORE: "unit-store",
+  UNIT_UPDATE: "unit-update",
+  UNIT_SHOW: "unit-view",
 
   SOURCES: "sources",
   SOURCE_STORE: "source-store",
+  SOURCE_UPDATE: "source-update",
+  SOURCE_SHOW: "source-view",
 
   CATEGORIES: "categories",
   CATEGORY_STORE: "category-store",
+  CATEGORY_UPDATE: "category-update",
+  CATEGORY_SHOW: "category-view",
 
   SUPPLIES: "supplies",
   SUPPLY_STORE: "supply-store",
+  SUPPLY_UPDATE: "supply-update",
+  SUPPLY_SHOW: "supply-view",
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",
@@ -52,6 +66,8 @@ export const API = {
 
   STOCKOUT: "stock-out",
   STOCKIN: "stock-in",
+  STOCK_UPDATE: "stock-in-backlogs",
+  STOCK_UPDATE_LIST: "backlog-list",
 
   DASHBOARD_TOTAL: "get-dashboard-total",
   DASHBOARD_SUPPLIES: "get-dashboard-supplies",
@@ -82,7 +98,7 @@ export const API = {
 export const BASE_URL = {
   development_landing_page: "http://192.168.5.1:5170", // This will be the landing page
   production_landing_page: "https://zcmc.online", // This will be the production landing page url
-  production: "https://api_name.zcmc.online/api/", // Change the sub domain name to your prefer name
+  production: "https://inventoryapi.zcmc.online/api", // Change the sub domain name to your prefer name
   development: "http://192.168.5.1:5166/api", // You can change the port or ip here
   local: "http://localhost:8000/api", // You can change the port or ip here
 };

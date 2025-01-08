@@ -72,7 +72,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
         },
         onError: (error) => {
-
             showSnackbar(
                 `Stockin failed!. Please try again. ${error}`,
                 "danger",
@@ -100,13 +99,13 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             formData.append("brand_id", values.brand);
             formData.append("source_id", values.source);
             formData.append("supplier_id", values.supplier);
-            formData.append("expiration_date", values.expiryDate === "N/A" ? "" : expiryDate);
+            formData.append("expiration_date", values.expiryDate === "N/A" ? "" : values.expiryDate);
             formData.append("quantity", values.quantity);
             formData.append("delivery_date", values.dateDelivered);
             formData.append("purchase_order_no", values.poNumber);
             formData.append("iar_no", values.iarNumber);
 
-            // Log all FormData entries to the console for testing only 
+            // Log all FormData entries to the console for testing only
             // for (let [key, value] of formData.entries()) {
             //     console.log(`${key}: ${value}`);
             // }
@@ -309,7 +308,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                     />
                 </Stack>
             </form >
-
         </>
     );
 };

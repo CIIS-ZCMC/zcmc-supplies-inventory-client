@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 
-import { API, BASE_URL } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useReportsHook = create((set) => ({
   item_count: [],
@@ -20,9 +20,8 @@ const useReportsHook = create((set) => ({
 
   getItemCount: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_ITEM_COUNT}`
-      );
+      const response = await inventory_api.get(`/${API.REPORTS_ITEM_COUNT}`);
+
       set({ item_count: response.data });
       console.log(response.data);
       return response.data;
@@ -33,9 +32,8 @@ const useReportsHook = create((set) => ({
 
   getStartingBal: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_STARTING_BAL}`
-      );
+      const response = await inventory_api.get(`/${API.REPORTS_STARTING_BAL}`);
+
       set({ starting_bal: response.data });
       return response.data;
     } catch (error) {
@@ -45,9 +43,8 @@ const useReportsHook = create((set) => ({
 
   getNearExp: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_NEAR_EXP}`
-      );
+      const response = await inventory_api.get(`/${API.REPORTS_NEAR_EXP}`);
+
       set({ near_exp: response.data.data });
       return response.data;
     } catch (error) {
@@ -57,9 +54,8 @@ const useReportsHook = create((set) => ({
 
   getZeroStocks: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_ZERO_STOCKS}`
-      );
+      const response = await inventory_api.get(`/${API.REPORTS_ZERO_STOCKS}`);
+
       set({ zero_stocks: response.data });
       return response.data;
     } catch (error) {
@@ -69,10 +65,10 @@ const useReportsHook = create((set) => ({
 
   getConsumed: async (year) => {
     try {
-      console.log(year);
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_CONSUMED}/${year}`
+      const response = await inventory_api.get(
+        `/${API.REPORTS_CONSUMED}/${year}`
       );
+
       set({ consumed: response.data });
       console.log(response.data);
       return response.data;
@@ -83,9 +79,8 @@ const useReportsHook = create((set) => ({
 
   getSufficient: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_SUFFICIENT}`
-      );
+      const response = await inventory_api.get(`/${API.REPORTS_SUFFICIENT}`);
+
       set({ sufficient_sup: response.data });
       return response.data;
     } catch (error) {
@@ -95,12 +90,12 @@ const useReportsHook = create((set) => ({
 
   getUnconsumed: async (year) => {
     try {
-      console.log(year);
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_UNCONSUMED}/${year}`
+      const response = await inventory_api.get(
+        `/${API.REPORTS_UNCONSUMED}/${year}`
       );
+
       set({ unconsumed: response.data });
-      console.log(response.data);
+
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -109,10 +104,10 @@ const useReportsHook = create((set) => ({
 
   getReorder: async (month) => {
     try {
-      console.log(month);
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_REORDER}/${month}`
+      const response = await inventory_api.get(
+        `/${API.REPORTS_REORDER}/${month}`
       );
+
       set({ reorder: response.data });
       return response.data;
     } catch (error) {
@@ -122,9 +117,10 @@ const useReportsHook = create((set) => ({
 
   getDisposal: async (month) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_DISPOSAL}/${month}`
+      const response = await inventory_api.get(
+        `/${API.REPORTS_DISPOSAL}/${month}`
       );
+
       set({ disposal: response.data });
       return response.data;
     } catch (error) {
@@ -135,8 +131,8 @@ const useReportsHook = create((set) => ({
   getItemCountDetails: async (id) => {
     try {
       // Include the id in the API request URL
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_ITEM_COUNT_BREAKDOWN}/${id}`
+      const response = await inventory_api.get(
+        `/${API.REPORTS_ITEM_COUNT_BREAKDOWN}/${id}`
       );
 
       // Update the state with the fetched data
@@ -151,8 +147,8 @@ const useReportsHook = create((set) => ({
   getItemCountInfo: async (id) => {
     try {
       // Include the id in the API request URL
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_ITEM_COUNT_TOTAL}/${id}`
+      const response = await inventory_api.get(
+        `/${API.REPORTS_ITEM_COUNT_TOTAL}/${id}`
       );
 
       // Update the state with the fetched data
@@ -166,8 +162,8 @@ const useReportsHook = create((set) => ({
   getItemCountIAR: async (id) => {
     try {
       // Include the id in the API request URL
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_ITEM_COUNT_IAR}/${id}`
+      const response = await inventory_api.get(
+        `/${API.REPORTS_ITEM_COUNT_IAR}/${id}`
       );
 
       // Update the state with the fetched data
@@ -181,9 +177,7 @@ const useReportsHook = create((set) => ({
   getDate: async () => {
     try {
       // Include the id in the API request URL
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_DATE}`
-      );
+      const response = await inventory_api.get(`/${API.REPORTS_DATE}`);
 
       // Update the state with the fetched data
       set({ dates: response.data });

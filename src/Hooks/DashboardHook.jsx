@@ -1,26 +1,27 @@
 import { create } from "zustand";
-import axios from "axios";
-import { BASE_URL, API } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useDashboardHook = create((set) => ({
+  getDashboardTotal: async () => {
+    try {
+      const response = await inventory_api.get(`/${API.DASHBOARD_TOTAL}`);
 
-    getDashboardTotal: async () => {
-        try {
-            const response = await axios.get(`${BASE_URL.development}/${API.DASHBOARD_TOTAL}`);
-            return response.data
-        } catch (error) {
-            error.message;
-        }
-    },
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
 
-    getDashboardSupplies: async () => {
-        try {
-            const response = await axios.get(`${BASE_URL.development}/${API.DASHBOARD_SUPPLIES}`);
-            return response.data
-        } catch (error) {
-            error.message;
-        }
-    },
-}))
+  getDashboardSupplies: async () => {
+    try {
+      const response = await inventory_api.get(`/${API.DASHBOARD_SUPPLIES}`);
 
-export default useDashboardHook
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
+}));
+
+export default useDashboardHook;

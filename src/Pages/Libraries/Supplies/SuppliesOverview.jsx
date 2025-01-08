@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { Stack, Typography, Box } from '@mui/joy'
 import { CopyPlus, ViewIcon } from 'lucide-react'
@@ -12,12 +12,14 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 import FormDialog from './FormDialog';
 
 import useSuppliesHook from '../../../Hooks/SuppliesHook'
+import useSnackbarHook from '../../../Hooks/AlertHook'
 
 import { supplyHeader } from '../../../Data/TableHeader';
 
-const SuppliersOverview = ({ filter }) => {
+const SuppliesOverview = ({ filter }) => {
 
-    const { getSupplies } = useSuppliesHook();
+    const { getSupplies, setInitialValues } = useSuppliesHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['supplies'],
@@ -25,8 +27,6 @@ const SuppliersOverview = ({ filter }) => {
     })
 
     const suppliesData = data?.data
-
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const handleDialogOpen = () => {
@@ -37,9 +37,13 @@ const SuppliersOverview = ({ filter }) => {
         setIsDialogOpen(false)
     }
 
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
+    function handleEditRow(data) {
+        setInitialValues(data);
     }
+
+    useEffect(() => {
+        suppliesData;
+    }, [suppliesData]);
 
     return (
         <div>
@@ -52,16 +56,16 @@ const SuppliersOverview = ({ filter }) => {
                     </Box>
 
                     <Typography my={2} level='title-lg' fontSize={24} gutterBottom>
-                        Get started by creating an Area
+                        Get started by creating an supply
                     </Typography>
 
                     <Typography width={600} my={2} level='body-md' textAlign={'center'} gutterBottom>
-                        You’ll use registered areas in this library to fill-up RIS requests and IARs as a pre-defined
+                        You’ll use registered supplies in this library to fill-up RIS requests and IARs as a pre-defined
                         selection to minimize typographical errors.
                     </Typography>
 
                     <ButtonComponent
-                        label={'Create an area'}
+                        label={'Create an supply'}
                         fullWidth={false}
                         width={150}
                         onClick={handleDialogOpen}
@@ -80,6 +84,7 @@ const SuppliersOverview = ({ filter }) => {
                             <ButtonComponent label="Add new item" onClick={handleDialogOpen} />
                         </Stack>
                     }
+                    editRow={handleEditRow}
                 />
             }
             <ModalComponent
@@ -87,20 +92,19 @@ const SuppliersOverview = ({ filter }) => {
                 title="Create a new source record"
                 description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
                 handleClose={handleDialogClose}
-                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}
+                content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}
             />
 
             <SnackbarComponent
-                open={snackbar.open}
-                onClose={handleSnackbarClose}
-                color={snackbar.color}
-                message={snackbar.message}
-                variant='solid'
-                anchor={{ vertical: 'top', horizontal: 'right' }}
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
             />
-
         </div>
     )
 }
 
-export default SuppliersOverview
+export default SuppliesOverview

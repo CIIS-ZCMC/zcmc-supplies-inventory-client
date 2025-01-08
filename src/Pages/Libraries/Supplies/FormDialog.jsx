@@ -1,30 +1,59 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react';
 
-import { useFormik } from 'formik'
-import { Grid, Divider, Stack, Typography } from '@mui/joy'
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+import { useFormik } from 'formik';
+import { Grid, Divider, Stack, Typography, Checkbox } from '@mui/joy';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 
-import ButtonComponent from '../../../Components/ButtonComponent'
-import InputComponent from '../../../Components/Form/InputComponent'
-import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent'
-import AccordionComponent from '../../../Components/AccordionComponent'
+import ButtonComponent from '../../../Components/ButtonComponent';
+import InputComponent from '../../../Components/Form/InputComponent';
+import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent';
+import AccordionComponent from '../../../Components/AccordionComponent';
 
-import useSuppliesHook from '../../../Hooks/SuppliesHook'
-import useCategoriesHook from '../../../Hooks/CategoriesHook'
-import useUnitsHook from '../../../Hooks/UnitsHook'
+import useSuppliesHook from '../../../Hooks/SuppliesHook';
+import useCategoriesHook from '../../../Hooks/CategoriesHook';
+import useUnitsHook from '../../../Hooks/UnitsHook';
+import useSourceHook from '../../../Hooks/SourceHook';
+import usePaginatedTableHook from '../../../Hooks/PaginatedTableHook';
 
 const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
     const queryClient = useQueryClient()
-    const { initialValues, validationSchema, createSupply } = useSuppliesHook();
+    const { isUpdate, id } = usePaginatedTableHook()
+    const { initialValues, validationSchema, createSupply, getSupplies, getSupply, updateSupply, setInitialValues } = useSuppliesHook();
 
     const { getCategories } = useCategoriesHook();
     const { getUnits } = useUnitsHook();
+    const { getSources } = useSourceHook();
+
+    const formik = useFormik({
+        initialValues: initialValues,
+        validationSchema: validationSchema,
+        enableReinitialize: true,
+        onSubmit: async (values) => {
+            const formData = new FormData();
+            formData.append("supply_name", values.supplyName);
+            formData.append("category_id", values.category);
+            formData.append("unit_id", values.unit);
+
+            await mutation.mutate(isUpdate ?
+                {
+                    'supply_name': values.supplyName,
+                    'category_id': values.category,
+                    'unit_id': values.unit,
+                }
+                :
+                formData
+            );
+
+        }
+    })
+
 
     // Array of queries to manage multiple fetching in a cleaner way
     const queryConfigs = [
         { key: 'units', fn: getUnits },
         { key: 'categories', fn: getCategories },
+        { key: 'sources', fn: getSources },
     ];
 
     const queries = queryConfigs.map(({ key, fn }) =>
@@ -35,6 +64,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
     const [
         { data: unitsData, isLoading: isUnitsLoading },
         { data: categoriesData, isLoading: isCategoriesLoading },
+        { data: sourcesData, isLoading: isSourcesLoading },
     ] = queries;
 
     // Helper function for mapping options
@@ -43,42 +73,68 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
     const unitsOptions = useMemo(() => mapOptions(unitsData?.data, 'unit_name'), [categoriesData]);
     const categoriesOptions = useMemo(() => mapOptions(categoriesData?.data, 'category_name'), [categoriesData]);
+    const sourcesOptions = useMemo(() => mapOptions(sourcesData?.data, 'source_name'), [sourcesData]);
+
+
+    useEffect(() => {
+        if (isUpdate && id) {
+            const fetchData = async () => {
+                try {
+                    const supplyData = await getSupply(id);
+
+                    const selectedCategory = categoriesOptions.find(option =>
+                        option.label?.toLowerCase().trim() === supplyData?.data?.category_name?.toLowerCase().trim()
+                    ) || null;
+
+                    const selectedUnit = unitsOptions.find(option =>
+                        option.label?.toLowerCase().trim() === supplyData?.data?.unit_name?.toLowerCase().trim()
+                    ) || null;
+
+                    formik.setValues({
+                        id: supplyData?.data?.id || null,
+                        supplyName: supplyData?.data?.supply_name || "",
+                        category: selectedCategory ? selectedCategory.id : '',
+                        unit: selectedUnit ? selectedUnit.id : '',
+                    });
+                } catch (error) {
+                    console.error('Error fetching Supply item details:', error.message);
+                    setSnackbar('Failed to load supply details. Please try again.', 'danger', 'filled');
+                }
+            };
+
+            fetchData();
+        }
+    }, [isUpdate, id, getSupply, categoriesOptions, unitsOptions, setSnackbar]);
+
 
     // Define create the mutation for stockout
     const mutation = useMutation({
-        mutationFn: createSupply,
+        mutationFn: async (formData) =>
+            isUpdate ? updateSupply(id, formData) : createSupply(formData),
         onSuccess: () => {
-            // Show success notification, close dialog, and invalidate areas cache
-            setSnackbar({ open: true, color: 'success', message: 'Source created successfully' });
+            setSnackbar(isUpdate ? 'Supply updated successfully' : 'Supply created successfully', "success", "filled");
             queryClient.invalidateQueries('supplies');
-            // Reset Formik form values after submission
-            formik.resetForm(); // Reset form to initial values
-            // setInitialValues;  // Reset the initial state in the store
+            formik.resetForm();
         },
         onError: (error) => {
-            setSnackbar({ open: true, color: 'danger', message: `${error}` })
+            if (error?.response?.status === 409) {
+                setSnackbar(`${error.response.data.message}` || 'Conflict: The resource already exists.', "danger", "filled");
+            } else {
+                // Handle other errors
+                setSnackbar(`${error.message || 'An error occurred. Please try again.', 'danger', 'filled'}`);
+            }
             console.error("Error submitting form:", error);
         },
         onSettled: () => {
             // Always close the dialog after the mutation is finished (whether successful or error)
-            handleDialogClose();
+            handleClose();
         }
     });
 
-    const formik = useFormik({
-        initialValues: initialValues,
-        validationSchema: validationSchema,
-        onSubmit: async (values) => {
-            // Create a new FormData object
-            const formData = new FormData();
-
-            formData.append("supply_name", values.supplyName);
-            formData.append("category_id", values.category);
-            formData.append("unit_id", values.unit);
-
-            await mutation.mutate(formData)
-        }
-    })
+    function handleClose() {
+        setInitialValues(null)
+        handleDialogClose()
+    }
 
     return (
         <>
@@ -138,6 +194,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
                 <Stack direction={'row'} spacing={2}>
                     <ButtonComponent
+                        type={'button'}
                         label={'Cancel'}
                         variant="outlined"
                         color="danger"
@@ -153,7 +210,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                         loading={mutation.isPending}
                     />
                 </Stack>
-            </form>
+            </form >
         </>
     )
 }

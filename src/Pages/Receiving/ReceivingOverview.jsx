@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Grid, Box, Typography, Stack } from "@mui/joy";
+import { Box, Stack } from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
 import * as XLSX from 'xlsx'
 
@@ -28,10 +28,9 @@ import SnackbarComponent from "../../Components/SnackbarComponent";
 import InputComponent from "../../Components/Form/InputComponent";
 
 //datas
-import { user } from '../../Data/index';
+import { user, categoryFilter } from '../../Data/index';
 import { receivingHeader } from '../../Data/TableHeader';
 import ReceivingDetails from "./ReceivingDetails";
-import { categoryFilter } from "../../Data/index";
 
 const ReceivingOverview = () => {
     const { getStockIn } = useReceivingHook();
@@ -117,6 +116,7 @@ const ReceivingOverview = () => {
     return (
         <>
             <Header pageDetails={pageDetails} data={user} />
+
             <Stack gap={2} mt={2}>
 
                 {/* search and filter */}
@@ -178,7 +178,7 @@ const ReceivingOverview = () => {
                                     size="lg"
                                     onClick={generateReport}
                                 />
-                                <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
+                                <ButtonComponent label="New IAR" onClick={handleDialogOpen} />
                             </Stack>
                         }
                         viewModal={true}

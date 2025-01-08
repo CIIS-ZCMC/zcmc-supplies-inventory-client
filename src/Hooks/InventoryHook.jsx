@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 
-import { API, BASE_URL } from "../Services/Config";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useInventoryHook = create((set) => ({
   inventory: [],
@@ -9,22 +9,20 @@ const useInventoryHook = create((set) => ({
 
   getInventory: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.INVENTORY}`
-      );
+      const response = await inventory_api.get(`/${API.INVENTORY}`);
+
       set({ inventory: response.data.data });
       return response.data;
     } catch (error) {
-      console.error(error.message); ``
+      console.error(error.message);
+      ``;
     }
   },
 
   getInventoryDetails: async (id) => {
     try {
       // Include the id in the API request URL
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.INVENTORY}/${id}`
-      );
+      const response = await inventory_api.get(`/${API.INVENTORY}/${id}`);
 
       // Update the state with the fetched data
       set({ details: response.data.data });

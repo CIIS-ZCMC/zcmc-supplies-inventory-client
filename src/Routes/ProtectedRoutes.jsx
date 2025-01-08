@@ -24,7 +24,7 @@ function ProtectedRoutes({ children }) {
         /**
          * Comment this if you want to prevent return to landing page when session expire
          */
-        window.location.href = BASE_URL.development_landing_page;
+        window.location.href = BASE_URL.production_landing_page;
         setLoading(false);
         return;
       }

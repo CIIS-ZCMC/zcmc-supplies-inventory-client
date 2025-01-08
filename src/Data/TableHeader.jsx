@@ -171,12 +171,63 @@ export const releasingHeader = [
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
+export const updateStockHeader = [
+  {
+    id: "id",
+    numeric: true,
+    disablePadding: true,
+    label: "#",
+  },
+
+  {
+    id: "source_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Source",
+  },
+
+  {
+    id: "supply_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Supply Name",
+  },
+
+  {
+    id: "category_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Category",
+  },
+
+  {
+    id: "unit_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Unit Name",
+  },
+
+  {
+    id: "quantity",
+    numeric: false,
+    disablePadding: false,
+    label: "Quantity",
+  },
+]
+
 export const receivingHeader = [
   {
     id: "id",
     numeric: true,
     disablePadding: true,
     label: "#",
+  },
+
+  {
+    id: "source_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Source",
   },
 
   {
@@ -239,6 +290,8 @@ export const areaHeader = [
     label: "Name of area",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -261,6 +314,8 @@ export const brandHeader = [
     disablePadding: false,
     label: "Name of area",
   },
+
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 
   // {
   //   id: "created_at",
@@ -285,6 +340,8 @@ export const supplierHeader = [
     label: "Supplier Name",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -308,6 +365,8 @@ export const categoriesHeader = [
     label: "Supplier Name",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -330,6 +389,8 @@ export const sourceHeader = [
     disablePadding: false,
     label: "Supplier Name",
   },
+
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 
   // {
   //   id: "created_at",
@@ -368,6 +429,8 @@ export const supplyHeader = [
     label: "Category",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -391,6 +454,8 @@ export const unitHeader = [
     label: "Supplier Name",
   },
 
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+
   // {
   //   id: "created_at",
   //   numeric: false,
@@ -401,12 +466,12 @@ export const unitHeader = [
 
 
 export const dashboardHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "supply_name",

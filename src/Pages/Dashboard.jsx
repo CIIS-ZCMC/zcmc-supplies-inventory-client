@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Box, Stack, Divider, Typography, Chip } from "@mui/joy";
 import { Info, SquareArrowOutUpRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import * as XLSX from 'xlsx'
 
 import { Link } from "react-router-dom";
 
@@ -13,8 +14,10 @@ import ButtonGroupComponent from "../Components/ButtonGroupComponent";
 import BoxComponent from "../Components/Container/BoxComponent";
 import PaginatedTable from "../Components/Table/PaginatedTable";
 import ButtonComponent from "../Components/ButtonComponent";
+import SnackbarComponent from "../Components/SnackbarComponent";
 
 import useDashboardHook from "../Hooks/DashboardHook";
+import useSnackbarHook from "../Hooks/AlertHook";
 
 import { user, legends } from '../Data/index';
 import { dashboardHeader } from "../Data/TableHeader";
@@ -22,6 +25,7 @@ import { dashboardHeader } from "../Data/TableHeader";
 function Dashboard() {
 
   const { getDashboardTotal, getDashboardSupplies } = useDashboardHook();
+  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar, } = useSnackbarHook();
 
   const { data: dashboardTotal, isLoading, error } = useQuery({
     queryKey: ['dashboard-total'],
@@ -91,7 +95,47 @@ function Dashboard() {
       label: 'Go to unconsumed items'
     },
   ]
+
   const buttonOptions = ['All areas', 'Medical', 'Janitorial', 'Office'];
+
+  const generateReport = () => {
+    try {
+      const worksheet = XLSX.utils.json_to_sheet(dashboardSuppiesData); //convert jsonData to worksheet
+
+      const columnWidth = { wpx: 150 }; // Set desired column width in pixels
+
+      //Set the same column width for all columns
+      worksheet["!cols"] = new Array(
+        dashboardSupplies[0] ? Object.keys(dashboardSupplies[0]).length : 0
+      ).fill(columnWidth);
+
+      // Enable text wrap for all header cells
+      const header = worksheet["!cols"] ? worksheet["!cols"] : [];
+      header.forEach((col, index) => {
+        if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
+      });
+
+      const workbook = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet
+      )
+
+      XLSX.writeFile(
+        workbook,
+        `stockin_repost.xlsx`
+      )
+
+      showSnackbar("Report generated successfully!", "success", "filled");
+    } catch (error) {
+      showSnackbar(
+        `Failed to generate the report. Please try again. ${error}`,
+        "danger",
+        "filled"
+      );
+    }
+  }
+
 
   return (
     <Fragment>
@@ -189,17 +233,26 @@ function Dashboard() {
             actionBtns={
               <Stack direction="row" spacing={1}>
                 <ButtonComponent
-                  variant={"solid"}
+                  variant={"outlined"}
                   label="Generate report"
                   size="lg"
+                  onClick={generateReport}
                 />
               </Stack>
             }
           />
-
         </ContainerComponent>
 
       </Stack >
+
+      <SnackbarComponent
+        open={open}
+        onClose={closeSnackbar}
+        anchor={anchor}
+        color={color}
+        variant={variant}
+        message={message}
+      />
     </Fragment >
   );
 }

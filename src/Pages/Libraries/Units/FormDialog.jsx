@@ -1,52 +1,82 @@
-import React from 'react'
+import { useEffect } from 'react'
 
 import { useFormik } from 'formik'
 import { Grid, Divider, Stack, Typography } from '@mui/joy'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import useUnitsHook from '../../../Hooks/UnitsHook'
+import usePaginatedTableHook from '../../../Hooks/PaginatedTableHook'
 
 import ButtonComponent from '../../../Components/ButtonComponent'
 import InputComponent from '../../../Components/Form/InputComponent'
 
-const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialogOpen }) => {
+const FormDialog = ({ handleDialogClose, setSnackbar, isDialogOpen }) => {
 
     const queryClient = useQueryClient()
-    const { initialValues, validationSchema, createUnit } = useUnitsHook();
-
-    // Define create the mutation for stockout
-    const mutation = useMutation({
-        mutationFn: createUnit,
-        onSuccess: () => {
-            // Show success notification, close dialog, and invalidate areas cache
-            setSnackbar({ open: true, color: 'success', message: 'Area Created Successfully' });
-            queryClient.invalidateQueries('areas');
-            // Reset Formik form values after submission
-            formik.resetForm(); // Reset form to initial values
-            setInitialValues;  // Reset the initial state in the store
-        },
-        onError: (error) => {
-            setSnackbar({ open: true, color: 'danger', message: `${error}` })
-            console.error("Error submitting form:", error);
-        },
-        onSettled: () => {
-            // Always close the dialog after the mutation is finished (whether successful or error)
-            handleDialogClose();
-        }
-    });
+    const { isUpdate, id } = usePaginatedTableHook();
+    const { initialValues, validationSchema, createUnit, updateUnit, setInitialValues, getUnit } = useUnitsHook();
 
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: validationSchema,
+        enableReinitialize: true,
         onSubmit: async (values) => {
             // Create a new FormData object
             const formData = new FormData();
-
             formData.append("unit_name", values.unitName);
-
-            await mutation.mutate(formData)
+            await mutation.mutate(isUpdate ? { 'unit_name': values.unitName } : formData);
         }
     })
+
+    // Load data when editing (update mode)
+    useEffect(() => {
+        if (isUpdate && id) {
+            const fetchData = async () => {
+                try {
+                    const unitData = await getUnit(id);
+                    // Correctly set initial values and reset form
+                    const updatedValues = {
+                        id: unitData?.data?.id || null,
+                        unitName: unitData?.data.unit_name || "",
+                    };
+                    formik.setValues(updatedValues);
+                } catch (error) {
+                    console.error('Error fetching unit:', error.message);
+                    setSnackbar('Failed to load unit details. Please try again.', 'danger', 'filled');
+                }
+            };
+            fetchData();
+        }
+    }, [isUpdate, id, getUnit, setSnackbar]);
+
+    // Define create the mutation for stockout
+    const mutation = useMutation({
+        mutationFn: async (formData) =>
+            isUpdate ? updateUnit(id, formData) : createUnit(formData),
+        onSuccess: () => {
+            setSnackbar(isUpdate ? 'Unit updated successfully' : 'Unit Created Successfully', "success", "filled");
+            queryClient.invalidateQueries('units');
+            formik.resetForm()
+        },
+        onError: (error) => {
+            if (error?.response?.status === 409) {
+                setSnackbar(`${error.response.data.message}` || 'Conflict: The resource already exists.', "danger", "filled");
+            } else {
+                // Handle other errors
+                setSnackbar(`${error.message || 'An error occurred. Please try again.', 'danger', 'filled'}`);
+            }
+            console.error("Error submitting form:", error);
+        },
+        onSettled: () => {
+            // Always close the dialog after the mutation is finished (whether successful or error)
+            handleClose();
+        }
+    });
+
+    function handleClose() {
+        setInitialValues(null)
+        handleDialogClose()
+    }
 
     return (
         <>
@@ -76,6 +106,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar, setInitialValues, isDialog
 
                 <Stack direction={'row'} spacing={2}>
                     <ButtonComponent
+                        type={'button'}
                         label={'Cancel'}
                         variant="outlined"
                         color="danger"

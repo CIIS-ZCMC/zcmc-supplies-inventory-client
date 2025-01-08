@@ -12,12 +12,14 @@ import SnackbarComponent from '../../../Components/SnackbarComponent'
 import FormDialog from './FormDialog';
 
 import useSuppliersHook from '../../../Hooks/SuppliersHook';
+import useSnackbarHook from '../../../Hooks/AlertHook'
 
 import { supplierHeader } from '../../../Data/TableHeader';
 
 const SuppliersOverview = ({ filter }) => {
 
-  const { getSuppliers } = useSuppliersHook();
+  const { getSuppliers, setInitialValues } = useSuppliersHook();
+  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['suppliers'],
@@ -26,7 +28,6 @@ const SuppliersOverview = ({ filter }) => {
 
   const suppliersData = data?.data
 
-  const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleDialogOpen = () => {
@@ -37,8 +38,8 @@ const SuppliersOverview = ({ filter }) => {
     setIsDialogOpen(false)
   }
 
-  const handleSnackbarClose = () => {
-    setSnackbar({ open: false })
+  function handleEditRow(data) {
+    setInitialValues(data);
   }
 
   return (
@@ -52,16 +53,16 @@ const SuppliersOverview = ({ filter }) => {
           </Box>
 
           <Typography my={2} level='title-lg' fontSize={24} gutterBottom>
-            Get started by creating an Area
+            Get started by creating an suppliers
           </Typography>
 
           <Typography width={600} my={2} level='body-md' textAlign={'center'} gutterBottom>
-            You’ll use registered areas in this library to fill-up RIS requests and IARs as a pre-defined
+            You’ll use registered suppliers in this library to fill-up RIS requests and IARs as a pre-defined
             selection to minimize typographical errors.
           </Typography>
 
           <ButtonComponent
-            label={'Create an area'}
+            label={'Create an supplier'}
             fullWidth={false}
             width={150}
             onClick={handleDialogOpen}
@@ -69,35 +70,39 @@ const SuppliersOverview = ({ filter }) => {
         </Stack>
         :
         <PaginatedTable
-          tableTitle={"Supplies"}
+          tableTitle={"Suppliers"}
           // tableDesc={"Sample Table Desription"}
+          loading={isLoading}
           columns={supplierHeader}
           rows={filter(suppliersData)}
           actions={<ViewIcon />}
           actionBtns={
             <Stack>
-              <ButtonComponent label="Add new area" onClick={handleDialogOpen} />
+              <ButtonComponent
+                label="Add new supplier"
+                onClick={handleDialogOpen}
+              />
             </Stack>
           }
+          editRow={handleEditRow}
         />
       }
       <ModalComponent
         isOpen={isDialogOpen}
-        title="Create a new area record"
+        title="Create a new supplier record"
         description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
         handleClose={handleDialogClose}
-        content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={setSnackbar} />}
+        content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}
       />
 
       <SnackbarComponent
-        open={snackbar.open}
-        onClose={handleSnackbarClose}
-        color={snackbar.color}
-        message={snackbar.message}
-        variant='solid'
-        anchor={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        onClose={closeSnackbar}
+        anchor={anchor}
+        color={color}
+        variant={variant}
+        message={message}
       />
-
     </div>
   )
 }
