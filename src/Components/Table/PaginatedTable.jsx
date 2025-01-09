@@ -68,6 +68,8 @@ function PaginatedTable({
   viewModalContent,
   modalContent,
   editRow,
+  editable,
+  viewable,
 }) {
   const [isOpenDialog, setIsDialogOpen] = useState(false);
 
@@ -202,25 +204,30 @@ function PaginatedTable({
                       <td key={column?.id} style={{ textWrap: "wrap" }}>
                         {column?.id === "actions" ? (
                           <>
-                            <ButtonComponent
-                              size={"sm"}
-                              variant="plain"
-                              onClick={() =>
-                                viewModal
-                                  ? handleModalOpen(row)
-                                  : handleNavigate(row)
-                              }
-                              startDecorator={
-                                <SquareArrowOutUpRight size={"1rem"} />
-                              }
-                            />
+                            {viewable &&
+                              <ButtonComponent
+                                size={"sm"}
+                                variant="plain"
+                                onClick={() =>
+                                  viewModal
+                                    ? handleModalOpen(row)
+                                    : handleNavigate(row)
+                                }
+                                startDecorator={
+                                  <SquareArrowOutUpRight size={"1rem"} />
+                                }
+                              />
+                            }
 
-                            <ButtonComponent
-                              size={"sm"}
-                              variant="plain"
-                              onClick={() => handleEdit(row)}
-                              startDecorator={<Pencil size={"1rem"} />}
-                            />
+                            {
+                              editable &&
+                              <ButtonComponent
+                                size={"sm"}
+                                variant="plain"
+                                onClick={() => handleEdit(row)}
+                                startDecorator={<Pencil size={"1rem"} />}
+                              />
+                            }
                           </>
                         ) : (
                           row[column?.id] ?? `${startIdx + index + 1}`

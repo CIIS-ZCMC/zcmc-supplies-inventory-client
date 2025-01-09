@@ -183,6 +183,8 @@ const ReceivingOverview = () => {
                         }
                         viewModal={true}
                         viewModalContent={handleViewDialogOpen}
+                        editable={false}
+                        viewable={true}
                     />
                 </ContainerComponent>
             </Stack>
