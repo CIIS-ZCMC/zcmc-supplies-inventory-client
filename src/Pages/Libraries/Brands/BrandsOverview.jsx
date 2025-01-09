@@ -92,6 +92,8 @@ const BrandsOverview = ({ filter }) => {
                         </Stack>
                     }
                     editRow={handleEditRow}
+                    editable={true}
+                    viewable={false}
                 />
             }
             <ModalComponent

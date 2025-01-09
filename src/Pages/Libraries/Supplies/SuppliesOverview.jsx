@@ -85,6 +85,8 @@ const SuppliesOverview = ({ filter }) => {
                         </Stack>
                     }
                     editRow={handleEditRow}
+                    editable={true}
+                    viewable={false}
                 />
             }
             <ModalComponent
