@@ -27,7 +27,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
     const { getSources } = useSourceHook();
     const { getSupplies } = useSuppliesHook();
 
-    const { initialValues, validationSchema, createStockIn, } = useReceivingHook();
+    const { initialValues, validationSchema, createStockIn, setInitialValues } = useReceivingHook();
 
     // Array of queries to manage multiple fetching in a cleaner way
     const queryConfigs = [
@@ -66,10 +66,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             // Only show success notification and close dialog after mutation is successful
             showSnackbar("Stockin Success!", "success", "filled");
             queryClient.invalidateQueries('stockin');
-
-            // Reset Formik form values after submission
-            formik.resetForm(); // Reset form to initial values
-
+            // formik.resetForm();
+            formik.resetForm();
+            formik.validateForm();
         },
         onError: (error) => {
             showSnackbar(
@@ -81,13 +80,19 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
         },
         onSettled: () => {
             // Always close the dialog after the mutation is finished (whether successful or error)
-            handleDialogClose();
+            handleClose();
         }
     });
+
+    function handleClose() {
+        setInitialValues(null)
+        handleDialogClose()
+    }
 
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: validationSchema,
+        enableReinitialize: true,
         onSubmit: async (values) => {
             // console.log(values)
 
@@ -105,21 +110,29 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             formData.append("purchase_order_no", values.poNumber);
             formData.append("iar_no", values.iarNumber);
 
-            // Log all FormData entries to the console for testing only
-            // for (let [key, value] of formData.entries()) {
-            //     console.log(`${key}: ${value}`);
-            // }
+            await mutation.mutate(formData);
 
-            // Send formData to the API
-            await mutation.mutate(formData); // Assuming this is your API call function
-            // console.log("Form submitted successfully",);
 
+            // // Reset form with explicit values
+            // formik.resetForm({
+            //     values: {
+            //         itemName: '',
+            //         brand: '',
+            //         source: '',
+            //         supplier: '',
+            //         expiryDate: null,
+            //         quantity: '',
+            //         dateDelivered: null,
+            //         poNumber: '',
+            //         iarNumber: ''
+            //     }
+            // });
         }
     })
 
-    // useEffect(() => {
-    //     console.log("Current form values:", formik.values);
-    // }, [formik.values]);
+    useEffect(() => {
+        console.log("Formik values after reset:", formik.values);
+    }, [formik.values]);
 
     return (
         <>
@@ -212,7 +225,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 name={"dateDelivered"}
                                 label="Date Delivered"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.dateDelivered}
+                                value={formik.values.dateDelivered || null}
                                 onChange={(date) => formik.setFieldValue("dateDelivered", date)}
                                 error={formik.touched.dateDelivered && Boolean(formik.errors.dateDelivered)}
                                 helperText={formik.touched.dateDelivered && formik.errors.dateDelivered}
@@ -224,7 +237,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 name="expiryDate"
                                 label="Expiry Date"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate} // Show no date when "N/A"
+                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate || null} // Reset to null when cleared
                                 onChange={(date) => formik.setFieldValue("expiryDate", date)}
                                 error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
                                 helperText={formik.touched.expiryDate && formik.errors.expiryDate}
@@ -259,15 +272,14 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 label="Brand"
                                 options={brandsOptions} // Include "No Brand" in options
                                 loading={isBrandsLoading}
-                                value={brandsOptions.find(option => option.id === formik.values.brand)}
+                                value={brandsOptions.find(option => option.id === formik.values.brand) || null}
                                 onChange={(event, value) =>
-                                    formik.setFieldValue("brand", value ? value.id : null)
+                                    formik.setFieldValue("brand", value ? value.id : '')
                                 }
                                 error={formik.touched.brand && Boolean(formik.errors.brand)}
                                 helperText={formik.touched.brand && formik.errors.brand}
                                 fullWidth={true}
                             />
-
                         </Grid>
 
                         <Grid xs={12} md={6}>

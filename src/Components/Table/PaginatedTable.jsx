@@ -31,6 +31,7 @@ import useCategoriesHook from "../../Hooks/CategoriesHook";
 import useUnitsHook from "../../Hooks/UnitsHook";
 import useSourceHook from "../../Hooks/SourceHook";
 import useSuppliesHook from '../../Hooks/SuppliesHook';
+import useReceivingHook from "../../Hooks/ReceivingHook";
 
 import AreasForm from "../../Pages/Libraries/Areas/FormDialog";
 import BrandForm from '../../Pages/Libraries/Brands/FormDialog';
@@ -83,7 +84,9 @@ function PaginatedTable({
   const { setInitialValues: setCategoriesValues } = useCategoriesHook()
   const { setInitialValues: setUnitsValues } = useUnitsHook();
   const { setInitialValues: setSourceValues } = useSourceHook();
-  const { initialValues: supplies, setInitialValues: setSuppliesValues } = useSuppliesHook();
+  const { setInitialValues: setSuppliesValues } = useSuppliesHook();
+  const { initialValues: recevings, setInitialValues: setReceivingValues } = useSuppliesHook();
+
 
   const { setSelectedRow } = useSelectedRow();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
@@ -95,8 +98,8 @@ function PaginatedTable({
   const currentPath = location.pathname;
 
   useEffect(() => {
-    console.log(supplies)
-  }, [supplies])
+    console.log(recevings)
+  }, [recevings])
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -140,6 +143,7 @@ function PaginatedTable({
     setUnitsValues(null)
     setSourceValues(null)
     setSuppliesValues(null)
+    setReceivingValues(null)
     resetState();
   };
 
