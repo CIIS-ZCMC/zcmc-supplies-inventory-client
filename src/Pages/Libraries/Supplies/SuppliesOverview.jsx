@@ -85,11 +85,13 @@ const SuppliesOverview = ({ filter }) => {
                         </Stack>
                     }
                     editRow={handleEditRow}
+                    editable={true}
+                    viewable={false}
                 />
             }
             <ModalComponent
                 isOpen={isDialogOpen}
-                title="Create a new source record"
+                title="Create a new record"
                 description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
                 handleClose={handleDialogClose}
                 content={<FormDialog handleDialogClose={handleDialogClose} isDialogOpen={isDialogOpen} setSnackbar={showSnackbar} />}

@@ -4,6 +4,7 @@ import {
   FormControl,
   FormLabel,
   Typography,
+  Stack,
 } from "@mui/joy";
 
 const AutoCompleteComponent = ({
@@ -17,11 +18,17 @@ const AutoCompleteComponent = ({
   fullWidth,
   error,
   helperText,
+  addBtn
 }) => {
   return (
     <Box>
       <FormControl fullWidth>
-        <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
+
+        <Stack direction={'row'} justifyContent='space-between' alignItems={'center'} mb={1} >
+          <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
+          {addBtn && addBtn}
+        </Stack>
+
         <Autocomplete
           filterSelectedOptions
           error={error}
@@ -36,6 +43,7 @@ const AutoCompleteComponent = ({
           isOptionEqualToValue={(option, value) => option?.id === value?.id}
           getOptionLabel={(option) => option.label || ""} // Safely retrieve the label
         />
+
         {error && (
           <Typography variant="body2" color="danger">
             {helperText}

@@ -1,7 +1,9 @@
 import { useMemo, useEffect, useState } from 'react';
-import { Box, Stack, Grid, Divider, Checkbox, Typography } from "@mui/joy";
+import { Box, Stack, Grid, Divider, Checkbox, Typography, Button } from "@mui/joy";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
+
+
 
 // Custom Components
 import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
@@ -9,6 +11,8 @@ import InputComponent from "../../Components/Form/InputComponent";
 import DatePickerComponent from '../../Components/Form/DatePickerComponent';
 import ButtonComponent from '../../Components/ButtonComponent';
 import TextAreaComponent from '../../Components/Form/TextAreaComponent';
+import ModalComponent from '../../Components/Dialogs/ModalComponent';
+import SnackbarComponent from '../../Components/SnackbarComponent';
 
 // hooks
 import useSourceHook from '../../Hooks/SourceHook';
@@ -16,8 +20,18 @@ import useSuppliesHook from '../../Hooks/SuppliesHook';
 import useSuppliersHook from '../../Hooks/SuppliersHook';
 import useBrandsHook from '../../Hooks/BrandsHook';
 import useReceivingHook from '../../Hooks/ReceivingHook';
+import useSnackbarHook from '../../Hooks/AlertHook';
+
+import SupplyForm from '../../Pages/Libraries/Supplies/FormDialog';
+import SourceForm from '../../Pages/Libraries/Source/FormDialog';
+import BrandForm from '../../Pages/Libraries/Brands/FormDialog';
+import SupplierForm from '../../Pages/Libraries/Suppliers/FormDialog';
 
 const FormDialog = ({ handleDialogClose, showSnackbar }) => {
+
+    const { open, message, color, variant, anchor, closeSnackbar, } = useSnackbarHook();
+
+    const [isFormDialogOpen, setIsFormDialogOpen] = useState(true);
 
     const queryClient = useQueryClient()
 
@@ -27,7 +41,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
     const { getSources } = useSourceHook();
     const { getSupplies } = useSuppliesHook();
 
-    const { initialValues, validationSchema, createStockIn, } = useReceivingHook();
+    const { initialValues, validationSchema, createStockIn, setInitialValues } = useReceivingHook();
 
     // Array of queries to manage multiple fetching in a cleaner way
     const queryConfigs = [
@@ -66,10 +80,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             // Only show success notification and close dialog after mutation is successful
             showSnackbar("Stockin Success!", "success", "filled");
             queryClient.invalidateQueries('stockin');
-
-            // Reset Formik form values after submission
-            formik.resetForm(); // Reset form to initial values
-
+            // formik.resetForm();
+            formik.resetForm();
+            formik.validateForm();
         },
         onError: (error) => {
             showSnackbar(
@@ -81,13 +94,28 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
         },
         onSettled: () => {
             // Always close the dialog after the mutation is finished (whether successful or error)
-            handleDialogClose();
+            handleClose();
         }
     });
+
+    const handleFormDialogOpen = () => {
+        setIsFormDialogOpen(true);
+    };
+
+    const handleFormDialogClose = () => {
+        setIsFormDialogOpen(false);
+    };
+
+    function handleClose() {
+        setInitialValues(null)
+        handleDialogClose()
+        handleFormDialogClose()
+    }
 
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: validationSchema,
+        enableReinitialize: true,
         onSubmit: async (values) => {
             // console.log(values)
 
@@ -105,21 +133,13 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             formData.append("purchase_order_no", values.poNumber);
             formData.append("iar_no", values.iarNumber);
 
-            // Log all FormData entries to the console for testing only
-            // for (let [key, value] of formData.entries()) {
-            //     console.log(`${key}: ${value}`);
-            // }
-
-            // Send formData to the API
-            await mutation.mutate(formData); // Assuming this is your API call function
-            // console.log("Form submitted successfully",);
-
+            await mutation.mutate(formData);
         }
     })
 
-    // useEffect(() => {
-    //     console.log("Current form values:", formik.values);
-    // }, [formik.values]);
+    useEffect(() => {
+        console.log("Formik values after reset:", formik.values);
+    }, [formik.values]);
 
     return (
         <>
@@ -129,6 +149,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                     <Grid container spacing={2}>
                         <Grid xs={12}>
                             {/* Supplies Autocomplete */}
+
                             <AutoCompleteComponent
                                 name={'itemName'}
                                 placeholder="Search Item..."
@@ -140,6 +161,15 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.itemName && Boolean(formik.errors.itemName)}
                                 helperText={formik.touched.itemName && formik.errors.itemName}
                                 fullWidth={true}
+                                addBtn={
+                                    <ButtonComponent
+                                        type={'button'}
+                                        label={'Add Item'}
+                                        size='sm'
+                                        variant={'outlined'}
+                                        onClick={handleFormDialogOpen}
+                                    />
+                                }
                             />
 
                             <Stack mt={2}>
@@ -212,7 +242,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 name={"dateDelivered"}
                                 label="Date Delivered"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.dateDelivered}
+                                value={formik.values.dateDelivered || null}
                                 onChange={(date) => formik.setFieldValue("dateDelivered", date)}
                                 error={formik.touched.dateDelivered && Boolean(formik.errors.dateDelivered)}
                                 helperText={formik.touched.dateDelivered && formik.errors.dateDelivered}
@@ -224,7 +254,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 name="expiryDate"
                                 label="Expiry Date"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate} // Show no date when "N/A"
+                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate || null} // Reset to null when cleared
                                 onChange={(date) => formik.setFieldValue("expiryDate", date)}
                                 error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
                                 helperText={formik.touched.expiryDate && formik.errors.expiryDate}
@@ -259,15 +289,14 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 label="Brand"
                                 options={brandsOptions} // Include "No Brand" in options
                                 loading={isBrandsLoading}
-                                value={brandsOptions.find(option => option.id === formik.values.brand)}
+                                value={brandsOptions.find(option => option.id === formik.values.brand) || null}
                                 onChange={(event, value) =>
-                                    formik.setFieldValue("brand", value ? value.id : null)
+                                    formik.setFieldValue("brand", value ? value.id : '')
                                 }
                                 error={formik.touched.brand && Boolean(formik.errors.brand)}
                                 helperText={formik.touched.brand && formik.errors.brand}
                                 fullWidth={true}
                             />
-
                         </Grid>
 
                         <Grid xs={12} md={6}>
@@ -308,6 +337,39 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                     />
                 </Stack>
             </form >
+
+
+            {/* stock form */}
+
+            {/* SupplyForm
+            SourceForm
+            BrandForm
+            SupplierForm */}
+
+            <ModalComponent
+                isOpen={isFormDialogOpen}
+                handleClose={handleFormDialogClose}
+                content={
+                    <SupplyForm
+                        open={open}
+                        message={message}
+                        color={color}
+                        showSnackbar={showSnackbar}
+                        handleDialogClose={handleDialogClose}
+                    />}
+                actionBtns={false}
+                title="Create a new record"
+                description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
+            />
+
+            <SnackbarComponent
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
+            />
         </>
     );
 };

@@ -42,6 +42,25 @@ const useReceivingHook = create((set) => ({
     supplier: Yup.string().required("Supplier is required"),
   }),
 
+  // Method to reset initial values
+  setInitialValues: (values) => {
+    if (values === null || values === undefined) {
+      return set({
+        initialValues: {
+          itemName: "",
+          source: "",
+          quantity: "",
+          poNumber: "",
+          iarNumber: "",
+          dateDelivered: null,
+          expiryDate: null,
+          brand: "",
+          supplier: "",
+        },
+      });
+    }
+  },
+
   //fetch the fata of stock into / receiving list
   getStockIn: async () => {
     try {
