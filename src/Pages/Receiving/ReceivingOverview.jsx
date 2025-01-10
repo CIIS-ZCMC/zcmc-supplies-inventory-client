@@ -165,6 +165,7 @@ const ReceivingOverview = () => {
 
                 <ContainerComponent>
                     <PaginatedTable
+                        loading={isLoading}
                         tableTitle={"List of stock-in transactions"}
                         tableDesc={"All your IARs are shown here. You may open each one to see more information."}
                         columns={receivingHeader}
@@ -183,6 +184,8 @@ const ReceivingOverview = () => {
                         }
                         viewModal={true}
                         viewModalContent={handleViewDialogOpen}
+                        editable={false}
+                        viewable={true}
                     />
                 </ContainerComponent>
             </Stack>

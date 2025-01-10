@@ -49,13 +49,13 @@ const useFilterHook = create((set) => ({
 
     // Filter by selected category
     let filtered = data?.filter((item) => {
-      // console.log("Current item:", item); // Log each item being processed
-
       const matchesCategory =
         !selectedCategory || item.category_name === selectedCategory;
       const matchesSearch =
         !searchTerm ||
         item.supply_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.purchase_order_no?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.iar_no?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.unit_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.area_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.brand_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||

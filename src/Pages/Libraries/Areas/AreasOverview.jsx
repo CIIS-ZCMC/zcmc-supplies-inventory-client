@@ -101,6 +101,8 @@ const AreasOverview = ({ filter }) => {
                         </Stack>
                     }
                     editRow={handleEditRow}
+                    editable={true}
+                    viewable={false}
                 />
             )}
             <ModalComponent

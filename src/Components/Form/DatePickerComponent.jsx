@@ -31,7 +31,7 @@ const DatePickerComponent = ({
         <Input
           disabled={disabled}
           sx={{ width: width, marginTop: 1, }}
-          value={value}
+          value={value || ""}
           name={name}
           onChange={handleChange}
           size={size}
