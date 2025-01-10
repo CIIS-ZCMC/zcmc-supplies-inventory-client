@@ -1,7 +1,9 @@
 import { useMemo, useEffect, useState } from 'react';
-import { Box, Stack, Grid, Divider, Checkbox, Typography } from "@mui/joy";
+import { Box, Stack, Grid, Divider, Checkbox, Typography, Button } from "@mui/joy";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
+
+
 
 // Custom Components
 import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
@@ -9,6 +11,8 @@ import InputComponent from "../../Components/Form/InputComponent";
 import DatePickerComponent from '../../Components/Form/DatePickerComponent';
 import ButtonComponent from '../../Components/ButtonComponent';
 import TextAreaComponent from '../../Components/Form/TextAreaComponent';
+import ModalComponent from '../../Components/Dialogs/ModalComponent';
+import SnackbarComponent from '../../Components/SnackbarComponent';
 
 // hooks
 import useSourceHook from '../../Hooks/SourceHook';
@@ -16,8 +20,18 @@ import useSuppliesHook from '../../Hooks/SuppliesHook';
 import useSuppliersHook from '../../Hooks/SuppliersHook';
 import useBrandsHook from '../../Hooks/BrandsHook';
 import useReceivingHook from '../../Hooks/ReceivingHook';
+import useSnackbarHook from '../../Hooks/AlertHook';
+
+import SupplyForm from '../../Pages/Libraries/Supplies/FormDialog';
+import SourceForm from '../../Pages/Libraries/Source/FormDialog';
+import BrandForm from '../../Pages/Libraries/Brands/FormDialog';
+import SupplierForm from '../../Pages/Libraries/Suppliers/FormDialog';
 
 const FormDialog = ({ handleDialogClose, showSnackbar }) => {
+
+    const { open, message, color, variant, anchor, closeSnackbar, } = useSnackbarHook();
+
+    const [isFormDialogOpen, setIsFormDialogOpen] = useState(true);
 
     const queryClient = useQueryClient()
 
@@ -84,9 +98,18 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
         }
     });
 
+    const handleFormDialogOpen = () => {
+        setIsFormDialogOpen(true);
+    };
+
+    const handleFormDialogClose = () => {
+        setIsFormDialogOpen(false);
+    };
+
     function handleClose() {
         setInitialValues(null)
         handleDialogClose()
+        handleFormDialogClose()
     }
 
     const formik = useFormik({
@@ -111,22 +134,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             formData.append("iar_no", values.iarNumber);
 
             await mutation.mutate(formData);
-
-
-            // // Reset form with explicit values
-            // formik.resetForm({
-            //     values: {
-            //         itemName: '',
-            //         brand: '',
-            //         source: '',
-            //         supplier: '',
-            //         expiryDate: null,
-            //         quantity: '',
-            //         dateDelivered: null,
-            //         poNumber: '',
-            //         iarNumber: ''
-            //     }
-            // });
         }
     })
 
@@ -142,6 +149,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                     <Grid container spacing={2}>
                         <Grid xs={12}>
                             {/* Supplies Autocomplete */}
+
                             <AutoCompleteComponent
                                 name={'itemName'}
                                 placeholder="Search Item..."
@@ -153,6 +161,15 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.itemName && Boolean(formik.errors.itemName)}
                                 helperText={formik.touched.itemName && formik.errors.itemName}
                                 fullWidth={true}
+                                addBtn={
+                                    <ButtonComponent
+                                        type={'button'}
+                                        label={'Add Item'}
+                                        size='sm'
+                                        variant={'outlined'}
+                                        onClick={handleFormDialogOpen}
+                                    />
+                                }
                             />
 
                             <Stack mt={2}>
@@ -320,6 +337,39 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                     />
                 </Stack>
             </form >
+
+
+            {/* stock form */}
+
+            {/* SupplyForm
+            SourceForm
+            BrandForm
+            SupplierForm */}
+
+            <ModalComponent
+                isOpen={isFormDialogOpen}
+                handleClose={handleFormDialogClose}
+                content={
+                    <SupplyForm
+                        open={open}
+                        message={message}
+                        color={color}
+                        showSnackbar={showSnackbar}
+                        handleDialogClose={handleDialogClose}
+                    />}
+                actionBtns={false}
+                title="Create a new record"
+                description={"Library records allows for a more streamlined and dynamic form-filling experiences."}
+            />
+
+            <SnackbarComponent
+                open={open}
+                onClose={closeSnackbar}
+                anchor={anchor}
+                color={color}
+                variant={variant}
+                message={message}
+            />
         </>
     );
 };

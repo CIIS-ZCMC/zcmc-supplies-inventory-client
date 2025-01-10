@@ -8,12 +8,14 @@ import ButtonComponent from '../../../Components/ButtonComponent';
 import InputComponent from '../../../Components/Form/InputComponent';
 import AutoCompleteComponent from '../../../Components/Form/AutoCompleteComponent';
 import AccordionComponent from '../../../Components/AccordionComponent';
+import SnackbarComponent from '../../../Components/SnackbarComponent';
 
 import useSuppliesHook from '../../../Hooks/SuppliesHook';
 import useCategoriesHook from '../../../Hooks/CategoriesHook';
 import useUnitsHook from '../../../Hooks/UnitsHook';
 import useSourceHook from '../../../Hooks/SourceHook';
 import usePaginatedTableHook from '../../../Hooks/PaginatedTableHook';
+import useSnackbarHook from '../../../Hooks/AlertHook';
 
 const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
@@ -74,7 +76,6 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
     const unitsOptions = useMemo(() => mapOptions(unitsData?.data, 'unit_name'), [categoriesData]);
     const categoriesOptions = useMemo(() => mapOptions(categoriesData?.data, 'category_name'), [categoriesData]);
     const sourcesOptions = useMemo(() => mapOptions(sourcesData?.data, 'source_name'), [sourcesData]);
-
 
     useEffect(() => {
         if (isUpdate && id) {
