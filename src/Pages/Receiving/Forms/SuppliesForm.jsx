@@ -13,16 +13,18 @@ import useCategoriesHook from '../../../Hooks/CategoriesHook';
 import useUnitsHook from '../../../Hooks/UnitsHook';
 import useSourceHook from '../../../Hooks/SourceHook';
 import usePaginatedTableHook from '../../../Hooks/PaginatedTableHook';
+import useSnackbarHook from '../../../Hooks/AlertHook';
 
-const FormDialog = ({ handleDialogClose, setSnackbar }) => {
+const SuppliesForm = ({ handleDialogClose }) => {
 
     const queryClient = useQueryClient()
     const { isUpdate, id } = usePaginatedTableHook()
     const { initialValues, validationSchema, createSupply, getSupplies, getSupply, updateSupply, setInitialValues } = useSuppliesHook();
-
+    const { showSnackbar } = useSnackbarHook();
     const { getCategories } = useCategoriesHook();
     const { getUnits } = useUnitsHook();
     const { getSources } = useSourceHook();
+
 
     const formik = useFormik({
         initialValues: initialValues,
@@ -46,7 +48,6 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
 
         }
     })
-
 
     // Array of queries to manage multiple fetching in a cleaner way
     const queryConfigs = [
@@ -96,30 +97,30 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                     });
                 } catch (error) {
                     console.error('Error fetching Supply item details:', error.message);
-                    setSnackbar('Failed to load supply details. Please try again.', 'danger', 'filled');
+                    showSnackbar('Failed to load supply details. Please try again.', 'danger', 'filled');
                 }
             };
 
             fetchData();
         }
-    }, [isUpdate, id, getSupply, categoriesOptions, unitsOptions, setSnackbar]);
+    }, [isUpdate, id, getSupply, categoriesOptions, unitsOptions, showSnackbar]);
 
 
-    // Define create the mutation for stockout
+    //Define create the mutation for stockout
     const mutation = useMutation({
         mutationFn: async (formData) =>
             isUpdate ? updateSupply(id, formData) : createSupply(formData),
         onSuccess: () => {
-            setSnackbar(isUpdate ? 'Supply updated successfully' : 'Supply created successfully', "success", "filled");
+            showSnackbar(isUpdate ? 'Supply updated successfully' : 'Supply created successfully', "success", "filled");
             queryClient.invalidateQueries('supplies');
             formik.resetForm();
         },
         onError: (error) => {
             if (error?.response?.status === 409) {
-                setSnackbar(`${error.response.data.message}` || 'Conflict: The resource already exists.', "danger", "filled");
+                showSnackbar(`${error.response.data.message}` || 'Conflict: The resource already exists.', "danger", "filled");
             } else {
                 // Handle other errors
-                setSnackbar(`${error.message || 'An error occurred. Please try again.', 'danger', 'filled'}`);
+                showSnackbar(`${error.message || 'An error occurred. Please try again.', 'danger', 'filled'}`);
             }
             console.error("Error submitting form:", error);
         },
@@ -209,8 +210,9 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                     />
                 </Stack>
             </form >
+
         </>
     )
 }
 
-export default FormDialog
+export default SuppliesForm
