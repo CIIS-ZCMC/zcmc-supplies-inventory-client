@@ -50,9 +50,8 @@ const useUnitsHook = create((set) => ({
 
   getUnit: async (id) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.UNIT_SHOW}/${id}`
-      );
+      const response = await inventory_api.get(`/${API.UNIT_SHOW}/${id}`);
+
       return response.data;
     } catch (error) {
       error.message;
