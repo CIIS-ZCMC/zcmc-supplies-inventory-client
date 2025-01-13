@@ -125,6 +125,7 @@ const Inventory = () => {
         </ContainerComponent>
         <ContainerComponent>
           <PaginatedTable
+            viewable={true}
             loading={loading}
             tableTitle={"List of items"}
             tableDesc={
