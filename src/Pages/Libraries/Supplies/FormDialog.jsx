@@ -80,6 +80,9 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
                 try {
                     const supplyData = await getSupply(id);
 
+                    // console.log(categoriesOptions.find(option => option.label === supplyData?.data?.category_name))
+                    // console.log(supplyData?.data?.category_name)
+
                     const selectedCategory = categoriesOptions.find(option =>
                         option.label?.toLowerCase().trim() === supplyData?.data?.category_name?.toLowerCase().trim()
                     ) || null;

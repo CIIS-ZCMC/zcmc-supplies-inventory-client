@@ -81,7 +81,10 @@ const SuppliesOverview = ({ filter }) => {
                     actions={<ViewIcon />}
                     actionBtns={
                         <Stack>
-                            <ButtonComponent label="Add new item" onClick={handleDialogOpen} />
+                            <ButtonComponent
+                                label="Add new item"
+                                onClick={handleDialogOpen}
+                            />
                         </Stack>
                     }
                     editRow={handleEditRow}

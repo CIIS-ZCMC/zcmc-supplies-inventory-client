@@ -30,7 +30,7 @@ const DatePickerComponent = ({
         <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
         <Input
           disabled={disabled}
-          sx={{ width: width, marginTop: 1, }}
+          sx={{ width: width, }}
           value={value || ""}
           name={name}
           onChange={handleChange}

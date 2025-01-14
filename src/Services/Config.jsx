@@ -57,6 +57,8 @@ export const API = {
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",
+  STOCK_IN_UPDATE: "stock-in-update",
+  STOCK_IN_DETAILS: "stock-in-details",
 
   RELEASING: "releasing-list",
   SELECTED_RELEASING_LIST: "selected-releasing-list",

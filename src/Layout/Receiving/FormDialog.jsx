@@ -13,7 +13,6 @@ import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
 import InputComponent from "../../Components/Form/InputComponent";
 import DatePickerComponent from '../../Components/Form/DatePickerComponent';
 import ButtonComponent from '../../Components/ButtonComponent';
-import SnackbarComponent from '../../Components/SnackbarComponent';
 import ModalComponent from '../../Components/Dialogs/ModalComponent';
 
 // hooks
@@ -22,7 +21,7 @@ import useSuppliesHook from '../../Hooks/SuppliesHook';
 import useSuppliersHook from '../../Hooks/SuppliersHook';
 import useBrandsHook from '../../Hooks/BrandsHook';
 import useReceivingHook from '../../Hooks/ReceivingHook';
-import useSnackbarHook from '../../Hooks/AlertHook';
+import usePaginatedTableHook from '../../Hooks/PaginatedTableHook';
 
 const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
@@ -38,8 +37,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
     const { getBrands } = useBrandsHook(); //change this int o suppliers
     const { getSources } = useSourceHook();
     const { getSupplies } = useSuppliesHook();
+    const { isUpdate, id } = usePaginatedTableHook();
 
-    const { initialValues, validationSchema, createStockIn, setInitialValues } = useReceivingHook();
+    const { initialValues, validationSchema, createStockIn, setInitialValues, getStockInDetails, updateStockIn } = useReceivingHook();
 
     // Array of queries to manage multiple fetching in a cleaner way
     const queryConfigs = [
@@ -71,6 +71,84 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
     const brandsOptions = useMemo(() => mapOptions(brandsData?.data, 'brand_name'), [brandsData]);
     const suppliersOptions = useMemo(() => mapOptions(suppliersData?.data, 'supplier_name'), [suppliersData]);
 
+    const formik = useFormik({
+        initialValues: initialValues,
+        validationSchema: validationSchema,
+        enableReinitialize: true,
+        onSubmit: async (values) => {
+
+            const formData = new FormData();
+
+            // Map formik values to the expected API field names
+            formData.append("supplies_masterlist_id", values.itemName);
+            formData.append("brand_id", values.brand);
+            formData.append("source_id", values.source);
+            formData.append("supplier_id", values.supplier);
+            formData.append("expiration_date", values.expiryDate === "N/A" ? "" : values.expiryDate);
+            formData.append("quantity", values.quantity);
+            formData.append("delivery_date", values.dateDelivered);
+            formData.append("purchase_order_no", values.poNumber);
+            formData.append("iar_no", values.iarNumber);
+
+            await mutation.mutate(isUpdate ?
+                {
+                    'brand_id': values.brand,
+                    'source_id': values.source,
+                    'supplier_id': values.supplier,
+                    'expiration_date': values.expiryDate,
+                    'quantity': values.quantity,
+                    'delivery_date': values.dateDelivered,
+                    'purchase_order_no': values.poNumber,
+                    'iar_no': values.iarNumber,
+                }
+                :
+                formData
+            );
+        }
+    })
+
+
+    useEffect(() => {
+        if (isUpdate && id) {
+            const fetchData = async () => {
+                try {
+
+                    const stockInDetails = await getStockInDetails(id);
+
+                    const selectedItem = suppliesOptions.find(option =>
+                        option.label?.toLowerCase().trim() === `${stockInDetails.data?.supply_name?.toLowerCase().trim()} (${stockInDetails?.data?.unit_name?.toLowerCase().trim()})`
+                    ) || null;
+
+                    console.log(selectedItem)
+
+                    const selectedSource = sourcesOptions.find(option =>
+                        option.label?.toLowerCase().trim() === stockInDetails?.data?.source_name?.toLowerCase().trim()
+                    ) || null;
+
+                    // console.log(suppliesOptions.find(option => option.label === selectedItem.id))
+
+                    //     const selectedUnit = unitsOptions.find(option =>
+                    //         option.label?.toLowerCase().trim() === supplyData?.data?.unit_name?.toLowerCase().trim()
+                    //     ) || null;
+
+                    formik.setValues({
+                        id: stockInDetails?.data?.id || null,
+                        supplyName: selectedItem ? selectedItem.id : '',
+                        source: selectedSource ? selectedSource.id : '',
+                        // unit: stockInDetails ? selectedUnit.id : '',
+                    });
+
+                }
+                catch (error) {
+                    console.error('Error fetching Supply item details:', error.message);
+                    showSnackbar('Failed to load supply details. Please try again.', 'danger', 'filled');
+                }
+            };
+
+            fetchData();
+        }
+    }, [isUpdate, id, getStockInDetails, suppliesOptions, showSnackbar]);
+
     // Define create the mutation for stockout
     const mutation = useMutation({
         mutationFn: createStockIn,
@@ -78,13 +156,12 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
             // Only show success notification and close dialog after mutation is successful
             showSnackbar("Stockin Success!", "success", "filled");
             queryClient.invalidateQueries('stockin');
-            // formik.resetForm();
             formik.resetForm();
             formik.validateForm();
         },
         onError: (error) => {
             showSnackbar(
-                `Stockin failed!. Please try again. ${error}`,
+                `Stockin failed!.Please try again.${error} `,
                 "danger",
                 "filled"
             );
@@ -138,34 +215,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
         setIsSupplierFormDialogOpen(false);
     }
 
-    const formik = useFormik({
-        initialValues: initialValues,
-        validationSchema: validationSchema,
-        enableReinitialize: true,
-        onSubmit: async (values) => {
-            // console.log(values)
-
-            // Create a new FormData object
-            const formData = new FormData();
-
-            // Map formik values to the expected API field names
-            formData.append("supplies_masterlist_id", values.itemName);
-            formData.append("brand_id", values.brand);
-            formData.append("source_id", values.source);
-            formData.append("supplier_id", values.supplier);
-            formData.append("expiration_date", values.expiryDate === "N/A" ? "" : values.expiryDate);
-            formData.append("quantity", values.quantity);
-            formData.append("delivery_date", values.dateDelivered);
-            formData.append("purchase_order_no", values.poNumber);
-            formData.append("iar_no", values.iarNumber);
-
-            await mutation.mutate(formData);
-        }
-    })
-
-    useEffect(() => {
-        console.log("Formik values after reset:", formik.values);
-    }, [formik.values]);
 
     return (
         <>
@@ -187,18 +236,19 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.itemName && Boolean(formik.errors.itemName)}
                                 helperText={formik.touched.itemName && formik.errors.itemName}
                                 fullWidth={true}
-                                addBtn={
-                                    <ButtonComponent
-                                        type={'button'}
-                                        label={'Add Item'}
-                                        size='sm'
-                                        variant={'outlined'}
-                                        onClick={handleFormDialogOpen}
-                                    />
-                                }
                             />
 
-                            <Stack mt={2}>
+                            <Stack direction='row' justifyContent={'end'} mt={1}>
+                                <ButtonComponent
+                                    type={'button'}
+                                    label={'Add Item'}
+                                    size='sm'
+                                    variant={'plain'}
+                                    onClick={handleFormDialogOpen}
+                                />
+                            </Stack>
+
+                            <Stack >
                                 <Typography level="body-sm">
                                     Item’s name and type of unit is combined and derived from your Dynamic Library to speed-up form fill-up and prevent typographical errors on input.
                                 </Typography>
@@ -218,19 +268,20 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.source && Boolean(formik.errors.source)}
                                 helperText={formik.touched.source && formik.errors.source}
                                 fullWidth={true}
-                                addBtn={
-                                    <ButtonComponent
-                                        type={'button'}
-                                        label={'Add Source'}
-                                        size='sm'
-                                        variant={'outlined'}
-                                        onClick={handleSourceDialogOpen}
-                                    />
-                                }
                             />
+
+                            <Stack direction='row' justifyContent={'end'} mt={1}>
+                                <ButtonComponent
+                                    type={'button'}
+                                    label={'Add Source'}
+                                    size='sm'
+                                    variant={'plain'}
+                                    onClick={handleSourceDialogOpen}
+                                />
+                            </Stack>
                         </Grid>
 
-                        <Grid xs={12} md={6} mt={2.5}>
+                        <Grid xs={12} md={6}>
                             <InputComponent
                                 name={'quantity'}
                                 size='lg'
@@ -333,16 +384,17 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.brand && Boolean(formik.errors.brand)}
                                 helperText={formik.touched.brand && formik.errors.brand}
                                 fullWidth={true}
-                                addBtn={
-                                    <ButtonComponent
-                                        type={'button'}
-                                        label={'Add Brand'}
-                                        size='sm'
-                                        variant={'outlined'}
-                                        onClick={handleBrandDialogOpen}
-                                    />
-                                }
                             />
+
+                            <Stack direction='row' justifyContent={'end'} mt={1}>
+                                <ButtonComponent
+                                    type={'button'}
+                                    label={'Add Brand'}
+                                    size='sm'
+                                    variant={'plain'}
+                                    onClick={handleBrandDialogOpen}
+                                />
+                            </Stack>
                         </Grid>
 
                         <Grid xs={12} md={6}>
@@ -357,16 +409,18 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 error={formik.touched.supplier && Boolean(formik.errors.supplier)}
                                 helperText={formik.touched.supplier && formik.errors.supplier}
                                 fullWidth={true}
-                                addBtn={
-                                    <ButtonComponent
-                                        type={'button'}
-                                        label={'Add Supplier'}
-                                        size='sm'
-                                        variant={'outlined'}
-                                        onClick={handleSupplierDialogOpen}
-                                    />
-                                }
                             />
+
+                            <Stack direction='row' justifyContent={'end'} mt={1}>
+                                <ButtonComponent
+                                    type={'button'}
+                                    label={'Add Supplier'}
+                                    size='sm'
+                                    variant={'plain'}
+                                    onClick={handleSupplierDialogOpen}
+                                />
+                            </Stack>
+
                         </Grid>
                     </Grid>
 
@@ -386,7 +440,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                         type={'submit'}
                         variant="solid"
                         color={"primary"}
-                        label={'Save'}
+                        label={isUpdate ? 'Update' : 'Save'}
                         fullWidth
                         loading={mutation.isPending}
                     />

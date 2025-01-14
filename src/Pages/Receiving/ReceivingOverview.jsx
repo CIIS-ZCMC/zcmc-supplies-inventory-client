@@ -10,6 +10,7 @@ import { ViewIcon, SearchIcon } from "lucide-react";
 import useReceivingHook from "../../Hooks/ReceivingHook";
 import useSnackbarHook from "../../Hooks/AlertHook";
 import useFilterHook from "../../Hooks/FilterHook";
+import useSuppliesHook from "../../Hooks/SuppliesHook";
 
 //layouts
 import Header from "../../Layout/Header/Header";
@@ -33,7 +34,7 @@ import { receivingHeader } from '../../Data/TableHeader';
 import ReceivingDetails from "./ReceivingDetails";
 
 const ReceivingOverview = () => {
-    const { getStockIn } = useReceivingHook();
+    const { getStockIn, setInitialValues } = useReceivingHook();
     const { open, message, color, variant, anchor, showSnackbar, closeSnackbar, } = useSnackbarHook();
     const { selectedCategory, setCategory, filteredInventory, clearFilters, setSearchTerm, searchTerm } = useFilterHook();
 
@@ -113,6 +114,10 @@ const ReceivingOverview = () => {
         }
     }
 
+    function handleEditRow(data) {
+        setInitialValues(data)
+    }
+
     return (
         <>
             <Header pageDetails={pageDetails} data={user} />
@@ -184,7 +189,8 @@ const ReceivingOverview = () => {
                         }
                         viewModal={true}
                         viewModalContent={handleViewDialogOpen}
-                        editable={false}
+                        editRow={handleEditRow}
+                        editable={true}
                         viewable={true}
                     />
                 </ContainerComponent>

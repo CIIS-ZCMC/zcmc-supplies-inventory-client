@@ -40,6 +40,7 @@ import CategoryForm from '../../Pages/Libraries/Categories/FormDialog';
 import UnitForm from '../../Pages/Libraries/Units/FormDialog';
 import SourceForm from "../../Pages/Libraries/Source/FormDialog";
 import SuppliesForm from '../../Pages/Libraries/Supplies/FormDialog';
+import ReceivingForm from '../../Layout/Receiving/FormDialog'
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -85,7 +86,7 @@ function PaginatedTable({
   const { setInitialValues: setUnitsValues } = useUnitsHook();
   const { setInitialValues: setSourceValues } = useSourceHook();
   const { setInitialValues: setSuppliesValues } = useSuppliesHook();
-  const { initialValues: recevings, setInitialValues: setReceivingValues } = useSuppliesHook();
+  const { initialValues: receiving, setInitialValues: setReceivingValues } = useReceivingHook();
 
 
   const { setSelectedRow } = useSelectedRow();
@@ -98,8 +99,8 @@ function PaginatedTable({
   const currentPath = location.pathname;
 
   useEffect(() => {
-    console.log(recevings)
-  }, [recevings])
+    console.log(receiving)
+  }, [receiving])
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -302,7 +303,7 @@ function PaginatedTable({
         isOpen={isOpenDialog}
         title="Update a new record"
         description={
-          "Library records allows for a more streamlined and dynamic form-filling experiences."
+          currentPath === '/receiving' && "Library records allows for a more streamlined and dynamic form-filling experiences."
         }
         handleClose={handleDialogClose}
         content={
@@ -362,11 +363,18 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
+          ) : currentPath === '/receiving' ? (
+            <ReceivingForm
+              open={open}
+              message={message}
+              color={color}
+              setSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
           )
             : null // Fallback if none of the conditions match
         }
       />
-
       <SnackbarComponent
         open={open}
         onClose={closeSnackbar}

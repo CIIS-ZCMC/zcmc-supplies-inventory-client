@@ -7,6 +7,7 @@ import { BASE_URL, API } from '../Services/Config'
 const useReceivingHook = create((set) => ({
 
     initialValues: {
+        id: null,
         itemName: '',
         source: '',
         quantity: '',
@@ -60,6 +61,20 @@ const useReceivingHook = create((set) => ({
                 },
             });
         }
+        set({
+            initialValues: {
+                id: values.id,
+                itemName: values.item_name,
+                source: values.source_id,
+                quantity: values.quantity,
+                poNumber: values.po_number,
+                iarNumber: values.iar_number,
+                dateDelivered: values.date_delivered,
+                expiryDate: values.expiry_date,
+                brand: values.brand_id,
+                supplier: values.supplier_id,
+            }
+        })
     },
 
     //fetch the fata of stock into / receiving list
@@ -67,6 +82,15 @@ const useReceivingHook = create((set) => ({
         try {
             const response = await axios.get(`${BASE_URL.development}/${API.RECEIVING}`);
             return response.data
+        } catch (error) {
+            error.message;
+        }
+    },
+
+    getStockInDetails: async (id) => {
+        try {
+            const response = await axios.get(`${BASE_URL.development}/${API.STOCK_IN_DETAILS}/${id}`);
+            return response.data;
         } catch (error) {
             error.message;
         }
@@ -81,8 +105,21 @@ const useReceivingHook = create((set) => ({
             console.error("Error creating stock out:", error.message);
             throw error;
         }
-    }
+    },
 
+    // Update with PUT or PATCH request
+    updateStockIn: async (id, formData) => {
+        try {
+            const response = await axios.post(
+                `${BASE_URL.development}/${API.STOCK_IN_UPDATE}/${id}`,
+                formData
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error updating supply:", error.message);
+            throw error;
+        }
+    },
 
 }));
 
