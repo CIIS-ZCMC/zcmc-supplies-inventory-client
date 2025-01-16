@@ -32,9 +32,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
     const queryClient = useQueryClient()
 
-    // Hooks for data fetching functions
-    const { getSuppliers } = useSuppliersHook(); //change this into brand
-    const { getBrands } = useBrandsHook(); //change this int o suppliers
+    const { getSuppliers } = useSuppliersHook();
+    const { getBrands } = useBrandsHook();
     const { getSources } = useSourceHook();
     const { getSupplies } = useSuppliesHook();
     const { isUpdate, id } = usePaginatedTableHook();
@@ -92,6 +91,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
             await mutation.mutate(isUpdate ?
                 {
+                    'supplies_masterlist_id': values.itemName,
                     'brand_id': values.brand,
                     'source_id': values.source,
                     'supplier_id': values.supplier,
@@ -107,7 +107,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
         }
     })
 
-
     useEffect(() => {
         if (isUpdate && id) {
             const fetchData = async () => {
@@ -119,22 +118,31 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                         option.label?.toLowerCase().trim() === `${stockInDetails.data?.supply_name?.toLowerCase().trim()} (${stockInDetails?.data?.unit_name?.toLowerCase().trim()})`
                     ) || null;
 
-                    console.log(selectedItem)
+                    const selectedBrand = brandsOptions.find(option =>
+                        option.label?.toLowerCase().trim() === stockInDetails?.data?.brand_name?.toLowerCase().trim()
+                    ) || null;
 
                     const selectedSource = sourcesOptions.find(option =>
                         option.label?.toLowerCase().trim() === stockInDetails?.data?.source_name?.toLowerCase().trim()
                     ) || null;
 
-                    // console.log(suppliesOptions.find(option => option.label === selectedItem.id))
-
-                    //     const selectedUnit = unitsOptions.find(option =>
-                    //         option.label?.toLowerCase().trim() === supplyData?.data?.unit_name?.toLowerCase().trim()
-                    //     ) || null;
+                    const selectedSupplier = suppliersOptions.find(option =>
+                        option.label?.toLowerCase().trim() === stockInDetails?.data?.supplier_name?.toLowerCase().trim()
+                    ) || null;
 
                     formik.setValues({
                         id: stockInDetails?.data?.id || null,
-                        supplyName: selectedItem ? selectedItem.id : '',
+                        itemName: selectedItem ? selectedItem.id : '',
+                        brand: selectedBrand ? selectedBrand.id : '',
                         source: selectedSource ? selectedSource.id : '',
+                        supplier: selectedSupplier ? selectedSupplier.id : '',
+                        deliveryDate: stockInDetails?.data?.delivery_date,
+                        expiryDate: stockInDetails?.data?.expiration_date
+                            ? new Date(stockInDetails.data.expiration_date)
+                            : null, // Convert to Date object
+                        quantity: stockInDetails?.data?.quantity || '',
+                        poNumber: stockInDetails?.data?.purchase_order_no || '',
+                        iarNumber: stockInDetails?.data?.iar_no || '',
                         // unit: stockInDetails ? selectedUnit.id : '',
                     });
 
@@ -147,7 +155,11 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
 
             fetchData();
         }
-    }, [isUpdate, id, getStockInDetails, suppliesOptions, showSnackbar]);
+    }, [isUpdate, id, getStockInDetails, suppliesOptions, brandsOptions, sourcesOptions, suppliersOptions, showSnackbar]);
+
+    useEffect(() => {
+        console.log(formik.values.dateDelivered);
+    }, [formik.values.dateDelivered]);
 
     // Define create the mutation for stockout
     const mutation = useMutation({
@@ -174,7 +186,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
     });
 
     function handleClose() {
-        setInitialValues(null)
+        // setInitialValues(null)
         handleDialogClose()
         handleBrandDialogClose()
     }
@@ -238,15 +250,17 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 fullWidth={true}
                             />
 
-                            <Stack direction='row' justifyContent={'end'} mt={1}>
-                                <ButtonComponent
-                                    type={'button'}
-                                    label={'Add Item'}
-                                    size='sm'
-                                    variant={'plain'}
-                                    onClick={handleFormDialogOpen}
-                                />
-                            </Stack>
+                            {!isUpdate &&
+                                <Stack direction='row' justifyContent={'end'} mt={1}>
+                                    <ButtonComponent
+                                        type={'button'}
+                                        label={'Add Item'}
+                                        size='sm'
+                                        variant={'plain'}
+                                        onClick={handleFormDialogOpen}
+                                    />
+                                </Stack>
+                            }
 
                             <Stack >
                                 <Typography level="body-sm">
@@ -270,15 +284,18 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 fullWidth={true}
                             />
 
-                            <Stack direction='row' justifyContent={'end'} mt={1}>
-                                <ButtonComponent
-                                    type={'button'}
-                                    label={'Add Source'}
-                                    size='sm'
-                                    variant={'plain'}
-                                    onClick={handleSourceDialogOpen}
-                                />
-                            </Stack>
+                            {!isUpdate &&
+                                <Stack direction='row' justifyContent={'end'} mt={1}>
+                                    <ButtonComponent
+                                        type={'button'}
+                                        label={'Add Source'}
+                                        size='sm'
+                                        variant={'plain'}
+                                        onClick={handleSourceDialogOpen}
+                                    />
+                                </Stack>
+                            }
+
                         </Grid>
 
                         <Grid xs={12} md={6}>
@@ -329,11 +346,15 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 name={"dateDelivered"}
                                 label="Date Delivered"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.dateDelivered || null}
-                                onChange={(date) => formik.setFieldValue("dateDelivered", date)}
+                                // value={formik.values.dateDelivered === "N/A" ? null : formik.values.dateDelivered || null}
+                                // onChange={(date) => formik.setFieldValue("dateDelivered", date)}
+                                value={formik.values.dateDelivered || null} // Pass null for invalid/missing dates
+                                onChange={(date) => formik.setFieldValue("dateDelivered", date || null)} // Ensure null for empty values
                                 error={formik.touched.dateDelivered && Boolean(formik.errors.dateDelivered)}
                                 helperText={formik.touched.dateDelivered && formik.errors.dateDelivered}
                             />
+
+                            {formik.values.dateDelivered}
                         </Grid>
 
                         <Grid xs={12} md={6}>
@@ -342,7 +363,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 name="expiryDate"
                                 label="Expiry Date"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate || null} // Reset to null when cleared
+                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate || null}
                                 onChange={(date) => formik.setFieldValue("expiryDate", date)}
                                 error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
                                 helperText={formik.touched.expiryDate && formik.errors.expiryDate}
@@ -385,16 +406,17 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 helperText={formik.touched.brand && formik.errors.brand}
                                 fullWidth={true}
                             />
-
-                            <Stack direction='row' justifyContent={'end'} mt={1}>
-                                <ButtonComponent
-                                    type={'button'}
-                                    label={'Add Brand'}
-                                    size='sm'
-                                    variant={'plain'}
-                                    onClick={handleBrandDialogOpen}
-                                />
-                            </Stack>
+                            {!isUpdate &&
+                                <Stack direction='row' justifyContent={'end'} mt={1}>
+                                    <ButtonComponent
+                                        type={'button'}
+                                        label={'Add Brand'}
+                                        size='sm'
+                                        variant={'plain'}
+                                        onClick={handleBrandDialogOpen}
+                                    />
+                                </Stack>
+                            }
                         </Grid>
 
                         <Grid xs={12} md={6}>
@@ -411,15 +433,17 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 fullWidth={true}
                             />
 
-                            <Stack direction='row' justifyContent={'end'} mt={1}>
-                                <ButtonComponent
-                                    type={'button'}
-                                    label={'Add Supplier'}
-                                    size='sm'
-                                    variant={'plain'}
-                                    onClick={handleSupplierDialogOpen}
-                                />
-                            </Stack>
+                            {!isUpdate &&
+                                <Stack direction='row' justifyContent={'end'} mt={1}>
+                                    <ButtonComponent
+                                        type={'button'}
+                                        label={'Add Supplier'}
+                                        size='sm'
+                                        variant={'plain'}
+                                        onClick={handleSupplierDialogOpen}
+                                    />
+                                </Stack>
+                            }
 
                         </Grid>
                     </Grid>

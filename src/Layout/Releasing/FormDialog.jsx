@@ -352,7 +352,7 @@ const FormDialog = ({
           )}
 
           {activeStep === 1 && (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               {/* Step 2 form dont mind the naming */}
               <Step2Form
                 selectedId={selectedId}

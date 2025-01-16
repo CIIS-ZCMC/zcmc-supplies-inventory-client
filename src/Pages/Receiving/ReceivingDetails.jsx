@@ -43,7 +43,7 @@ const ReceivingDetails = ({ urlId }) => {
             <Stack pr={4}>
                 <Grid container spacing={2}>
                     {/* Group 1 */}
-                    <Grid item width={"100%"}>
+                    <Grid width={"100%"}>
                         <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>Transaction Information</Typography>
 
                         <Card sx={{ p: 2 }}>
@@ -55,7 +55,7 @@ const ReceivingDetails = ({ urlId }) => {
                     </Grid>
 
                     {/* Group 2 */}
-                    <Grid item width={"100%"}>
+                    <Grid width={"100%"}>
                         <Typography sx={{ fontSize: '1rem', fontWeight: 'bold' }}>Product Information</Typography>
 
                         <Card sx={{ p: 2 }}>

@@ -11,11 +11,11 @@ const BrandInput = (props) => {
     props.regularBrands.length === 0
       ? props.brandRegularOptions
       : props.brandRegularOptions.filter(
-          (outerValue) =>
-            !props.regularBrands.find(
-              (innerValue) => innerValue.brand_id === outerValue.id
-            )
-        );
+        (outerValue) =>
+          !props.regularBrands.find(
+            (innerValue) => innerValue.brand_id === outerValue.id
+          )
+      );
 
   const QuantityDisplay = () => {
     if (props.item.exceed) {
@@ -66,7 +66,7 @@ const BrandInput = (props) => {
       {" "}
       <Grid container spacing={2}>
         {/* Brand Selection */}
-        <Grid item md={7} lg={7}>
+        <Grid md={7} lg={7}>
           <AutoCompleteComponent
             name={"brandRegular"}
             placeholder="Search brand..."
@@ -98,7 +98,7 @@ const BrandInput = (props) => {
         </Grid>
 
         {/* Quantity Input */}
-        <Grid item xs={11} md={5} lg={5}>
+        <Grid xs={11} md={5} lg={5}>
           <InputComponent
             label="Quantity"
             placeholder="xxx.xxx.xxx"

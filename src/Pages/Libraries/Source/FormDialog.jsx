@@ -80,7 +80,7 @@ const FormDialog = ({ handleDialogClose, setSnackbar }) => {
         <>
             <form onSubmit={formik.handleSubmit}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid xs={12}>
                         <InputComponent
                             size={'lg'}
                             label="Sources"

@@ -49,30 +49,32 @@ const useReceivingHook = create((set) => ({
         if (values === null || values === undefined) {
             return set({
                 initialValues: {
+                    id: null,
                     itemName: '',
+                    brand: '',
                     source: '',
+                    supplier: '',
                     quantity: '',
                     poNumber: '',
                     iarNumber: '',
                     dateDelivered: null,
                     expiryDate: null,
-                    brand: '',
-                    supplier: '',
                 },
             });
         }
+
         set({
             initialValues: {
                 id: values.id,
-                itemName: values.item_name,
-                source: values.source_id,
+                itemName: values.supply_name,
+                source: values.source_name,
                 quantity: values.quantity,
-                poNumber: values.po_number,
-                iarNumber: values.iar_number,
-                dateDelivered: values.date_delivered,
+                poNumber: values.purchase_order_no,
+                iarNumber: values.iar_no,
+                dateDelivered: values?.delivery_date,
                 expiryDate: values.expiry_date,
-                brand: values.brand_id,
-                supplier: values.supplier_id,
+                brand: values.brand_name,
+                supplier: values.supplier_name,
             }
         })
     },
