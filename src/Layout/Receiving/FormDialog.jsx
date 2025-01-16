@@ -23,7 +23,7 @@ import useBrandsHook from '../../Hooks/BrandsHook';
 import useReceivingHook from '../../Hooks/ReceivingHook';
 import usePaginatedTableHook from '../../Hooks/PaginatedTableHook';
 
-const FormDialog = ({ handleDialogClose, showSnackbar }) => {
+const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
 
     const [isSupplyFormDialogOpen, setIsSupplyFormDialogOpen] = useState(false);
     const [isBrandFormDialogOpen, setIsBrandFormDialogOpen] = useState(false);
@@ -59,6 +59,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
         { data: brandsData, isLoading: isBrandsLoading },
         { data: suppliersData, isLoading: isSuppliersLoading },
     ] = queries;
+
+
 
     // Helper function for mapping options
     const mapOptions = (data, labelKey) =>
@@ -110,9 +112,11 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
     useEffect(() => {
         if (isUpdate && id) {
             const fetchData = async () => {
+
                 try {
 
                     const stockInDetails = await getStockInDetails(id);
+                    console.log(stockInDetails)
 
                     const selectedItem = suppliesOptions.find(option =>
                         option.label?.toLowerCase().trim() === `${stockInDetails.data?.supply_name?.toLowerCase().trim()} (${stockInDetails?.data?.unit_name?.toLowerCase().trim()})`
@@ -136,10 +140,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                         brand: selectedBrand ? selectedBrand.id : '',
                         source: selectedSource ? selectedSource.id : '',
                         supplier: selectedSupplier ? selectedSupplier.id : '',
-                        deliveryDate: stockInDetails?.data?.delivery_date,
-                        expiryDate: stockInDetails?.data?.expiration_date
-                            ? new Date(stockInDetails.data.expiration_date)
-                            : null, // Convert to Date object
+                        dateDelivered: stockInDetails?.data?.delivery_date,
+                        expiryDate: stockInDetails?.data?.expiry_date,
                         quantity: stockInDetails?.data?.quantity || '',
                         poNumber: stockInDetails?.data?.purchase_order_no || '',
                         iarNumber: stockInDetails?.data?.iar_no || '',
@@ -158,8 +160,9 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
     }, [isUpdate, id, getStockInDetails, suppliesOptions, brandsOptions, sourcesOptions, suppliersOptions, showSnackbar]);
 
     useEffect(() => {
-        console.log(formik.values.dateDelivered);
-    }, [formik.values.dateDelivered]);
+        console.log(formik.values.expiryDate)
+    }, [formik.values.expiryDate])
+
 
     // Define create the mutation for stockout
     const mutation = useMutation({
@@ -354,7 +357,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar }) => {
                                 helperText={formik.touched.dateDelivered && formik.errors.dateDelivered}
                             />
 
-                            {formik.values.dateDelivered}
                         </Grid>
 
                         <Grid xs={12} md={6}>

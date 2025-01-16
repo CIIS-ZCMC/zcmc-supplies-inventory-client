@@ -45,7 +45,6 @@ const ReceivingOverview = () => {
 
     const stockinData = data?.data
 
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
     const [selectedRow, setSelectedRow] = useState(null);
@@ -53,10 +52,6 @@ const ReceivingOverview = () => {
     const pageDetails = {
         title: "Receiving (IAR Management)",
         description: "all your IARs are shown here, you may open each ont to see more information"
-    }
-
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
     }
 
     const handleDialogOpen = () => {
@@ -112,10 +107,6 @@ const ReceivingOverview = () => {
                 "filled"
             );
         }
-    }
-
-    function handleEditRow(data) {
-        setInitialValues(data)
     }
 
     return (
@@ -189,7 +180,6 @@ const ReceivingOverview = () => {
                         }
                         viewModal={true}
                         viewModalContent={handleViewDialogOpen}
-                        editRow={handleEditRow}
                         editable={true}
                         viewable={true}
                     />
@@ -200,7 +190,6 @@ const ReceivingOverview = () => {
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
-                // open, message, color, variant, anchor, showSnackbar, closeSnackbar
                 content={<FormDialog open={open} message={message} color={color} showSnackbar={showSnackbar} handleDialogClose={handleDialogClose} />}
                 actionBtns={false}
                 title="Record a new Requisition and Issue slip"
