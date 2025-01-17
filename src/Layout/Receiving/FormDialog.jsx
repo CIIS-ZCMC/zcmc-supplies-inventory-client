@@ -143,7 +143,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                         quantity: stockInDetails?.data?.quantity || '',
                         poNumber: stockInDetails?.data?.purchase_order_no || '',
                         iarNumber: stockInDetails?.data?.iar_no || '',
-                        // unit: stockInDetails ? selectedUnit.id : '',
                     });
 
                 }
