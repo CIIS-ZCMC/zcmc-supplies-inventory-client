@@ -298,10 +298,15 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
         setIsSourceFormDialogOpen(true);
     };
 
+    const handleSourceDialogClose = () => {
+        setIsSourceFormDialogOpen(false);
+    };
+
     //brands
     const handleBrandDialogOpen = () => {
         setIsBrandFormDialogOpen(true);
     };
+
 
     const handleBrandDialogClose = () => {
         setIsBrandFormDialogOpen(false);
@@ -695,15 +700,16 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                 />
             )}
 
-            {/* Source Form Modal */}
-            <ModalComponent
-                isOpen={isSourceFormDialogOpen}
-                content={<SourceForm handleDialogClose={handleSourceDialogClose} />}
-                actionBtns={false}
-                handleClose={handleSourceDialogClose}
-                title={"Add new Source"}
-                description={"Add a new item to your library."}
-            />
+            {!isUpdate && id == null && (
+                <ModalComponent
+                    isOpen={isSourceFormDialogOpen}
+                    content={<SourceForm handleDialogClose={handleSourceDialogClose} />}
+                    actionBtns={false}
+                    handleClose={handleSourceDialogClose}
+                    title={"Add new Source"}
+                    description={"Add a new item to your library."}
+                />
+            )}
 
             {/* Brands Form Modal */}
             {!isUpdate && id == null && (
@@ -717,15 +723,18 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                 />
             )}
 
-            {/* Suppliers */}
-            <ModalComponent
-                isOpen={isSupplierFormDialogOpen}
-                content={<SupplierForm handleDialogClose={handleSupplierDialogClose} />}
-                actionBtns={false}
-                handleClose={handleSupplierDialogClose}
-                title={"Add New supplier"}
-                description={"Add a new item to your library."}
-            />
+            {!isUpdate && id == null && (
+                <ModalComponent
+                    isOpen={isSupplierFormDialogOpen}
+                    content={<SupplierForm handleDialogClose={handleSupplierDialogClose} />}
+                    actionBtns={false}
+                    handleClose={handleSupplierDialogClose}
+                    title={"Add New supplier"}
+                    description={"Add a new item to your library."}
+                />
+            )}
+
+
         </>
     );
 };
