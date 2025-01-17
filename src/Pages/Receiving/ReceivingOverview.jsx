@@ -34,6 +34,9 @@ import { receivingHeader } from "../../Data/TableHeader";
 import ReceivingDetails from "./ReceivingDetails";
 
 const ReceivingOverview = () => {
+
+
+
     const { getStockIn, setInitialValues } = useReceivingHook();
     const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
         useSnackbarHook();
@@ -42,8 +45,6 @@ const ReceivingOverview = () => {
         setCategory,
         filteredInventory,
         clearFilters,
-        setSearchTerm,
-        searchTerm,
     } = useFilterHook();
 
     const { data, isLoading, error } = useQuery({
@@ -52,6 +53,14 @@ const ReceivingOverview = () => {
     });
 
     const stockinData = data?.data;
+
+    const [filteredData, setFilteredData] = useState(stockinData);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        // Update filtered data whenever stockinData changes
+        setFilteredData(stockinData);
+    }, [stockinData]);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -116,6 +125,26 @@ const ReceivingOverview = () => {
         setInitialValues(data);
     }
 
+    const handleSearch = (term) => {
+        setSearchTerm(term); // Update the search term state
+
+        if (!term) {
+            // If search term is empty, reset to original data
+            setFilteredData(stockinData);
+        } else {
+            // Filter rows based on search term
+            const lowercasedTerm = term.toLowerCase();
+            const filtered = stockinData.filter((row) =>
+                Object.values(row).some(
+                    (value) =>
+                        value &&
+                        value.toString().toLowerCase().includes(lowercasedTerm)
+                )
+            );
+            setFilteredData(filtered);
+        }
+    };
+
     return (
         <>
             <Header pageDetails={pageDetails} data={user} />
@@ -134,7 +163,7 @@ const ReceivingOverview = () => {
                             placeholder="Find by PO, number, IAR number or date"
                             startIcon={<SearchIcon />}
                             value={searchTerm}
-                            setValue={setSearchTerm}
+                            setValue={(value) => handleSearch(value)} // Trigger handleSearch on change
                             width={300}
                         />
                         <Box display="flex" gap={1}>
@@ -172,7 +201,7 @@ const ReceivingOverview = () => {
                             "All your IARs are shown here. You may open each one to see more information."
                         }
                         columns={receivingHeader}
-                        rows={filteredInventory(stockinData)}
+                        rows={filteredData}
                         actions={<ViewIcon />}
                         actionBtns={
                             <Stack direction="row" spacing={1}>
