@@ -641,7 +641,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
             label={"Cancel"}
             variant="outlined"
             color="danger"
-            onClick={handleDialogClose}
+            onClick={handleClose}
             fullWidth
           />
           <ButtonComponent
@@ -656,14 +656,16 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
       </form>
 
       {/* Supplies Form Modal */}
-      <ModalComponent
-        isOpen={isSupplyFormDialogOpen}
-        content={<SuppliesForm handleDialogClose={handleFormDialogClose} />}
-        actionBtns={false}
-        handleClose={handleFormDialogClose}
-        title={"Add new item"}
-        description={"Add a new item to your library."}
-      />
+      {!isUpdate && id == null && (
+        <ModalComponent
+          isOpen={isSupplyFormDialogOpen}
+          content={<SuppliesForm handleDialogClose={handleFormDialogClose} />}
+          actionBtns={false}
+          handleClose={handleFormDialogClose}
+          title={"Add new item"}
+          description={"Add a new item to your library."}
+        />
+      )}
 
       {/* Source Form Modal */}
       <ModalComponent
@@ -676,14 +678,16 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
       />
 
       {/* Brands Form Modal */}
-      <ModalComponent
-        isOpen={isBrandFormDialogOpen}
-        content={<BrandForm handleDialogClose={handleBrandDialogClose} />}
-        actionBtns={false}
-        handleClose={handleBrandDialogClose}
-        title={"Add new brand "}
-        description={"Add a new item to your library."}
-      />
+      {!isUpdate && id == null && (
+        <ModalComponent
+          isOpen={isBrandFormDialogOpen}
+          content={<BrandForm handleDialogClose={handleBrandDialogClose} />}
+          actionBtns={false}
+          handleClose={handleBrandDialogClose}
+          title={"Add new brand "}
+          description={"Add a new item to your library."}
+        />
+      )}
 
       {/* Suppliers */}
       <ModalComponent
