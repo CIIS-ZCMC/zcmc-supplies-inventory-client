@@ -139,7 +139,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                         source: selectedSource ? selectedSource.id : '',
                         supplier: selectedSupplier ? selectedSupplier.id : '',
                         dateDelivered: stockInDetails?.data?.delivery_date,
-                        expiryDate: stockInDetails?.data?.expiry_date,
+                        expiryDate: stockInDetails?.data?.expiry_date === null ? "N/A" : stockInDetails?.data?.expiry_date,
                         quantity: stockInDetails?.data?.quantity || '',
                         poNumber: stockInDetails?.data?.purchase_order_no || '',
                         iarNumber: stockInDetails?.data?.iar_no || '',
@@ -351,6 +351,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
 
                         </Grid>
 
+
                         <Grid xs={12} md={6}>
                             <DatePickerComponent
                                 size={'lg'}
@@ -363,7 +364,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                                 helperText={formik.touched.expiryDate && formik.errors.expiryDate}
                             />
 
-                            {/* Checkbox for No Expiry Date */}
                             <Checkbox
                                 label="No Expiry Date (N/A)"
                                 checked={formik.values.expiryDate === "N/A"}
@@ -383,6 +383,40 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                             </Checkbox>
 
                         </Grid>
+
+                        {/* 
+                        <Grid xs={12} md={6}>
+                            <DatePickerComponent
+                                size={'lg'}
+                                name="expiryDate"
+                                label="Expiry Date"
+                                placeholder="xxxx.xx.xx"
+                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate || null} // Reset to null when cleared
+                                onChange={(date) => formik.setFieldValue("expiryDate", date)}
+                                error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
+                                helperText={formik.touched.expiryDate && formik.errors.expiryDate}
+                            />
+
+                         
+                            <Checkbox
+                                label="No Expiry Date (N/A)"
+                                checked={formik.values.expiryDate === "N/A"}
+                                onChange={(e) =>
+                                    formik.setFieldValue("expiryDate", e.target.checked ? "N/A" : null)
+                                }
+                                size="lg"
+                                sx={{
+                                    mt: 1,
+                                    color: "primary.500",
+                                    "&.Mui-checked": {
+                                        color: "primary.700",
+                                    },
+                                }}
+                            >
+                                No Expiry Date (N/A)
+                            </Checkbox>
+
+                        </Grid> */}
 
                         {/* 
                         <Grid xs={12} md={6}>

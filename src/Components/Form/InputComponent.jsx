@@ -53,7 +53,13 @@ function InputComponent({
         onChange={onChange ? onChange : (e) => setValue(e.target.value)}
         sx={{ fontWeight: fontWeight, width: width }}
       />
-      {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      {/* {helperText && <FormHelperText>{helperText}</FormHelperText>} */}
+
+      {error && (
+        <Typography variant="body2" color="danger">
+          {helperText}
+        </Typography>
+      )}
     </FormControl>
   );
 }

@@ -1,5 +1,5 @@
-import { FormLabel, FormControl, Input } from "@mui/joy";
-import { Calendar1Icon } from "lucide-react";
+import { FormLabel, FormControl, Input, Typography } from "@mui/joy";
+
 
 const DatePickerComponent = ({
   label,
@@ -48,7 +48,15 @@ const DatePickerComponent = ({
             }
           }
         />
-        {error && <div style={{ color: "danger" }}>{helperText}</div>}{" "}
+
+
+        {error && (
+          <Typography variant="body2" color="danger">
+            {helperText}
+          </Typography>
+        )}
+
+        {/* {error && <div style={{ color: "#c41c1c" }}>{helperText}</div>}{" "} */}
         {/* Display error message */}
       </FormControl>
     </>
