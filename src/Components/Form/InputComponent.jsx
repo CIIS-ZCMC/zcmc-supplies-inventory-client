@@ -25,7 +25,7 @@ function InputComponent({
   placeholder,
   helperText,
   value,
-  // setValue,
+  setValue,
   autoFocus,
   fontWeight,
   startIcon,

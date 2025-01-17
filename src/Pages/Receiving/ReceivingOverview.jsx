@@ -109,6 +109,10 @@ const ReceivingOverview = () => {
         }
     }
 
+    function handleEditRow(data) {
+        setInitialValues(data);
+    }
+
     return (
         <>
             <Header pageDetails={pageDetails} data={user} />
@@ -182,6 +186,7 @@ const ReceivingOverview = () => {
                         viewModalContent={handleViewDialogOpen}
                         editable={true}
                         viewable={true}
+                        editRow={handleEditRow}
                     />
                 </ContainerComponent>
             </Stack>

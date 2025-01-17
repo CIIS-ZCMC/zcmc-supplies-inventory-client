@@ -60,8 +60,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
         { data: suppliersData, isLoading: isSuppliersLoading },
     ] = queries;
 
-
-
     // Helper function for mapping options
     const mapOptions = (data, labelKey) =>
         data?.map(item => ({ label: item[labelKey], id: item.id })) || [];
@@ -77,8 +75,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
         validationSchema: validationSchema,
         enableReinitialize: true,
         onSubmit: async (values) => {
-
             const formData = new FormData();
+            // console.log(values)
 
             // Map formik values to the expected API field names
             formData.append("supplies_masterlist_id", values.itemName);
@@ -97,7 +95,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                     'brand_id': values.brand,
                     'source_id': values.source,
                     'supplier_id': values.supplier,
-                    'expiration_date': values.expiryDate,
+                    'expiration_date': values.expiryDate === "N/A" ? "" : values.expiryDate,
                     'quantity': values.quantity,
                     'delivery_date': values.dateDelivered,
                     'purchase_order_no': values.poNumber,
@@ -116,7 +114,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                 try {
 
                     const stockInDetails = await getStockInDetails(id);
-                    console.log(stockInDetails)
+                    // console.log(stockInDetails)
 
                     const selectedItem = suppliesOptions.find(option =>
                         option.label?.toLowerCase().trim() === `${stockInDetails.data?.supply_name?.toLowerCase().trim()} (${stockInDetails?.data?.unit_name?.toLowerCase().trim()})`
@@ -159,20 +157,18 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
         }
     }, [isUpdate, id, getStockInDetails, suppliesOptions, brandsOptions, sourcesOptions, suppliersOptions, showSnackbar]);
 
-    useEffect(() => {
-        console.log(formik.values.expiryDate)
-    }, [formik.values.expiryDate])
+    // useEffect(() => {
+    //     console.log(formik.values.expiryDate)
+    // }, [formik.values.expiryDate])
 
 
     // Define create the mutation for stockout
     const mutation = useMutation({
-        mutationFn: createStockIn,
+        mutationFn: async (formdata) => isUpdate ? updateStockIn(id, formdata) : createStockIn(formdata),
         onSuccess: () => {
-            // Only show success notification and close dialog after mutation is successful
-            showSnackbar("Stockin Success!", "success", "filled");
+            showSnackbar(isUpdate ? 'Stockin updated successfully' : 'Stockin success', "success", "filled");
             queryClient.invalidateQueries('stockin');
             formik.resetForm();
-            formik.validateForm();
         },
         onError: (error) => {
             showSnackbar(
@@ -189,9 +185,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
     });
 
     function handleClose() {
-        // setInitialValues(null)
+        setInitialValues(null)
         handleDialogClose()
-        handleBrandDialogClose()
     }
 
     //supplies
@@ -229,7 +224,6 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
     const handleSupplierDialogClose = () => {
         setIsSupplierFormDialogOpen(false);
     }
-
 
     return (
         <>
@@ -349,10 +343,8 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                                 name={"dateDelivered"}
                                 label="Date Delivered"
                                 placeholder="xxxx.xx.xx"
-                                // value={formik.values.dateDelivered === "N/A" ? null : formik.values.dateDelivered || null}
-                                // onChange={(date) => formik.setFieldValue("dateDelivered", date)}
-                                value={formik.values.dateDelivered || null} // Pass null for invalid/missing dates
-                                onChange={(date) => formik.setFieldValue("dateDelivered", date || null)} // Ensure null for empty values
+                                value={formik.values.dateDelivered || null}
+                                onChange={(date) => formik.setFieldValue("dateDelivered", date || null)}
                                 error={formik.touched.dateDelivered && Boolean(formik.errors.dateDelivered)}
                                 helperText={formik.touched.dateDelivered && formik.errors.dateDelivered}
                             />
@@ -365,7 +357,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                                 name="expiryDate"
                                 label="Expiry Date"
                                 placeholder="xxxx.xx.xx"
-                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate || null}
+                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate || null} // Reset to null when cleared
                                 onChange={(date) => formik.setFieldValue("expiryDate", date)}
                                 error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
                                 helperText={formik.touched.expiryDate && formik.errors.expiryDate}
@@ -390,8 +382,58 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                                 No Expiry Date (N/A)
                             </Checkbox>
 
-
                         </Grid>
+
+                        {/* 
+                        <Grid xs={12} md={6}>
+                            <DatePickerComponent
+                                size={'lg'}
+                                name="expiryDate"
+                                label="Expiry Date"
+                                placeholder="xxxx.xx.xx"
+                                value={formik.values.expiryDate === "N/A" ? null : formik.values.expiryDate || null}
+                                onChange={(date) => formik.setFieldValue("expiryDate", date)}
+                                error={formik.touched.expiryDate && Boolean(formik.errors.expiryDate)}
+                                helperText={formik.touched.expiryDate && formik.errors.expiryDate}
+                            />
+
+                            <Checkbox
+                                label="No Expiry Date (N/A)"
+                                checked={formik.values.expiryDate === "N/A"}
+                                onChange={(e) =>
+                                    formik.setFieldValue("expiryDate", e.target.checked ? "N/A" : null)
+                                }
+                                size="lg"
+                                sx={{
+                                    mt: 1,
+                                    color: "primary.500",
+                                    "&.Mui-checked": {
+                                        color: "primary.700",
+                                    },
+                                }}
+                            >
+                                No Expiry Date (N/A)
+                            </Checkbox>
+
+                            <Checkbox
+                                label="No Expiry Date (N/A)"
+                                checked={!formik.values.expiryDate || formik.values.expiryDate === "N/A"} // Check when null or "N/A"
+                                onChange={(e) =>
+                                    formik.setFieldValue("expiryDate", e.target.checked ? "N/A" : null)
+                                }
+                                size="lg"
+                                sx={{
+                                    mt: 1,
+                                    color: "primary.500",
+                                    "&.Mui-checked": {
+                                        color: "primary.700",
+                                    },
+                                }}
+                            >
+                                No Expiry Date (N/A)
+                            </Checkbox>
+
+                        </Grid> */}
 
                         <Grid xs={12} md={6}>
                             <AutoCompleteComponent
@@ -456,6 +498,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
 
                 <Stack direction={'row'} spacing={2}>
                     <ButtonComponent
+                        type={'button'}
                         label={'Cancel'}
                         variant="outlined"
                         color="danger"

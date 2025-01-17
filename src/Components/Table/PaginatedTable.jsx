@@ -149,7 +149,7 @@ function PaginatedTable({
   };
 
   const handleEdit = (data) => {
-    // editRow(data);
+    editRow(data);
     setId(data.id)
     setIsUpdate(true);
     setIsDialogOpen(true);
