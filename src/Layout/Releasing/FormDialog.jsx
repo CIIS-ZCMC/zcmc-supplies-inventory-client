@@ -212,7 +212,7 @@ const FormDialog = ({
       closeDialog();
     },
     onError: (error) => {
-      showSnackbar
+      showSnackbar;
       // setSnackbar({ open: true, color: "danger", message: `${error}` });
       setSnackbar("Failed to stockout", "danger");
 
@@ -394,11 +394,11 @@ const FormDialog = ({
             disabled={
               activeStep === 0
                 ? !(
-                  requestingOffice !== null &&
-                  qtyRequest > 0 &&
-                  risNo !== null &&
-                  risNo !== ""
-                )
+                    requestingOffice !== null &&
+                    qtyRequest > 0 &&
+                    risNo !== null &&
+                    risNo !== ""
+                  )
                 : dissableOnRegularOrDonationEmptyItems()
             }
             onClick={onHandleNext}

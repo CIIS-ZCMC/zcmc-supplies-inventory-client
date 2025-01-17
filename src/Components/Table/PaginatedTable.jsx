@@ -30,17 +30,17 @@ import useSuppliersHook from "../../Hooks/SuppliersHook";
 import useCategoriesHook from "../../Hooks/CategoriesHook";
 import useUnitsHook from "../../Hooks/UnitsHook";
 import useSourceHook from "../../Hooks/SourceHook";
-import useSuppliesHook from '../../Hooks/SuppliesHook';
+import useSuppliesHook from "../../Hooks/SuppliesHook";
 import useReceivingHook from "../../Hooks/ReceivingHook";
 
 import AreasForm from "../../Pages/Libraries/Areas/FormDialog";
-import BrandForm from '../../Pages/Libraries/Brands/FormDialog';
-import SupplierForm from '../../Pages/Libraries/Suppliers/FormDialog';
-import CategoryForm from '../../Pages/Libraries/Categories/FormDialog';
-import UnitForm from '../../Pages/Libraries/Units/FormDialog';
+import BrandForm from "../../Pages/Libraries/Brands/FormDialog";
+import SupplierForm from "../../Pages/Libraries/Suppliers/FormDialog";
+import CategoryForm from "../../Pages/Libraries/Categories/FormDialog";
+import UnitForm from "../../Pages/Libraries/Units/FormDialog";
 import SourceForm from "../../Pages/Libraries/Source/FormDialog";
-import SuppliesForm from '../../Pages/Libraries/Supplies/FormDialog';
-import ReceivingForm from '../../Layout/Receiving/FormDialog'
+import SuppliesForm from "../../Pages/Libraries/Supplies/FormDialog";
+import ReceivingForm from "../../Layout/Receiving/FormDialog";
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -82,15 +82,16 @@ function PaginatedTable({
   const { setInitialValues: setAreasValues } = useAreasHook();
   const { setInitialValues: setBrandsValues } = useBrandsHook();
   const { setInitialValues: setSuppliersValues } = useSuppliersHook();
-  const { setInitialValues: setCategoriesValues } = useCategoriesHook()
+  const { setInitialValues: setCategoriesValues } = useCategoriesHook();
   const { setInitialValues: setUnitsValues } = useUnitsHook();
   const { setInitialValues: setSourceValues } = useSourceHook();
   const { setInitialValues: setSuppliesValues } = useSuppliesHook();
-  const { initialValues: receiving, setInitialValues: setReceivingValues } = useReceivingHook();
-
+  const { initialValues: receiving, setInitialValues: setReceivingValues } =
+    useReceivingHook();
 
   const { setSelectedRow } = useSelectedRow();
-  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
+  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
+    useSnackbarHook();
   const { setIsUpdate, setId, resetState } = usePaginatedTableHook();
 
   const navigate = useNavigate();
@@ -99,8 +100,8 @@ function PaginatedTable({
   const currentPath = location.pathname;
 
   useEffect(() => {
-    console.log(receiving)
-  }, [receiving])
+    console.log(receiving);
+  }, [receiving]);
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -137,20 +138,20 @@ function PaginatedTable({
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-    setAreasValues(null)
-    setBrandsValues(null)
-    setSuppliersValues(null)
-    setCategoriesValues(null)
-    setUnitsValues(null)
-    setSourceValues(null)
-    setSuppliesValues(null)
-    setReceivingValues(null)
+    setAreasValues(null);
+    setBrandsValues(null);
+    setSuppliersValues(null);
+    setCategoriesValues(null);
+    setUnitsValues(null);
+    setSourceValues(null);
+    setSuppliesValues(null);
+    setReceivingValues(null);
     resetState();
   };
 
   const handleEdit = (data) => {
     editRow(data);
-    setId(data.id)
+    setId(data.id);
     setIsUpdate(true);
     setIsDialogOpen(true);
   };
@@ -209,7 +210,7 @@ function PaginatedTable({
                       <td key={column?.id} style={{ textWrap: "wrap" }}>
                         {column?.id === "actions" ? (
                           <>
-                            {viewable &&
+                            {viewable && (
                               <ButtonComponent
                                 size={"sm"}
                                 variant="plain"
@@ -222,17 +223,16 @@ function PaginatedTable({
                                   <SquareArrowOutUpRight size={"1rem"} />
                                 }
                               />
-                            }
+                            )}
 
-                            {
-                              editable &&
+                            {editable && (
                               <ButtonComponent
                                 size={"sm"}
                                 variant="plain"
                                 onClick={() => handleEdit(row)}
                                 startDecorator={<Pencil size={"1rem"} />}
                               />
-                            }
+                            )}
                           </>
                         ) : (
                           row[column?.id] ?? `${startIdx + index + 1}`
@@ -303,11 +303,12 @@ function PaginatedTable({
         isOpen={isOpenDialog}
         title="Update a new record"
         description={
-          currentPath === '/receiving' && "Library records allows for a more streamlined and dynamic form-filling experiences."
+          currentPath === "/receiving" &&
+          "Library records allows for a more streamlined and dynamic form-filling experiences."
         }
         handleClose={handleDialogClose}
         content={
-          currentPath === '/libraries/areas' ? (
+          currentPath === "/libraries/areas" ? (
             <AreasForm
               open={open}
               message={message}
@@ -315,7 +316,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/brands' ? (
+          ) : currentPath === "/libraries/brands" ? (
             <BrandForm
               open={open}
               message={message}
@@ -323,7 +324,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/suppliers' ? (
+          ) : currentPath === "/libraries/suppliers" ? (
             <SupplierForm
               open={open}
               message={message}
@@ -331,7 +332,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/categories' ? (
+          ) : currentPath === "/libraries/categories" ? (
             <CategoryForm
               open={open}
               message={message}
@@ -339,7 +340,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/units' ? (
+          ) : currentPath === "/libraries/units" ? (
             <UnitForm
               open={open}
               message={message}
@@ -347,7 +348,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/source' ? (
+          ) : currentPath === "/libraries/source" ? (
             <SourceForm
               open={open}
               message={message}
@@ -355,7 +356,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/supplies' ? (
+          ) : currentPath === "/libraries/supplies" ? (
             <SuppliesForm
               open={open}
               message={message}
@@ -363,16 +364,15 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/receiving' ? (
+          ) : currentPath === "/receiving" ? (
             <ReceivingForm
               open={open}
               message={message}
               color={color}
-              setSnackbar={showSnackbar}
+              showSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          )
-            : null // Fallback if none of the conditions match
+          ) : null // Fallback if none of the conditions match
         }
       />
       <SnackbarComponent
