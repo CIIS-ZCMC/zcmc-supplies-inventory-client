@@ -313,7 +313,7 @@ function PaginatedTable({
               open={open}
               message={message}
               color={color}
-              showSnackbar={showSnackbar}
+              setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
           ) : currentPath === "/libraries/brands" ? (
@@ -321,7 +321,7 @@ function PaginatedTable({
               open={open}
               message={message}
               color={color}
-              showSnackbar={showSnackbar}
+              setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
           ) : currentPath === "/libraries/suppliers" ? (
@@ -329,7 +329,7 @@ function PaginatedTable({
               open={open}
               message={message}
               color={color}
-              showSnackbar={showSnackbar}
+              setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
           ) : currentPath === "/libraries/categories" ? (
@@ -337,7 +337,7 @@ function PaginatedTable({
               open={open}
               message={message}
               color={color}
-              showSnackbar={showSnackbar}
+              setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
           ) : currentPath === "/libraries/units" ? (
@@ -345,7 +345,7 @@ function PaginatedTable({
               open={open}
               message={message}
               color={color}
-              showSnackbar={showSnackbar}
+              setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
           ) : currentPath === "/libraries/source" ? (
@@ -353,7 +353,7 @@ function PaginatedTable({
               open={open}
               message={message}
               color={color}
-              showSnackbar={showSnackbar}
+              setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
           ) : currentPath === "/libraries/supplies" ? (
@@ -361,7 +361,7 @@ function PaginatedTable({
               open={open}
               message={message}
               color={color}
-              showSnackbar={showSnackbar}
+              setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
           ) : currentPath === "/receiving" ? (
