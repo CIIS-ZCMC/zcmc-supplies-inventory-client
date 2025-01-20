@@ -10,18 +10,14 @@ import { ViewIcon, SearchIcon } from "lucide-react";
 import useReceivingHook from "../../Hooks/ReceivingHook";
 import useSnackbarHook from "../../Hooks/AlertHook";
 import useFilterHook from "../../Hooks/FilterHook";
-import useSuppliesHook from "../../Hooks/SuppliesHook";
 
 //layouts
 import Header from "../../Layout/Header/Header";
-import SearchFilter from "../../Layout/SearchFilter/SearchFilter";
-import Table from "../../Layout/Table/Table";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import ButtonComponent from "../../Components/ButtonComponent";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 
 //custom components
-import DatePickerComponent from "../../Components/Form/DatePickerComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import FormDialog from "../../Layout/Receiving/FormDialog";
@@ -34,8 +30,6 @@ import { receivingHeader } from "../../Data/TableHeader";
 import ReceivingDetails from "./ReceivingDetails";
 
 const ReceivingOverview = () => {
-
-
 
     const { getStockIn, setInitialValues } = useReceivingHook();
     const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
@@ -126,14 +120,13 @@ const ReceivingOverview = () => {
     }
 
     const handleSearch = (term) => {
-        setSearchTerm(term); // Update the search term state
+        setSearchTerm(term);
 
         if (!term) {
-            // If search term is empty, reset to original data
             setFilteredData(stockinData);
         } else {
-            // Filter rows based on search term
             const lowercasedTerm = term.toLowerCase();
+
             const filtered = stockinData.filter((row) =>
                 Object.values(row).some(
                     (value) =>
@@ -141,6 +134,12 @@ const ReceivingOverview = () => {
                         value.toString().toLowerCase().includes(lowercasedTerm)
                 )
             );
+
+            // const filtered = stockinData.filter((row) =>
+            //     (row.ris_no && row.ris_no.toLowerCase().includes(lowercasedTerm)) ||
+            //     (row.iar_no && row.iar_no.toLowerCase().includes(lowercasedTerm))
+            // );
+
             setFilteredData(filtered);
         }
     };
