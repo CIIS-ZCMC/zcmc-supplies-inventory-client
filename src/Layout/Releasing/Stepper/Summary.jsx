@@ -31,7 +31,7 @@ const Summary = ({
           }}
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6} style={{ display: "flex", gap: 5 }}>
+            <Grid xs={12} md={6} style={{ display: "flex", gap: 5 }}>
               <Typography variant="h5" fontWeight="bold">
                 {totalRegularQtyBrands ? totalRegularQtyBrands : 0}
               </Typography>
@@ -54,7 +54,7 @@ const Summary = ({
               sx={{ mx: 2, bgcolor: "#E0E0E0", width: 1 }}
             />
 
-            <Grid item xs={12} md={6} style={{ display: "flex", gap: 5 }}>
+            <Grid xs={12} md={6} style={{ display: "flex", gap: 5 }}>
               <Typography variant="h5" fontWeight="bold">
                 {totalDonationQtyBrands ? totalDonationQtyBrands : 0}
               </Typography>

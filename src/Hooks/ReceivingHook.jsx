@@ -6,6 +6,7 @@ import inventory_api from "../Services/ApiName";
 
 const useReceivingHook = create((set) => ({
   initialValues: {
+    id: null,
     itemName: "",
     source: "",
     quantity: "",
@@ -47,18 +48,34 @@ const useReceivingHook = create((set) => ({
     if (values === null || values === undefined) {
       return set({
         initialValues: {
+          id: null,
           itemName: "",
+          brand: "",
           source: "",
+          supplier: "",
           quantity: "",
           poNumber: "",
           iarNumber: "",
           dateDelivered: null,
           expiryDate: null,
-          brand: "",
-          supplier: "",
         },
       });
     }
+
+    set({
+      initialValues: {
+        id: values.id,
+        itemName: values.supply_name,
+        source: values.source_name,
+        quantity: values.quantity,
+        poNumber: values.purchase_order_no,
+        iarNumber: values.iar_no,
+        dateDelivered: values?.delivery_date,
+        expiryDate: values.expiry_date,
+        brand: values.brand_name,
+        supplier: values.supplier_name,
+      },
+    });
   },
 
   //fetch the fata of stock into / receiving list
@@ -69,6 +86,45 @@ const useReceivingHook = create((set) => ({
       return response.data;
     } catch (error) {
       error.message;
+    }
+  },
+
+  getStockInDetails: async (id) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.STOCK_IN_DETAILS}/${id}`
+      );
+
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
+
+  // Create stock in with POST request
+  createStockIn: async (formData) => {
+    try {
+      const response = await inventory_api.post(`/${API.STOCKIN}`, formData);
+
+      return response.data;
+    } catch (error) {
+      console.error("Error creating stock out:", error.message);
+      throw error;
+    }
+  },
+
+  // Update with PUT or PATCH request
+  updateStockIn: async (id, formData) => {
+    try {
+      const response = await inventory_api.post(
+        `/${API.STOCK_IN_UPDATE}/${id}`,
+        formData
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Error updating supply:", error.message);
+      throw error;
     }
   },
 

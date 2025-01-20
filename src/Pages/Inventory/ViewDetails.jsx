@@ -34,11 +34,11 @@ function ViewDetails(props) {
   const theme = useTheme();
   const { selectedRow } = useSelectedRow();
   const { id } = useParams();
-  const storedSupplyName = localStorage.getItem("supply_name");
+  // const storedSupplyName = localStorage.getItem("selectedRow");
   const { details, getInventoryDetails } = useInventoryHook();
 
   const pageDetails = {
-    pageTitle: `Viewing "${storedSupplyName}"`,
+    pageTitle: `Viewing "${selectedRow?.supply_name}"`,
     title: "Inventory",
     description:
       "See how an RIS item was received by your inventory, including more information about its integrity.",
@@ -51,6 +51,7 @@ function ViewDetails(props) {
     { id: "supply_name", label: "Item Name" },
     { id: "category_name", label: "Category" },
     { id: "unit_name", label: "Unit" },
+    { id: "source_name", label: "Source" }
   ];
 
   const totalQuantity = details.reduce((sum, item) => sum + item.quantity, 0);

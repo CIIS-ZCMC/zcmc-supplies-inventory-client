@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Box, Stack } from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
-import * as XLSX from 'xlsx'
+import * as XLSX from "xlsx";
 
 import { ViewIcon, SearchIcon } from "lucide-react";
 
@@ -13,14 +13,11 @@ import useFilterHook from "../../Hooks/FilterHook";
 
 //layouts
 import Header from "../../Layout/Header/Header";
-import SearchFilter from "../../Layout/SearchFilter/SearchFilter";
-import Table from "../../Layout/Table/Table";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import ButtonComponent from "../../Components/ButtonComponent";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 
 //custom components
-import DatePickerComponent from "../../Components/Form/DatePickerComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import FormDialog from "../../Layout/Receiving/FormDialog";
@@ -28,52 +25,63 @@ import SnackbarComponent from "../../Components/SnackbarComponent";
 import InputComponent from "../../Components/Form/InputComponent";
 
 //datas
-import { user, categoryFilter } from '../../Data/index';
-import { receivingHeader } from '../../Data/TableHeader';
+import { user, categoryFilter } from "../../Data/index";
+import { receivingHeader } from "../../Data/TableHeader";
 import ReceivingDetails from "./ReceivingDetails";
 
 const ReceivingOverview = () => {
-    const { getStockIn } = useReceivingHook();
-    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar, } = useSnackbarHook();
-    const { selectedCategory, setCategory, filteredInventory, clearFilters, setSearchTerm, searchTerm } = useFilterHook();
+
+    const { getStockIn, setInitialValues } = useReceivingHook();
+    const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
+        useSnackbarHook();
+    const {
+        selectedCategory,
+        setCategory,
+        filteredInventory,
+        clearFilters,
+    } = useFilterHook();
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['stockin'],
+        queryKey: ["stockin"],
         queryFn: getStockIn,
-    })
+    });
 
-    const stockinData = data?.data
+    const stockinData = data?.data;
 
-    const [snackbar, setSnackbar] = useState({ open: false, color: '', message: '' })
-    const [isDialogOpen, setIsDialogOpen] = useState(false)
-    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+    const [filteredData, setFilteredData] = useState(stockinData);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        // Update filtered data whenever stockinData changes
+        setFilteredData(stockinData);
+    }, [stockinData]);
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
 
     const pageDetails = {
         title: "Receiving (IAR Management)",
-        description: "all your IARs are shown here, you may open each ont to see more information"
-    }
-
-    const handleSnackbarClose = () => {
-        setSnackbar({ open: false })
-    }
+        description:
+            "all your IARs are shown here, you may open each ont to see more information",
+    };
 
     const handleDialogOpen = () => {
         setIsDialogOpen(true);
     };
 
     const handleDialogClose = () => {
-        setIsDialogOpen(false)
-    }
+        setIsDialogOpen(false);
+    };
 
     const handleViewDialogOpen = (row) => {
-        setSelectedRow(row.id)
+        setSelectedRow(row.id);
         setIsViewDialogOpen(true);
     };
 
     const handleViewDialogClose = (row) => {
-        setIsViewDialogOpen(false)
-    }
+        setIsViewDialogOpen(false);
+    };
 
     const generateReport = () => {
         try {
@@ -92,16 +100,10 @@ const ReceivingOverview = () => {
                 if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
             });
 
-            const workbook = XLSX.utils.book_new()
-            XLSX.utils.book_append_sheet(
-                workbook,
-                worksheet
-            )
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet);
 
-            XLSX.writeFile(
-                workbook,
-                `stockin_repost.xlsx`
-            )
+            XLSX.writeFile(workbook, `stockin_repost.xlsx`);
 
             showSnackbar("Report generated successfully!", "success", "filled");
         } catch (error) {
@@ -111,14 +113,42 @@ const ReceivingOverview = () => {
                 "filled"
             );
         }
+    };
+
+    function handleEditRow(data) {
+        setInitialValues(data);
     }
+
+    const handleSearch = (term) => {
+        setSearchTerm(term);
+
+        if (!term) {
+            setFilteredData(stockinData);
+        } else {
+            const lowercasedTerm = term.toLowerCase();
+
+            const filtered = stockinData.filter((row) =>
+                Object.values(row).some(
+                    (value) =>
+                        value &&
+                        value.toString().toLowerCase().includes(lowercasedTerm)
+                )
+            );
+
+            // const filtered = stockinData.filter((row) =>
+            //     (row.ris_no && row.ris_no.toLowerCase().includes(lowercasedTerm)) ||
+            //     (row.iar_no && row.iar_no.toLowerCase().includes(lowercasedTerm))
+            // );
+
+            setFilteredData(filtered);
+        }
+    };
 
     return (
         <>
             <Header pageDetails={pageDetails} data={user} />
 
             <Stack gap={2} mt={2}>
-
                 {/* search and filter */}
                 <ContainerComponent>
                     <Stack
@@ -132,7 +162,7 @@ const ReceivingOverview = () => {
                             placeholder="Find by PO, number, IAR number or date"
                             startIcon={<SearchIcon />}
                             value={searchTerm}
-                            setValue={setSearchTerm}
+                            setValue={(value) => handleSearch(value)} // Trigger handleSearch on change
                             width={300}
                         />
                         <Box display="flex" gap={1}>
@@ -160,16 +190,17 @@ const ReceivingOverview = () => {
                             />
                         </Box>
                     </Stack>
-
                 </ContainerComponent>
 
                 <ContainerComponent>
                     <PaginatedTable
                         loading={isLoading}
                         tableTitle={"List of stock-in transactions"}
-                        tableDesc={"All your IARs are shown here. You may open each one to see more information."}
+                        tableDesc={
+                            "All your IARs are shown here. You may open each one to see more information."
+                        }
                         columns={receivingHeader}
-                        rows={filteredInventory(stockinData)}
+                        rows={filteredData}
                         actions={<ViewIcon />}
                         actionBtns={
                             <Stack direction="row" spacing={1}>
@@ -184,8 +215,9 @@ const ReceivingOverview = () => {
                         }
                         viewModal={true}
                         viewModalContent={handleViewDialogOpen}
-                        editable={false}
+                        editable={true}
                         viewable={true}
+                        editRow={handleEditRow}
                     />
                 </ContainerComponent>
             </Stack>
@@ -194,11 +226,20 @@ const ReceivingOverview = () => {
             <ModalComponent
                 isOpen={isDialogOpen}
                 handleClose={handleDialogClose}
-                // open, message, color, variant, anchor, showSnackbar, closeSnackbar
-                content={<FormDialog open={open} message={message} color={color} showSnackbar={showSnackbar} handleDialogClose={handleDialogClose} />}
+                content={
+                    <FormDialog
+                        open={open}
+                        message={message}
+                        color={color}
+                        showSnackbar={showSnackbar}
+                        handleDialogClose={handleDialogClose}
+                    />
+                }
                 actionBtns={false}
                 title="Record a new Requisition and Issue slip"
-                description={"Describe how would you like to release items from your inventory. All fields are required."}
+                description={
+                    "Describe how would you like to release items from your inventory. All fields are required."
+                }
             />
 
             {/* modal overview */}
@@ -207,8 +248,10 @@ const ReceivingOverview = () => {
                 handleClose={handleViewDialogClose}
                 content={<ReceivingDetails urlId={selectedRow} />}
                 actionBtns={false}
-                title={'Transaction Overview'}
-                description={"Complete information about an IAR. This record cannot be edited."}
+                title={"Transaction Overview"}
+                description={
+                    "Complete information about an IAR. This record cannot be edited."
+                }
             />
 
             <SnackbarComponent
@@ -220,7 +263,7 @@ const ReceivingOverview = () => {
                 message={message}
             />
         </>
-    )
-}
+    );
+};
 
-export default ReceivingOverview
+export default ReceivingOverview;

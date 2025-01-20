@@ -32,6 +32,8 @@ const SnackbarComponent = ({
         return <MdInfoOutline />;
     }
   };
+
+
   return (
     <Snackbar
       color={color}

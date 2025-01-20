@@ -26,7 +26,7 @@ const Step1Form = ({
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid xs={12} md={6}>
           <AutoCompleteComponent
             placeholder="Search area..."
             label="Requesting Office"
@@ -50,7 +50,7 @@ const Step1Form = ({
             }
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid xs={12} md={6}>
           <InputComponent
             size={"lg"}
             label="Quantity Requested"
@@ -75,7 +75,7 @@ const Step1Form = ({
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid xs={12} md={6}>
           <DatePickerComponent
             size={"lg"}
             label="RIS date"
@@ -85,7 +85,7 @@ const Step1Form = ({
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid xs={12} md={6}>
           <InputComponent
             size={"lg"}
             label="RIS number"
@@ -106,7 +106,7 @@ const Step1Form = ({
           />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid xs={12}>
           <TextAreaComponent
             label={"Remarks"}
             placeholder={"Enter Remarks"}

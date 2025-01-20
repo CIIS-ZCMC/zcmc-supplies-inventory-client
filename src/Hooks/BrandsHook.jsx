@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import * as Yup from "yup";
-import { API } from "../Services/Config";
 import inventory_api from "../Services/ApiName";
+import { API } from "../Services/Config";
 
 const useBrandsHook = create((set) => ({
   initialValues: {
