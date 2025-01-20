@@ -127,18 +127,6 @@ const useReceivingHook = create((set) => ({
       throw error;
     }
   },
-
-  // Create stock in with POST request
-  createStockIn: async (formData) => {
-    try {
-      const response = await inventory_api.post(`/${API.STOCKIN}`, formData);
-
-      return response.data;
-    } catch (error) {
-      console.error("Error creating stock out:", error.message);
-      throw error;
-    }
-  },
 }));
 
 export default useReceivingHook;
