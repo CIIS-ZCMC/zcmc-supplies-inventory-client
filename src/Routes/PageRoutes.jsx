@@ -35,21 +35,32 @@ const ReceivingDetails = lazy(() =>
 );
 
 // const ItemReview = lazy(() => import("../Pages/ItemReview"));
-const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
+
+//Inventory Pages
 const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
 const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
 
-const Reports = lazy(() => import("../Pages/Reports/Reports"));
 const StockUpdate = lazy(() => import("../Pages/Stock-Update/StockUpdate"));
 
+// Libraries Pages
+const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
+const AreasOverview = lazy(() => import("../Pages/Libraries/Areas/AreasOverview"));
+const BrandsOverview = lazy(() => import("../Pages/Libraries/Brands/BrandsOverview"));
+const SuppliersOverview = lazy(() => import("../Pages/Libraries/Suppliers/SuppliersOverview"));
+const CategoriesOverview = lazy(() => import("../Pages/Libraries/Categories/CategoriesOverview"));
+const SourceOverview = lazy(() => import("../Pages/Libraries/Source/SourceOverview"));
+const SuppliesOverview = lazy(() => import("../Pages/Libraries/Supplies/SuppliesOverview"));
+const UnitsOverview = lazy(() => import("../Pages/Libraries/Units/UnitsOverview"));
 
-import AreasOverview from "../Pages/Libraries/Areas/AreasOverview";
-import BrandsOverview from "../Pages/Libraries/Brands/BrandsOverview";
-import SuppliersOverview from "../Pages/Libraries/Suppliers/SuppliersOverview";
-import CategoriesOverview from "../Pages/Libraries/Categories/CategoriesOverview";
-import SourceOverview from "../Pages/Libraries/Source/SourceOverview";
-import SuppliesOverview from "../Pages/Libraries/Supplies/SuppliesOverview";
-import UnitsOverview from "../Pages/Libraries/Units/UnitsOverview"
+// Reports Pages
+const Reports = lazy(() => import("../Pages/Reports/Reports"));
+
+const ReorderedItems = lazy(() => import("../Pages/Reports/ReorderedItems"));
+const ConsumedItems = lazy(() => import("../Pages/Reports/ConsumedItems"));
+const DisposalItems = lazy(() => import("../Pages/Reports/DisposalItems"));
+const ZeroStockItems = lazy(() => import("../Pages/Reports/ZeroStockItems"));
+const UnconsumedItems = lazy(() => import("../Pages/Reports/UnconsumedItems"));
+const WithoutRISItems = lazy(() => import("../Pages/Reports/WithoutRISItems"));
 
 export const sidebarRoutes = [
   {
@@ -88,12 +99,22 @@ export const sidebarRoutes = [
     icon: <ChartCandlestick />,
     permissions: ["view"],
   },
+
   {
-    path: "/reports",
+    path: "reports",
     name: "Reports",
     element: <Reports />,
     icon: <GrDocument />,
     permissions: ["view"],
+    children: [
+      { path: "", element: <Navigate to="reordered-items" replace /> },
+      { path: "reordered-items", element: <ReorderedItems /> },
+      { path: "consumed-items", element: <ConsumedItems /> },
+      { path: "disposal-items", element: <DisposalItems /> },
+      { path: "zero-stock-items", element: <ZeroStockItems /> },
+      { path: "unconsumed-items", element: <UnconsumedItems /> },
+      { path: "without-RIS-items", element: <WithoutRISItems /> },
+    ],
   },
 
 ];
@@ -117,6 +138,8 @@ export const childrenRoutes = [
       { path: "supplies", element: <SuppliesOverview /> }
     ],
   },
+
+
 
   {
     path: "/receiving/:id",
@@ -145,4 +168,9 @@ export const childrenRoutes = [
     icon: null,
     permissions: ["view"],
   },
+
 ];
+
+
+
+

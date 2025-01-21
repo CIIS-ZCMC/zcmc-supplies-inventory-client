@@ -1,11 +1,21 @@
-import { Fragment, useEffect, useState } from "react";
-import { user } from "../../Data/index";
+import { Fragment, lazy, useEffect, useState } from "react";
+
+
+
 import Header from "../../Layout/Header/Header";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
 import ButtonComponent from "../../Components/ButtonComponent";
 import TabComponent from "../../Components/TabComponent";
 import TableComponent from "../../Components/Table/TableComponent";
+
+import ButtonGroupComponent from "../../Components/ButtonGroupComponent";
+import InputComponent from "../../Components/Form/InputComponent";
+
+import { SearchIcon } from 'lucide-react';
+
+import { user, sortFilter } from "../../Data/index";
+
 import {
   consumedHeader,
   disposalHeader,
@@ -17,12 +27,16 @@ import {
   unconsumedHeader,
   zeroStocksHeader,
 } from "../../Data/TableHeader";
+
 import useReportsHook from "../../Hooks/ReportsHook";
 import useModalHook from "../../Hooks/ModalHook";
+import useFilterHook from "../../Hooks/FilterHook";
+
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
-import useFilterHook from "../../Hooks/FilterHook";
-import { useLocation } from "react-router-dom";
+
+
+import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
 import { BiCheckCircle } from "react-icons/bi";
 import DatePickerComponent from "../../Components/Form/DatePickerComponent";
 import YearSelect from "../../Components/Form/SelectYearComponent";
@@ -36,6 +50,7 @@ import { MdOfflineBolt, MdOutlineOfflineBolt } from "react-icons/md";
 
 import { categoryFilter } from "../../Data/index"; // from index data
 
+// pages
 export const FilterInfo = ({ label }) => {
   return (
     <Box display="flex" alignItems="center">
@@ -52,6 +67,67 @@ const getCurrentMonthYear = () => {
 };
 
 function Reports(props) {
+
+  const {
+    filteredInventory,
+    selectedCategory,
+    month,
+    year,
+    setCategory,
+    setMonth,
+    setYear,
+    clearFilters,
+    sortOrder,
+    setSortOrder,
+    searchTerm,
+    setSearchTerm,
+  } = useFilterHook();
+
+  // const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentPath = location.pathname;
+
+  const ReorderedItems = () => lazy(() => import("../Reports/ReorderedItems"));
+  const ConsumedItems = () => lazy(() => import("../Reports/ConsumedItems"));
+  const DisposalItems = () => lazy(() => import("../Reports/DisposalItems"));
+  const ZeroStockItems = () => lazy(() => import("../Reports/ZeroStockItems"));
+  const UnconsumedItems = () => lazy(() => import("../Reports/UnconsumedItems"));
+  const WithoutRISItems = () => lazy(() => import("../Reports/WithoutRISItems"));
+
+  // Define the available routes and their corresponding components
+  const routes = {
+    reorderedItems: <ReorderedItems
+    // filter={filteredInventory}
+    />,
+    consumedItems:
+      <ConsumedItems
+      // filter={filteredInventory}
+      />,
+    disposalItems:
+      <DisposalItems
+      // filter={filteredInventory}
+      />,
+    zeroStocksItems:
+      <ZeroStockItems
+      // filter={filteredInventory}
+      />,
+    unconsumedItems:
+      <UnconsumedItems
+      // filter={filteredInventory}
+      />,
+    withoutRISItems:
+      <WithoutRISItems
+      // filter={filteredInventory}
+      />,
+  };
+
+  useEffect(() => {
+    console.log(routes)
+  }, [routes]);
+
   const theme = useTheme();
   const {
     item_count,
@@ -80,20 +156,6 @@ function Reports(props) {
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
     useSnackbarHook();
 
-  const {
-    filteredInventory,
-    selectedCategory,
-    month,
-    year,
-    setCategory,
-    setMonth,
-    setYear,
-    clearFilters,
-  } = useFilterHook();
-
-  const location = useLocation();
-
-  const currentPath = location.pathname;
 
   const pageDetails = {
     title: "Reports",
@@ -424,7 +486,8 @@ function Reports(props) {
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
-      <ContainerComponent
+
+      {/* <ContainerComponent
         marginTop={30}
         title={"System-generated reports"}
         description={`See how resource supplies were accumulated, consumed and moved in
@@ -504,8 +567,56 @@ function Reports(props) {
           withTabDesc
           isTable
         />
+      </ContainerComponent> */}
+
+      <ContainerComponent>
+        <Stack my={2}>
+          <Box>
+            <ButtonGroupComponent
+              buttonOptions={Object.keys(routes).map((key) => key.charAt(0).toUpperCase() + key.slice(1).replace("-", " "))}
+              selectedOption={currentPath || defaultOption}
+              onOptionChange={(option) => {
+                // Navigate to the selected route
+                const formattedOption = option.toLowerCase().replace(" ", "-");
+                navigate(`/libraries/${formattedOption}`);
+              }}
+            />
+          </Box>
+        </Stack>
+
+        <Divider></Divider>
+
+        <Stack direction="row" justifyContent={"space-between"} alignItems="center" spacing={2} my={1}>
+          {/* Search */}
+          <InputComponent
+            placeholder="Find by names, brands, categories, etc."
+            startIcon={<SearchIcon />}
+            width={500}
+            value={searchTerm}
+            setValue={setSearchTerm}
+          />
+          <Box>
+            <SelectComponent
+              startIcon={"Sort by:"}
+              placeholder={"category"}
+              options={sortFilter}
+              value={sortOrder}
+              onChange={setSortOrder}
+            />
+          </Box>
+        </Stack>
       </ContainerComponent>
-      {console.log(month)}
+
+
+      {/* Render the content based on the current route */}
+      <ContainerComponent>
+        <Routes>
+          {Object.entries(routes).map(([path, component]) => (
+            <Route key={path} path={path} element={component} />
+          ))}
+        </Routes>
+      </ContainerComponent>
+
       <ModalComponent
         isOpen={isOpen}
         handleClose={closeModal}

@@ -38,7 +38,11 @@ export const receivingTableHeader = [
 ];
 
 export const itemHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category Name" },
   { id: "unit_name", label: "Unit" },
@@ -51,7 +55,11 @@ export const itemHeader = [
 ];
 
 export const startingBalHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -60,7 +68,11 @@ export const startingBalHeader = [
 ];
 
 export const nearExpHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "brand_name", label: "Brand" },
@@ -71,14 +83,22 @@ export const nearExpHeader = [
 ];
 
 export const zeroStocksHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
 ];
 
 export const consumedHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -86,7 +106,11 @@ export const consumedHeader = [
 ];
 
 export const sufficientHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -95,7 +119,11 @@ export const sufficientHeader = [
 ];
 
 export const unconsumedHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -103,7 +131,11 @@ export const unconsumedHeader = [
 ];
 
 export const reorderHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -113,7 +145,11 @@ export const reorderHeader = [
 ];
 
 export const disposalHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -121,7 +157,11 @@ export const disposalHeader = [
 ];
 
 export const itemBreakdown = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "month", label: "Month" },
   { id: "iar_purchased", label: "IAR purchased" },
   { id: "iar_donation", label: "IAR donation" },
@@ -132,7 +172,7 @@ export const itemBreakdown = [
 
 export const releasingHeader = [
   {
-    id: "id",
+    // id: "id",
     numeric: true,
     disablePadding: true,
     label: "#",
@@ -173,7 +213,7 @@ export const releasingHeader = [
 
 export const updateStockHeader = [
   {
-    id: "id",
+    // id: "id",
     numeric: true,
     disablePadding: true,
     label: "#",
@@ -217,7 +257,7 @@ export const updateStockHeader = [
 
 export const receivingHeader = [
   {
-    id: "id",
+    // id: 1,
     numeric: true,
     disablePadding: true,
     label: "#",
