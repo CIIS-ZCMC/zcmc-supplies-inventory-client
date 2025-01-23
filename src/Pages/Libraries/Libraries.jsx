@@ -104,9 +104,15 @@ const Libraries = () => {
                 {/* Render the content based on the current route */}
                 <ContainerComponent>
                     <Routes>
-                        {Object.entries(routes).map(([path, component]) => (
+                        {/* {Object.entries(routes).map(([path, component]) => (
                             <Route key={path} path={path} element={component} />
-                        ))}
+                        ))} */}
+
+                        {Object.entries(routes).map(([path, component]) => {
+                            console.log(`Rendering route: ${path}`);
+                            console.log(`Component:`, component);
+                            return <Route key={path} path={path} element={component} />;
+                        })}
                     </Routes>
                 </ContainerComponent>
             </Stack>

@@ -51,7 +51,8 @@ export const itemHeader = [
   { id: "average_monthly_consumption", label: "Average monthly consumption" },
   { id: "months_left_to_consume", label: "Months left to consume" },
   { id: "starting_balance", label: "2024 starting balance" },
-  { id: "actions", label: "Actions" },
+  // { id: "actions", label: "Actions" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 export const startingBalHeader = [
@@ -91,6 +92,7 @@ export const zeroStocksHeader = [
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 export const consumedHeader = [
@@ -103,6 +105,7 @@ export const consumedHeader = [
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
   { id: "average_monthly_consumption", label: "Average monthly consumption" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 export const sufficientHeader = [
@@ -154,6 +157,7 @@ export const disposalHeader = [
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
   { id: "quantity", label: "Quantity served to WMR" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 export const itemBreakdown = [

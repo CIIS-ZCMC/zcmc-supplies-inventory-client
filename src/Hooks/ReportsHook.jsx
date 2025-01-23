@@ -109,7 +109,6 @@ const useReportsHook = create((set) => ({
 
   getReorder: async (month) => {
     try {
-      console.log(month);
       const response = await axios.get(
         `${BASE_URL.development}/${API.REPORTS_REORDER}/${month}`
       );

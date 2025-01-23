@@ -56,28 +56,28 @@ function Dashboard() {
     {
       count: reorder_items,
       title: "Reorder items",
-      link: '',
+      link: '/reports/reordered-items',
       label: 'Go to reordered items'
     },
 
     {
       count: most_consumed_items,
       title: "Most consumed items",
-      link: '',
+      link: '/reports/consumed-items',
       label: 'Go to consumed items'
     },
 
     {
       count: items_for_disposal,
       title: "items for disposal ",
-      link: '',
+      link: '/reports/disposal-items',
       label: 'Go to items for disposal'
     },
 
     {
       count: zero_stocks,
       title: "Zero stock since start of year",
-      link: '',
+      link: '/reports/zero-stocks-items',
       label: 'Go to zero-stock items'
     },
 
@@ -91,7 +91,7 @@ function Dashboard() {
     {
       count: not_consumed_without_ris,
       title: "Not consumed without ris",
-      link: '',
+      link: '/reports/without-ris-items',
       label: 'Go to unconsumed items'
     },
   ]

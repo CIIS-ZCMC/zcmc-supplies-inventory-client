@@ -111,9 +111,9 @@ export const sidebarRoutes = [
       { path: "reordered-items", element: <ReorderedItems /> },
       { path: "consumed-items", element: <ConsumedItems /> },
       { path: "disposal-items", element: <DisposalItems /> },
-      { path: "zero-stock-items", element: <ZeroStockItems /> },
+      { path: "zero-stocks-items", element: <ZeroStockItems /> },
       { path: "unconsumed-items", element: <UnconsumedItems /> },
-      { path: "without-RIS-items", element: <WithoutRISItems /> },
+      { path: "without-ris-items", element: <WithoutRISItems /> },
     ],
   },
 
@@ -138,8 +138,6 @@ export const childrenRoutes = [
       { path: "supplies", element: <SuppliesOverview /> }
     ],
   },
-
-
 
   {
     path: "/receiving/:id",

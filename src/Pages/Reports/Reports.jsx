@@ -1,7 +1,5 @@
 import { Fragment, lazy, useEffect, useState } from "react";
 
-
-
 import Header from "../../Layout/Header/Header";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
@@ -35,6 +33,12 @@ import useFilterHook from "../../Hooks/FilterHook";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
 
+import ReorderedItems from "../Reports/ReorderedItems";
+import ConsumedItems from "../Reports/ConsumedItems";
+import DisposalItems from "../Reports/DisposalItems";
+import ZeroStockItems from "../Reports/ZeroStockItems";
+import UnconsumedItems from "../Reports/UnconsumedItems";
+import WithoutRISItems from "../Reports/WithoutRISItems";
 
 import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
 import { BiCheckCircle } from "react-icons/bi";
@@ -83,52 +87,6 @@ function Reports(props) {
     setSearchTerm,
   } = useFilterHook();
 
-  // const [searchTerm, setSearchTerm] = useState("");
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const currentPath = location.pathname;
-
-  const ReorderedItems = () => lazy(() => import("../Reports/ReorderedItems"));
-  const ConsumedItems = () => lazy(() => import("../Reports/ConsumedItems"));
-  const DisposalItems = () => lazy(() => import("../Reports/DisposalItems"));
-  const ZeroStockItems = () => lazy(() => import("../Reports/ZeroStockItems"));
-  const UnconsumedItems = () => lazy(() => import("../Reports/UnconsumedItems"));
-  const WithoutRISItems = () => lazy(() => import("../Reports/WithoutRISItems"));
-
-  // Define the available routes and their corresponding components
-  const routes = {
-    reorderedItems: <ReorderedItems
-    // filter={filteredInventory}
-    />,
-    consumedItems:
-      <ConsumedItems
-      // filter={filteredInventory}
-      />,
-    disposalItems:
-      <DisposalItems
-      // filter={filteredInventory}
-      />,
-    zeroStocksItems:
-      <ZeroStockItems
-      // filter={filteredInventory}
-      />,
-    unconsumedItems:
-      <UnconsumedItems
-      // filter={filteredInventory}
-      />,
-    withoutRISItems:
-      <WithoutRISItems
-      // filter={filteredInventory}
-      />,
-  };
-
-  useEffect(() => {
-    console.log(routes)
-  }, [routes]);
-
-  const theme = useTheme();
   const {
     item_count,
     starting_bal,
@@ -152,6 +110,49 @@ function Reports(props) {
     getDate,
   } = useReportsHook();
 
+  // const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const currentPath = location.pathname;
+
+  const extractedPath = currentPath.split("/").pop();
+  const defaultOption = "reordered-items";
+
+
+  const currentDate = new Date();
+  const fullyear = currentDate.getFullYear(); // 2024
+  const currentMonth = currentDate.getMonth() + 1; // 11 (November)
+  const currentMonthYear = `${fullyear}-${currentMonth < 10 ? "0" + currentMonth : currentMonth}`// "2024-11"
+
+  useEffect(() => {
+    console.log(fullyear)
+  }, [fullyear])
+
+  useEffect(() => {
+    // Redirect to the default route if no child route is selected
+    if (location.pathname === "/reports") {
+      navigate(`/reports/${defaultOption}`);
+    }
+  }, [location.pathname, navigate, defaultOption]);
+
+  // Define the available routes and their corresponding components
+  const routes = {
+    reordered: <ReorderedItems filter={filteredInventory} />,
+    consumed: <ConsumedItems filter={filteredInventory} />,
+    disposal: <DisposalItems filter={filteredInventory} />,
+    zero_stocks: <ZeroStockItems filter={filteredInventory} />,
+    without_RIS: <WithoutRISItems filter={filteredInventory} />,
+  };
+
+  // useEffect(() => {
+  //   console.log(routes)
+  // }, [routes]);
+
+  const theme = useTheme();
+
+
   const { isOpen, openModal, closeModal } = useModalHook();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
     useSnackbarHook();
@@ -166,7 +167,7 @@ function Reports(props) {
 
   const [loading, setLoading] = useState(true);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-  const currentMonthYear = getCurrentMonthYear();
+  // const currentMonthYear = getCurrentMonthYear();
 
   // made the category filter global
   // const categoryFilter = [
@@ -360,12 +361,13 @@ function Reports(props) {
   ];
 
   function fetchDataBasedOnIndex(selectedTabIndex) {
+
     const currentDate = new Date();
     const year = currentDate.getFullYear(); // 2024
     const currentMonth = currentDate.getMonth() + 1; // 11 (November)
-    const currentMonthYear = `${year}-${currentMonth < 10 ? "0" + currentMonth : currentMonth
-      }`; // "2024-11"
+    const currentMonthYear = `${year}-${currentMonth < 10 ? "0" + currentMonth : currentMonth} `; // "2024-11"
     // Assuming this is how you define currentMonthYear
+
     switch (selectedTabIndex) {
       case 0:
         setYear("");
@@ -428,77 +430,77 @@ function Reports(props) {
     };
   }, [selectedTabIndex]);
 
-  const generateExcel = () => {
-    try {
-      const data = tabsData[selectedTabIndex].rows; // Get the current tab's rows
-      const worksheet = XLSX.utils.json_to_sheet(data); // Convert rows to worksheet
+  // const generateExcel = () => {
+  //   try {
+  //     const data = tabsData[selectedTabIndex].rows; // Get the current tab's rows
+  //     const worksheet = XLSX.utils.json_to_sheet(data); // Convert rows to worksheet
 
-      // Define the same width for all columns (in pixels)
-      const columnWidth = { wpx: 150 }; // Set desired column width in pixels
+  //     // Define the same width for all columns (in pixels)
+  //     const columnWidth = { wpx: 150 }; // Set desired column width in pixels
 
-      // Set the same column width for all columns
-      worksheet["!cols"] = new Array(
-        data[0] ? Object.keys(data[0]).length : 0
-      ).fill(columnWidth);
+  //     // Set the same column width for all columns
+  //     worksheet["!cols"] = new Array(
+  //       data[0] ? Object.keys(data[0]).length : 0
+  //     ).fill(columnWidth);
 
-      // Enable text wrap for all header cells
-      const header = worksheet["!cols"] ? worksheet["!cols"] : [];
-      header.forEach((col, index) => {
-        if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
-      });
+  //     // Enable text wrap for all header cells
+  //     const header = worksheet["!cols"] ? worksheet["!cols"] : [];
+  //     header.forEach((col, index) => {
+  //       if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
+  //     });
 
-      // Enable text wrap for all data cells
-      for (const cellAddress in worksheet) {
-        const cell = worksheet[cellAddress];
-        if (cell && cell.v) {
-          if (!cell.s) {
-            cell.s = {};
-          }
-          cell.s.alignment = { wrapText: true }; // Set text wrap style for the cell
-        }
-      }
+  //     // Enable text wrap for all data cells
+  //     for (const cellAddress in worksheet) {
+  //       const cell = worksheet[cellAddress];
+  //       if (cell && cell.v) {
+  //         if (!cell.s) {
+  //           cell.s = {};
+  //         }
+  //         cell.s.alignment = { wrapText: true }; // Set text wrap style for the cell
+  //       }
+  //     }
 
-      const workbook = XLSX.utils.book_new(); // Create a new workbook
-      XLSX.utils.book_append_sheet(
-        workbook,
-        worksheet,
-        tabsData[selectedTabIndex].label
-      ); // Append sheet to workbook
+  //     const workbook = XLSX.utils.book_new(); // Create a new workbook
+  //     XLSX.utils.book_append_sheet(
+  //       workbook,
+  //       worksheet,
+  //       tabsData[selectedTabIndex].label
+  //     ); // Append sheet to workbook
 
-      // Generate the Excel file and trigger download
-      XLSX.writeFile(
-        workbook,
-        `${tabsData[selectedTabIndex].label}_report.xlsx`
-      );
+  //     // Generate the Excel file and trigger download
+  //     XLSX.writeFile(
+  //       workbook,
+  //       `${tabsData[selectedTabIndex].label} _report.xlsx`
+  //     );
 
-      // Show success snackbar
-      showSnackbar("Report generated successfully!", "success", "filled");
-    } catch (error) {
-      // Show error snackbar if something goes wrong
-      showSnackbar(
-        "Failed to generate the report. Please try again.",
-        "error",
-        "filled"
-      );
-    }
-  };
+  //     // Show success snackbar
+  //     showSnackbar("Report generated successfully!", "success", "filled");
+  //   } catch (error) {
+  //     // Show error snackbar if something goes wrong
+  //     showSnackbar(
+  //       "Failed to generate the report. Please try again.",
+  //       "error",
+  //       "filled"
+  //     );
+  //   }
+  // };
 
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
 
-      {/* <ContainerComponent
+      <ContainerComponent
         marginTop={30}
         title={"System-generated reports"}
         description={`See how resource supplies were accumulated, consumed and moved in
-              your organization’s inventory.`}
+    your organization’s inventory.`}
         actions={
           <Stack direction="row" spacing={1}>
             <ButtonComponent label={"Generate report"} onClick={openModal} />
           </Stack>
         }
       >
-        <TabComponent
+        {/* <TabComponent
           tabs={tabsData}
           onTabChange={(index) => {
             setSelectedTabIndex(index);
@@ -566,19 +568,26 @@ function Reports(props) {
           }
           withTabDesc
           isTable
-        />
-      </ContainerComponent> */}
+        /> */}
 
-      <ContainerComponent>
         <Stack my={2}>
           <Box>
             <ButtonGroupComponent
-              buttonOptions={Object.keys(routes).map((key) => key.charAt(0).toUpperCase() + key.slice(1).replace("-", " "))}
-              selectedOption={currentPath || defaultOption}
+              // buttonOptions={Object.keys(routes).map((key) => console.log(key))}
+              buttonOptions={Object.keys(routes).map((key) =>
+                key
+                  .replace(/[_]/g, " ") // Replace underscores or dashes with spaces
+                  .toLowerCase() // Convert the entire key to lowercase
+                  .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize the first letter of each word
+              )}
+              selectedOption={extractedPath || defaultOption}
               onOptionChange={(option) => {
                 // Navigate to the selected route
-                const formattedOption = option.toLowerCase().replace(" ", "-");
-                navigate(`/libraries/${formattedOption}`);
+                const formattedOption = option
+                  .toLowerCase() // Convert the entire string to lowercase
+                  .replace(/\s+/g, "-") // Replace all spaces (one or more) with a dash
+                  + "-items"; // Append "-items" to the end
+                navigate(`/reports/${formattedOption}`);
               }}
             />
           </Box>
@@ -605,16 +614,50 @@ function Reports(props) {
             />
           </Box>
         </Stack>
-      </ContainerComponent>
+
+        {extractedPath === 'reordered-items' &&
+          <ReorderedItems
+            filter={filteredInventory}
+            currentMonthYear={currentMonthYear}
+            header={reorderHeader}
+          />}
+
+        {extractedPath === 'consumed-items'
+          &&
+          <ConsumedItems
+            filter={filteredInventory}
+            header={consumedHeader}
+            currentYear={fullyear}
+          />}
+
+        {extractedPath === 'disposal-items'
+          &&
+          <DisposalItems
+            filter={filteredInventory}
+            header={disposalHeader}
+            currentMonthYear={currentMonthYear}
+          />
+        }
+        {extractedPath === 'zero-stocks-items' &&
+          <ZeroStockItems
+            filter={filteredInventory}
+            header={zeroStocksHeader}
+          />
+        }
+        {/* {extractedPath === 'unconsumed-items' &&
+          <UnconsumedItems
+            filter={filteredInventory}
+
+          />
+        } */}
+        {extractedPath === 'without-ris-items' &&
+          <WithoutRISItems
+            filter={filteredInventory}
+            header={unconsumedHeader}
+            currentYear={fullyear}
+          />}
 
 
-      {/* Render the content based on the current route */}
-      <ContainerComponent>
-        <Routes>
-          {Object.entries(routes).map(([path, component]) => (
-            <Route key={path} path={path} element={component} />
-          ))}
-        </Routes>
       </ContainerComponent>
 
       <ModalComponent
@@ -623,7 +666,7 @@ function Reports(props) {
         actionBtns={true}
         leftButtonLabel={"Close"}
         leftButtonAction={closeModal}
-        rightButtonAction={generateExcel}
+        // rightButtonAction={generateExcel}
         rightButtonLabel={"Generate"}
         title="Inventory report summary"
         description={
@@ -637,7 +680,7 @@ function Reports(props) {
               </Typography>
               <Stack
                 sx={{
-                  border: `1px solid ${theme.palette.custom.buttonBg}`,
+                  border: `1px solid ${theme.palette.custom.buttonBg} `,
                   p: 2,
                   borderRadius: 10,
                 }}
@@ -659,7 +702,7 @@ function Reports(props) {
                     sx={{ color: "#225524" }}
                     textAlign="right"
                   >
-                    {tabsData[selectedTabIndex].rows.length} items
+                    {/* {tabsData[selectedTabIndex].rows.length} items */}
                   </Typography>
                 </Box>
               </Stack>
@@ -673,20 +716,22 @@ function Reports(props) {
                   />
                 ) : (
                   <FilterInfo
-                    label={`Fetch and filter items from Category: ${selectedCategory}`}
+                    label={`Fetch and filter items from Category: ${selectedCategory} `}
                   />
                 )}
                 {year ? (
-                  <FilterInfo label={`For the year of ${year}`} />
+                  <FilterInfo label={`For the year of ${year} `} />
                 ) : month ? (
-                  <FilterInfo label={`For the month of ${month}`} />
+                  <FilterInfo label={`For the month of ${month} `} />
                 ) : (
                   <FilterInfo
                     label={`For the entire period from ${moment(
                       dates.start_date
-                    ).format("LL")} - ${moment(dates.current_date).format(
-                      "LL"
-                    )}`}
+                    ).format("LL")
+                      } - ${moment(dates.current_date).format(
+                        "LL"
+                      )
+                      } `}
                   />
                 )}
               </Stack>
