@@ -1,11 +1,9 @@
-import { Fragment, lazy, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import Header from "../../Layout/Header/Header";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import { Box, Divider, Stack, Typography, useTheme, Button } from "@mui/joy";
 import ButtonComponent from "../../Components/ButtonComponent";
-import TabComponent from "../../Components/TabComponent";
-import TableComponent from "../../Components/Table/TableComponent";
 
 import ButtonGroupComponent from "../../Components/ButtonGroupComponent";
 import InputComponent from "../../Components/Form/InputComponent";
@@ -44,7 +42,7 @@ import UnconsumedItems from "../Reports/UnconsumedItems";
 import WithoutRISItems from "../Reports/WithoutRISItems";
 
 
-import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
+import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import { BiCheckCircle } from "react-icons/bi";
 import DatePickerComponent from "../../Components/Form/DatePickerComponent";
 import YearSelect from "../../Components/Form/SelectYearComponent";
@@ -82,10 +80,6 @@ function Reports(props) {
     selectedCategory,
     month,
     year,
-    setCategory,
-    setMonth,
-    setYear,
-    clearFilters,
     sortOrder,
     setSortOrder,
     searchTerm,
@@ -93,26 +87,7 @@ function Reports(props) {
   } = useFilterHook();
 
   const {
-    item_count,
-    starting_bal,
-    near_exp,
-    zero_stocks,
-    consumed,
-    sufficient_sup,
-    unconsumed,
-    reorder,
-    disposal,
     dates,
-    getItemCount,
-    getStartingBal,
-    getNearExp,
-    getZeroStocks,
-    getConsumed,
-    getSufficient,
-    getUnconsumed,
-    getReorder,
-    getDisposal,
-    getDate,
   } = useReportsHook();
 
   // made the category filter global
@@ -179,15 +154,8 @@ function Reports(props) {
       "Generate different types of reports here on-demand to fit your data-intensive requirements.",
     pagePath: `${currentPath}`,
   };
-
-  const [loading, setLoading] = useState(true);
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(routes[0].path);
 
-  useEffect(() => {
-    console.log(selectedOption);
-    navigate(`/${selectedOption}`);
-  }, [selectedOption, navigate]);
 
   const InfoDescription = () => (
     <>
@@ -201,255 +169,9 @@ function Reports(props) {
     </>
   )
 
-  // const currentMonthYear = getCurrentMonthYear();
-
-
-
   const handleOnButtonGroupClick = (path) => {
-    setSelectedOption(path);
+    navigate(`/${path}`)
   };
-
-  // const tabsData = [
-  //   {
-  //     label: "Item count",
-  //     columns: itemHeader,
-  //     rows: filteredInventory(item_count),
-  //     filterBtns: (
-  //       <SelectComponent
-  //         startIcon={"Sort by:"}
-  //         placeholder={"category"}
-  //         options={categoryFilter}
-  //         value={selectedCategory}
-  //         onChange={setCategory}
-  //       />
-  //     ),
-  //     desc: "the number of balances and consumption.",
-  //   },
-  //   {
-  //     label: "Starting balance",
-  //     columns: startingBalHeader,
-  //     rows: filteredInventory(starting_bal),
-  //     filterBtns: (
-  //       <SelectComponent
-  //         startIcon={"Sort by:"}
-  //         placeholder={"category"}
-  //         options={categoryFilter}
-  //         value={selectedCategory}
-  //         onChange={setCategory}
-  //       />
-  //     ),
-  //     desc: "starting balance of 0 upon start of the year.",
-  //   },
-  //   {
-  //     label: "Near expiration date",
-  //     columns: nearExpHeader,
-  //     rows: filteredInventory(near_exp),
-  //     filterBtns: (
-  //       <SelectComponent
-  //         startIcon={"Sort by:"}
-  //         placeholder={"category"}
-  //         options={categoryFilter}
-  //         value={selectedCategory}
-  //         onChange={setCategory}
-  //       />
-  //     ),
-  //     desc: "less than 4 months remaining prior date of expiry.",
-  //   },
-  //   {
-  //     label: "Zero stocks",
-  //     columns: zeroStocksHeader,
-  //     rows: filteredInventory(zero_stocks),
-  //     filterBtns: (
-  //       <SelectComponent
-  //         startIcon={"Sort by:"}
-  //         placeholder={"category"}
-  //         options={categoryFilter}
-  //         value={selectedCategory}
-  //         onChange={setCategory}
-  //       />
-  //     ),
-  //     desc: "zero starting balance, no IAR up to this moment and with zero current balance.",
-  //   },
-  //   {
-  //     label: "Most consumed items",
-  //     columns: consumedHeader,
-  //     rows: filteredInventory(consumed),
-  //     filterBtns: (
-  //       <>
-  //         <YearSelect
-  //           value={year}
-  //           onChange={setYear}
-  //           actions={(year) => getConsumed(year)}
-  //         />{" "}
-  //         {/* Default to 2024 */}
-  //         <SelectComponent
-  //           startIcon={"Sort by:"}
-  //           placeholder={"category"}
-  //           options={categoryFilter}
-  //           value={selectedCategory}
-  //           onChange={setCategory}
-  //         />
-  //       </>
-  //     ),
-  //     desc: "its number of average monthly consumption",
-  //   },
-  //   {
-  //     label: "Items with sufficient stocks",
-  //     columns: sufficientHeader,
-  //     rows: filteredInventory(sufficient_sup),
-  //     filterBtns: (
-  //       <SelectComponent
-  //         startIcon={"Sort by:"}
-  //         placeholder={"category"}
-  //         options={categoryFilter}
-  //         value={selectedCategory}
-  //         onChange={setCategory}
-  //       />
-  //     ),
-  //     desc: "those with sufficient stocks having months left to consume of greater than 5 months",
-  //   },
-  //   {
-  //     label: "Unconsumed without RIS",
-  //     columns: unconsumedHeader,
-  //     rows: filteredInventory(unconsumed),
-  //     filterBtns: (
-  //       <>
-  //         <YearSelect
-  //           value={year}
-  //           onChange={setYear}
-  //           actions={(year) => getUnconsumed(year)}
-  //         />
-  //         <SelectComponent
-  //           startIcon={"Sort by:"}
-  //           placeholder={"category"}
-  //           options={categoryFilter}
-  //           value={selectedCategory}
-  //           onChange={setCategory}
-  //         />
-  //       </>
-  //     ),
-  //     desc: "those with sufficient stocks having months left to consume of greater than 5 months but with no RIS requests",
-  //   },
-  //   {
-  //     label: "Reorder items",
-  //     columns: reorderHeader,
-  //     rows: filteredInventory(reorder),
-  //     filterBtns: (
-  //       <>
-  //         <DatePickerComponent
-  //           type="month"
-  //           startDecorator={"Month:"}
-  //           value={month}
-  //           onChange={setMonth}
-  //           actions={(month) => getReorder(month)}
-  //         />
-  //         <SelectComponent
-  //           startIcon={"Sort by:"}
-  //           placeholder={"category"}
-  //           options={categoryFilter}
-  //           value={selectedCategory}
-  //           onChange={setCategory}
-  //         />
-  //       </>
-  //     ),
-  //     desc: "those below the 7-month threshold (number of months left to consume)",
-  //   },
-  //   {
-  //     label: "For disposal",
-  //     columns: disposalHeader,
-  //     rows: filteredInventory(disposal),
-  //     filterBtns: (
-  //       <>
-  //         <DatePickerComponent
-  //           type="month"
-  //           startDecorator={"Month:"}
-  //           value={month}
-  //           onChange={setMonth}
-  //           actions={(month) => getDisposal(month)}
-  //         />
-  //         <SelectComponent
-  //           startIcon={"Sort by:"}
-  //           placeholder={"category"}
-  //           options={categoryFilter}
-  //           value={selectedCategory}
-  //           onChange={setCategory}
-  //         />
-  //       </>
-  //     ),
-  //     desc: "those marked on RIS requests with assigned office to WMR.",
-  //   },
-  // ];
-
-
-  // function fetchDataBasedOnIndex(selectedTabIndex) {
-
-  //   const currentDate = new Date();
-  //   const year = currentDate.getFullYear(); // 2024
-  //   const currentMonth = currentDate.getMonth() + 1; // 11 (November)
-  //   const currentMonthYear = `${year}-${currentMonth < 10 ? "0" + currentMonth : currentMonth} `; // "2024-11"
-  //   // Assuming this is how you define currentMonthYear
-
-  //   switch (selectedTabIndex) {
-  //     case 0:
-  //       setYear("");
-  //       setMonth("");
-  //       getItemCount();
-  //       break;
-  //     case 1:
-  //       setYear("");
-  //       setMonth("");
-  //       getStartingBal();
-  //       break;
-  //     case 2:
-  //       setYear("");
-  //       setMonth("");
-  //       getNearExp();
-  //       break;
-  //     case 3:
-  //       setYear("");
-  //       setMonth("");
-  //       getZeroStocks();
-  //       break;
-  //     case 4:
-  //       setYear(year);
-  //       setMonth("");
-  //       getConsumed(year);
-  //       break;
-  //     case 5:
-  //       setYear("");
-  //       setMonth("");
-  //       getSufficient();
-  //       break;
-  //     case 6:
-  //       setYear(year);
-  //       setMonth("");
-  //       getUnconsumed(year);
-  //       break;
-  //     case 7:
-  //       setYear("");
-  //       setMonth(currentMonthYear);
-  //       getReorder(currentMonthYear);
-  //       break;
-  //     case 8:
-  //       setYear("");
-  //       setMonth(currentMonthYear);
-  //       getDisposal(currentMonthYear);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      getDate();
-      getItemCount();
-      setLoading(false);
-    }, 300);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [selectedTabIndex]);
 
   // const generateExcel = () => {
   //   try {
@@ -528,16 +250,6 @@ function Reports(props) {
         }
       >
 
-        <Stack my={2}>
-          <Box>
-            <ButtonGroupComponent
-              buttonOptions={routes}
-              selectedOption={selectedOption}
-              onChange={handleOnButtonGroupClick}
-            />
-          </Box>
-        </Stack>
-
         <Stack direction="row" justifyContent={"space-between"} alignItems="center" spacing={2} my={1}>
           {/* Search */}
           <InputComponent
@@ -558,75 +270,15 @@ function Reports(props) {
           </Box>
         </Stack>
 
-        {/* <TabComponent
-          tabs={tabsData}
-          onTabChange={(index) => {
-            setSelectedTabIndex(index);
-            fetchDataBasedOnIndex(index);
-          }}
-          selectedTabIndex={selectedTabIndex}
-          loading={loading}
-          clearFilters={clearFilters}
-          otherDetails={
-            selectedTabIndex === 2 ? (
-              <Stack direction="row" alignItems="center" gap={1}>
-                <Typography level="body-sm">
-                  Legend (by number of months left prior expiry):
-                </Typography>
-                {expire_legends.map((e, i) => (
-                  <>
-                    <Box
-                      bgcolor="white"
-                      padding={0.5}
-                      borderRadius={100}
-                      style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}
-                    >
-                      <Box
-                        borderRadius={100}
-                        bgcolor={e.color}
-                        width={15}
-                        height={15}
-                      ></Box>
-                    </Box>
-
-                    <Typography key={i} level="body-sm">
-                      {e.label}
-                    </Typography>
-                  </>
-                ))}
-              </Stack>
-            ) : selectedTabIndex === 7 ? (
-              <Stack direction="row" alignItems="center" gap={1}>
-                <Typography level="body-sm">Legend:</Typography>
-                {stock_legends.map((e, i) => (
-                  <>
-                    <Box
-                      bgcolor="white"
-                      padding={0.5}
-                      borderRadius={100}
-                      style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}
-                    >
-                      <Box
-                        borderRadius={100}
-                        bgcolor={e.color}
-                        width={15}
-                        height={15}
-                      ></Box>
-                    </Box>
-
-                    <Typography key={i} level="body-sm">
-                      {e.label}
-                    </Typography>
-                  </>
-                ))}
-              </Stack>
-            ) : (
-              ""
-            )
-          }
-          withTabDesc
-          isTable
-        /> */}
+        <Stack my={2}>
+          <Box>
+            <ButtonGroupComponent
+              buttonOptions={routes}
+              selectedOption={selectedOption}
+              onChange={handleOnButtonGroupClick}
+            />
+          </Box>
+        </Stack>
 
         <Divider></Divider>
 

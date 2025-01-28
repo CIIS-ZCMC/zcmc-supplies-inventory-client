@@ -109,7 +109,7 @@ export const sidebarRoutes = [
     icon: <GrDocument />,
     permissions: ["view"],
     children: [
-      { path: "", element: <Navigate to="reordered-items" replace /> },
+      // { path: "", element: <Navigate to="reordered-items" replace /> },
       { path: "item-count", element: <ItemCount /> },
       { path: "starting-balance", element: <StartingBalance /> },
       { path: "near-expiration", element: <NearExpiration /> },
