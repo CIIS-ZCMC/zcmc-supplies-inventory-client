@@ -554,7 +554,7 @@ function Reports(props) {
           </Stack>
         }
       >
-        <TabComponent
+        {/* <TabComponent
           tabs={tabsData}
           onTabChange={(index) => {
             setSelectedTabIndex(index);
@@ -622,7 +622,7 @@ function Reports(props) {
           }
           withTabDesc
           isTable
-        />
+        /> */}
 
         <Stack my={2}>
           <Box>
