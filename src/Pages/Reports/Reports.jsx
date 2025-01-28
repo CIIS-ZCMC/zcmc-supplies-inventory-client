@@ -2,7 +2,7 @@ import { Fragment, lazy, useEffect, useState } from "react";
 
 import Header from "../../Layout/Header/Header";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
-import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
+import { Box, Divider, Stack, Typography, useTheme, Button } from "@mui/joy";
 import ButtonComponent from "../../Components/ButtonComponent";
 import TabComponent from "../../Components/TabComponent";
 import TableComponent from "../../Components/Table/TableComponent";
@@ -33,12 +33,16 @@ import useFilterHook from "../../Hooks/FilterHook";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
 
+import ItemCount from "../Reports/ItemCount";
+import StartingBalance from "./StartingBalance";
+import NearExpiration from "./NearExpiration";
 import ReorderedItems from "../Reports/ReorderedItems";
 import ConsumedItems from "../Reports/ConsumedItems";
 import DisposalItems from "../Reports/DisposalItems";
 import ZeroStockItems from "../Reports/ZeroStockItems";
 import UnconsumedItems from "../Reports/UnconsumedItems";
 import WithoutRISItems from "../Reports/WithoutRISItems";
+
 
 import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
 import { BiCheckCircle } from "react-icons/bi";
@@ -53,6 +57,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import { MdOfflineBolt, MdOutlineOfflineBolt } from "react-icons/md";
 
 import { categoryFilter } from "../../Data/index"; // from index data
+
 
 // pages
 export const FilterInfo = ({ label }) => {
@@ -120,7 +125,6 @@ function Reports(props) {
   const extractedPath = currentPath.split("/").pop();
   const defaultOption = "reordered-items";
 
-
   const currentDate = new Date();
   const fullyear = currentDate.getFullYear(); // 2024
   const currentMonth = currentDate.getMonth() + 1; // 11 (November)
@@ -138,13 +142,32 @@ function Reports(props) {
   }, [location.pathname, navigate, defaultOption]);
 
   // Define the available routes and their corresponding components
-  const routes = {
-    reordered: <ReorderedItems filter={filteredInventory} />,
-    consumed: <ConsumedItems filter={filteredInventory} />,
-    disposal: <DisposalItems filter={filteredInventory} />,
-    zero_stocks: <ZeroStockItems filter={filteredInventory} />,
-    without_RIS: <WithoutRISItems filter={filteredInventory} />,
-  };
+  // const routes = {
+  //   item_count: 'Item count',
+  //   starting_balance: 'Starting balance',
+  //   near_expiration: 'Near expiration',
+  //   zero_stocks: 'Zero stocks',
+  //   consumed: 'Most consumed items',
+  //   without_RIS: 'Unconsumed without RIS',
+  //   reordered: 'Reorder Items',
+  //   disposal: 'For Disposal'
+
+  //   // zero_stocks: <ZeroStockItems filter={filteredInventory} />,
+  //   // : <ReorderedItems filter={filteredInventory} />,
+  //   // disposal: <DisposalItems filter={filteredInventory} />,
+
+  // };
+
+
+  // item_count,
+  //   starting_bal,
+  //   near_exp,
+  //   zero_stocks,
+  //   consumed,
+  //   sufficient_sup,
+  //   unconsumed,
+  //   reorder,
+  //   disposal,
 
   // useEffect(() => {
   //   console.log(routes)
@@ -167,6 +190,9 @@ function Reports(props) {
 
   const [loading, setLoading] = useState(true);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
+
+
   // const currentMonthYear = getCurrentMonthYear();
 
   // made the category filter global
@@ -176,176 +202,176 @@ function Reports(props) {
   //   { name: "Office", value: "Office" },
   // ];
 
-  const tabsData = [
-    {
-      label: "Item count",
-      columns: itemHeader,
-      rows: filteredInventory(item_count),
-      filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
-      ),
-      desc: "the number of balances and consumption.",
-    },
-    {
-      label: "Starting balance",
-      columns: startingBalHeader,
-      rows: filteredInventory(starting_bal),
-      filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
-      ),
-      desc: "starting balance of 0 upon start of the year.",
-    },
-    {
-      label: "Near expiration date",
-      columns: nearExpHeader,
-      rows: filteredInventory(near_exp),
-      filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
-      ),
-      desc: "less than 4 months remaining prior date of expiry.",
-    },
-    {
-      label: "Zero stocks",
-      columns: zeroStocksHeader,
-      rows: filteredInventory(zero_stocks),
-      filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
-      ),
-      desc: "zero starting balance, no IAR up to this moment and with zero current balance.",
-    },
-    {
-      label: "Most consumed items",
-      columns: consumedHeader,
-      rows: filteredInventory(consumed),
-      filterBtns: (
-        <>
-          <YearSelect
-            value={year}
-            onChange={setYear}
-            actions={(year) => getConsumed(year)}
-          />{" "}
-          {/* Default to 2024 */}
-          <SelectComponent
-            startIcon={"Sort by:"}
-            placeholder={"category"}
-            options={categoryFilter}
-            value={selectedCategory}
-            onChange={setCategory}
-          />
-        </>
-      ),
-      desc: "its number of average monthly consumption",
-    },
-    {
-      label: "Items with sufficient stocks",
-      columns: sufficientHeader,
-      rows: filteredInventory(sufficient_sup),
-      filterBtns: (
-        <SelectComponent
-          startIcon={"Sort by:"}
-          placeholder={"category"}
-          options={categoryFilter}
-          value={selectedCategory}
-          onChange={setCategory}
-        />
-      ),
-      desc: "those with sufficient stocks having months left to consume of greater than 5 months",
-    },
-    {
-      label: "Unconsumed without RIS",
-      columns: unconsumedHeader,
-      rows: filteredInventory(unconsumed),
-      filterBtns: (
-        <>
-          <YearSelect
-            value={year}
-            onChange={setYear}
-            actions={(year) => getUnconsumed(year)}
-          />
-          <SelectComponent
-            startIcon={"Sort by:"}
-            placeholder={"category"}
-            options={categoryFilter}
-            value={selectedCategory}
-            onChange={setCategory}
-          />
-        </>
-      ),
-      desc: "those with sufficient stocks having months left to consume of greater than 5 months but with no RIS requests",
-    },
-    {
-      label: "Reorder items",
-      columns: reorderHeader,
-      rows: filteredInventory(reorder),
-      filterBtns: (
-        <>
-          <DatePickerComponent
-            type="month"
-            startDecorator={"Month:"}
-            value={month}
-            onChange={setMonth}
-            actions={(month) => getReorder(month)}
-          />
-          <SelectComponent
-            startIcon={"Sort by:"}
-            placeholder={"category"}
-            options={categoryFilter}
-            value={selectedCategory}
-            onChange={setCategory}
-          />
-        </>
-      ),
-      desc: "those below the 7-month threshold (number of months left to consume)",
-    },
-    {
-      label: "For disposal",
-      columns: disposalHeader,
-      rows: filteredInventory(disposal),
-      filterBtns: (
-        <>
-          <DatePickerComponent
-            type="month"
-            startDecorator={"Month:"}
-            value={month}
-            onChange={setMonth}
-            actions={(month) => getDisposal(month)}
-          />
-          <SelectComponent
-            startIcon={"Sort by:"}
-            placeholder={"category"}
-            options={categoryFilter}
-            value={selectedCategory}
-            onChange={setCategory}
-          />
-        </>
-      ),
-      desc: "those marked on RIS requests with assigned office to WMR.",
-    },
-  ];
+  // const tabsData = [
+  //   {
+  //     label: "Item count",
+  //     columns: itemHeader,
+  //     rows: filteredInventory(item_count),
+  //     filterBtns: (
+  //       <SelectComponent
+  //         startIcon={"Sort by:"}
+  //         placeholder={"category"}
+  //         options={categoryFilter}
+  //         value={selectedCategory}
+  //         onChange={setCategory}
+  //       />
+  //     ),
+  //     desc: "the number of balances and consumption.",
+  //   },
+  //   {
+  //     label: "Starting balance",
+  //     columns: startingBalHeader,
+  //     rows: filteredInventory(starting_bal),
+  //     filterBtns: (
+  //       <SelectComponent
+  //         startIcon={"Sort by:"}
+  //         placeholder={"category"}
+  //         options={categoryFilter}
+  //         value={selectedCategory}
+  //         onChange={setCategory}
+  //       />
+  //     ),
+  //     desc: "starting balance of 0 upon start of the year.",
+  //   },
+  //   {
+  //     label: "Near expiration date",
+  //     columns: nearExpHeader,
+  //     rows: filteredInventory(near_exp),
+  //     filterBtns: (
+  //       <SelectComponent
+  //         startIcon={"Sort by:"}
+  //         placeholder={"category"}
+  //         options={categoryFilter}
+  //         value={selectedCategory}
+  //         onChange={setCategory}
+  //       />
+  //     ),
+  //     desc: "less than 4 months remaining prior date of expiry.",
+  //   },
+  //   {
+  //     label: "Zero stocks",
+  //     columns: zeroStocksHeader,
+  //     rows: filteredInventory(zero_stocks),
+  //     filterBtns: (
+  //       <SelectComponent
+  //         startIcon={"Sort by:"}
+  //         placeholder={"category"}
+  //         options={categoryFilter}
+  //         value={selectedCategory}
+  //         onChange={setCategory}
+  //       />
+  //     ),
+  //     desc: "zero starting balance, no IAR up to this moment and with zero current balance.",
+  //   },
+  //   {
+  //     label: "Most consumed items",
+  //     columns: consumedHeader,
+  //     rows: filteredInventory(consumed),
+  //     filterBtns: (
+  //       <>
+  //         <YearSelect
+  //           value={year}
+  //           onChange={setYear}
+  //           actions={(year) => getConsumed(year)}
+  //         />{" "}
+  //         {/* Default to 2024 */}
+  //         <SelectComponent
+  //           startIcon={"Sort by:"}
+  //           placeholder={"category"}
+  //           options={categoryFilter}
+  //           value={selectedCategory}
+  //           onChange={setCategory}
+  //         />
+  //       </>
+  //     ),
+  //     desc: "its number of average monthly consumption",
+  //   },
+  //   {
+  //     label: "Items with sufficient stocks",
+  //     columns: sufficientHeader,
+  //     rows: filteredInventory(sufficient_sup),
+  //     filterBtns: (
+  //       <SelectComponent
+  //         startIcon={"Sort by:"}
+  //         placeholder={"category"}
+  //         options={categoryFilter}
+  //         value={selectedCategory}
+  //         onChange={setCategory}
+  //       />
+  //     ),
+  //     desc: "those with sufficient stocks having months left to consume of greater than 5 months",
+  //   },
+  //   {
+  //     label: "Unconsumed without RIS",
+  //     columns: unconsumedHeader,
+  //     rows: filteredInventory(unconsumed),
+  //     filterBtns: (
+  //       <>
+  //         <YearSelect
+  //           value={year}
+  //           onChange={setYear}
+  //           actions={(year) => getUnconsumed(year)}
+  //         />
+  //         <SelectComponent
+  //           startIcon={"Sort by:"}
+  //           placeholder={"category"}
+  //           options={categoryFilter}
+  //           value={selectedCategory}
+  //           onChange={setCategory}
+  //         />
+  //       </>
+  //     ),
+  //     desc: "those with sufficient stocks having months left to consume of greater than 5 months but with no RIS requests",
+  //   },
+  //   {
+  //     label: "Reorder items",
+  //     columns: reorderHeader,
+  //     rows: filteredInventory(reorder),
+  //     filterBtns: (
+  //       <>
+  //         <DatePickerComponent
+  //           type="month"
+  //           startDecorator={"Month:"}
+  //           value={month}
+  //           onChange={setMonth}
+  //           actions={(month) => getReorder(month)}
+  //         />
+  //         <SelectComponent
+  //           startIcon={"Sort by:"}
+  //           placeholder={"category"}
+  //           options={categoryFilter}
+  //           value={selectedCategory}
+  //           onChange={setCategory}
+  //         />
+  //       </>
+  //     ),
+  //     desc: "those below the 7-month threshold (number of months left to consume)",
+  //   },
+  //   {
+  //     label: "For disposal",
+  //     columns: disposalHeader,
+  //     rows: filteredInventory(disposal),
+  //     filterBtns: (
+  //       <>
+  //         <DatePickerComponent
+  //           type="month"
+  //           startDecorator={"Month:"}
+  //           value={month}
+  //           onChange={setMonth}
+  //           actions={(month) => getDisposal(month)}
+  //         />
+  //         <SelectComponent
+  //           startIcon={"Sort by:"}
+  //           placeholder={"category"}
+  //           options={categoryFilter}
+  //           value={selectedCategory}
+  //           onChange={setCategory}
+  //         />
+  //       </>
+  //     ),
+  //     desc: "those marked on RIS requests with assigned office to WMR.",
+  //   },
+  // ];
 
   const expire_legends = [
     { label: "1 month", color: "red" },
@@ -485,6 +511,34 @@ function Reports(props) {
   //   }
   // };
 
+  // const ButtonOptions = () => routes.map(({ id, label, value }) => (
+  //   <Button key={id} value={value} onChange={handleOnButtonGroupClick(value)}>
+  //     {label}
+  //   </Button>
+  // ))
+
+  const routes = [
+    { id: 1, label: 'Item count', path: 'reports/item-count' },
+    { id: 2, label: 'Starting balance', path: 'reports/starting-balance' },
+    { id: 3, label: 'Near expiration', path: 'reports/near-expiration' },
+    { id: 4, label: 'Zero stocks', path: 'reports/zero-stocks-items' },
+    { id: 5, label: 'Most consumed items', path: 'reports/consumed-items' },
+    { id: 6, label: 'Unconsumed without RIS', path: 'reports/unconsumed-items' },
+    { id: 7, label: 'Reorder Items', path: 'reports/reordered-items' },
+    { id: 8, label: 'For Disposal', path: 'reports/disposal-items' },
+  ]
+
+  const [selectedOption, setSelectedOption] = useState(routes[0].path);
+
+  useEffect(() => {
+    console.log(selectedOption);
+    navigate(`/${selectedOption}`);
+  }, [selectedOption, navigate]);
+
+  const handleOnButtonGroupClick = (path) => {
+    setSelectedOption(path);
+  };
+
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
@@ -573,22 +627,9 @@ function Reports(props) {
         <Stack my={2}>
           <Box>
             <ButtonGroupComponent
-              // buttonOptions={Object.keys(routes).map((key) => console.log(key))}
-              buttonOptions={Object.keys(routes).map((key) =>
-                key
-                  .replace(/[_]/g, " ") // Replace underscores or dashes with spaces
-                  .toLowerCase() // Convert the entire key to lowercase
-                  .replace(/\b\w/g, (char) => char.toUpperCase()) // Capitalize the first letter of each word
-              )}
-              selectedOption={extractedPath || defaultOption}
-              onOptionChange={(option) => {
-                // Navigate to the selected route
-                const formattedOption = option
-                  .toLowerCase() // Convert the entire string to lowercase
-                  .replace(/\s+/g, "-") // Replace all spaces (one or more) with a dash
-                  + "-items"; // Append "-items" to the end
-                navigate(`/reports/${formattedOption}`);
-              }}
+              buttonOptions={routes}
+              selectedOption={selectedOption}
+              onChange={handleOnButtonGroupClick}
             />
           </Box>
         </Stack>
@@ -614,6 +655,27 @@ function Reports(props) {
             />
           </Box>
         </Stack>
+
+        {extractedPath === 'item-count' &&
+          <ItemCount
+            filter={filteredInventory}
+            header={itemHeader}
+          />
+        }
+
+        {extractedPath === 'starting-balance' &&
+          <StartingBalance
+            filter={filteredInventory}
+            header={startingBalHeader}
+          />
+        }
+
+        {extractedPath === 'near-expiration' &&
+          <NearExpiration
+            filter={filteredInventory}
+            header={nearExpHeader}
+          />
+        }
 
         {extractedPath === 'reordered-items' &&
           <ReorderedItems

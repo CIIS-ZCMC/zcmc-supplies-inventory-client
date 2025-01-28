@@ -54,7 +54,9 @@ const UnitsOverview = lazy(() => import("../Pages/Libraries/Units/UnitsOverview"
 
 // Reports Pages
 const Reports = lazy(() => import("../Pages/Reports/Reports"));
-
+const ItemCount = lazy(() => import('../Pages/Reports/ItemCount'));
+const StartingBalance = lazy(() => import('../Pages/Reports/StartingBalance'));
+const NearExpiration = lazy(() => import('../Pages/Reports/NearExpiration'));
 const ReorderedItems = lazy(() => import("../Pages/Reports/ReorderedItems"));
 const ConsumedItems = lazy(() => import("../Pages/Reports/ConsumedItems"));
 const DisposalItems = lazy(() => import("../Pages/Reports/DisposalItems"));
@@ -108,6 +110,9 @@ export const sidebarRoutes = [
     permissions: ["view"],
     children: [
       { path: "", element: <Navigate to="reordered-items" replace /> },
+      { path: "item-count", element: <ItemCount /> },
+      { path: "starting-balance", element: <StartingBalance /> },
+      { path: "near-expiration", element: <NearExpiration /> },
       { path: "reordered-items", element: <ReorderedItems /> },
       { path: "consumed-items", element: <ConsumedItems /> },
       { path: "disposal-items", element: <DisposalItems /> },
@@ -116,7 +121,6 @@ export const sidebarRoutes = [
       { path: "without-ris-items", element: <WithoutRISItems /> },
     ],
   },
-
 ];
 
 export const childrenRoutes = [
