@@ -160,10 +160,10 @@ function PaginatedTable({
     <>
       <Box>
         <Stack
-          spacing={1}
-          direction="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
+        // spacing={1}
+        // direction="row"
+        // justifyContent="space-between"
+        // alignItems="flex-end"
         >
           <Box>
             <Typography level="title-lg">
@@ -176,128 +176,130 @@ function PaginatedTable({
                 </Chip>
               )}
             </Typography>
-            <Typography level="body-sm" color="#666666">
-              {tableDesc}
-            </Typography>
+            {/* <Typography level="body-sm" color="#666666"> */}
+            {tableDesc}
+            {/* </Typography> */}
           </Box>
           {actionBtns}
-        </Stack>
+        </Stack >
         <Divider sx={{ my: 3, color: "#E6E6E6" }} />
         {/* Table */}
-        {loading ? (
-          <Box display="flex" justifyContent="center" py={5}>
-            <CircularProgress />
-          </Box>
-        ) : rows?.length > 0 ? (
-          <>
-            <Table stripe="odd" borderAxis="both">
-              <thead>
-                <tr>
-                  {columns?.map((col, index) => (
-                    <th
-                      key={index}
-                      style={{ textWrap: "wrap", width: col?.width }}
-                    >
-                      {col?.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentRows?.map((row, index) => (
-                  <tr key={row?.id}>
-                    {columns?.map((column) => (
-                      <td key={column?.id} style={{ textWrap: "wrap" }}>
-                        {column?.id === "actions" ? (
-                          <>
-                            {viewable && (
-                              <ButtonComponent
-                                size={"sm"}
-                                variant="plain"
-                                onClick={() =>
-                                  viewModal
-                                    ? handleModalOpen(row)
-                                    : handleNavigate(row)
-                                }
-                                startDecorator={
-                                  <SquareArrowOutUpRight size={"1rem"} />
-                                }
-                              />
-                            )}
-
-                            {editable && (
-                              <ButtonComponent
-                                size={"sm"}
-                                variant="plain"
-                                onClick={() => handleEdit(row)}
-                                startDecorator={<Pencil size={"1rem"} />}
-                              />
-                            )}
-                          </>
-                        ) : (
-                          row[column?.id] ?? `${startIdx + index + 1}`
-                        )}
-                      </td>
+        {
+          loading ? (
+            <Box display="flex" justifyContent="center" py={5}>
+              <CircularProgress />
+            </Box>
+          ) : rows?.length > 0 ? (
+            <>
+              <Table stripe="odd" borderAxis="both">
+                <thead>
+                  <tr>
+                    {columns?.map((col, index) => (
+                      <th
+                        key={index}
+                        style={{ textWrap: "wrap", width: col?.width }}
+                      >
+                        {col?.label}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {currentRows?.map((row, index) => (
+                    <tr key={row?.id}>
+                      {columns?.map((column) => (
+                        <td key={column?.id} style={{ textWrap: "wrap" }}>
+                          {column?.id === "actions" ? (
+                            <>
+                              {viewable && (
+                                <ButtonComponent
+                                  size={"sm"}
+                                  variant="plain"
+                                  onClick={() =>
+                                    viewModal
+                                      ? handleModalOpen(row)
+                                      : handleNavigate(row)
+                                  }
+                                  startDecorator={
+                                    <SquareArrowOutUpRight size={"1rem"} />
+                                  }
+                                />
+                              )}
 
-            {/* Pagination Controls */}
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              py={2}
-              mt={2}
-            >
-              <Button
-                variant="outlined"
-                color="neutral"
-                disabled={page === 1}
-                onClick={() => handleChangePage(page - 1)}
+                              {editable && (
+                                <ButtonComponent
+                                  size={"sm"}
+                                  variant="plain"
+                                  onClick={() => handleEdit(row)}
+                                  startDecorator={<Pencil size={"1rem"} />}
+                                />
+                              )}
+                            </>
+                          ) : (
+                            row[column?.id] ?? `${startIdx + index + 1}`
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+
+              {/* Pagination Controls */}
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                py={2}
+                mt={2}
               >
-                Previous
-              </Button>
+                <Button
+                  variant="outlined"
+                  color="neutral"
+                  disabled={page === 1}
+                  onClick={() => handleChangePage(page - 1)}
+                >
+                  Previous
+                </Button>
 
-              <Stack direction="row">
-                <Box display="flex" alignItems="center" ml={2}>
-                  <Typography level="body-sm" sx={{ mr: 1 }}>
-                    rows per page:
-                  </Typography>
-                  <Select
-                    value={rowsPerPage}
-                    onChange={handleRowsPerPageChange}
-                    sx={{ minWidth: 70 }}
-                    size="sm"
-                  >
-                    {[10, 20, 30, 50].map((option) => (
-                      <Option key={option} value={option}>
-                        {option}
-                      </Option>
-                    ))}
-                  </Select>
-                  <Typography level="body-sm" sx={{ ml: 1 }}>
-                    Showing {startIdx + 1}-{endIdx} items out of {rows?.length}
-                  </Typography>
-                </Box>
-              </Stack>
+                <Stack direction="row">
+                  <Box display="flex" alignItems="center" ml={2}>
+                    <Typography level="body-sm" sx={{ mr: 1 }}>
+                      rows per page:
+                    </Typography>
+                    <Select
+                      value={rowsPerPage}
+                      onChange={handleRowsPerPageChange}
+                      sx={{ minWidth: 70 }}
+                      size="sm"
+                    >
+                      {[10, 20, 30, 50].map((option) => (
+                        <Option key={option} value={option}>
+                          {option}
+                        </Option>
+                      ))}
+                    </Select>
+                    <Typography level="body-sm" sx={{ ml: 1 }}>
+                      Showing {startIdx + 1}-{endIdx} items out of {rows?.length}
+                    </Typography>
+                  </Box>
+                </Stack>
 
-              <Button
-                variant="outlined"
-                color="neutral"
-                disabled={page === totalPages}
-                onClick={() => handleChangePage(page + 1)}
-              >
-                Next
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <NoRows icon={icon} label={label} desc={desc} button={btn} />
-        )}
-      </Box>
+                <Button
+                  variant="outlined"
+                  color="neutral"
+                  disabled={page === totalPages}
+                  onClick={() => handleChangePage(page + 1)}
+                >
+                  Next
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <NoRows icon={icon} label={label} desc={desc} button={btn} />
+          )
+        }
+      </Box >
 
       <ModalComponent
         isOpen={isOpenDialog}
