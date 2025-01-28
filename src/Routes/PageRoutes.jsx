@@ -165,7 +165,7 @@ export const childrenRoutes = [
   },
 
   {
-    path: "/reports/:id",
+    path: "/reports/item-count/:id",
     element: <ViewItemDetails />,
     icon: null,
     permissions: ["view"],
