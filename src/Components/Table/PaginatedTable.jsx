@@ -179,8 +179,8 @@ function PaginatedTable({
             {/* <Typography level="body-sm" color="#666666"> */}
             {tableDesc}
             {/* </Typography> */}
+            {actionBtns}
           </Box>
-          {actionBtns}
         </Stack >
         <Divider sx={{ my: 3, color: "#E6E6E6" }} />
         {/* Table */}

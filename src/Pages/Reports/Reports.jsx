@@ -154,8 +154,8 @@ function Reports(props) {
       "Generate different types of reports here on-demand to fit your data-intensive requirements.",
     pagePath: `${currentPath}`,
   };
-  const [selectedOption, setSelectedOption] = useState(routes[0].path);
 
+  const [selectedOption, setSelectedOption] = useState(routes[0].path);
 
   const InfoDescription = () => (
     <>
@@ -170,6 +170,7 @@ function Reports(props) {
   )
 
   const handleOnButtonGroupClick = (path) => {
+    setSelectedOption(path)
     navigate(`/${path}`)
   };
 

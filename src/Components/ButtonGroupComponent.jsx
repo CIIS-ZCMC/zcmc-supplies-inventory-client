@@ -7,6 +7,9 @@ const ButtonGroupComponent = ({ buttonOptions, selectedOption, onChange }) => {
     return (
         <div>
             <ToggleButtonGroup
+                sx={{
+                    mt: 0.9
+                }}
                 value={selectedOption}
                 exclusive
                 onChange={(event, newValue) => {

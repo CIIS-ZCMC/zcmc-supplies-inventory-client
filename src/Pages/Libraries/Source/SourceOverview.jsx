@@ -9,6 +9,9 @@ import ModalComponent from '../../../Components/Dialogs/ModalComponent'
 import PaginatedTable from '../../../Components/Table/PaginatedTable'
 import SnackbarComponent from '../../../Components/SnackbarComponent'
 
+//layouts
+import TableDescription from '../../../Layout/Libraries/TableDescription'
+
 import FormDialog from './FormDialog';
 
 import useSourceHook from '../../../Hooks/SourceHook';
@@ -73,20 +76,15 @@ const SourceOverview = ({ filter }) => {
                 </Stack>
                 :
                 <PaginatedTable
-                    tableTitle={"Source"}
-                    // tableDesc={"Sample Table Desription"}
+                    tableDesc={<TableDescription label={'Add new source'} onClick={handleDialogOpen} />}
                     columns={sourceHeader}
                     rows={filter(sourcesData)}
                     loading={isLoading}
                     actions={<ViewIcon />}
-                    actionBtns={
-                        <Stack>
-                            <ButtonComponent label="Add new source" onClick={handleDialogOpen} />
-                        </Stack>
-                    }
                     editRow={handleEditRow}
                     editable={true}
                     viewable={false}
+                    showChip={false}
                 />
             }
             <ModalComponent
