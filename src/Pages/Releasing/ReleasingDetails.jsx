@@ -68,6 +68,18 @@ const ReleasingDetails = () => {
         { id: "quantity", label: "Quantity" },
     ];
 
+    const formatData = (data) => {
+        return data.map((row) => ({
+            ...row,
+            brand_name: row.brand_name ?? "N/A",
+            supplier_name: row.supplier_name ?? "N/A",
+        }));
+    };
+
+    useEffect(() => {
+        console.log(formatData(columns))
+    }, [formatData])
+
     return (
         <>
             {/* {JSON.stringify(filteredItems)} */}
@@ -143,7 +155,7 @@ const ReleasingDetails = () => {
                     tableTitle={"More information"}
                     tableDesc={"A single item can have multiple brands, suppliers, expiry dates and more."}
                     loading={isLoading}
-                    columns={columns}
+                    columns={formatData(columns)}
                     rows={releasedItems}
                     actionBtns={
                         <Stack direction="row" spacing={1}>
