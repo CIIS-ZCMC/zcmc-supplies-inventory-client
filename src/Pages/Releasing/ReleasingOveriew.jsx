@@ -188,6 +188,7 @@ const Releasing = () => {
                 <ButtonComponent label="New RIS" onClick={handleDialogOpen} />
               </Stack>
             }
+            viewable={true}
           />
         </ContainerComponent>
 
