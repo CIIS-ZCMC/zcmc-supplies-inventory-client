@@ -10,7 +10,7 @@ import InputComponent from "../../Components/Form/InputComponent";
 
 import { SearchIcon } from 'lucide-react';
 
-import { user, sortFilter } from "../../Data/index";
+import { user, sortFilter, filterByYear } from "../../Data/index";
 
 import {
   consumedHeader,
@@ -54,9 +54,6 @@ import { InfoIcon } from "lucide-react";
 import { BsInfoCircle } from "react-icons/bs";
 import { MdOfflineBolt, MdOutlineOfflineBolt } from "react-icons/md";
 
-import { categoryFilter } from "../../Data/index"; // from index data
-
-
 // pages
 export const FilterInfo = ({ label }) => {
   return (
@@ -80,6 +77,7 @@ function Reports(props) {
     selectedCategory,
     month,
     year,
+    setYear,
     sortOrder,
     setSortOrder,
     searchTerm,
@@ -88,14 +86,9 @@ function Reports(props) {
 
   const {
     dates,
+    getUnconsumed,
   } = useReportsHook();
 
-  // made the category filter global
-  const categoryFilter = [
-    { name: "Janitorial", value: "Janitorial" },
-    { name: "Medical", value: "Medical" },
-    { name: "Office", value: "Office" },
-  ];
 
   const expire_legends = [
     { label: "1 month", color: "red" },
@@ -174,6 +167,15 @@ function Reports(props) {
     navigate(`/${path}`)
   };
 
+
+  useEffect(() => {
+    if (year === null) {
+      setYear(fullyear)
+    }
+    console.log(year)
+  }, [year])
+
+
   // const generateExcel = () => {
   //   try {
   //     const data = tabsData[selectedTabIndex].rows; // Get the current tab's rows
@@ -235,6 +237,8 @@ function Reports(props) {
   //   </Button>
   // ))
 
+
+
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
@@ -260,7 +264,21 @@ function Reports(props) {
             value={searchTerm}
             setValue={setSearchTerm}
           />
-          <Box>
+
+          <Stack
+            direction="row"
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            spacing={2}
+          >
+            <SelectComponent
+              startIcon={"filter by date:"}
+              placeholder={"category"}
+              options={filterByYear}
+              value={year}
+              onChange={setYear}
+            />
+
             <SelectComponent
               startIcon={"Sort by:"}
               placeholder={"category"}
@@ -268,7 +286,8 @@ function Reports(props) {
               value={sortOrder}
               onChange={setSortOrder}
             />
-          </Box>
+          </Stack>
+
         </Stack>
 
         <Stack my={2}>
@@ -323,7 +342,7 @@ function Reports(props) {
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={consumedHeader}
-            currentYear={fullyear}
+            currentYear={year}
           />
         }
 
@@ -332,7 +351,7 @@ function Reports(props) {
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={unconsumedHeader}
-            fullyear={fullyear}
+            fullyear={year}
           />
         }
 
@@ -360,7 +379,6 @@ function Reports(props) {
             header={unconsumedHeader}
             currentYear={fullyear}
           />}
-
 
       </ContainerComponent>
 

@@ -77,7 +77,7 @@ const ReleasingDetails = () => {
     };
 
     useEffect(() => {
-        console.log(formatData(columns))
+        console.log(formatData(releasedItems))
     }, [formatData])
 
     return (
