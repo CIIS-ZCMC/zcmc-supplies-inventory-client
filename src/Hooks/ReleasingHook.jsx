@@ -39,11 +39,14 @@ const useReleasingHook = create((set) => ({
     brandQuantities: {},
 
     // Function to set quantity for a specific source_id
-    setBrandQuantity: (source_id, quantity) =>
+    setBrandQuantity: (key, quantity) =>
         set((state) => ({
-            brandQuantities: { ...state.brandQuantities, [source_id]: quantity },
+            brandQuantities: { ...state.brandQuantities, [key]: quantity },
         })),
 
+    retrieveKey: (selectedBrand) => {
+        return `${selectedBrand.source_id}-${selectedBrand.id}`
+    },
 
     //fetch the fata of stock out / releasing list
     getStockOut: async () => {

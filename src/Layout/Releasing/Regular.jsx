@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Grid, Typography, Stack, Box, Divider } from "@mui/joy";
+import { Box, } from "@mui/joy";
 
-import { Trash, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import ButtonComponent from "../../Components/ButtonComponent";
 
@@ -43,6 +43,7 @@ const Regular = ({
     data?.map((item) => ({
       id: item.brand_id,
       label: item[labelKey],
+      supplier_id: item.supplier_id,
       source_id: item.source_id,
       quantity: item.quantity,
       expiration_date: item.expiration_date,
@@ -55,6 +56,7 @@ const Regular = ({
 
   const [regularBrand, setRegularBrand] = useState(null); //Primary key of Regular Brand Product
   const [regularSource, setRegularSource] = useState(null); // ID: Identify as Donation[2] or Regular[1]
+  const [regularSupplier, setRegularSuppier] = useState(null)
   const [regularQuantity, setRegularQuantity] = useState(1);
   const [regularExpirationDate, setRegularExpirationDate] = useState(null);
 
@@ -80,6 +82,7 @@ const Regular = ({
       ...prevList,
       {
         brand_id: regularBrand,
+        supplier_id: regularSupplier,
         source_id: regularSource,
         quantity: regularQuantity,
         expiration_date: regularExpirationDate,
@@ -89,6 +92,7 @@ const Regular = ({
     // Reset the state for brand and quantity inputs
     setRegularBrand(null);
     setRegularSource(null);
+    setRegularSuppier(null)
     setRegularQuantity(initialQty);
     setRegularExpirationDate(null);
   };
