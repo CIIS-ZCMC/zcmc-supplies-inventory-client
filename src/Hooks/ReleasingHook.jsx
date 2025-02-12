@@ -34,6 +34,17 @@ const useReleasingHook = create((set) => ({
         quantityServed: Yup.number().required('Quantity Served is required'),
     }),
 
+
+    // Store quantity per source_id
+    brandQuantities: {},
+
+    // Function to set quantity for a specific source_id
+    setBrandQuantity: (source_id, quantity) =>
+        set((state) => ({
+            brandQuantities: { ...state.brandQuantities, [source_id]: quantity },
+        })),
+
+
     //fetch the fata of stock out / releasing list
     getStockOut: async () => {
         try {
@@ -65,23 +76,43 @@ const useReleasingHook = create((set) => ({
         }
     },
 
+    // Fetch brand regular and update quantity state
     getBrandRegular: async (id) => {
         try {
-            // console.log(`${BASE_URL}/${RELEASING}`)
             const response = await axios.get(`${BASE_URL.development}/${API.BRAND_REGULAR}/${id}`);
-            return response.data
+            const brandData = response.data;
+
+            if (brandData?.source_id) {
+                set((state) => ({
+                    brandQuantities: {
+                        ...state.brandQuantities,
+                        [brandData.source_id]: brandData.quantity || 0
+                    }
+                }));
+            }
+            return brandData;
         } catch (error) {
-            error.message;
+            console.error(error.message);
         }
     },
 
+    // Fetch brand donation and update quantity state
     getBrandDonation: async (id) => {
         try {
-            // console.log(`${BASE_URL}/${RELEASING}`)
             const response = await axios.get(`${BASE_URL.development}/${API.BRAND_DONATION}/${id}`);
-            return response.data
+            const brandData = response.data;
+
+            if (brandData?.source_id) {
+                set((state) => ({
+                    brandQuantities: {
+                        ...state.brandQuantities,
+                        [brandData.source_id]: brandData.quantity || 0
+                    }
+                }));
+            }
+            return brandData;
         } catch (error) {
-            error.message;
+            console.error(error.message);
         }
     },
 

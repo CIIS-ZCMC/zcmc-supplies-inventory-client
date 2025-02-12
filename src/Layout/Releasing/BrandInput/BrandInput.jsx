@@ -6,7 +6,28 @@ import AutoCompleteComponent from "../../../Components/Form/AutoCompleteComponen
 import InputComponent from "../../../Components/Form/InputComponent";
 import IconButtonComponent from "../../../Components/IconButtonComponent";
 
+import useReleasingHook from "../../../Hooks/ReleasingHook";
+
 const BrandInput = (props) => {
+
+  const { brandQuantities, setBrandQuantity } = useReleasingHook();
+
+  useEffect(() => {
+    if (props.item.brand_id) {
+      const selectedBrand = props.brandRegularOptions.find(
+        (option) => option.id === props.item.brand_id
+      );
+
+      if (selectedBrand) {
+        setBrandQuantity(selectedBrand.source_id, selectedBrand.quantity || 0);
+      }
+    }
+  }, [props.item.brand_id, props.brandRegularOptions, setBrandQuantity]);
+
+  // Get the correct quantity for the current source_id
+  const currentQuantity = brandQuantities[props.item.source_id] || 0;
+  console.log("Current Quantity:", currentQuantity);
+
   const filterBrandOptions =
     props.regularBrands.length === 0
       ? props.brandRegularOptions
@@ -70,7 +91,7 @@ const BrandInput = (props) => {
           <AutoCompleteComponent
             name={"brandRegular"}
             placeholder="Search brand..."
-            label={"Brand"}
+            label={`Brand `}
             options={filterBrandOptions}
             loading={props.isBrandRegularloading}
             value={props.brandRegularOptions.find(
@@ -100,7 +121,7 @@ const BrandInput = (props) => {
         {/* Quantity Input */}
         <Grid xs={11} md={5} lg={5}>
           <InputComponent
-            label="Quantity"
+            label={`Quantity (${currentQuantity} available)`}
             placeholder="xxx.xxx.xxx"
             fullWidth={true}
             name={`quantity-${props.index}`}
@@ -115,17 +136,20 @@ const BrandInput = (props) => {
                 justifyContent="space-between"
               >
                 <QuantityDisplay />
-
-                {/* Trash Icon Button */}
-                <IconButtonComponent
-                  color="danger"
-                  icon={Trash}
-                  iconSize={16}
-                  onClick={() => props.handleRemoveBrand(props.index)}
-                />
               </Stack>
             }
           />
+
+          <Stack direction={'row'} justifyContent={'end'} mt={1}>
+            {/* Trash Icon Button */}
+            <IconButtonComponent
+              color="danger"
+              icon={Trash}
+              iconSize={16}
+              onClick={() => props.handleRemoveBrand(props.index)}
+            />
+          </Stack>
+
         </Grid>
       </Grid>
       <Divider sx={{ my: 2 }} />

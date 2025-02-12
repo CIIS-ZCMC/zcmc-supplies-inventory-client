@@ -167,7 +167,6 @@ function Reports(props) {
     navigate(`/${path}`)
   };
 
-
   useEffect(() => {
     if (year === null) {
       setYear(fullyear)
@@ -271,13 +270,16 @@ function Reports(props) {
             alignItems={"center"}
             spacing={2}
           >
-            <SelectComponent
-              startIcon={"filter by date:"}
-              placeholder={"category"}
-              options={filterByYear}
-              value={year}
-              onChange={setYear}
-            />
+
+            {!['/reports/near-expiration', '/reports/zero-stocks-items', '/reports/reordered-items', '/reports/disposal-items'].includes(currentPath) && (
+              <SelectComponent
+                startIcon={"filter by date:"}
+                placeholder={"category"}
+                options={filterByYear}
+                value={year}
+                onChange={setYear}
+              />
+            )}
 
             <SelectComponent
               startIcon={"Sort by:"}
