@@ -12,7 +12,7 @@ const useInventoryHook = create((set) => ({
       const response = await axios.get(
         `${BASE_URL.development}/${API.INVENTORY}`
       );
-      set({ inventory: response.data.data });
+      // set({ inventory: response.data.data });
       return response.data;
     } catch (error) {
       console.error(error.message); ``

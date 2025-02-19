@@ -13,6 +13,7 @@ import SelectComponent from "../../Components/Form/SelectComponent";
 import useFilterHook from "../../Hooks/FilterHook";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
@@ -65,21 +66,17 @@ const Inventory = () => {
     pagePath: "/inventory",
   };
 
-  const [loading, setLoading] = useState(true);
-
   const navigateToItemSupplies = () => {
     navigate('/libraries')
   }
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      getInventory();
-      setLoading(false);
-    }, 300);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [getInventory]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: "inventory",
+    queryFn: getInventory,
+  });
+
+  const inventoryData = data?.data;
+
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
@@ -126,13 +123,13 @@ const Inventory = () => {
         <ContainerComponent>
           <PaginatedTable
             viewable={true}
-            loading={loading}
+            loading={isLoading}
             tableTitle={"List of items"}
             tableDesc={
               "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
             }
             columns={columns}
-            rows={filteredInventory(inventory)}
+            rows={filteredInventory(inventoryData)}
             actions={<ViewIcon />}
             btnLabel={"Add new item name"}
             actionBtns={
