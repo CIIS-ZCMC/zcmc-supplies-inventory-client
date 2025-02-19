@@ -38,38 +38,24 @@ const useReleasingHook = create((set) => ({
     try {
       const response = await inventory_api.get(`/${API.RELEASING}`);
 
-<<<<<<< HEAD
       return response.data;
     } catch (error) {
       error.message;
     }
   },
-=======
 
-    // Store quantity per source_id
-    brandQuantities: {},
+  // Store quantity per source_id
+  brandQuantities: {},
 
-    // Function to set quantity for a specific source_id
-    setBrandQuantity: (key, quantity) =>
-        set((state) => ({
-            brandQuantities: { ...state.brandQuantities, [key]: quantity },
-        })),
+  // Function to set quantity for a specific source_id
+  setBrandQuantity: (key, quantity) =>
+    set((state) => ({
+      brandQuantities: { ...state.brandQuantities, [key]: quantity },
+    })),
 
-    retrieveKey: (selectedBrand) => {
-        return `${selectedBrand.source_id}-${selectedBrand.id}`
-    },
-
-    //fetch the fata of stock out / releasing list
-    getStockOut: async () => {
-        try {
-            // console.log(`${BASE_URL}/${RELEASING}`)
-            const response = await axios.get(`${BASE_URL.development}/${API.RELEASING}`);
-            return response.data
-        } catch (error) {
-            error.message;
-        }
-    },
->>>>>>> tobemerge
+  retrieveKey: (selectedBrand) => {
+    return `${selectedBrand.source_id}-${selectedBrand.id}`;
+  },
 
   getSelectedReleasingList: async (id) => {
     try {
@@ -81,7 +67,6 @@ const useReleasingHook = create((set) => ({
     }
   },
 
-<<<<<<< HEAD
   // Create stock out with POST request
   createStockOut: async (formData) => {
     try {
@@ -93,53 +78,21 @@ const useReleasingHook = create((set) => ({
       throw error;
     }
   },
-=======
-    // Fetch brand regular and update quantity state
-    getBrandRegular: async (id) => {
-        try {
-            const response = await axios.get(`${BASE_URL.development}/${API.BRAND_REGULAR}/${id}`);
-            const brandData = response.data;
-
-            if (brandData?.source_id) {
-                set((state) => ({
-                    brandQuantities: {
-                        ...state.brandQuantities,
-                        [brandData.source_id]: brandData.quantity || 0
-                    }
-                }));
-            }
-            return brandData;
-        } catch (error) {
-            console.error(error.message);
-        }
-    },
-
-    // Fetch brand donation and update quantity state
-    getBrandDonation: async (id) => {
-        try {
-            const response = await axios.get(`${BASE_URL.development}/${API.BRAND_DONATION}/${id}`);
-            const brandData = response.data;
-
-            if (brandData?.source_id) {
-                set((state) => ({
-                    brandQuantities: {
-                        ...state.brandQuantities,
-                        [brandData.source_id]: brandData.quantity || 0
-                    }
-                }));
-            }
-            return brandData;
-        } catch (error) {
-            console.error(error.message);
-        }
-    },
->>>>>>> tobemerge
 
   getBrandRegular: async (id) => {
     try {
       const response = await inventory_api.get(`/${API.BRAND_REGULAR}/${id}`);
+      const brandData = response.data;
 
-      return response.data;
+      if (brandData?.source_id) {
+        set((state) => ({
+          brandQuantities: {
+            ...state.brandQuantities,
+            [brandData.source_id]: brandData.quantity || 0,
+          },
+        }));
+      }
+      return brandData;
     } catch (error) {
       error.message;
     }
@@ -148,8 +101,17 @@ const useReleasingHook = create((set) => ({
   getBrandDonation: async (id) => {
     try {
       const response = await inventory_api.get(`/${API.BRAND_DONATION}/${id}`);
+      const brandData = response.data;
 
-      return response.data;
+      if (brandData?.source_id) {
+        set((state) => ({
+          brandQuantities: {
+            ...state.brandQuantities,
+            [brandData.source_id]: brandData.quantity || 0,
+          },
+        }));
+      }
+      return brandData;
     } catch (error) {
       error.message;
     }
