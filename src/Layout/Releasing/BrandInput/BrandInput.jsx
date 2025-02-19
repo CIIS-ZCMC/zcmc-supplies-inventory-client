@@ -155,7 +155,7 @@ const BrandInput = (props) => {
               </Stack>
             }
           />
-          {props.item.quantity}
+          {/* {props.item.quantity} */}
 
           <Stack direction={'row'} justifyContent={'end'} mt={1}>
             {/* Trash Icon Button */}
