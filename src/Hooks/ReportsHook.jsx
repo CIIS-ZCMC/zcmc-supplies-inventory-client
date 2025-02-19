@@ -90,20 +90,11 @@ const useReportsHook = create((set) => ({
 
   getUnconsumed: async (year) => {
     try {
-<<<<<<< HEAD
       const response = await inventory_api.get(
         `/${API.REPORTS_UNCONSUMED}/${year}`
-=======
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_UNCONSUMED}/${year}`
->>>>>>> tobemerge
       );
 
       set({ unconsumed: response.data });
-<<<<<<< HEAD
-
-=======
->>>>>>> tobemerge
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -112,13 +103,8 @@ const useReportsHook = create((set) => ({
 
   getReorder: async (month) => {
     try {
-<<<<<<< HEAD
       const response = await inventory_api.get(
         `/${API.REPORTS_REORDER}/${month}`
-=======
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_REORDER}/${month}`
->>>>>>> tobemerge
       );
 
       set({ reorder: response.data });
