@@ -249,7 +249,7 @@ const FormDialog = ({
           <Stack>
             <Typography>Regular</Typography>
             <Typography level="body-sm">
-              Total quantity to be released from Regular: 0 / 1400 left
+              Total quantity to be released from Regular: {totalRegularQtyBrands} / 1400 left
             </Typography>
           </Stack>
         </>
@@ -275,7 +275,7 @@ const FormDialog = ({
           <Stack>
             <Typography>Donation</Typography>
             <Typography level="body-sm">
-              Total quantity to be released from Regular: 0 / 1400 left
+              Total quantity to be released from Regular: {totalDonationQtyBrands} / 1400 left
             </Typography>
           </Stack>
         </>
@@ -394,11 +394,11 @@ const FormDialog = ({
             disabled={
               activeStep === 0
                 ? !(
-                    requestingOffice !== null &&
-                    qtyRequest > 0 &&
-                    risNo !== null &&
-                    risNo !== ""
-                  )
+                  requestingOffice !== null &&
+                  qtyRequest > 0 &&
+                  risNo !== null &&
+                  risNo !== ""
+                )
                 : dissableOnRegularOrDonationEmptyItems()
             }
             onClick={onHandleNext}

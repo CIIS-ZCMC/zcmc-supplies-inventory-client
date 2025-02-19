@@ -9,6 +9,9 @@ import ModalComponent from '../../../Components/Dialogs/ModalComponent'
 import PaginatedTable from '../../../Components/Table/PaginatedTable'
 import SnackbarComponent from '../../../Components/SnackbarComponent'
 
+//layouts
+import TableDescription from '../../../Layout/Libraries/TableDescription'
+
 import FormDialog from './FormDialog';
 
 import useUnitsHook from '../../../Hooks/UnitsHook'
@@ -72,20 +75,21 @@ const UnitsOverview = ({ filter }) => {
                 </Stack>
                 :
                 <PaginatedTable
-                    tableTitle={"Units"}
-                    // tableDesc={"Sample Table Desription"}
+                    // tableTitle={"Units"}
+                    tableDesc={
+                        <TableDescription
+                            label={'Add new unit'}
+                            onClick={handleDialogOpen}
+                        />
+                    }
                     columns={unitHeader}
                     rows={filter(unitsData)}
                     loading={isLoading}
                     actions={<ViewIcon />}
-                    actionBtns={
-                        <Stack>
-                            <ButtonComponent label="Add new unit" onClick={handleDialogOpen} />
-                        </Stack>
-                    }
                     editRow={handleEditRow}
                     editable={true}
                     viewable={false}
+                    showChip={false}
                 />
             }
             <ModalComponent

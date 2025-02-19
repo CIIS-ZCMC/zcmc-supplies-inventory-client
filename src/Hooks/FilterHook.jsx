@@ -6,7 +6,7 @@ const useFilterHook = create((set) => ({
   searchTerm: "",
   month: "",
   year: "",
-  fromDate: "", // New state for full date filtering
+  fromDate: "",
   toDate: "",
 
   // Update selected category filter
@@ -44,7 +44,7 @@ const useFilterHook = create((set) => ({
       console.error("Expected an array but got:", data);
       return [];
     }
-    const { selectedCategory, sortOrder, searchTerm } =
+    const { selectedCategory, sortOrder, searchTerm, year } =
       useFilterHook.getState();
 
     // Filter by selected category

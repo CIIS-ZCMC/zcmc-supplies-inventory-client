@@ -19,11 +19,11 @@ const Step2Form = ({
     (item) => item.id === selectedId
   );
 
-  useEffect(() => {
-    if (itemCurrentStockLevel) {
-      console.log(itemCurrentStockLevel?.quantity);
-    }
-  }, [itemCurrentStockLevel]);
+  // useEffect(() => {
+  //   if (itemCurrentStockLevel) {
+  //     console.log(itemCurrentStockLevel?.quantity);
+  //   }
+  // }, [itemCurrentStockLevel]);
 
   return (
     <div>

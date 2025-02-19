@@ -51,7 +51,8 @@ function ViewDetails(props) {
     { id: "supply_name", label: "Item Name" },
     { id: "category_name", label: "Category" },
     { id: "unit_name", label: "Unit" },
-    { id: "source_name", label: "Source" }
+    { id: "source_name", label: "Source" },
+    { id: "quantity", label: "Quantity" }
   ];
 
   const totalQuantity = details.reduce((sum, item) => sum + item.quantity, 0);
