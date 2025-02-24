@@ -8,7 +8,7 @@ import { Stack, Box, Typography } from '@mui/joy'
 import useReportsHook from '../../Hooks/ReportsHook'
 import PaginatedTable from '../../Components/Table/PaginatedTable'
 
-const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
+const RegularSupplies = ({ filter, header, InfoDescription, currentYear }) => {
 
     const { getRegularSupply } = useReportsHook();
 
@@ -16,6 +16,10 @@ const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
         queryKey: ['regularSupplies', currentYear],
         queryFn: () => getRegularSupply(currentYear)
     })
+
+    useEffect(() => {
+        console.log('Regular Supplies:', currentYear === 2024)
+    }, [currentYear])
 
     const regularSuppliesData = data || [];
 
@@ -58,4 +62,4 @@ const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
     )
 }
 
-export default StartingBalance
+export default RegularSupplies

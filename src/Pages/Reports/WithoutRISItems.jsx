@@ -20,7 +20,7 @@ const WithoutRISItems = ({ currentYear, filter, header }) => {
     return (
         <div>
             <PaginatedTable
-                tableTitle={"Unconsumed without ris"}
+                // tableTitle={"Unconsumed without ris"}
                 tableDesc={"Sample Table Desription"}
                 loading={isLoading}
                 columns={header}

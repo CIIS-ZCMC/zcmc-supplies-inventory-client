@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import Header from "../../Layout/Header/Header";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import { Box, Divider, Stack, Typography, useTheme, Button } from "@mui/joy";
@@ -7,6 +9,7 @@ import ButtonComponent from "../../Components/ButtonComponent";
 
 import ButtonGroupComponent from "../../Components/ButtonGroupComponent";
 import InputComponent from "../../Components/Form/InputComponent";
+import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
 
 import { SearchIcon } from 'lucide-react';
 
@@ -29,6 +32,7 @@ import {
 import useReportsHook from "../../Hooks/ReportsHook";
 import useModalHook from "../../Hooks/ModalHook";
 import useFilterHook from "../../Hooks/FilterHook";
+import useAreasHook from "../../Hooks/AreasHook";
 
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
@@ -56,8 +60,6 @@ import moment from "moment";
 import { InfoIcon } from "lucide-react";
 import { BsInfoCircle } from "react-icons/bs";
 import { MdOfflineBolt, MdOutlineOfflineBolt } from "react-icons/md";
-
-
 
 // pages
 export const FilterInfo = ({ label }) => {
@@ -94,6 +96,10 @@ function Reports(props) {
     getUnconsumed,
   } = useReportsHook();
 
+
+  const {
+    getAreas
+  } = useAreasHook()
 
   const expire_legends = [
     { label: "1 month", color: "red" },
@@ -136,11 +142,23 @@ function Reports(props) {
   const currentMonth = currentDate.getMonth() + 1; // 11 (November)
   const currentMonthYear = `${fullyear}-${currentMonth < 10 ? "0" + currentMonth : currentMonth}`// "2024-11"
 
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['areas'],
+    queryFn: () => getAreas(),
+  })
+
+  const [areaId, setAreaId] = useState(null);
+
+  const areasData = data?.data;
+
+  const areasOptions = areasData?.map(area => ({ label: area.area_name, id: area.id }));
+
   useEffect(() => {
     // Redirect to the default route if no child route is selected
     if (location.pathname === "/reports") {
       navigate(`/reports/${defaultOption}`);
     }
+
   }, [location.pathname, navigate, defaultOption]);
 
   const theme = useTheme();
@@ -156,6 +174,7 @@ function Reports(props) {
   };
 
   const [selectedOption, setSelectedOption] = useState(routes[0].path);
+
 
   const InfoDescription = () => (
     <>
@@ -179,6 +198,7 @@ function Reports(props) {
       setYear(fullyear)
     }
     console.log(year)
+    console.log(fullyear)
   }, [year])
 
 
@@ -243,6 +263,7 @@ function Reports(props) {
   //   </Button>
   // ))
 
+
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
@@ -278,13 +299,23 @@ function Reports(props) {
 
             {!['/reports/near-expiration', '/reports/zero-stocks-items', '/reports/reordered-items', '/reports/disposal-items'].includes(currentPath) && (
               <SelectComponent
-                startIcon={"filter by year:"}
-                placeholder={"category"}
+                startIcon={"Filter by year:"}
+                placeholder={"Year"}
                 options={filterByYear}
                 value={year}
                 onChange={setYear}
               />
             )}
+
+            {['/reports/area-supplies'].includes(currentPath) &&
+              <AutoCompleteComponent
+                placeholder={"Filter by Area"}
+                options={areasOptions}
+                loading={isLoading}
+                value={areasOptions?.find(option => option.id === areaId) || areasOptions?.find(option => option.id === 1)}
+                onChange={(event, value) => setAreaId(value ? value.id : 1)}
+              />
+            }
 
             <SelectComponent
               startIcon={"Sort by:"}
@@ -395,7 +426,8 @@ function Reports(props) {
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={areaSuppliesHeader}
-            currentYear={fullyear}
+            currentYear={year}
+            areaId={areaId}
           />
         }
 
@@ -404,7 +436,7 @@ function Reports(props) {
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={regularSuppliesHeader}
-            currentYear={fullyear}
+            currentYear={year}
           />
         }
       </ContainerComponent>
