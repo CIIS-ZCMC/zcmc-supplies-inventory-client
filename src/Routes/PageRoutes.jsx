@@ -2,13 +2,9 @@ import { Navigate } from "react-router-dom";
 
 import { lazy } from "react";
 import {
-  CircleGauge,
   ArrowUpFromLine,
   ArrowDownToLine,
-  BaggageClaim,
-  Tag,
   ClipboardList,
-  LayoutGrid,
   ChartCandlestick,
 } from "lucide-react";
 
@@ -63,6 +59,8 @@ const DisposalItems = lazy(() => import("../Pages/Reports/DisposalItems"));
 const ZeroStockItems = lazy(() => import("../Pages/Reports/ZeroStockItems"));
 const UnconsumedItems = lazy(() => import("../Pages/Reports/UnconsumedItems"));
 const WithoutRISItems = lazy(() => import("../Pages/Reports/WithoutRISItems"));
+const AreasSupplies = lazy(() => import("../Pages/Reports/AreaSupplies"));
+const RegularSupplies = lazy(() => import("../Pages/Reports/RegularSupplies"));
 
 export const sidebarRoutes = [
   {
@@ -119,6 +117,8 @@ export const sidebarRoutes = [
       { path: "zero-stocks-items", element: <ZeroStockItems /> },
       { path: "unconsumed-items", element: <UnconsumedItems /> },
       { path: "without-ris-items", element: <WithoutRISItems /> },
+      { path: "area-supplies", element: <AreasSupplies /> },
+      { path: "regular-supplies", element: <RegularSupplies /> },
     ],
   },
 ];

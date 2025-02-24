@@ -22,6 +22,8 @@ import {
   sufficientHeader,
   unconsumedHeader,
   zeroStocksHeader,
+  areaSuppliesHeader,
+  regularSuppliesHeader,
 } from "../../Data/TableHeader";
 
 import useReportsHook from "../../Hooks/ReportsHook";
@@ -40,7 +42,8 @@ import DisposalItems from "../Reports/DisposalItems";
 import ZeroStockItems from "../Reports/ZeroStockItems";
 import UnconsumedItems from "../Reports/UnconsumedItems";
 import WithoutRISItems from "../Reports/WithoutRISItems";
-
+import AreaSupplies from "./AreaSupplies";
+import RegularSupplies from "./RegularSupplies";
 
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import { BiCheckCircle } from "react-icons/bi";
@@ -53,6 +56,8 @@ import moment from "moment";
 import { InfoIcon } from "lucide-react";
 import { BsInfoCircle } from "react-icons/bs";
 import { MdOfflineBolt, MdOutlineOfflineBolt } from "react-icons/md";
+
+
 
 // pages
 export const FilterInfo = ({ label }) => {
@@ -112,6 +117,8 @@ function Reports(props) {
     { id: 6, label: 'Unconsumed without RIS', path: 'reports/unconsumed-items' },
     { id: 7, label: 'Reorder Items', path: 'reports/reordered-items' },
     { id: 8, label: 'For Disposal', path: 'reports/disposal-items' },
+    { id: 9, label: 'Area Supplies', path: 'reports/area-supplies' },
+    { id: 10, label: 'Regular Supplies', path: 'reports/regular-supplies' },
   ]
 
   // const [searchTerm, setSearchTerm] = useState("");
@@ -235,8 +242,6 @@ function Reports(props) {
   //     {label}
   //   </Button>
   // ))
-
-
 
   return (
     <Fragment>
@@ -382,8 +387,26 @@ function Reports(props) {
             filter={filteredInventory}
             header={unconsumedHeader}
             currentYear={fullyear}
-          />}
+          />
+        }
 
+        {extractedPath === 'area-supplies' &&
+          <AreaSupplies
+            InfoDescription={InfoDescription}
+            filter={filteredInventory}
+            header={areaSuppliesHeader}
+            currentYear={fullyear}
+          />
+        }
+
+        {extractedPath === 'regular-supplies' &&
+          <RegularSupplies
+            InfoDescription={InfoDescription}
+            filter={filteredInventory}
+            header={regularSuppliesHeader}
+            currentYear={fullyear}
+          />
+        }
       </ContainerComponent>
 
       <ModalComponent
