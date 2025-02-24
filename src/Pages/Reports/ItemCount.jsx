@@ -8,13 +8,13 @@ import { Stack, Box, Typography } from '@mui/joy'
 import useReportsHook from '../../Hooks/ReportsHook'
 import PaginatedTable from '../../Components/Table/PaginatedTable'
 
-const ItemCount = ({ filter, header, InfoDescription }) => {
+const ItemCount = ({ filter, header, InfoDescription, currentYear }) => {
 
     const { getItemCount } = useReportsHook();
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['itemCount',],
-        queryFn: () => getItemCount()
+        queryKey: ['itemCount', currentYear],
+        queryFn: () => getItemCount(currentYear)
     })
 
     const itemCount = data || [];

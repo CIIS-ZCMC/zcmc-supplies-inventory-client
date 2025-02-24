@@ -8,13 +8,13 @@ import { Stack, Box, Typography } from '@mui/joy'
 import useReportsHook from '../../Hooks/ReportsHook'
 import PaginatedTable from '../../Components/Table/PaginatedTable'
 
-const StartingBalance = ({ filter, header, InfoDescription }) => {
+const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
 
     const { getStartingBal } = useReportsHook();
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['startingBalance'],
-        queryFn: () => getStartingBal()
+        queryKey: ['startingBalance', currentYear],
+        queryFn: () => getStartingBal(currentYear)
     })
 
     const startingBalance = data || [];

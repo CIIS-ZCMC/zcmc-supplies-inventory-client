@@ -273,7 +273,7 @@ function Reports(props) {
 
             {!['/reports/near-expiration', '/reports/zero-stocks-items', '/reports/reordered-items', '/reports/disposal-items'].includes(currentPath) && (
               <SelectComponent
-                startIcon={"filter by date:"}
+                startIcon={"filter by year:"}
                 placeholder={"category"}
                 options={filterByYear}
                 value={year}
@@ -306,6 +306,7 @@ function Reports(props) {
 
         {extractedPath === 'item-count' &&
           <ItemCount
+            currentYear={year}
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={itemHeader}
@@ -317,6 +318,7 @@ function Reports(props) {
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={startingBalHeader}
+            currentYear={year}
           />
         }
 
