@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import Header from "../../Layout/Header/Header";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import { Box, Divider, Stack, Typography, useTheme, Button } from "@mui/joy";
@@ -7,6 +9,7 @@ import ButtonComponent from "../../Components/ButtonComponent";
 
 import ButtonGroupComponent from "../../Components/ButtonGroupComponent";
 import InputComponent from "../../Components/Form/InputComponent";
+import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
 
 import { SearchIcon } from 'lucide-react';
 
@@ -22,11 +25,14 @@ import {
   sufficientHeader,
   unconsumedHeader,
   zeroStocksHeader,
+  areaSuppliesHeader,
+  regularSuppliesHeader,
 } from "../../Data/TableHeader";
 
 import useReportsHook from "../../Hooks/ReportsHook";
 import useModalHook from "../../Hooks/ModalHook";
 import useFilterHook from "../../Hooks/FilterHook";
+import useAreasHook from "../../Hooks/AreasHook";
 
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import SelectComponent from "../../Components/Form/SelectComponent";
@@ -40,7 +46,8 @@ import DisposalItems from "../Reports/DisposalItems";
 import ZeroStockItems from "../Reports/ZeroStockItems";
 import UnconsumedItems from "../Reports/UnconsumedItems";
 import WithoutRISItems from "../Reports/WithoutRISItems";
-
+import AreaSupplies from "./AreaSupplies";
+import RegularSupplies from "./RegularSupplies";
 
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import { BiCheckCircle } from "react-icons/bi";
@@ -90,6 +97,10 @@ function Reports(props) {
   } = useReportsHook();
 
 
+  const {
+    getAreas
+  } = useAreasHook()
+
   const expire_legends = [
     { label: "1 month", color: "red" },
     { label: "2 months", color: "yellow" },
@@ -112,6 +123,8 @@ function Reports(props) {
     { id: 6, label: 'Unconsumed without RIS', path: 'reports/unconsumed-items' },
     { id: 7, label: 'Reorder Items', path: 'reports/reordered-items' },
     { id: 8, label: 'For Disposal', path: 'reports/disposal-items' },
+    { id: 9, label: 'Area Supplies', path: 'reports/area-supplies' },
+    { id: 10, label: 'Regular Supplies', path: 'reports/regular-supplies' },
   ]
 
   // const [searchTerm, setSearchTerm] = useState("");
@@ -129,11 +142,23 @@ function Reports(props) {
   const currentMonth = currentDate.getMonth() + 1; // 11 (November)
   const currentMonthYear = `${fullyear}-${currentMonth < 10 ? "0" + currentMonth : currentMonth}`// "2024-11"
 
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['areas'],
+    queryFn: () => getAreas(),
+  })
+
+  const [areaId, setAreaId] = useState(null);
+
+  const areasData = data?.data;
+
+  const areasOptions = areasData?.map(area => ({ label: area.area_name, id: area.id }));
+
   useEffect(() => {
     // Redirect to the default route if no child route is selected
     if (location.pathname === "/reports") {
       navigate(`/reports/${defaultOption}`);
     }
+
   }, [location.pathname, navigate, defaultOption]);
 
   const theme = useTheme();
@@ -149,6 +174,7 @@ function Reports(props) {
   };
 
   const [selectedOption, setSelectedOption] = useState(routes[0].path);
+
 
   const InfoDescription = () => (
     <>
@@ -172,6 +198,7 @@ function Reports(props) {
       setYear(fullyear)
     }
     console.log(year)
+    console.log(fullyear)
   }, [year])
 
 
@@ -237,7 +264,6 @@ function Reports(props) {
   // ))
 
 
-
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
@@ -273,13 +299,23 @@ function Reports(props) {
 
             {!['/reports/near-expiration', '/reports/zero-stocks-items', '/reports/reordered-items', '/reports/disposal-items'].includes(currentPath) && (
               <SelectComponent
-                startIcon={"filter by date:"}
-                placeholder={"category"}
+                startIcon={"Filter by year:"}
+                placeholder={"Year"}
                 options={filterByYear}
                 value={year}
                 onChange={setYear}
               />
             )}
+
+            {['/reports/area-supplies'].includes(currentPath) &&
+              <AutoCompleteComponent
+                placeholder={"Filter by Area"}
+                options={areasOptions}
+                loading={isLoading}
+                value={areasOptions?.find(option => option.id === areaId) || areasOptions?.find(option => option.id === 1)}
+                onChange={(event, value) => setAreaId(value ? value.id : 1)}
+              />
+            }
 
             <SelectComponent
               startIcon={"Sort by:"}
@@ -306,6 +342,7 @@ function Reports(props) {
 
         {extractedPath === 'item-count' &&
           <ItemCount
+            currentYear={year}
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={itemHeader}
@@ -317,6 +354,7 @@ function Reports(props) {
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={startingBalHeader}
+            currentYear={year}
           />
         }
 
@@ -380,8 +418,27 @@ function Reports(props) {
             filter={filteredInventory}
             header={unconsumedHeader}
             currentYear={fullyear}
-          />}
+          />
+        }
 
+        {extractedPath === 'area-supplies' &&
+          <AreaSupplies
+            InfoDescription={InfoDescription}
+            filter={filteredInventory}
+            header={areaSuppliesHeader}
+            currentYear={year}
+            areaId={areaId}
+          />
+        }
+
+        {extractedPath === 'regular-supplies' &&
+          <RegularSupplies
+            InfoDescription={InfoDescription}
+            filter={filteredInventory}
+            header={regularSuppliesHeader}
+            currentYear={year}
+          />
+        }
       </ContainerComponent>
 
       <ModalComponent

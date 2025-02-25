@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { ViewIcon } from 'lucide-react'
@@ -8,16 +8,16 @@ import { Stack, Box, Typography } from '@mui/joy'
 import useReportsHook from '../../Hooks/ReportsHook'
 import PaginatedTable from '../../Components/Table/PaginatedTable'
 
-const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
+const AreaSupplies = ({ filter, header, InfoDescription, currentYear, areaId }) => {
 
-    const { getStartingBal } = useReportsHook();
+    const { getAreaSupply } = useReportsHook();
 
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['startingBalance', currentYear],
-        queryFn: () => getStartingBal(currentYear)
+    const { data, isLoading, } = useQuery({
+        queryKey: ['areaSupplies', areaId, currentYear],
+        queryFn: () => getAreaSupply(areaId, currentYear)
     })
 
-    const startingBalance = data || [];
+    const areaSuppliesData = data || [];
 
     const TableDescription = () => (
         <>
@@ -49,7 +49,7 @@ const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
                 tableDesc={<TableDescription />}
                 loading={isLoading}
                 columns={header}
-                rows={filter(startingBalance)}
+                rows={filter(areaSuppliesData)}
                 actions={<ViewIcon />}
                 editable={false}
                 viewable={true}
@@ -58,4 +58,4 @@ const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
     )
 }
 
-export default StartingBalance
+export default AreaSupplies

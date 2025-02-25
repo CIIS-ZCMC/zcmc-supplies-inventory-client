@@ -18,7 +18,8 @@ const AutoCompleteComponent = ({
   fullWidth,
   error,
   helperText,
-  addBtn
+  addBtn,
+  size
 }) => {
   return (
     <Box>
@@ -36,7 +37,7 @@ const AutoCompleteComponent = ({
           sx={{ width }}
           options={options}
           placeholder={placeholder}
-          size="lg"
+          size={size}
           onChange={onChange}
           value={value}
           fullWidth={fullWidth}
