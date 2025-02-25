@@ -1,5 +1,4 @@
 import { Navigate } from "react-router-dom";
-
 import { lazy } from "react";
 import {
   ArrowUpFromLine,
@@ -7,74 +6,41 @@ import {
   ClipboardList,
   ChartCandlestick,
 } from "lucide-react";
-
 import { BiCategory } from "react-icons/bi";
 import { GrDocument } from "react-icons/gr";
 import ViewItemDetails from "../Pages/Reports/ViewItemDetails";
 
-// Lazy load each page component
-const Dashboard = lazy(() => import("../Pages/Dashboard"));
-//Releasing/Stock Out
-const ReleasingOverview = lazy(() =>
-  import("../Pages/Releasing/ReleasingOveriew")
-);
-const ReleasingDetails = lazy(() =>
-  import("../Pages/Releasing/ReleasingDetails")
-);
-
-//Receiving/Stock in
-const ReceivingOverview = lazy(() =>
-  import("../Pages/Receiving/ReceivingOverview")
-);
-const ReceivingDetails = lazy(() =>
-  import("../Pages/Receiving/ReceivingDetails")
-);
-
-// const ItemReview = lazy(() => import("../Pages/ItemReview"));
-
-//Inventory Pages
-const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
-const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
-
-const StockUpdate = lazy(() => import("../Pages/Stock-Update/StockUpdate"));
-
-// Libraries Pages
-const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
-const AreasOverview = lazy(() =>
-  import("../Pages/Libraries/Areas/AreasOverview")
-);
-const BrandsOverview = lazy(() =>
-  import("../Pages/Libraries/Brands/BrandsOverview")
-);
-const SuppliersOverview = lazy(() =>
-  import("../Pages/Libraries/Suppliers/SuppliersOverview")
-);
-const CategoriesOverview = lazy(() =>
-  import("../Pages/Libraries/Categories/CategoriesOverview")
-);
-const SourceOverview = lazy(() =>
-  import("../Pages/Libraries/Source/SourceOverview")
-);
-const SuppliesOverview = lazy(() =>
-  import("../Pages/Libraries/Supplies/SuppliesOverview")
-);
-const UnitsOverview = lazy(() =>
-  import("../Pages/Libraries/Units/UnitsOverview")
-);
-
-// Reports Pages
+// Lazy load only Reports and Libraries
 const Reports = lazy(() => import("../Pages/Reports/Reports"));
-const ItemCount = lazy(() => import("../Pages/Reports/ItemCount"));
-const StartingBalance = lazy(() => import("../Pages/Reports/StartingBalance"));
-const NearExpiration = lazy(() => import("../Pages/Reports/NearExpiration"));
-const ReorderedItems = lazy(() => import("../Pages/Reports/ReorderedItems"));
-const ConsumedItems = lazy(() => import("../Pages/Reports/ConsumedItems"));
-const DisposalItems = lazy(() => import("../Pages/Reports/DisposalItems"));
-const ZeroStockItems = lazy(() => import("../Pages/Reports/ZeroStockItems"));
-const UnconsumedItems = lazy(() => import("../Pages/Reports/UnconsumedItems"));
-const WithoutRISItems = lazy(() => import("../Pages/Reports/WithoutRISItems"));
-const AreasSupplies = lazy(() => import("../Pages/Reports/AreaSupplies"));
-const RegularSupplies = lazy(() => import("../Pages/Reports/RegularSupplies"));
+const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
+
+// Direct imports for other components
+import Dashboard from "../Pages/Dashboard";
+import ReleasingOverview from "../Pages/Releasing/ReleasingOveriew";
+import ReleasingDetails from "../Pages/Releasing/ReleasingDetails";
+import ReceivingOverview from "../Pages/Receiving/ReceivingOverview";
+import ReceivingDetails from "../Pages/Receiving/ReceivingDetails";
+import Inventory from "../Pages/Inventory/Inventory";
+import ViewDetails from "../Pages/Inventory/ViewDetails";
+import StockUpdate from "../Pages/Stock-Update/StockUpdate";
+import AreasOverview from "../Pages/Libraries/Areas/AreasOverview";
+import BrandsOverview from "../Pages/Libraries/Brands/BrandsOverview";
+import SuppliersOverview from "../Pages/Libraries/Suppliers/SuppliersOverview";
+import CategoriesOverview from "../Pages/Libraries/Categories/CategoriesOverview";
+import SourceOverview from "../Pages/Libraries/Source/SourceOverview";
+import SuppliesOverview from "../Pages/Libraries/Supplies/SuppliesOverview";
+import UnitsOverview from "../Pages/Libraries/Units/UnitsOverview";
+import ItemCount from "../Pages/Reports/ItemCount";
+import StartingBalance from "../Pages/Reports/StartingBalance";
+import NearExpiration from "../Pages/Reports/NearExpiration";
+import ReorderedItems from "../Pages/Reports/ReorderedItems";
+import ConsumedItems from "../Pages/Reports/ConsumedItems";
+import DisposalItems from "../Pages/Reports/DisposalItems";
+import ZeroStockItems from "../Pages/Reports/ZeroStockItems";
+import UnconsumedItems from "../Pages/Reports/UnconsumedItems";
+import WithoutRISItems from "../Pages/Reports/WithoutRISItems";
+import AreaSupplies from "../Pages/Reports/AreaSupplies";
+import RegularSupplies from "../Pages/Reports/RegularSupplies";
 
 export const sidebarRoutes = [
   {
@@ -98,7 +64,6 @@ export const sidebarRoutes = [
     icon: <ArrowUpFromLine />,
     permissions: ["view"],
   },
-
   {
     path: "/receiving",
     name: "Receiving (IAR)",
@@ -113,7 +78,6 @@ export const sidebarRoutes = [
     icon: <ChartCandlestick />,
     permissions: ["view"],
   },
-
   {
     path: "reports",
     name: "Reports",
@@ -121,7 +85,6 @@ export const sidebarRoutes = [
     icon: <GrDocument />,
     permissions: ["view"],
     children: [
-      // { path: "", element: <Navigate to="reordered-items" replace /> },
       { path: "item-count", element: <ItemCount /> },
       { path: "starting-balance", element: <StartingBalance /> },
       { path: "near-expiration", element: <NearExpiration /> },
@@ -131,7 +94,7 @@ export const sidebarRoutes = [
       { path: "zero-stocks-items", element: <ZeroStockItems /> },
       { path: "unconsumed-items", element: <UnconsumedItems /> },
       { path: "without-ris-items", element: <WithoutRISItems /> },
-      { path: "area-supplies", element: <AreasSupplies /> },
+      { path: "area-supplies", element: <AreaSupplies /> },
       { path: "regular-supplies", element: <RegularSupplies /> },
     ],
   },
@@ -142,9 +105,6 @@ export const childrenRoutes = [
     path: "libraries",
     element: <Libraries />,
     permission: ["view"],
-    // children: [
-    //   { path: "brands", element: <BrandsOverview /> },
-    // ]
     children: [
       { path: "", element: <Navigate to="areas" replace /> },
       { path: "areas", element: <AreasOverview /> },
@@ -156,28 +116,22 @@ export const childrenRoutes = [
       { path: "supplies", element: <SuppliesOverview /> },
     ],
   },
-
   {
     path: "/receiving/:id",
-    // name: "Releasing Details",
     element: <ReceivingDetails />,
     permissions: ["view"],
   },
-
   {
     path: "/releasing/:id",
-    // name: "Releasing Details",
     element: <ReleasingDetails />,
     permissions: ["view"],
   },
-
   {
     path: "/inventory/:id",
     element: <ViewDetails />,
     icon: null,
     permissions: ["view"],
   },
-
   {
     path: "/reports/item-count/:id",
     element: <ViewItemDetails />,
