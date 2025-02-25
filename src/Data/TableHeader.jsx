@@ -160,6 +160,34 @@ export const disposalHeader = [
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
+export const areaSuppliesHeader = [
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
+  { id: "supply_name", label: "Item Name" },
+  { id: "category_name", label: "Category" },
+  { id: "unit_name", label: "Unit" },
+  { id: "total_quantity", label: "Quantity" },
+  { id: "average_monthly_consumption", label: "Monthly Consumption" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+];
+
+export const regularSuppliesHeader = [
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
+  { id: "supply_name", label: "Item Name" },
+  { id: "category_name", label: "Category" },
+  { id: "unit_name", label: "Unit" },
+  { id: "regular_starting_balance", label: "Starting Balance" },
+  { id: "total_stockin_quantity", label: "Total Stockin Quantity" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+];
+
 export const itemBreakdown = [
   {
     // id: "id",
@@ -173,6 +201,7 @@ export const itemBreakdown = [
   { id: "ris_donation", label: "RIS from donation" },
   { id: "ending_balance", label: "Ending balance" },
 ];
+
 
 export const releasingHeader = [
   {

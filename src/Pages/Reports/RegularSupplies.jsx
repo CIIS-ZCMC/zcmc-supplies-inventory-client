@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useQuery } from '@tanstack/react-query'
 import { ViewIcon } from 'lucide-react'
@@ -8,16 +8,20 @@ import { Stack, Box, Typography } from '@mui/joy'
 import useReportsHook from '../../Hooks/ReportsHook'
 import PaginatedTable from '../../Components/Table/PaginatedTable'
 
-const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
+const RegularSupplies = ({ filter, header, InfoDescription, currentYear }) => {
 
-    const { getStartingBal } = useReportsHook();
+    const { getRegularSupply } = useReportsHook();
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['startingBalance', currentYear],
-        queryFn: () => getStartingBal(currentYear)
+        queryKey: ['regularSupplies', currentYear],
+        queryFn: () => getRegularSupply(currentYear)
     })
 
-    const startingBalance = data || [];
+    useEffect(() => {
+        console.log('Regular Supplies:', currentYear === 2024)
+    }, [currentYear])
+
+    const regularSuppliesData = data || [];
 
     const TableDescription = () => (
         <>
@@ -49,7 +53,7 @@ const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
                 tableDesc={<TableDescription />}
                 loading={isLoading}
                 columns={header}
-                rows={filter(startingBalance)}
+                rows={filter(regularSuppliesData)}
                 actions={<ViewIcon />}
                 editable={false}
                 viewable={true}
@@ -58,4 +62,4 @@ const StartingBalance = ({ filter, header, InfoDescription, currentYear }) => {
     )
 }
 
-export default StartingBalance
+export default RegularSupplies

@@ -17,11 +17,13 @@ const useReportsHook = create((set) => ({
   item_total: [],
   item_iar: [],
   dates: [],
+  areaSupplies: [],
+  regularSupplies: [],
 
-  getItemCount: async () => {
+  getItemCount: async (year) => {
     try {
       const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_ITEM_COUNT}`
+        `${BASE_URL.development}/${API.REPORTS_ITEM_COUNT}/${year}`
       );
       set({ item_count: response.data });
       console.log(response.data);
@@ -31,10 +33,10 @@ const useReportsHook = create((set) => ({
     }
   },
 
-  getStartingBal: async () => {
+  getStartingBal: async (year) => {
     try {
       const response = await axios.get(
-        `${BASE_URL.development}/${API.REPORTS_STARTING_BAL}`
+        `${BASE_URL.development}/${API.REPORTS_STARTING_BAL}/${year}`
       );
       set({ starting_bal: response.data });
       return response.data;
@@ -190,5 +192,38 @@ const useReportsHook = create((set) => ({
       console.error("Error fetching inventory:", error.message);
     }
   },
+
+  getAreaSupply: async (id, year) => {
+    try {
+      // Include the id in the API request URL
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.REPORTS_AREA_SUPPLY}/${id}/${year}`
+      );
+
+      // Update the state with the fetched data
+      set({ areaSupplies: response.data });
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
+    }
+  },
+
+  getRegularSupply: async (year) => {
+    try {
+      // Include the id in the API request URL
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.REPORTS_SUPPLY_REGULAR}/${year}`
+      );
+
+      // Update the state with the fetched data
+      set({ regularSupplies: response.data });
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
+    }
+  },
+
 }));
 export default useReportsHook;
