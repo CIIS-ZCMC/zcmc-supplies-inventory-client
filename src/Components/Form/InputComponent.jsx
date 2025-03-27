@@ -5,7 +5,9 @@ import {
   FormLabel,
   Input,
   FormHelperText,
+  Box,
 } from "@mui/joy";
+import ButtonComponent from "../../Components/ButtonComponent";
 
 InputComponent.propTypes = {
   label: PropTypes.string.isRequired,
@@ -34,25 +36,37 @@ function InputComponent({
   onChange,
   error,
   size,
-  isRequired
+  isRequired,
+  action = false,
 }) {
   return (
     <FormControl fullWidth>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
-      <Input
-        required={isRequired}
-        width={width}
-        name={name}
-        size={size}
-        variant="outlined"
-        error={error}
-        autoFocus={autoFocus}
-        placeholder={placeholder}
-        value={value}
-        fullWidth={fullWidth}
-        onChange={onChange ? onChange : (e) => setValue(e.target.value)}
-        sx={{ fontWeight: fontWeight, width: width }}
-      />
+      <Box display="flex" alignItems="center" mb={1}>
+        <Input
+          required={isRequired}
+          width={width}
+          name={name}
+          size={size}
+          variant="outlined"
+          error={error}
+          autoFocus={autoFocus}
+          placeholder={placeholder}
+          value={value}
+          fullWidth={fullWidth}
+          onChange={onChange ? onChange : (e) => setValue(e.target.value)}
+          sx={{ fontWeight: fontWeight, width: width }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && action?.onClick) {
+              action.onClick();
+            }
+          }}
+        />
+        {action && (
+          <ButtonComponent label={action.label} onClick={action.onClick} />
+        )}
+      </Box>
+
       {/* {helperText && <FormHelperText>{helperText}</FormHelperText>} */}
 
       {error && (

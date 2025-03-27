@@ -12,7 +12,7 @@ import Header from "../../Layout/Header/Header";
 import SelectComponent from "../../Components/Form/SelectComponent";
 import useFilterHook from "../../Hooks/FilterHook";
 import { MdOutlineLibraryAdd } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 const categoryFilter = [
@@ -43,8 +43,9 @@ const columns = [
   { id: "actions", label: "Actions", width: "5%" },
 ];
 
-const Inventory = () => {
+const PurchaseReq = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const { inventory, getInventory } = useInventoryHook();
   const {
     filteredInventory,
@@ -60,9 +61,10 @@ const Inventory = () => {
   const theme = useTheme();
 
   const pageDetails = {
-    title: "Inventory",
-    description: "See the list of items in your inventory.",
-    pagePath: "/inventory",
+    title: "Purchase Request Information Tagging",
+    description:
+      "Enhance purchase request records by tagging critical financial information, including available funds and ORS/BURS numbers.",
+    pagePath: "/purchase-order",
   };
 
   const navigateToItemSupplies = () => {
@@ -87,6 +89,12 @@ const Inventory = () => {
             alignItems="flex-end"
           >
             {/* search*/}
+            <ButtonComponent
+              label="navigate"
+              onClick={() => {
+                navigate(id ? "/purchase-order" : "/purchase-order/1");
+              }}
+            />
             <InputComponent
               label="Find a slip"
               placeholder="Find by item name, category, unit"
@@ -94,8 +102,11 @@ const Inventory = () => {
               value={searchTerm}
               setValue={setSearchTerm}
               width={300}
+              action={{
+                label: "Search",
+                onClick: () => console.log("searching..."),
+              }}
             />
-
             <Box display="flex" gap={1}>
               <SelectComponent
                 startIcon={"Sort by:"}
@@ -103,6 +114,13 @@ const Inventory = () => {
                 options={categoryFilter}
                 value={selectedCategory}
                 onChange={setCategory}
+              />
+              <SelectComponent
+                startIcon={"Sort by:"}
+                placeholder={"highest"}
+                options={sortFilter}
+                value={sortOrder}
+                onChange={setSortOrder}
               />
               <ButtonComponent
                 size="sm"
@@ -114,51 +132,55 @@ const Inventory = () => {
           </Stack>
         </ContainerComponent>
         <ContainerComponent>
-          <PaginatedTable
-            viewable={true}
-            loading={isLoading}
-            tableTitle={"List of items"}
-            tableDesc={
-              "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
-            }
-            columns={columns}
-            rows={filteredInventory(inventoryData)}
-            actions={<ViewIcon />}
-            btnLabel={"Add new item name"}
-            actionBtns={
-              <Stack direction="row" spacing={1}>
-                <ButtonComponent
-                  variant={"outlined"}
-                  label="Generate report"
-                  size="lg"
+          {id ? (
+            <Outlet />
+          ) : (
+            <PaginatedTable
+              viewable={true}
+              loading={isLoading}
+              tableTitle={"List of items"}
+              tableDesc={
+                "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
+              }
+              columns={columns}
+              rows={filteredInventory(inventoryData)}
+              actions={<ViewIcon />}
+              btnLabel={"Add new item name"}
+              actionBtns={
+                <Stack direction="row" spacing={1}>
+                  <ButtonComponent
+                    variant={"outlined"}
+                    label="Generate report"
+                    size="lg"
+                  />
+                  <ButtonComponent
+                    label="Add new item name"
+                    onClick={navigateToItemSupplies}
+                  />
+                </Stack>
+              }
+              icon={
+                <MdOutlineLibraryAdd
+                  style={{
+                    verticalAlign: "middle",
+                    color: theme.palette.custom.buttonBg,
+                    fontSize: 30,
+                    backgroundColor: "#EBF2F9",
+                    padding: 10,
+                    borderRadius: 5,
+                  }}
                 />
-                <ButtonComponent
-                  label="Add new item name"
-                  onClick={navigateToItemSupplies}
-                />
-              </Stack>
-            }
-            icon={
-              <MdOutlineLibraryAdd
-                style={{
-                  verticalAlign: "middle",
-                  color: theme.palette.custom.buttonBg,
-                  fontSize: 30,
-                  backgroundColor: "#EBF2F9",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              />
-            }
-            label={"Fill-up your inventory by creating a New item"}
-            desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
+              }
+              label={"Fill-up your inventory by creating a New item"}
+              desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
                   inventory items in filling-up IARs and RIS requests.`}
-            btn={<ButtonComponent label={"Create new item"} onClick={"/"} />}
-          />
+              btn={<ButtonComponent label={"Create new item"} onClick={"/"} />}
+            />
+          )}
         </ContainerComponent>
       </Stack>
     </Fragment>
   );
 };
 
-export default Inventory;
+export default PurchaseReq;

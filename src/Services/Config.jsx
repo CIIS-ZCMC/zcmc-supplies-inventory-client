@@ -19,6 +19,10 @@ export const ROOT_PATH = "/dashboard";
 /**
  * Server End points add here
  */
+export const MigrateLibraries = {
+  UNIT: "fetch-Unit-data-bizbox",
+};
+
 export const API = {
   AREAS: "areas",
   AREA_STORE: "area-store",
@@ -88,7 +92,7 @@ export const API = {
   REPORTS_ITEM_COUNT_TOTAL: "get-item-total",
   REPORTS_ITEM_COUNT_IAR: "get-item-iar",
   REPORTS_AREA_SUPPLY: "get-area-supply",
-  REPORTS_SUPPLY_REGULAR: "get-supply-regular"
+  REPORTS_SUPPLY_REGULAR: "get-supply-regular",
 };
 
 /**
