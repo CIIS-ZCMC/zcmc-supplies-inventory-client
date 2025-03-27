@@ -17,11 +17,14 @@ const useReportsHook = create((set) => ({
   item_total: [],
   item_iar: [],
   dates: [],
+  areaSupplies: [],
+  regularSupplies: [],
 
-  getItemCount: async () => {
+  getItemCount: async (year) => {
     try {
-      const response = await inventory_api.get(`/${API.REPORTS_ITEM_COUNT}`);
-
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.REPORTS_ITEM_COUNT}/${year}`
+      );
       set({ item_count: response.data });
       console.log(response.data);
       return response.data;
@@ -30,10 +33,11 @@ const useReportsHook = create((set) => ({
     }
   },
 
-  getStartingBal: async () => {
+  getStartingBal: async (year) => {
     try {
-      const response = await inventory_api.get(`/${API.REPORTS_STARTING_BAL}`);
-
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.REPORTS_STARTING_BAL}/${year}`
+      );
       set({ starting_bal: response.data });
       return response.data;
     } catch (error) {
@@ -90,12 +94,11 @@ const useReportsHook = create((set) => ({
 
   getUnconsumed: async (year) => {
     try {
-      const response = await inventory_api.get(
-        `/${API.REPORTS_UNCONSUMED}/${year}`
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.REPORTS_UNCONSUMED}/${year}`
       );
 
       set({ unconsumed: response.data });
-
       return response.data;
     } catch (error) {
       console.error(error.message);
@@ -104,8 +107,8 @@ const useReportsHook = create((set) => ({
 
   getReorder: async (month) => {
     try {
-      const response = await inventory_api.get(
-        `/${API.REPORTS_REORDER}/${month}`
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.REPORTS_REORDER}/${month}`
       );
 
       set({ reorder: response.data });
@@ -187,5 +190,38 @@ const useReportsHook = create((set) => ({
       console.error("Error fetching inventory:", error.message);
     }
   },
+
+  getAreaSupply: async (id, year) => {
+    try {
+      // Include the id in the API request URL
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.REPORTS_AREA_SUPPLY}/${id}/${year}`
+      );
+
+      // Update the state with the fetched data
+      set({ areaSupplies: response.data });
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
+    }
+  },
+
+  getRegularSupply: async (year) => {
+    try {
+      // Include the id in the API request URL
+      const response = await axios.get(
+        `${BASE_URL.development}/${API.REPORTS_SUPPLY_REGULAR}/${year}`
+      );
+
+      // Update the state with the fetched data
+      set({ regularSupplies: response.data });
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
+    }
+  },
+
 }));
 export default useReportsHook;

@@ -9,6 +9,8 @@ import ModalComponent from '../../../Components/Dialogs/ModalComponent'
 import PaginatedTable from '../../../Components/Table/PaginatedTable'
 import SnackbarComponent from '../../../Components/SnackbarComponent'
 
+import TableDescription from '../../../Layout/Libraries/TableDescription'
+
 import FormDialog from './FormDialog'
 
 import useBrandsHook from '../../../Hooks/BrandsHook'
@@ -45,6 +47,7 @@ const BrandsOverview = ({ filter }) => {
         brandsData;
     }, [brandsData])
 
+
     return (
         <div>
             {brandsData?.length < 0 ?
@@ -77,23 +80,21 @@ const BrandsOverview = ({ filter }) => {
                 </Stack>
                 :
                 <PaginatedTable
-                    tableTitle={"Brands"}
-                    // tableDesc={"Sample Table Desription"}
+                    // tableTitle={"Brands"}
+                    tableDesc={
+                        <TableDescription
+                            label="Add new brand"
+                            onClick={handleDialogOpen}
+                        />
+                    }
                     loading={isLoading}
                     columns={brandHeader}
                     rows={filter(brandsData)}
                     actions={<ViewIcon />}
-                    actionBtns={
-                        <Stack>
-                            <ButtonComponent
-                                label="Add new brand"
-                                onClick={handleDialogOpen}
-                            />
-                        </Stack>
-                    }
                     editRow={handleEditRow}
                     editable={true}
                     viewable={false}
+                    showChip={false}
                 />
             }
             <ModalComponent

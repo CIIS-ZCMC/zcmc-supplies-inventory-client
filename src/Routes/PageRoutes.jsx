@@ -2,13 +2,9 @@ import { Navigate } from "react-router-dom";
 
 import { lazy } from "react";
 import {
-  CircleGauge,
   ArrowUpFromLine,
   ArrowDownToLine,
-  BaggageClaim,
-  Tag,
   ClipboardList,
-  LayoutGrid,
   ChartCandlestick,
 } from "lucide-react";
 
@@ -35,20 +31,36 @@ const ReceivingDetails = lazy(() =>
 );
 
 // const ItemReview = lazy(() => import("../Pages/ItemReview"));
-const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
+
+//Inventory Pages
 const Inventory = lazy(() => import("../Pages/Inventory/Inventory"));
 const ViewDetails = lazy(() => import("../Pages/Inventory/ViewDetails"));
 
-const Reports = lazy(() => import("../Pages/Reports/Reports"));
 const StockUpdate = lazy(() => import("../Pages/Stock-Update/StockUpdate"));
 
-import AreasOverview from "../Pages/Libraries/Areas/AreasOverview";
-import BrandsOverview from "../Pages/Libraries/Brands/BrandsOverview";
-import SuppliersOverview from "../Pages/Libraries/Suppliers/SuppliersOverview";
-import CategoriesOverview from "../Pages/Libraries/Categories/CategoriesOverview";
-import SourceOverview from "../Pages/Libraries/Source/SourceOverview";
-import SuppliesOverview from "../Pages/Libraries/Supplies/SuppliesOverview";
-import UnitsOverview from "../Pages/Libraries/Units/UnitsOverview";
+// Libraries Pages
+const Libraries = lazy(() => import("../Pages/Libraries/Libraries"));
+const AreasOverview = lazy(() => import("../Pages/Libraries/Areas/AreasOverview"));
+const BrandsOverview = lazy(() => import("../Pages/Libraries/Brands/BrandsOverview"));
+const SuppliersOverview = lazy(() => import("../Pages/Libraries/Suppliers/SuppliersOverview"));
+const CategoriesOverview = lazy(() => import("../Pages/Libraries/Categories/CategoriesOverview"));
+const SourceOverview = lazy(() => import("../Pages/Libraries/Source/SourceOverview"));
+const SuppliesOverview = lazy(() => import("../Pages/Libraries/Supplies/SuppliesOverview"));
+const UnitsOverview = lazy(() => import("../Pages/Libraries/Units/UnitsOverview"));
+
+// Reports Pages
+const Reports = lazy(() => import("../Pages/Reports/Reports"));
+const ItemCount = lazy(() => import('../Pages/Reports/ItemCount'));
+const StartingBalance = lazy(() => import('../Pages/Reports/StartingBalance'));
+const NearExpiration = lazy(() => import('../Pages/Reports/NearExpiration'));
+const ReorderedItems = lazy(() => import("../Pages/Reports/ReorderedItems"));
+const ConsumedItems = lazy(() => import("../Pages/Reports/ConsumedItems"));
+const DisposalItems = lazy(() => import("../Pages/Reports/DisposalItems"));
+const ZeroStockItems = lazy(() => import("../Pages/Reports/ZeroStockItems"));
+const UnconsumedItems = lazy(() => import("../Pages/Reports/UnconsumedItems"));
+const WithoutRISItems = lazy(() => import("../Pages/Reports/WithoutRISItems"));
+const AreasSupplies = lazy(() => import("../Pages/Reports/AreaSupplies"));
+const RegularSupplies = lazy(() => import("../Pages/Reports/RegularSupplies"));
 
 export const sidebarRoutes = [
   {
@@ -87,12 +99,27 @@ export const sidebarRoutes = [
     icon: <ChartCandlestick />,
     permissions: ["view"],
   },
+
   {
-    path: "/reports",
+    path: "reports",
     name: "Reports",
     element: <Reports />,
     icon: <GrDocument />,
     permissions: ["view"],
+    children: [
+      // { path: "", element: <Navigate to="reordered-items" replace /> },
+      { path: "item-count", element: <ItemCount /> },
+      { path: "starting-balance", element: <StartingBalance /> },
+      { path: "near-expiration", element: <NearExpiration /> },
+      { path: "reordered-items", element: <ReorderedItems /> },
+      { path: "consumed-items", element: <ConsumedItems /> },
+      { path: "disposal-items", element: <DisposalItems /> },
+      { path: "zero-stocks-items", element: <ZeroStockItems /> },
+      { path: "unconsumed-items", element: <UnconsumedItems /> },
+      { path: "without-ris-items", element: <WithoutRISItems /> },
+      { path: "area-supplies", element: <AreasSupplies /> },
+      { path: "regular-supplies", element: <RegularSupplies /> },
+    ],
   },
 ];
 
@@ -138,9 +165,14 @@ export const childrenRoutes = [
   },
 
   {
-    path: "/reports/:id",
+    path: "/reports/item-count/:id",
     element: <ViewItemDetails />,
     icon: null,
     permissions: ["view"],
   },
+
 ];
+
+
+
+

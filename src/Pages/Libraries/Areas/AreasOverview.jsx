@@ -9,6 +9,9 @@ import ModalComponent from "../../../Components/Dialogs/ModalComponent";
 import PaginatedTable from "../../../Components/Table/PaginatedTable";
 import SnackbarComponent from "../../../Components/SnackbarComponent";
 
+//layouts
+import TableDescription from "../../../Layout/Libraries/TableDescription";
+
 import FormDialog from "./FormDialog";
 
 import useAreasHook from "../../../Hooks/AreasHook";
@@ -86,23 +89,16 @@ const AreasOverview = ({ filter }) => {
                 </Stack>
             ) : (
                 <PaginatedTable
-                    tableTitle={"Areas"}
-                    // tableDesc={"Sample Table Desription"}
+                    // tableTitle={"Areas"}
+                    tableDesc={<TableDescription label={'Add new area'} onClick={handleDialogOpen} />}
                     loading={isLoading}
                     columns={areaHeader}
                     rows={filter(areaData)}
                     actions={<ViewIcon />}
-                    actionBtns={
-                        <Stack>
-                            <ButtonComponent
-                                label="Add new area"
-                                onClick={handleDialogOpen}
-                            />
-                        </Stack>
-                    }
                     editRow={handleEditRow}
                     editable={true}
                     viewable={false}
+                    showChip={false}
                 />
             )}
             <ModalComponent

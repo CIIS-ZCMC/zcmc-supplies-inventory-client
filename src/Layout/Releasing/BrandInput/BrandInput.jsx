@@ -6,16 +6,52 @@ import AutoCompleteComponent from "../../../Components/Form/AutoCompleteComponen
 import InputComponent from "../../../Components/Form/InputComponent";
 import IconButtonComponent from "../../../Components/IconButtonComponent";
 
+import useReleasingHook from "../../../Hooks/ReleasingHook";
+
 const BrandInput = (props) => {
+
+  const { brandQuantities, setBrandQuantity, retrieveKey } = useReleasingHook();
+
+  function selectedBrand() {
+    const filteredBrands = props.brandRegularOptions.find(
+      (option) =>
+        // console.log(option.id, props.item.brand_id)
+        option.id === props.item.brand_id
+        && option.supplier_id === props.item.supplier_id
+    );
+    return filteredBrands
+  }
+
+  function currentQuantity() {
+    const selectedItem = selectedBrand();
+    if (!selectedItem) return 0;
+    return brandQuantities[retrieveKey(selectedItem)];
+  }
+
+  useEffect(() => {
+
+    if (props.item.brand_id) {
+
+      if (selectedBrand()) {
+        setBrandQuantity(retrieveKey(selectedBrand()), selectedBrand().quantity || 0);
+      }
+    }
+  }, [props.item.brand_id, props.brandRegularOptions, setBrandQuantity,]);
+
+
+
+  // Get the correct quantity for the current source_id
   const filterBrandOptions =
     props.regularBrands.length === 0
       ? props.brandRegularOptions
       : props.brandRegularOptions.filter(
-          (outerValue) =>
-            !props.regularBrands.find(
-              (innerValue) => innerValue.brand_id === outerValue.id
-            )
-        );
+        (outerValue) =>
+          !props.regularBrands.find(
+            (innerValue) =>
+              innerValue.brand_id === outerValue.id &&
+              innerValue.supplier_id === outerValue.supplier_id
+          )
+      );
 
   const QuantityDisplay = () => {
     if (props.item.exceed) {
@@ -66,11 +102,11 @@ const BrandInput = (props) => {
       {" "}
       <Grid container spacing={2}>
         {/* Brand Selection */}
-        <Grid item md={7} lg={7}>
+        <Grid md={7} lg={7}>
           <AutoCompleteComponent
             name={"brandRegular"}
             placeholder="Search brand..."
-            label={"Brand"}
+            label={`Brand `}
             options={filterBrandOptions}
             loading={props.isBrandRegularloading}
             value={props.brandRegularOptions.find(
@@ -80,6 +116,7 @@ const BrandInput = (props) => {
               const updatedList = [...props.regularBrands];
               updatedList[props.index].brand_id = value?.id;
               updatedList[props.index].source_id = value?.source_id;
+              updatedList[props.index].supplier_id = value?.supplier_id;
               updatedList[props.index].quantity =
                 value?.quantity === null ? 0 : value?.quantity > 0 ? 1 : 0;
               updatedList[props.index].expiration_date = value?.expiration_date;
@@ -98,9 +135,9 @@ const BrandInput = (props) => {
         </Grid>
 
         {/* Quantity Input */}
-        <Grid item xs={11} md={5} lg={5}>
+        <Grid xs={11} md={5} lg={5}>
           <InputComponent
-            label="Quantity"
+            label={`Quantity (${currentQuantity()} available)`}
             placeholder="xxx.xxx.xxx"
             fullWidth={true}
             name={`quantity-${props.index}`}
@@ -115,17 +152,21 @@ const BrandInput = (props) => {
                 justifyContent="space-between"
               >
                 <QuantityDisplay />
-
-                {/* Trash Icon Button */}
-                <IconButtonComponent
-                  color="danger"
-                  icon={Trash}
-                  iconSize={16}
-                  onClick={() => props.handleRemoveBrand(props.index)}
-                />
               </Stack>
             }
           />
+          {/* {props.item.quantity} */}
+
+          <Stack direction={'row'} justifyContent={'end'} mt={1}>
+            {/* Trash Icon Button */}
+            <IconButtonComponent
+              color="danger"
+              icon={Trash}
+              iconSize={16}
+              onClick={() => props.handleRemoveBrand(props.index)}
+            />
+          </Stack>
+
         </Grid>
       </Grid>
       <Divider sx={{ my: 2 }} />

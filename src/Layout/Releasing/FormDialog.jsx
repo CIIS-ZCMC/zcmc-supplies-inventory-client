@@ -212,7 +212,7 @@ const FormDialog = ({
       closeDialog();
     },
     onError: (error) => {
-      showSnackbar
+      showSnackbar;
       // setSnackbar({ open: true, color: "danger", message: `${error}` });
       setSnackbar("Failed to stockout", "danger");
 
@@ -249,7 +249,7 @@ const FormDialog = ({
           <Stack>
             <Typography>Regular</Typography>
             <Typography level="body-sm">
-              Total quantity to be released from Regular: 0 / 1400 left
+              Total quantity to be released from Regular: {totalRegularQtyBrands} / 1400 left
             </Typography>
           </Stack>
         </>
@@ -275,7 +275,7 @@ const FormDialog = ({
           <Stack>
             <Typography>Donation</Typography>
             <Typography level="body-sm">
-              Total quantity to be released from Regular: 0 / 1400 left
+              Total quantity to be released from Regular: {totalDonationQtyBrands} / 1400 left
             </Typography>
           </Stack>
         </>
@@ -352,7 +352,7 @@ const FormDialog = ({
           )}
 
           {activeStep === 1 && (
-            <Grid item xs={12}>
+            <Grid xs={12}>
               {/* Step 2 form dont mind the naming */}
               <Step2Form
                 selectedId={selectedId}

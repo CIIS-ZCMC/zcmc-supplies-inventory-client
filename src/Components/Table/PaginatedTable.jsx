@@ -30,16 +30,17 @@ import useSuppliersHook from "../../Hooks/SuppliersHook";
 import useCategoriesHook from "../../Hooks/CategoriesHook";
 import useUnitsHook from "../../Hooks/UnitsHook";
 import useSourceHook from "../../Hooks/SourceHook";
-import useSuppliesHook from '../../Hooks/SuppliesHook';
+import useSuppliesHook from "../../Hooks/SuppliesHook";
 import useReceivingHook from "../../Hooks/ReceivingHook";
 
 import AreasForm from "../../Pages/Libraries/Areas/FormDialog";
-import BrandForm from '../../Pages/Libraries/Brands/FormDialog';
-import SupplierForm from '../../Pages/Libraries/Suppliers/FormDialog';
-import CategoryForm from '../../Pages/Libraries/Categories/FormDialog';
-import UnitForm from '../../Pages/Libraries/Units/FormDialog';
+import BrandForm from "../../Pages/Libraries/Brands/FormDialog";
+import SupplierForm from "../../Pages/Libraries/Suppliers/FormDialog";
+import CategoryForm from "../../Pages/Libraries/Categories/FormDialog";
+import UnitForm from "../../Pages/Libraries/Units/FormDialog";
 import SourceForm from "../../Pages/Libraries/Source/FormDialog";
-import SuppliesForm from '../../Pages/Libraries/Supplies/FormDialog';
+import SuppliesForm from "../../Pages/Libraries/Supplies/FormDialog";
+import ReceivingForm from "../../Layout/Receiving/FormDialog";
 
 PaginatedTable.propTypes = {
   rowsPage: PropTypes.number,
@@ -81,15 +82,16 @@ function PaginatedTable({
   const { setInitialValues: setAreasValues } = useAreasHook();
   const { setInitialValues: setBrandsValues } = useBrandsHook();
   const { setInitialValues: setSuppliersValues } = useSuppliersHook();
-  const { setInitialValues: setCategoriesValues } = useCategoriesHook()
+  const { setInitialValues: setCategoriesValues } = useCategoriesHook();
   const { setInitialValues: setUnitsValues } = useUnitsHook();
   const { setInitialValues: setSourceValues } = useSourceHook();
   const { setInitialValues: setSuppliesValues } = useSuppliesHook();
-  const { initialValues: recevings, setInitialValues: setReceivingValues } = useSuppliesHook();
-
+  const { initialValues: receiving, setInitialValues: setReceivingValues } =
+    useReceivingHook();
 
   const { setSelectedRow } = useSelectedRow();
-  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
+  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
+    useSnackbarHook();
   const { setIsUpdate, setId, resetState } = usePaginatedTableHook();
 
   const navigate = useNavigate();
@@ -98,8 +100,8 @@ function PaginatedTable({
   const currentPath = location.pathname;
 
   useEffect(() => {
-    console.log(recevings)
-  }, [recevings])
+    console.log(receiving);
+  }, [receiving]);
 
   const handleNavigate = (row) => {
     const { id } = row;
@@ -136,20 +138,20 @@ function PaginatedTable({
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-    setAreasValues(null)
-    setBrandsValues(null)
-    setSuppliersValues(null)
-    setCategoriesValues(null)
-    setUnitsValues(null)
-    setSourceValues(null)
-    setSuppliesValues(null)
-    setReceivingValues(null)
+    setAreasValues(null);
+    setBrandsValues(null);
+    setSuppliersValues(null);
+    setCategoriesValues(null);
+    setUnitsValues(null);
+    setSourceValues(null);
+    setSuppliesValues(null);
+    setReceivingValues(null);
     resetState();
   };
 
   const handleEdit = (data) => {
     editRow(data);
-    setId(data.id)
+    setId(data.id);
     setIsUpdate(true);
     setIsDialogOpen(true);
   };
@@ -158,10 +160,10 @@ function PaginatedTable({
     <>
       <Box>
         <Stack
-          spacing={1}
-          direction="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
+        // spacing={1}
+        // direction="row"
+        // justifyContent="space-between"
+        // alignItems="flex-end"
         >
           <Box>
             <Typography level="title-lg">
@@ -174,139 +176,141 @@ function PaginatedTable({
                 </Chip>
               )}
             </Typography>
-            <Typography level="body-sm" color="#666666">
-              {tableDesc}
-            </Typography>
+            {/* <Typography level="body-sm" color="#666666"> */}
+            {tableDesc}
+            {/* </Typography> */}
+            {actionBtns}
           </Box>
-          {actionBtns}
-        </Stack>
+        </Stack >
         <Divider sx={{ my: 3, color: "#E6E6E6" }} />
         {/* Table */}
-        {loading ? (
-          <Box display="flex" justifyContent="center" py={5}>
-            <CircularProgress />
-          </Box>
-        ) : rows?.length > 0 ? (
-          <>
-            <Table stripe="odd" borderAxis="both">
-              <thead>
-                <tr>
-                  {columns?.map((col, index) => (
-                    <th
-                      key={index}
-                      style={{ textWrap: "wrap", width: col?.width }}
-                    >
-                      {col?.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {currentRows?.map((row, index) => (
-                  <tr key={row?.id}>
-                    {columns?.map((column) => (
-                      <td key={column?.id} style={{ textWrap: "wrap" }}>
-                        {column?.id === "actions" ? (
-                          <>
-                            {viewable &&
-                              <ButtonComponent
-                                size={"sm"}
-                                variant="plain"
-                                onClick={() =>
-                                  viewModal
-                                    ? handleModalOpen(row)
-                                    : handleNavigate(row)
-                                }
-                                startDecorator={
-                                  <SquareArrowOutUpRight size={"1rem"} />
-                                }
-                              />
-                            }
-
-                            {
-                              editable &&
-                              <ButtonComponent
-                                size={"sm"}
-                                variant="plain"
-                                onClick={() => handleEdit(row)}
-                                startDecorator={<Pencil size={"1rem"} />}
-                              />
-                            }
-                          </>
-                        ) : (
-                          row[column?.id] ?? `${startIdx + index + 1}`
-                        )}
-                      </td>
+        {
+          loading ? (
+            <Box display="flex" justifyContent="center" py={5}>
+              <CircularProgress />
+            </Box>
+          ) : rows?.length > 0 ? (
+            <>
+              <Table stripe="odd" borderAxis="both">
+                <thead>
+                  <tr>
+                    {columns?.map((col, index) => (
+                      <th
+                        key={index}
+                        style={{ textWrap: "wrap", width: col?.width }}
+                      >
+                        {col?.label}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {currentRows?.map((row, index) => (
+                    <tr key={row?.id}>
+                      {columns?.map((column) => (
+                        <td key={column?.id} style={{ textWrap: "wrap" }}>
+                          {column?.id === "actions" ? (
+                            <>
+                              {viewable && (
+                                <ButtonComponent
+                                  size={"sm"}
+                                  variant="plain"
+                                  onClick={() =>
+                                    viewModal
+                                      ? handleModalOpen(row)
+                                      : handleNavigate(row)
+                                  }
+                                  startDecorator={
+                                    <SquareArrowOutUpRight size={"1rem"} />
+                                  }
+                                />
+                              )}
 
-            {/* Pagination Controls */}
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              py={2}
-              mt={2}
-            >
-              <Button
-                variant="outlined"
-                color="neutral"
-                disabled={page === 1}
-                onClick={() => handleChangePage(page - 1)}
+                              {editable && (
+                                <ButtonComponent
+                                  size={"sm"}
+                                  variant="plain"
+                                  onClick={() => handleEdit(row)}
+                                  startDecorator={<Pencil size={"1rem"} />}
+                                />
+                              )}
+                            </>
+                          ) : (
+                            row[column?.id] ?? `${startIdx + index + 1}`
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+
+              {/* Pagination Controls */}
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                py={2}
+                mt={2}
               >
-                Previous
-              </Button>
+                <Button
+                  variant="outlined"
+                  color="neutral"
+                  disabled={page === 1}
+                  onClick={() => handleChangePage(page - 1)}
+                >
+                  Previous
+                </Button>
 
-              <Stack direction="row">
-                <Box display="flex" alignItems="center" ml={2}>
-                  <Typography level="body-sm" sx={{ mr: 1 }}>
-                    rows per page:
-                  </Typography>
-                  <Select
-                    value={rowsPerPage}
-                    onChange={handleRowsPerPageChange}
-                    sx={{ minWidth: 70 }}
-                    size="sm"
-                  >
-                    {[10, 20, 30, 50].map((option) => (
-                      <Option key={option} value={option}>
-                        {option}
-                      </Option>
-                    ))}
-                  </Select>
-                  <Typography level="body-sm" sx={{ ml: 1 }}>
-                    Showing {startIdx + 1}-{endIdx} items out of {rows?.length}
-                  </Typography>
-                </Box>
-              </Stack>
+                <Stack direction="row">
+                  <Box display="flex" alignItems="center" ml={2}>
+                    <Typography level="body-sm" sx={{ mr: 1 }}>
+                      rows per page:
+                    </Typography>
+                    <Select
+                      value={rowsPerPage}
+                      onChange={handleRowsPerPageChange}
+                      sx={{ minWidth: 70 }}
+                      size="sm"
+                    >
+                      {[10, 20, 30, 50].map((option) => (
+                        <Option key={option} value={option}>
+                          {option}
+                        </Option>
+                      ))}
+                    </Select>
+                    <Typography level="body-sm" sx={{ ml: 1 }}>
+                      Showing {startIdx + 1}-{endIdx} items out of {rows?.length}
+                    </Typography>
+                  </Box>
+                </Stack>
 
-              <Button
-                variant="outlined"
-                color="neutral"
-                disabled={page === totalPages}
-                onClick={() => handleChangePage(page + 1)}
-              >
-                Next
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <NoRows icon={icon} label={label} desc={desc} button={btn} />
-        )}
-      </Box>
+                <Button
+                  variant="outlined"
+                  color="neutral"
+                  disabled={page === totalPages}
+                  onClick={() => handleChangePage(page + 1)}
+                >
+                  Next
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <NoRows icon={icon} label={label} desc={desc} button={btn} />
+          )
+        }
+      </Box >
 
       <ModalComponent
         isOpen={isOpenDialog}
         title="Update a new record"
         description={
+          currentPath === "/receiving" &&
           "Library records allows for a more streamlined and dynamic form-filling experiences."
         }
         handleClose={handleDialogClose}
         content={
-          currentPath === '/libraries/areas' ? (
+          currentPath === "/libraries/areas" ? (
             <AreasForm
               open={open}
               message={message}
@@ -314,7 +318,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/brands' ? (
+          ) : currentPath === "/libraries/brands" ? (
             <BrandForm
               open={open}
               message={message}
@@ -322,7 +326,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/suppliers' ? (
+          ) : currentPath === "/libraries/suppliers" ? (
             <SupplierForm
               open={open}
               message={message}
@@ -330,7 +334,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/categories' ? (
+          ) : currentPath === "/libraries/categories" ? (
             <CategoryForm
               open={open}
               message={message}
@@ -338,7 +342,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/units' ? (
+          ) : currentPath === "/libraries/units" ? (
             <UnitForm
               open={open}
               message={message}
@@ -346,7 +350,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/source' ? (
+          ) : currentPath === "/libraries/source" ? (
             <SourceForm
               open={open}
               message={message}
@@ -354,7 +358,7 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          ) : currentPath === '/libraries/supplies' ? (
+          ) : currentPath === "/libraries/supplies" ? (
             <SuppliesForm
               open={open}
               message={message}
@@ -362,11 +366,17 @@ function PaginatedTable({
               setSnackbar={showSnackbar}
               handleDialogClose={handleDialogClose}
             />
-          )
-            : null // Fallback if none of the conditions match
+          ) : currentPath === "/receiving" ? (
+            <ReceivingForm
+              open={open}
+              message={message}
+              color={color}
+              showSnackbar={showSnackbar}
+              handleDialogClose={handleDialogClose}
+            />
+          ) : null // Fallback if none of the conditions match
         }
       />
-
       <SnackbarComponent
         open={open}
         onClose={closeSnackbar}

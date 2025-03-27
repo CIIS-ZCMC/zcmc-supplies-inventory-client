@@ -22,7 +22,11 @@ import useSnackbarHook from "../Hooks/AlertHook";
 import { user, legends } from '../Data/index';
 import { dashboardHeader } from "../Data/TableHeader";
 
+import { useNavigate } from "react-router-dom";
+
 function Dashboard() {
+
+  const navigate = useNavigate();
 
   const { getDashboardTotal, getDashboardSupplies } = useDashboardHook();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar, } = useSnackbarHook();
@@ -56,42 +60,42 @@ function Dashboard() {
     {
       count: reorder_items,
       title: "Reorder items",
-      link: '',
+      link: '/reports/reordered-items',
       label: 'Go to reordered items'
     },
 
     {
       count: most_consumed_items,
       title: "Most consumed items",
-      link: '',
+      link: '/reports/consumed-items',
       label: 'Go to consumed items'
     },
 
     {
       count: items_for_disposal,
       title: "items for disposal ",
-      link: '',
+      link: '/reports/disposal-items',
       label: 'Go to items for disposal'
     },
 
     {
       count: zero_stocks,
       title: "Zero stock since start of year",
-      link: '',
+      link: '/reports/zero-stocks-items',
       label: 'Go to zero-stock items'
     },
 
     {
       count: sufficient_but_not_consumed,
       title: "Sufficient but not consumed",
-      link: '',
+      link: '/reports/unconsumed-items',
       label: 'Go to unconsumed items'
     },
 
     {
       count: not_consumed_without_ris,
       title: "Not consumed without ris",
-      link: '',
+      link: '/reports/without-ris-items',
       label: 'Go to unconsumed items'
     },
   ]
@@ -136,6 +140,12 @@ function Dashboard() {
     }
   }
 
+  const handleNavigateRoute = (link) => {
+    console.log(link)
+    if (link) {
+      navigate(link);
+    }
+  }
 
   return (
     <Fragment>
@@ -158,8 +168,8 @@ function Dashboard() {
 
           <Stack my={2} direction="row" spacing={2}>
             {statistics.map(({ count, title, link, label }, index) => (
-              <BoxComponent>
-                <Box p={1} key={index}>
+              <BoxComponent key={index}>
+                <Box p={1} >
                   <Stack sx={{ color: '#1D70BC' }} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
                     <Typography level="h2" fontWeight={500} textColor={'#1D70BC'}>{count}</Typography>
                     <Info size={'16px'} />
@@ -169,16 +179,17 @@ function Dashboard() {
 
                   <Divider />
 
-                  <Box my={1}>
-                    <Link to={link}>
-                      <Stack direction={'row'} alignItems={'center'}>
-                        <Typography mr={1} fontSize={14} sx={{ color: '#2D7230', }}>
-                          {label}
-                        </Typography>
-                        <SquareArrowOutUpRight color="#2D7230" size={16} />
-                      </Stack>
-                    </Link>
+                  <Box my={1}
+                    onClick={() => handleNavigateRoute(link)}
+                    style={{ cursor: "pointer" }}>
+                    <Stack direction="row" alignItems="center">
+                      <Typography mr={1} fontSize={14} sx={{ color: "#2D7230" }}>
+                        {label}
+                      </Typography>
+                      <SquareArrowOutUpRight color="#2D7230" size={16} />
+                    </Stack>
                   </Box>
+
                 </Box>
               </BoxComponent>
             ))}

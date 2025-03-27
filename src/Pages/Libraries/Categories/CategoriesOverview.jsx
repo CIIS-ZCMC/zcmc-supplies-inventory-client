@@ -9,6 +9,9 @@ import ModalComponent from '../../../Components/Dialogs/ModalComponent'
 import PaginatedTable from '../../../Components/Table/PaginatedTable'
 import SnackbarComponent from '../../../Components/SnackbarComponent'
 
+//layouts
+import TableDescription from '../../../Layout/Libraries/TableDescription'
+
 import FormDialog from './FormDialog';
 
 import useCategoriesHook from '../../../Hooks/CategoriesHook'
@@ -70,23 +73,20 @@ const SuppliersOverview = ({ filter }) => {
                 </Stack>
                 :
                 <PaginatedTable
-                    tableTitle={"Categories"}
-                    // tableDesc={"Sample Table Desription"}
+                    // tableTitle={"Categories"}
+                    tableDesc={
+                        <TableDescription
+                            label="Add new category"
+                            onClick={handleDialogOpen}
+                        />}
                     loading={isLoading}
                     columns={categoriesHeader}
                     rows={filter(categoriesData)}
                     actions={<ViewIcon />}
-                    actionBtns={
-                        <Stack>
-                            <ButtonComponent
-                                label="Add new category"
-                                onClick={handleDialogOpen}
-                            />
-                        </Stack>
-                    }
                     editRow={handleEditRow}
                     editable={true}
                     viewable={false}
+                    showChip={false}
                 />
             }
             <ModalComponent

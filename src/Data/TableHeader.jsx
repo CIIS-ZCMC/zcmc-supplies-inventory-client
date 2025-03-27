@@ -38,7 +38,11 @@ export const receivingTableHeader = [
 ];
 
 export const itemHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category Name" },
   { id: "unit_name", label: "Unit" },
@@ -47,11 +51,16 @@ export const itemHeader = [
   { id: "average_monthly_consumption", label: "Average monthly consumption" },
   { id: "months_left_to_consume", label: "Months left to consume" },
   { id: "starting_balance", label: "2024 starting balance" },
-  { id: "actions", label: "Actions" },
+  // { id: "actions", label: "Actions" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 export const startingBalHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -60,7 +69,11 @@ export const startingBalHeader = [
 ];
 
 export const nearExpHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "brand_name", label: "Brand" },
@@ -71,22 +84,36 @@ export const nearExpHeader = [
 ];
 
 export const zeroStocksHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 export const consumedHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
   { id: "average_monthly_consumption", label: "Average monthly consumption" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 export const sufficientHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -95,7 +122,11 @@ export const sufficientHeader = [
 ];
 
 export const unconsumedHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -103,7 +134,11 @@ export const unconsumedHeader = [
 ];
 
 export const reorderHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
@@ -113,15 +148,52 @@ export const reorderHeader = [
 ];
 
 export const disposalHeader = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
   { id: "quantity", label: "Quantity served to WMR" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+];
+
+export const areaSuppliesHeader = [
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
+  { id: "supply_name", label: "Item Name" },
+  { id: "category_name", label: "Category" },
+  { id: "unit_name", label: "Unit" },
+  { id: "total_quantity", label: "Quantity" },
+  { id: "average_monthly_consumption", label: "Monthly Consumption" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+];
+
+export const regularSuppliesHeader = [
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
+  { id: "supply_name", label: "Item Name" },
+  { id: "category_name", label: "Category" },
+  { id: "unit_name", label: "Unit" },
+  { id: "regular_starting_balance", label: "Starting Balance" },
+  { id: "total_stockin_quantity", label: "Total Stockin Quantity" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
 export const itemBreakdown = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    // id: "id",
+    label: "#",
+    width: "5%"
+  },
   { id: "month", label: "Month" },
   { id: "iar_purchased", label: "IAR purchased" },
   { id: "iar_donation", label: "IAR donation" },
@@ -130,9 +202,10 @@ export const itemBreakdown = [
   { id: "ending_balance", label: "Ending balance" },
 ];
 
+
 export const releasingHeader = [
   {
-    id: "id",
+    // id: "id",
     numeric: true,
     disablePadding: true,
     label: "#",
@@ -173,7 +246,7 @@ export const releasingHeader = [
 
 export const updateStockHeader = [
   {
-    id: "id",
+    // id: "id",
     numeric: true,
     disablePadding: true,
     label: "#",
@@ -217,7 +290,7 @@ export const updateStockHeader = [
 
 export const receivingHeader = [
   {
-    id: "id",
+    // id: 1,
     numeric: true,
     disablePadding: true,
     label: "#",

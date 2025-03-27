@@ -57,6 +57,8 @@ export const API = {
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",
+  STOCK_IN_UPDATE: "stock-in-update",
+  STOCK_IN_DETAILS: "stock-in-details",
 
   RELEASING: "releasing-list",
   SELECTED_RELEASING_LIST: "selected-releasing-list",
@@ -85,6 +87,8 @@ export const API = {
   REPORTS_ITEM_COUNT_BREAKDOWN: "get-item-breakdown",
   REPORTS_ITEM_COUNT_TOTAL: "get-item-total",
   REPORTS_ITEM_COUNT_IAR: "get-item-iar",
+  REPORTS_AREA_SUPPLY: "get-area-supply",
+  REPORTS_SUPPLY_REGULAR: "get-supply-regular"
 };
 
 /**

@@ -9,6 +9,9 @@ import ModalComponent from '../../../Components/Dialogs/ModalComponent'
 import PaginatedTable from '../../../Components/Table/PaginatedTable'
 import SnackbarComponent from '../../../Components/SnackbarComponent'
 
+//layouts
+import TableDescription from '../../../Layout/Libraries/TableDescription'
+
 import FormDialog from './FormDialog';
 
 import useSuppliesHook from '../../../Hooks/SuppliesHook'
@@ -73,20 +76,21 @@ const SuppliesOverview = ({ filter }) => {
                 </Stack>
                 :
                 <PaginatedTable
-                    tableTitle={"Supplies"}
-                    // tableDesc={"Sample Table Desription"}
+                    // tableTitle={"Supplies"}
+                    tableDesc={
+                        <TableDescription
+                            label="Add new supply"
+                            onClick={handleDialogOpen}
+                        />
+                    }
                     columns={supplyHeader}
                     loading={isLoading}
                     rows={filter(suppliesData)}
                     actions={<ViewIcon />}
-                    actionBtns={
-                        <Stack>
-                            <ButtonComponent label="Add new item" onClick={handleDialogOpen} />
-                        </Stack>
-                    }
                     editRow={handleEditRow}
                     editable={true}
                     viewable={false}
+                    showChip={false}
                 />
             }
             <ModalComponent

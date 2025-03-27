@@ -9,6 +9,9 @@ import ModalComponent from '../../../Components/Dialogs/ModalComponent'
 import PaginatedTable from '../../../Components/Table/PaginatedTable'
 import SnackbarComponent from '../../../Components/SnackbarComponent'
 
+//layouts
+import TableDescription from '../../../Layout/Libraries/TableDescription'
+
 import FormDialog from './FormDialog';
 
 import useSuppliersHook from '../../../Hooks/SuppliersHook';
@@ -70,23 +73,15 @@ const SuppliersOverview = ({ filter }) => {
         </Stack>
         :
         <PaginatedTable
-          tableTitle={"Suppliers"}
-          // tableDesc={"Sample Table Desription"}
+          tableDesc={<TableDescription label={'Add new supplier'} onClick={handleDialogOpen} />}
           loading={isLoading}
           columns={supplierHeader}
           rows={filter(suppliersData)}
           actions={<ViewIcon />}
-          actionBtns={
-            <Stack>
-              <ButtonComponent
-                label="Add new supplier"
-                onClick={handleDialogOpen}
-              />
-            </Stack>
-          }
           editRow={handleEditRow}
           editable={true}
           viewable={false}
+          showChip={false}
         />
       }
       <ModalComponent

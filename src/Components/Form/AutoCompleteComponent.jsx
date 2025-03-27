@@ -18,25 +18,26 @@ const AutoCompleteComponent = ({
   fullWidth,
   error,
   helperText,
-  addBtn
+  addBtn,
+  size
 }) => {
   return (
     <Box>
       <FormControl fullWidth>
 
-        <Stack direction={'row'} justifyContent='space-between' alignItems={'center'} mb={1} >
+        <Stack direction={'row'} justifyContent='space-between' alignItems={'center'}  >
           <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
-          {addBtn && addBtn}
+          {/* {addBtn && addBtn} */}
         </Stack>
 
         <Autocomplete
-          filterSelectedOptions
+          // filterSelectedOptions
           error={error}
           name={name}
           sx={{ width }}
           options={options}
           placeholder={placeholder}
-          size="lg"
+          size={size}
           onChange={onChange}
           value={value}
           fullWidth={fullWidth}

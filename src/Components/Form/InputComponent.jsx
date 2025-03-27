@@ -12,7 +12,7 @@ InputComponent.propTypes = {
   placeholder: PropTypes.string,
   helperText: PropTypes.string,
   value: PropTypes.string.isRequired,
-  setValue: PropTypes.func.isRequired,
+  // setValue: PropTypes.func.isRequired,
   autoFocus: PropTypes.bool,
   fontWeight: PropTypes.number,
   startIcon: PropTypes.object,
@@ -53,7 +53,13 @@ function InputComponent({
         onChange={onChange ? onChange : (e) => setValue(e.target.value)}
         sx={{ fontWeight: fontWeight, width: width }}
       />
-      {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      {/* {helperText && <FormHelperText>{helperText}</FormHelperText>} */}
+
+      {error && (
+        <Typography variant="body2" color="danger">
+          {helperText}
+        </Typography>
+      )}
     </FormControl>
   );
 }
