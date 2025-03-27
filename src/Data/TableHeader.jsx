@@ -41,7 +41,7 @@ export const itemHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category Name" },
@@ -59,7 +59,7 @@ export const startingBalHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -72,7 +72,7 @@ export const nearExpHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -87,7 +87,7 @@ export const zeroStocksHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -99,7 +99,7 @@ export const consumedHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -112,7 +112,7 @@ export const sufficientHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -125,7 +125,7 @@ export const unconsumedHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -137,7 +137,7 @@ export const reorderHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -151,7 +151,7 @@ export const disposalHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -164,7 +164,7 @@ export const areaSuppliesHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -178,7 +178,7 @@ export const regularSuppliesHeader = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
@@ -192,7 +192,7 @@ export const itemBreakdown = [
   {
     // id: "id",
     label: "#",
-    width: "5%"
+    width: "5%",
   },
   { id: "month", label: "Month" },
   { id: "iar_purchased", label: "IAR purchased" },
@@ -201,7 +201,6 @@ export const itemBreakdown = [
   { id: "ris_donation", label: "RIS from donation" },
   { id: "ending_balance", label: "Ending balance" },
 ];
-
 
 export const releasingHeader = [
   {
@@ -286,7 +285,7 @@ export const updateStockHeader = [
     disablePadding: false,
     label: "Quantity",
   },
-]
+];
 
 export const receivingHeader = [
   {
@@ -399,28 +398,66 @@ export const brandHeader = [
 ];
 
 export const supplierHeader = [
-  // {
-  //   id: "id",
-  //   numeric: true,
-  //   disablePadding: true,
-  //   label: "#",
-  // },
-
   {
     id: "supplier_name",
     numeric: false,
     disablePadding: false,
     label: "Supplier Name",
   },
-
-  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
-
-  // {
-  //   id: "created_at",
-  //   numeric: false,
-  //   disablePadding: false,
-  //   label: "Created at",
-  // },
+  {
+    id: "email",
+    numeric: false,
+    disablePadding: false,
+    label: "Email",
+  },
+  {
+    id: "prcontactperson",
+    numeric: false,
+    disablePadding: false,
+    label: "Contact Person",
+  },
+  {
+    id: "prtelno",
+    numeric: false,
+    disablePadding: false,
+    label: "Telephone No.",
+  },
+  {
+    id: "prfaxno",
+    numeric: false,
+    disablePadding: false,
+    label: "Fax No.",
+  },
+  {
+    id: "premail",
+    numeric: false,
+    disablePadding: false,
+    label: "PR Email",
+  },
+  {
+    id: "prstreetbldg1",
+    numeric: false,
+    disablePadding: false,
+    label: "Street/Building",
+  },
+  {
+    id: "praddress",
+    numeric: false,
+    disablePadding: false,
+    label: "Address",
+  },
+  {
+    id: "prcountry",
+    numeric: false,
+    disablePadding: false,
+    label: "Country",
+  },
+  {
+    id: "actions",
+    numeric: false,
+    disablePadding: false,
+    label: "Actions",
+  },
 ];
 
 export const categoriesHeader = [
@@ -537,7 +574,6 @@ export const unitHeader = [
   // },
 ];
 
-
 export const dashboardHeader = [
   // {
   //   id: "id",
@@ -580,5 +616,4 @@ export const dashboardHeader = [
     disablePadding: true,
     label: "This year's starting balance",
   },
-
-]
+];

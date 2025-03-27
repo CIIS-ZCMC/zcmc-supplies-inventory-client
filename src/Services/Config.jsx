@@ -19,21 +19,25 @@ export const ROOT_PATH = "/dashboard";
 /**
  * Server End points add here
  */
+export const MigrateLibraries = {
+  UNIT: "fetch-Unit-data-bizbox",
+};
+
 export const API = {
   AREAS: "areas",
   AREA_STORE: "area-store",
-  AREA_UPDATE: 'area-update',
-  AREA_SHOW: 'area-view',
+  AREA_UPDATE: "area-update",
+  AREA_SHOW: "area-view",
 
   BRANDS: "brands",
   BRAND_STORE: "brand-store",
-  BRAND_UPDATE: 'brand-update',
-  BRAND_SHOW: 'brand-view',
+  BRAND_UPDATE: "brand-update",
+  BRAND_SHOW: "brand-view",
 
   SUPPLIERS: "suppliers",
   SUPPLIER_STORE: "supplier-store",
-  SUPPLIER_UPDATE: 'supplier-update',
-  SUPPLIER_SHOW: 'supplier-view',
+  SUPPLIER_UPDATE: "supplier-update",
+  SUPPLIER_SHOW: "supplier-view",
 
   UNITS: "units",
   UNIT_STORE: "unit-store",
@@ -42,18 +46,18 @@ export const API = {
 
   SOURCES: "sources",
   SOURCE_STORE: "source-store",
-  SOURCE_UPDATE: 'source-update',
-  SOURCE_SHOW: 'source-view',
+  SOURCE_UPDATE: "source-update",
+  SOURCE_SHOW: "source-view",
 
   CATEGORIES: "categories",
   CATEGORY_STORE: "category-store",
-  CATEGORY_UPDATE: 'category-update',
-  CATEGORY_SHOW: 'category-view',
+  CATEGORY_UPDATE: "category-update",
+  CATEGORY_SHOW: "category-view",
 
   SUPPLIES: "supplies",
   SUPPLY_STORE: "supply-store",
-  SUPPLY_UPDATE: 'supply-update',
-  SUPPLY_SHOW: 'supply-view',
+  SUPPLY_UPDATE: "supply-update",
+  SUPPLY_SHOW: "supply-view",
 
   INVENTORY: "get-inventory",
   RECEIVING: "receiving-list",
@@ -88,7 +92,7 @@ export const API = {
   REPORTS_ITEM_COUNT_TOTAL: "get-item-total",
   REPORTS_ITEM_COUNT_IAR: "get-item-iar",
   REPORTS_AREA_SUPPLY: "get-area-supply",
-  REPORTS_SUPPLY_REGULAR: "get-supply-regular"
+  REPORTS_SUPPLY_REGULAR: "get-supply-regular",
 };
 
 /**
