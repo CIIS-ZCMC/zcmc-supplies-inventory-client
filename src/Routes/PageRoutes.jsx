@@ -5,9 +5,11 @@ import {
   ArrowDownToLine,
   ClipboardList,
   ChartCandlestick,
+  NotebookTextIcon,
 } from "lucide-react";
 import { BiCategory } from "react-icons/bi";
 import { GrDocument } from "react-icons/gr";
+import { FaFileInvoiceDollar } from "react-icons/fa";
 import ViewItemDetails from "../Pages/Reports/ViewItemDetails";
 
 // Lazy load only Reports and Libraries
@@ -41,6 +43,8 @@ import UnconsumedItems from "../Pages/Reports/UnconsumedItems";
 import WithoutRISItems from "../Pages/Reports/WithoutRISItems";
 import AreaSupplies from "../Pages/Reports/AreaSupplies";
 import RegularSupplies from "../Pages/Reports/RegularSupplies";
+import { PiInvoiceDuotone } from "react-icons/pi";
+import PurchaseReq from "../Pages/PurchaseRequest/PurchaseReq";
 
 export const sidebarRoutes = [
   {
@@ -97,6 +101,14 @@ export const sidebarRoutes = [
       { path: "area-supplies", element: <AreaSupplies /> },
       { path: "regular-supplies", element: <RegularSupplies /> },
     ],
+  },
+  {
+    path: "/purchase-order",
+    name: "po",
+    element: <PurchaseReq />,
+    icon: <NotebookTextIcon />,
+    permissions: ["view"],
+    children: [{ path: ":id", element: <>this will display</> }],
   },
 ];
 

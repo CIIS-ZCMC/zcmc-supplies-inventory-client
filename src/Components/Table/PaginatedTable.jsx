@@ -238,7 +238,6 @@ function PaginatedTable({
                                 }
                               />
                             )}
-
                             {editable && (
                               <ButtonComponent
                                 size={"sm"}
@@ -249,7 +248,8 @@ function PaginatedTable({
                             )}
                           </>
                         ) : (
-                          row[column?.id] ?? `${startIdx + index + 1}`
+                          // row[column?.id] ?? `${startIdx + index + 1}`
+                          row[column?.id] ?? `null`
                         )}
                       </td>
                     ))}

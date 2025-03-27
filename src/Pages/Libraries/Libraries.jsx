@@ -24,6 +24,7 @@ import UnitsOverview from "./Units/UnitsOverview";
 
 //custom hooks
 import useFilterHook from "../../Hooks/FilterHook";
+import { useQuery } from "@tanstack/react-query";
 
 const Libraries = () => {
   const {
@@ -33,6 +34,10 @@ const Libraries = () => {
     setSearchTerm,
     filteredInventory,
   } = useFilterHook();
+
+  const { data, isLoading, error, status, isFetching } = useQuery({
+    queryKey: ["supplies"],
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -72,12 +77,12 @@ const Libraries = () => {
 
   return (
     <>
+      {/* {JSON.stringify(isFetching)} */}
       <Header pageDetails={pageDetails} data={user} />
       <Stack gap={2} mt={2}>
         <ContainerComponent>
           <Stack direction="row" alignItems="center" spacing={2} my={1}>
             {/* Search */}
-
             <InputComponent
               placeholder="Find by names, brands, categories, etc."
               startIcon={<SearchIcon />}

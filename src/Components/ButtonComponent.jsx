@@ -28,7 +28,7 @@ function ButtonComponent({
   customOutlined,
   type,
   loading,
-  width
+  width,
 }) {
   const theme = useTheme();
 
@@ -39,18 +39,18 @@ function ButtonComponent({
     py: 1,
     ...(customOutlined
       ? {
-        backgroundColor: "white",
-        color: theme.palette.custom.buttonBg,
-        border: 2,
-        borderColor: theme.palette.custom.buttonBg,
-        "&:hover": {
-          backgroundColor: theme.palette.custom.light,
-          color: "white",
-        },
-      }
+          backgroundColor: "white",
+          color: theme.palette.custom.buttonBg,
+          border: 2,
+          borderColor: theme.palette.custom.buttonBg,
+          "&:hover": {
+            backgroundColor: theme.palette.custom.light,
+            color: "white",
+          },
+        }
       : variant || color
-        ? {}
-        : {
+      ? {}
+      : {
           backgroundColor: theme.palette.custom.buttonBg,
           "&:hover": { backgroundColor: theme.palette.custom.light },
         }),
