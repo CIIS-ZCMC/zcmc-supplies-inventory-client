@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     children: sidebarRoutes, // Custom page routes
   },
   {
-    // path: "/releasing",
+     //path: "/releasing",
     element: (
       <ProtectedRoutes>
         <Layout />

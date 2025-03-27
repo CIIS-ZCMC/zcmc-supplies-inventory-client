@@ -13,24 +13,24 @@ function ProtectedRoutes({ children }) {
   const [loading, setLoading] = useState(true);
 
   function initialize(token) {
-    if (location.pathname.includes(SSO_SIGNING_PATH)) {
-      const regenerateSigningSessionURL = `${location.pathname}${location.search}`;
-      navigate(regenerateSigningSessionURL);
-      return;
-    }
+    // if (location.pathname.includes(SSO_SIGNING_PATH)) {
+    //   const regenerateSigningSessionURL = `${location.pathname}${location.search}`;
+    //   navigate(regenerateSigningSessionURL);
+    //   return;
+    // }
 
-    sessionValidation(token, (status, feedback) => {
-      if (!(status >= 200 && status < 300)) {
-        /**
-         * Comment this if you want to prevent return to landing page when session expire
-         */
-        window.location.href = BASE_URL.production_landing_page;
-        setLoading(false);
-        return;
-      }
-      navigate(ROOT_PATH);
-      setLoading(false);
-    });
+    // sessionValidation(token, (status, feedback) => {
+    //   if (!(status >= 200 && status < 300)) {
+    //     /**
+    //      * Comment this if you want to prevent return to landing page when session expire
+    //      */
+    //     window.location.href = BASE_URL.production_landing_page;
+    //     setLoading(false);
+    //     return;
+    //   }
+    //   navigate(ROOT_PATH);
+    //   setLoading(false);
+    // });
   }
 
   useEffect(() => {
