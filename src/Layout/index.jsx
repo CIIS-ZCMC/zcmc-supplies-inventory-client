@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
-import { Box, Grid, useTheme } from "@mui/joy";
+import { Box, CircularProgress, Grid, useTheme } from "@mui/joy";
 import Sidebar from "./Sidebar";
+import { Suspense } from "react";
 
 function Layout() {
   const theme = useTheme();
@@ -43,7 +44,15 @@ function Layout() {
         }}
       >
         <Box>
-          <Outlet />
+          <Suspense
+            fallback={
+              <>
+                <CircularProgress />
+              </>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </Box>
       </Grid>
     </Grid>

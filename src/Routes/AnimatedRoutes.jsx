@@ -38,11 +38,7 @@ const router = createBrowserRouter([
 ]);
 
 function AnimatedRoutes() {
-  return (
-    <Suspense fallback={<CircularProgress />}>
-      <RouterProvider router={router} />
-    </Suspense>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default AnimatedRoutes;
