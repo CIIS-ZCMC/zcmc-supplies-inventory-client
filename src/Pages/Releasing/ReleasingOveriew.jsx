@@ -64,9 +64,11 @@ const Releasing = () => {
     setSnackbar({ open: false });
   };
 
-  const handleDialogOpen = () => {
-    setIsDialogOpen(true);
-  };
+    const handleSaveRIS = () => {
+        alert('RIS TO BE SAVED')
+        setIsDialogOpen(false)
+        //add snackbar indication item was saved
+    }
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);

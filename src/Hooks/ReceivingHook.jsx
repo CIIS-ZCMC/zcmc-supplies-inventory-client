@@ -1,10 +1,21 @@
 import { create } from "zustand";
-import axios from "axios";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
-import { BASE_URL, API } from '../Services/Config'
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useReceivingHook = create((set) => ({
+  initialValues: {
+    itemName: "",
+    source: "",
+    quantity: "",
+    poNumber: "",
+    iarNumber: "",
+    dateDelivered: null,
+    expiryDate: null,
+    brand: "",
+    supplier: "",
+  },
 
     initialValues: {
         id: null,
@@ -124,6 +135,19 @@ const useReceivingHook = create((set) => ({
         }
     },
 
+   
+
+  // Create stock in with POST request
+  createStockIn: async (formData) => {
+    try {
+      const response = await inventory_api.post(`/${API.STOCKIN}`, formData);
+
+      return response.data;
+    } catch (error) {
+      console.error("Error creating stock out:", error.message);
+      throw error;
+    }
+  },
 }));
 
-export default useReceivingHook
+export default useReceivingHook;

@@ -1,17 +1,16 @@
 import { create } from "zustand";
-import axios from "axios";
-import * as Yup from 'yup'
-import { API, BASE_URL } from "../Services/Config";
+import * as Yup from "yup";
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 
 const useSourceHook = create((set) => ({
-
   initialValues: {
     id: null,
-    sourceName: '',
+    sourceName: "",
   },
 
   validationSchema: Yup.object({
-    sourceName: Yup.string().required('Source name is required'),
+    sourceName: Yup.string().required("Source name is required"),
   }),
 
   // Method to reset initial values
@@ -29,9 +28,8 @@ const useSourceHook = create((set) => ({
 
   getSources: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.SOURCES}`
-      );
+      const response = await inventory_api.get(`/${API.SOURCES}`);
+
       return response.data;
     } catch (error) {
       error.message;
@@ -45,14 +43,18 @@ const useSourceHook = create((set) => ({
       );
       return response.data;
     } catch (error) {
-      error.message
+      error.message;
     }
   },
 
   // Create in with POST request
   createSource: async (formData) => {
     try {
-      const response = await axios.post(`${BASE_URL.development}/${API.SOURCE_STORE}`, formData);
+      const response = await inventory_api.post(
+        `/${API.SOURCE_STORE}`,
+        formData
+      );
+
       return response.data;
     } catch (error) {
       console.error("Error creating Source:", error.message);
@@ -63,17 +65,17 @@ const useSourceHook = create((set) => ({
   // Update with PUT or PATCH request
   updateSource: async (id, formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.development}/${API.SOURCE_UPDATE}/${id}`,
+      const response = await inventory_api.post(
+        `/${API.SOURCE_UPDATE}/${id}`,
         formData
       );
+
       return response.data;
     } catch (error) {
       console.error("Error updating source:", error.message);
       throw error;
     }
   },
-
 }));
 
 export default useSourceHook;

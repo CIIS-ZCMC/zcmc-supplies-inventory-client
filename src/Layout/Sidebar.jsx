@@ -11,8 +11,8 @@ function Sidebar() {
   const theme = useTheme();
   const color = theme.palette.custom;
 
-  const location = useLocation()
-  const currentPath = location.pathname
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const CustomLink = styled(({ ...props }) => <Link {...props} />)(
     ({ theme, path }) => ({
@@ -57,18 +57,20 @@ function Sidebar() {
             </Typography>
           </CustomLink>
         ))}
-      </Stack >
+      </Stack>
 
-      <Sheet sx={{
-        p: 1.5,
-        borderRadius: '10px',
-        backgroundColor: '#0A223E',
-        mt: 2,
-      }}>
+      <Sheet
+        sx={{
+          p: 1.5,
+          borderRadius: "10px",
+          backgroundColor: "#0A223E",
+          mt: 2,
+        }}
+      >
         <Typography
           level="title-sm"
           sx={{
-            color: '#E6E6E6',
+            color: "#E6E6E6",
             mb: 1,
           }}
         >
@@ -78,50 +80,52 @@ function Sidebar() {
           level="body-sm"
           fontSize={12}
           sx={{
-            color: '#E6E6E6'
+            color: "#E6E6E6",
           }}
         >
-          Manage reusable values on filling forms with product names, categories, suppliers, sources, brands, areas and units with dynamic system libraries.
+          Manage reusable values on filling forms with product names,
+          categories, suppliers, sources, brands, areas and units with dynamic
+          system libraries.
         </Typography>
 
-        <Stack mt={2} direction={'row'} alignItems={'center'}>
-
+        <Stack mt={2} direction={"row"} alignItems={"center"}>
           {/* render only if not in the path '/libraries' */}
-          {currentPath !== '/libraries' &&
+          {currentPath !== "/libraries" && (
             <Box mr={2}>
-              <Link to={'/libraries'}>
-                <Stack direction={'row'} alignItems={'center'}>
-                  <Typography mr={1} fontSize={12} sx={{ color: '#E6E6E6', }}>
+              <Link to={"/libraries"}>
+                <Stack direction={"row"} alignItems={"center"}>
+                  <Typography mr={1} fontSize={12} sx={{ color: "#E6E6E6" }}>
                     Go to my libraries
                   </Typography>
                   <BookCopy color="#E6E6E6" size={16} />
                 </Stack>
               </Link>
             </Box>
-          }
+          )}
 
           <Link>
-            <Stack direction={'row'} alignItems={'center'}>
-              <Typography mr={1} fontSize={12} sx={{ color: '#E6E6E6', }}>
+            <Stack direction={"row"} alignItems={"center"}>
+              <Typography mr={1} fontSize={12} sx={{ color: "#E6E6E6" }}>
                 Need help?
               </Typography>
               <ExternalLink color="#E6E6E6" size={16} />
             </Stack>
           </Link>
-
         </Stack>
       </Sheet>
 
-      <Sheet sx={{
-        p: 1.5,
-        borderRadius: '10px',
-        backgroundColor: '#0A223E',
-        mt: 2,
-      }}>
+      <Sheet
+        sx={{
+          p: 1.5,
+          borderRadius: "10px",
+          backgroundColor: "#0A223E",
+          mt: 2,
+        }}
+      >
         <Typography
           level="title-sm"
           sx={{
-            color: '#E6E6E6',
+            color: "#E6E6E6",
             mb: 1,
           }}
         >
@@ -131,29 +135,26 @@ function Sidebar() {
           level="body-sm"
           fontSize={12}
           sx={{
-            color: '#E6E6E6'
+            color: "#E6E6E6",
           }}
         >
-          Let us know about your experience.
-          Your feedback is invaluable in ensuring the stability of the new Inventory Management System.
+          Let us know about your experience. Your feedback is invaluable in
+          ensuring the stability of the new Inventory Management System.
         </Typography>
 
-        <Stack mt={2} direction={'row'} alignItems={'center'}>
+        <Stack mt={2} direction={"row"} alignItems={"center"}>
           <Link>
-            <Stack direction={'row'} alignItems={'center'}>
-              <Typography mr={1} fontSize={12} sx={{ color: '#E6E6E6', }}>
+            <Stack direction={"row"} alignItems={"center"}>
+              <Typography mr={1} fontSize={12} sx={{ color: "#E6E6E6" }}>
                 Report an issue?
               </Typography>
               <MessageCircleQuestion color="#E6E6E6" size={16} />
             </Stack>
           </Link>
-
         </Stack>
       </Sheet>
-
-    </Stack >
+    </Stack>
   );
 }
 
 export default Sidebar;
-

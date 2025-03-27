@@ -11,12 +11,20 @@ import Authentication from "../Pages/Authentication/Authentication";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />, // Parent component that renders common layout
+    element: (
+      <ProtectedRoutes>
+        <Layout />
+      </ProtectedRoutes>
+    ), // Parent component that renders common layout
     children: sidebarRoutes, // Custom page routes
   },
   {
-    // path: "/releasing",
-    element: <Layout />, // Parent component that renders common layout
+     //path: "/releasing",
+    element: (
+      <ProtectedRoutes>
+        <Layout />
+      </ProtectedRoutes>
+    ), // Parent component that renders common layout
     children: childrenRoutes, // Custom page routes
   },
   {
