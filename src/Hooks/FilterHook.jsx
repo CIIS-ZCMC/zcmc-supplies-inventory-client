@@ -40,6 +40,8 @@ const useFilterHook = create((set) => ({
   // Computed property for filtered and sorted inventory
   filteredInventory: (data) => {
     // Ensure data is an array
+
+   
     if (!Array.isArray(data)) {
       console.error("Expected an array but got:", data);
       return [];

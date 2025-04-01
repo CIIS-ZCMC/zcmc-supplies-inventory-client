@@ -46,12 +46,18 @@ const Releasing = () => {
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
   const { selectedCategory, setCategory, filteredInventory, clearFilters, searchTerm, setSearchTerm } = useFilterHook();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["stockout"],
+  const { data, isLoading, error,status } = useQuery({
+    queryKey: ["stockouts"],
     queryFn: getStockOut,
   });
-
-  const stockoutData = data?.data;
+  
+  useEffect(() => {
+    console.log("Query Status:", status);
+    console.log("Loading:", isLoading);
+    console.log("Error:", error);
+    console.log("Data:", data);
+  }, [status, isLoading, error, data]);
+  const stockoutData = data?.data ?? [];
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -63,6 +69,10 @@ const Releasing = () => {
   const handleSnackbarClose = () => {
     setSnackbar({ open: false });
   };
+
+  const handleDialogOpen = () =>{ 
+    
+  }
 
     const handleSaveRIS = () => {
         alert('RIS TO BE SAVED')
@@ -128,6 +138,7 @@ const Releasing = () => {
     <>
       <Header pageDetails={pageDetails} data={user} />
       <Stack gap={2} mt={2}>
+        
         {/* search and filter */}
         <ContainerComponent>
           <Stack
