@@ -1,7 +1,6 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
-
+import inventory_api from "../Services/ApiName";
 import { BASE_URL, API } from "../Services/Config";
 
 const useSuppliersHook = create((set) => ({
@@ -54,8 +53,8 @@ const useSuppliersHook = create((set) => ({
   // ✅ Fetch All Suppliers
   getSuppliers: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.SUPPLIERS}`
+      const response = await inventory_api.get(
+        `/${API.SUPPLIERS}`
       );
       return response.data;
     } catch (error) {
@@ -67,8 +66,8 @@ const useSuppliersHook = create((set) => ({
   // ✅ Fetch Single Supplier by ID
   getSupplier: async (id) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.SUPPLIER_SHOW}/${id}`
+      const response = await inventory_api.get(
+        `/${API.SUPPLIER_SHOW}/${id}`
       );
       return response.data;
     } catch (error) {
@@ -80,8 +79,8 @@ const useSuppliersHook = create((set) => ({
   // ✅ Create a New Supplier
   createSupplier: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.development}/${API.SUPPLIER_STORE}`,
+      const response = await inventory_api.post(
+        `/${API.SUPPLIER_STORE}`,
         formData
       );
       return response.data;
@@ -94,8 +93,8 @@ const useSuppliersHook = create((set) => ({
   // ✅ Update an Existing Supplier
   updateSupplier: async (id, formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.development}/${API.SUPPLIER_UPDATE}/${id}`,
+      const response = await inventory_api.post(
+        `/${API.SUPPLIER_UPDATE}/${id}`,
         formData
       );
       return response.data;

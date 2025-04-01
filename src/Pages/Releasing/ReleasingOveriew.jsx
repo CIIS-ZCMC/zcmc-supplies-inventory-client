@@ -50,13 +50,7 @@ const Releasing = () => {
     queryKey: ["stockouts"],
     queryFn: getStockOut,
   });
-  
-  useEffect(() => {
-    console.log("Query Status:", status);
-    console.log("Loading:", isLoading);
-    console.log("Error:", error);
-    console.log("Data:", data);
-  }, [status, isLoading, error, data]);
+
   const stockoutData = data?.data ?? [];
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);

@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 import { BASE_URL, MigrateLibraries } from "../Services/Config";
 import { queryClient } from "../Utils/queryClient";
+import inventory_api from "../Services/ApiName";
 
 export const useSyncSupplies = create((set) => ({
   isUpdating: false,
@@ -10,7 +10,7 @@ export const useSyncSupplies = create((set) => ({
   updateDatabase: async () => {
     set({ isUpdating: true, error: null }); // Start loading
     try {
-      await axios.get(`${BASE_URL.development}/${MigrateLibraries.UNIT}`); // API call
+      await inventory_api.get(`/${MigrateLibraries.UNIT}`); // API call
       queryClient
         .invalidateQueries(["supplies"])
         .then(() => console.log("aaaaaaaaaaaaaaaaaaaaaaaaa")); // Refetch data after update

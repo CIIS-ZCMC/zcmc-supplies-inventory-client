@@ -38,8 +38,8 @@ const useCategoriesHook = create((set) => ({
 
   getCategory: async (id) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.CATEGORY_SHOW}/${id}`
+      const response = await inventory_api.get(
+        `/${API.CATEGORY_SHOW}/${id}`
       );
       return response.data;
     } catch (error) {

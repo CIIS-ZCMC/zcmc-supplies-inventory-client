@@ -94,7 +94,7 @@ const useReceivingHook = create((set) => ({
     //fetch the fata of stock into / receiving list
     getStockIn: async () => {
         try {
-            const response = await axios.get(`${BASE_URL.development}/${API.RECEIVING}`);
+            const response = await inventory_api.get(`/${API.RECEIVING}`);
             return response.data
         } catch (error) {
             error.message;
@@ -103,7 +103,7 @@ const useReceivingHook = create((set) => ({
 
     getStockInDetails: async (id) => {
         try {
-            const response = await axios.get(`${BASE_URL.development}/${API.STOCK_IN_DETAILS}/${id}`);
+            const response = await inventory_api.get(`/${API.STOCK_IN_DETAILS}/${id}`);
             return response.data;
         } catch (error) {
             error.message;
@@ -113,7 +113,7 @@ const useReceivingHook = create((set) => ({
     // Create stock in with POST request
     createStockIn: async (formData) => {
         try {
-            const response = await axios.post(`${BASE_URL.development}/${API.STOCKIN}`, formData);
+            const response = await inventory_api.post(`/${API.STOCKIN}`, formData);
             return response.data;
         } catch (error) {
             console.error("Error creating stock out:", error.message);
@@ -124,8 +124,8 @@ const useReceivingHook = create((set) => ({
     // Update with PUT or PATCH request
     updateStockIn: async (id, formData) => {
         try {
-            const response = await axios.post(
-                `${BASE_URL.development}/${API.STOCK_IN_UPDATE}/${id}`,
+            const response = await inventory_api.post(
+                `/${API.STOCK_IN_UPDATE}/${id}`,
                 formData
             );
             return response.data;

@@ -63,16 +63,7 @@ const useReleasingHook = create((set) => ({
         return `${selectedBrand.source_id}-${selectedBrand.id}`
     },
 
-    //fetch the fata of stock out / releasing list
-    getStockOut: async () => {
-        try {
-            // console.log(`${BASE_URL}/${RELEASING}`)
-            const response = await axios.get(`${BASE_URL.development}/${API.RELEASING}`);
-            return response.data
-        } catch (error) {
-            error.message;
-        }
-    },
+
 
   getSelectedReleasingList: async (id) => {
     try {
@@ -98,7 +89,7 @@ const useReleasingHook = create((set) => ({
     // Fetch brand regular and update quantity state
     getBrandRegular: async (id) => {
         try {
-            const response = await axios.get(`${BASE_URL.development}/${API.BRAND_REGULAR}/${id}`);
+            const response = await inventory_api.get(`/${API.BRAND_REGULAR}/${id}`);
             const brandData = response.data;
 
             if (brandData?.source_id) {
@@ -118,7 +109,7 @@ const useReleasingHook = create((set) => ({
     // Fetch brand donation and update quantity state
     getBrandDonation: async (id) => {
         try {
-            const response = await axios.get(`${BASE_URL.development}/${API.BRAND_DONATION}/${id}`);
+            const response = await inventory_api.get(`/${API.BRAND_DONATION}/${id}`);
             const brandData = response.data;
 
             if (brandData?.source_id) {

@@ -1,5 +1,4 @@
 import { create } from "zustand";
-
 import { API } from "../Services/Config";
 import inventory_api from "../Services/ApiName";
 
@@ -9,8 +8,8 @@ const useInventoryHook = create((set) => ({
 
   getInventory: async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.INVENTORY}`
+      const response = await inventory_api.get(
+        `/${API.INVENTORY}`
       );
       // set({ inventory: response.data.data });
       return response.data;

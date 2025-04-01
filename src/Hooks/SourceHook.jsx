@@ -38,8 +38,8 @@ const useSourceHook = create((set) => ({
 
   getSource: async (id) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.SOURCE_SHOW}/${id}`
+      const response = await inventory_api.get(
+        `/${API.SOURCE_SHOW}/${id}`
       );
       return response.data;
     } catch (error) {

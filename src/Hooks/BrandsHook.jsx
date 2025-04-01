@@ -1,8 +1,7 @@
 import { create } from "zustand";
-import axios from "axios";
 import * as Yup from "yup";
 import { BASE_URL, API } from "../Services/Config";
-
+import inventory_api from "../Services/ApiName";
 const useBrandsHook = create((set) => ({
   initialValues: {
     id: null,
@@ -28,7 +27,7 @@ const useBrandsHook = create((set) => ({
 
   getBrands: async () => {
     try {
-      const response = await axios.get(`${BASE_URL.development}/${API.BRANDS}`);
+      const response = await inventory_api.get(`/${API.BRANDS}`);
       return response.data;
     } catch (error) {
       error.message;
@@ -37,8 +36,8 @@ const useBrandsHook = create((set) => ({
 
   getBrand: async (id) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL.development}/${API.BRAND_SHOW}/${id}`
+      const response = await inventory_api.get(
+        `/${API.BRAND_SHOW}/${id}`
       );
       return response.data;
     } catch (error) {
@@ -49,8 +48,8 @@ const useBrandsHook = create((set) => ({
   // Create Area in with POST request
   createBrand: async (formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.development}/${API.BRAND_STORE}`,
+      const response = await inventory_api.post(
+        `/${API.BRAND_STORE}`,
         formData
       );
       return response.data;
@@ -63,8 +62,8 @@ const useBrandsHook = create((set) => ({
   // Update with PUT or PATCH request
   updateBrand: async (id, formData) => {
     try {
-      const response = await axios.post(
-        `${BASE_URL.development}/${API.BRAND_UPDATE}/${id}`,
+      const response = await inventory_api.post(
+        `/${API.BRAND_UPDATE}/${id}`,
         formData
       );
       return response.data;
