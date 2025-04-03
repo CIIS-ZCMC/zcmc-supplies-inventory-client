@@ -14,6 +14,7 @@ const Step2Form = ({
   setSelectedId,
   selectedId,
   selectedQuantity,
+  qtyRequest
 }) => {
   const itemCurrentStockLevel = suppliesOptions?.find(
     (item) => item.id === selectedId
@@ -27,6 +28,7 @@ const Step2Form = ({
 
   return (
     <div>
+    
       <AutoCompleteComponent
         label={"Item Name"}
         placeholder="Search Item..."
@@ -50,6 +52,13 @@ const Step2Form = ({
       />
 
       <Stack my={1}>
+      <Typography level={"body-sm"}>
+        Requested Quantity : ({" "}
+          <span style={{ fontWeight: "bold" ,color:"#A62C2C"}}>
+            {qtyRequest || 0}{" "}
+          </span>
+          )
+        </Typography>
         <Typography level={"body-sm"}>
           Item's current stock level: value remaining: ({" "}
           <span style={{ fontWeight: "bold" }}>

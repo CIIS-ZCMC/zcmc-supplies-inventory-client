@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Grid, Typography, Stack, Box, Divider } from "@mui/joy";
+import { Grid, Typography, Stack, Box, Divider,Checkbox } from "@mui/joy";
 
 import { Trash } from "lucide-react";
 import AutoCompleteComponent from "../../../Components/Form/AutoCompleteComponent";
@@ -7,10 +7,11 @@ import InputComponent from "../../../Components/Form/InputComponent";
 import IconButtonComponent from "../../../Components/IconButtonComponent";
 
 import useReleasingHook from "../../../Hooks/ReleasingHook";
-
+import useSnackbarHook from "../../../Hooks/AlertHook";
 const BrandInput = (props) => {
 
   const { brandQuantities, setBrandQuantity, retrieveKey } = useReleasingHook();
+  const {nobrandRegular,noBrandDonation,setBrandRegular,setBrandDonation} = useSnackbarHook();
 
   function selectedBrand() {
     const filteredBrands = props.brandRegularOptions.find(
@@ -23,6 +24,8 @@ const BrandInput = (props) => {
   }
 
   function currentQuantity() {
+ 
+
     const selectedItem = selectedBrand();
     if (!selectedItem) return 0;
     return brandQuantities[retrieveKey(selectedItem)];
@@ -97,21 +100,72 @@ const BrandInput = (props) => {
     );
   };
 
+  function setBrands(bool){
+    if(props.isRegular){
+      setBrandRegular(bool)
+    }else {
+      setBrandDonation(bool)
+    }
+  }
+
+
+  function hasNoBrand(){
+    return false;
+    if(props.isRegular){
+      if(nobrandRegular){
+        return true;
+      }
+    }else {
+      if(noBrandDonation){
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
+  function ifOnlyOneSelected(){
+    if(props.isRegular){
+      return props.regularBrands.length ==1;
+    }else {
+      return props.regularBrands.length ==1;
+    }
+  }
+
+  function BrandValue(value){
+    if(props.isRegular){
+      if(nobrandRegular){
+        return null;
+      }else{
+        return value
+      }
+    }else {
+      if(noBrandDonation){
+        return null;
+      }else{
+        return value
+      }
+    }
+  }
+
   return (
     <>
       {" "}
       <Grid container spacing={2}>
         {/* Brand Selection */}
         <Grid md={7} lg={7}>
+          
           <AutoCompleteComponent
+          
             name={"brandRegular"}
             placeholder="Search brand..."
             label={`Brand `}
             options={filterBrandOptions}
             loading={props.isBrandRegularloading}
-            value={props.brandRegularOptions.find(
+            value={BrandValue(props.brandRegularOptions.find(
               (option) => option.id === props.item.brand_id
-            )}
+            ))}
             onChange={(e, value) => {
               const updatedList = [...props.regularBrands];
               updatedList[props.index].brand_id = value?.id;
@@ -131,18 +185,34 @@ const BrandInput = (props) => {
                 </Typography>
               )
             }
+            disabled={hasNoBrand()}
           />
+  {/* { ifOnlyOneSelected() && <Box padding={1}>
+        <Checkbox label="No brand indicated"
+        onChange={(event)=>{
+          if (event.target.checked){
+            setBrands(true)
+          } else {
+            setBrands(false)
+          }
+        }}
+        
+        sx={{fontSize:"12px"}} size="sm" />  
+       </Box>  }
+      */}
+
         </Grid>
 
         {/* Quantity Input */}
         <Grid xs={11} md={5} lg={5}>
+          
           <InputComponent
-            label={`Quantity (${currentQuantity()} available)`}
+            label={hasNoBrand() ? "Quantity":`Quantity (${currentQuantity()} available)`}
             placeholder="xxx.xxx.xxx"
             fullWidth={true}
             name={`quantity-${props.index}`}
             size="lg"
-            value={props.item.quantity}
+            value={props.item.quantity }
             error={!props.item.quantity && props.errors.quantity}
             onChange={(e) => props.handleQuantityValueChange(e, props.index)}
             helperText={

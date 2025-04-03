@@ -68,6 +68,7 @@ const ReleasingDetails = () => {
         { id: "quantity", label: "Quantity" },
     ];
 
+
     const formatData = (data) => {
         return data.map((row) => ({
             ...row,

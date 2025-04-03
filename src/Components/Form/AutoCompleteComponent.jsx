@@ -19,7 +19,8 @@ const AutoCompleteComponent = ({
   error,
   helperText,
   addBtn,
-  size
+  size,
+  disabled=false
 }) => {
   return (
     <Box>
@@ -43,6 +44,7 @@ const AutoCompleteComponent = ({
           fullWidth={fullWidth}
           isOptionEqualToValue={(option, value) => option?.id === value?.id}
           getOptionLabel={(option) => option.label || ""} // Safely retrieve the label
+          disabled={disabled}
         />
 
         {error && (

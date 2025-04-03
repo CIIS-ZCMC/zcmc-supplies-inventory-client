@@ -7,7 +7,7 @@ import ButtonComponent from "../../Components/ButtonComponent";
 
 import useReleasingHook from "../../Hooks/ReleasingHook";
 import BrandInput from "./BrandInput/BrandInput";
-
+import useSnackbarHook from "../../Hooks/AlertHook";
 const Donation = ({
   setIsValid,
   qtyRequest,
@@ -18,6 +18,7 @@ const Donation = ({
   setDonationBrands,
   exceed,
 }) => {
+  const {noBrandDonation,nobrandRegular} = useSnackbarHook();
   const totalDonationBrands = donationBrands?.reduce(
     (acc, donation) => acc + Number(donation.quantity || 0),
     0
@@ -26,6 +27,7 @@ const Donation = ({
   useEffect(() => {
     setTotalDonationQtyBrands(totalDonationBrands);
   }, [totalDonationBrands]);
+
 
   const { getBrandDonation } = useReleasingHook();
 
@@ -145,10 +147,11 @@ const Donation = ({
           handleRemoveBrand={handleRemoveBrand}
           currentTotatlQuantity={currentTotatlQuantity()}
           errors={errors}
+          isRegular={false}
         />
       ))}
-
-      {!checkOnExceedQuantityRequest() && !exceed && (
+  {/* !checkOnExceedQuantityRequest() && !exceed && !noBrandDonation  */}
+      {!checkOnExceedQuantityRequest() && !exceed &&  (
         <ButtonComponent
           type="button"
           variant="contained"

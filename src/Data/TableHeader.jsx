@@ -203,12 +203,12 @@ export const itemBreakdown = [
 ];
 
 export const releasingHeader = [
-  {
-    // id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //    id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
   {
     id: "supply_name",
     numeric: false,

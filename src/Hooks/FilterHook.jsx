@@ -41,7 +41,7 @@ const useFilterHook = create((set) => ({
   filteredInventory: (data) => {
     // Ensure data is an array
 
-   
+   console.log(data)
     if (!Array.isArray(data)) {
       console.error("Expected an array but got:", data);
       return [];

@@ -8,14 +8,21 @@ import {
   AccordionDetails,
 } from "@mui/joy";
 
+
 const AccordionComponent = ({ accordionData }) => {
   return (
     <div>
       <AccordionGroup sx={{ borderRadius: "5px" }} variant="outlined" size="lg">
+        
         {accordionData.map(({ summary, details }, index) => (
           <Accordion key={index}>
+         
             <AccordionSummary>{summary}</AccordionSummary>
-            <AccordionDetails>{details}</AccordionDetails>
+            <AccordionDetails>
+         
+              {details}</AccordionDetails>
+
+      
           </Accordion>
         ))}
       </AccordionGroup>

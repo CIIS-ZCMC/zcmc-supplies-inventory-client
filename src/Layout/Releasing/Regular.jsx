@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Box, } from "@mui/joy";
+import { Box,Stack } from "@mui/joy";
 
 import { Plus } from "lucide-react";
 
@@ -8,7 +8,7 @@ import ButtonComponent from "../../Components/ButtonComponent";
 
 import useReleasingHook from "../../Hooks/ReleasingHook";
 import BrandInput from "./BrandInput/BrandInput";
-
+import useSnackbarHook from "../../Hooks/AlertHook";
 const Regular = ({
   qtyRequest,
   errors,
@@ -18,6 +18,8 @@ const Regular = ({
   setRegularBrands,
   exceed,
 }) => {
+  const {nobrandRegular,noBrandDonation} = useSnackbarHook();
+
   const totalRegularBrands = regularBrands?.reduce(
     (acc, regular) => acc + Number(regular.quantity || 0),
     0
@@ -78,6 +80,7 @@ const Regular = ({
   const handleAddBrand = () => {
     let initialQty = 1;
 
+    
     setRegularBrands((prevList) => [
       ...prevList,
       {
@@ -141,7 +144,9 @@ const Regular = ({
         borderRadius: "8px",
       }}
     >
+      {console.log(regularBrands)}
       {regularBrands.map((item, index) => (
+       
         <BrandInput
           index={index}
           item={item}
@@ -154,17 +159,22 @@ const Regular = ({
           handleRemoveBrand={handleRemoveBrand}
           errors={errors}
           currentTotatlQuantity={currentTotatlQuantity()}
+          isRegular={true}
         />
       ))}
 
-      {!checkOnExceedQuantityRequest() && !exceed && (
-        <ButtonComponent
+  {/* checkOnExceedQuantityRequest() && !exceed && !nobrandRegular  */}
+      {!checkOnExceedQuantityRequest() && !exceed &&  (
+
+          <ButtonComponent
           type="button"
+          
           variant="contained"
           label="Add another brand"
           onClick={handleAddBrand} // Trigger appending
           endDecorator={<Plus size={20} />}
         />
+    
       )}
     </Box>
   );

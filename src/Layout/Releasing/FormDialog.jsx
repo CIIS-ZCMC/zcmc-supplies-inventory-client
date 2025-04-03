@@ -2,7 +2,7 @@ import { useMemo, useEffect, useState } from "react";
 import { Box, Stack, Grid, Divider, Alert, Button, Typography } from "@mui/joy";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
-
+import Checkbox from '@mui/joy/Checkbox';
 //stepper components
 import Step2Form from "./Stepper/Step2Form";
 import Step1Form from "./Stepper/Step1Form";
@@ -12,7 +12,7 @@ import Summary from "./Stepper/Summary";
 import useAreasHook from "../../Hooks/AreasHook";
 import useSuppliesHook from "../../Hooks/SuppliesHook";
 import useReleasingHook from "../../Hooks/ReleasingHook";
-
+import useSnackbarHook from "../../Hooks/AlertHook";
 import Regular from "./Regular";
 import Donation from "./Donation";
 
@@ -27,6 +27,7 @@ const FormDialog = ({
   const [btnType, setBtnType] = useState("button");
 
   const queryClient = useQueryClient();
+  const {nobrandRegular,noBrandDonation,setBrandRegular,setBrandDonation} = useSnackbarHook();
 
   // local state
   const [selectedQuantity, setSelectedQuantity] = useState("");
@@ -37,7 +38,7 @@ const FormDialog = ({
   //form state
   const [selectedId, setSelectedId] = useState();
   const [regularBrands, setRegularBrands] = useState([]);
-
+  
   //   const [regularBrands, setRegularBrands] = useState([
   //     { brand_id: "", source_id: "", quantity: "", expiration_date: "" },
   //   ]);
@@ -95,6 +96,10 @@ const FormDialog = ({
   };
 
   function dissableOnRegularOrDonationEmptyItems() {
+    if(nobrandRegular || noBrandDonation){
+      return false;
+    }
+
     if (regularBrands.length === 0 && donationBrands.length === 0) return true;
 
     if (regularBrands.length > 0) {
@@ -137,6 +142,8 @@ const FormDialog = ({
 
   const onHandleNext = () => {
     const isValid = validateStep();
+
+  
     if (isValid) {
       handleNext();
     }
@@ -195,7 +202,10 @@ const FormDialog = ({
     () => mapOptions(areasData?.data, "area_name"),
     [areasData]
   );
-
+ 
+  const itemCurrentStockLevel = suppliesOptions?.find(
+    (item) => item.id === selectedId
+  );
   // useEffect(() => {
   //     const specificItem = suppliesOptions.find(item => item.id === someId);
   //     if (specificItem) {
@@ -249,13 +259,14 @@ const FormDialog = ({
           <Stack>
             <Typography>Regular</Typography>
             <Typography level="body-sm">
-              Total quantity to be released from Regular: {totalRegularQtyBrands} / 1400 left
+              Total quantity to be released from Regular: {totalRegularQtyBrands} / {itemCurrentStockLevel?.quantity} left
             </Typography>
           </Stack>
         </>
       ),
       details: (
-        <Regular
+        <>
+          <Regular
           errors={errors}
           selectedId={selectedId}
           regularBrands={regularBrands}
@@ -267,6 +278,13 @@ const FormDialog = ({
           setIsValid={setIsValid}
           exceed={exceedLimitBaseOnRegularAndDonationQuantity()}
         />
+        
+          {/* <Box padding={1}>
+        <Checkbox label="No brand indicated" sx={{fontSize:"12px"}} size="sm" />  
+          </Box>   */}
+
+        </>
+      
       ),
     },
     {
@@ -275,13 +293,14 @@ const FormDialog = ({
           <Stack>
             <Typography>Donation</Typography>
             <Typography level="body-sm">
-              Total quantity to be released from Regular: {totalDonationQtyBrands} / 1400 left
+              Total quantity to be released from Donation: {totalDonationQtyBrands} / {itemCurrentStockLevel?.quantity} left
             </Typography>
           </Stack>
         </>
       ),
       details: (
-        <Donation
+        <>
+         <Donation
           errors={errors}
           selectedId={selectedId}
           donationBrands={donationBrands}
@@ -291,6 +310,12 @@ const FormDialog = ({
           setIsValid={setIsValid}
           exceed={exceedLimitBaseOnRegularAndDonationQuantity()}
         />
+        {/* <Box padding={1}>
+        <Checkbox label="No brand indicated" sx={{fontSize:"12px"}} size="sm" />  
+          </Box>   */}
+
+        </>
+       
       ),
     },
   ];
@@ -332,6 +357,7 @@ const FormDialog = ({
     <>
       <form onSubmit={(e) => handleSubmit(e)}>
         <Box>
+       
           {activeStep === 0 && (
             // step 1 form dont mind the naming
             <Step1Form
@@ -361,6 +387,7 @@ const FormDialog = ({
                 accordionData={accordionData}
                 suppliesOptions={suppliesOptions}
                 isSuppliesLoading={isSuppliesLoading}
+                qtyRequest={qtyRequest}
                 errors={errors}
               />
             </Grid>
