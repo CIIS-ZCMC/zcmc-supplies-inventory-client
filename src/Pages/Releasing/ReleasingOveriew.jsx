@@ -63,10 +63,9 @@ const Releasing = () => {
   const handleSnackbarClose = () => {
     setSnackbar({ open: false });
   };
-
-  const handleDialogOpen = () =>{ 
-    
-  }
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true);
+  };
 
     const handleSaveRIS = () => {
         alert('RIS TO BE SAVED')

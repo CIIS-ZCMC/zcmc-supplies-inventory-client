@@ -30,7 +30,11 @@ const BreadcrumbsComponent = ({
           <Link
             color="neutral"
             component="button"
-            onClick={() => handleNavigate(subPath)} // Navigate to the specific subpage
+            onClick={() => {
+              if(subPath !== ""){
+                handleNavigate(subPath)
+              }
+            }} // Navigate to the specific subpage
           >
             {subTitle}
           </Link>

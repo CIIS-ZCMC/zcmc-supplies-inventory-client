@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, useTheme } from "@mui/joy";
+import { Box, Button, Stack, Typography, useTheme } from "@mui/joy";
 import { ChevronRight } from "lucide-react";
 
 import BreadcrumbsComponent from "../../Components/BreadcrumbsComponent";
@@ -7,7 +7,8 @@ import SheetComponent from "../../Components/SheetComponent";
 import ButtonComponent from "../../Components/ButtonComponent";
 import useUserHook from "../../hooks/UserHook";
 import SignOut from "../../Components/Signout";
-
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { useNavigate } from "react-router-dom";
 const FlexContainer = ({
   children,
   direction = "row",
@@ -32,7 +33,7 @@ const FlexContainer = ({
 const Header = ({ pageDetails, data }) => {
   const theme = useTheme();
   const { user } = useUserHook();
-
+  const navigate = useNavigate();
   return (
     <FlexContainer
       direction="row"
@@ -40,6 +41,7 @@ const Header = ({ pageDetails, data }) => {
       justifyContent="space-between"
     >
       <Box>
+     
         <FlexContainer direction="row" alignItems="center">
           {data ? (
             <AvatarComponent alt={data.name} src={data.src} />
@@ -54,7 +56,12 @@ const Header = ({ pageDetails, data }) => {
             subTitle={pageDetails?.subTitle}
           />
         </FlexContainer>
-
+        {pageDetails?.subTitle &&    <Button onClick={()=>{
+          navigate(-1)
+        }} sx={{position:"relative",top:"10px",fontSize:"12px"}} variant="plain" startDecorator={<KeyboardBackspaceIcon sx={{fontSize:"15px"}} />}>
+          Back
+        </Button>}
+      
         <Stack mt={3}>
           <Typography fontSize={30} fontWeight={600}>
             {pageDetails?.pageTitle
@@ -110,7 +117,10 @@ const Header = ({ pageDetails, data }) => {
             size="lg"
           />
         </Box> */}
+        
       </FlexContainer>
+
+     
     </FlexContainer>
   );
 };

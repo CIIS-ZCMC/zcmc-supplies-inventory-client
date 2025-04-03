@@ -45,6 +45,7 @@ import AreaSupplies from "../Pages/Reports/AreaSupplies";
 import RegularSupplies from "../Pages/Reports/RegularSupplies";
 import { PiInvoiceDuotone } from "react-icons/pi";
 import PurchaseReq from "../Pages/PurchaseRequest/PurchaseReq";
+import NewItem from "../Pages/Inventory/NewItem";
 
 export const sidebarRoutes = [
   {
@@ -141,6 +142,12 @@ export const childrenRoutes = [
   {
     path: "/inventory/:id",
     element: <ViewDetails />,
+    icon: null,
+    permissions: ["view"],
+  },
+  {
+    path: "/newItem",
+    element: <NewItem />,
     icon: null,
     permissions: ["view"],
   },

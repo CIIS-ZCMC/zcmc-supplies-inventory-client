@@ -14,7 +14,8 @@ import useFilterHook from "../../Hooks/FilterHook";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-
+import ModalComponent from "../../Components/Dialogs/ModalComponent";
+import NewItem from "./NewItem";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -59,6 +60,14 @@ const Inventory = () => {
 
   const theme = useTheme();
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const steps = ["Step 1", "Step 2", "Step 3"];
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    color: "",
+    message: "",
+  });
   const pageDetails = {
     title: "Inventory",
     description: "See the list of items in your inventory.",
@@ -66,7 +75,13 @@ const Inventory = () => {
   };
 
   const navigateToItemSupplies = () => {
-    navigate("/libraries");
+   navigate("/newItem");
+  };
+
+  
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setActiveStep(0);
   };
 
   const { data, isLoading, error } = useQuery({
@@ -157,6 +172,8 @@ const Inventory = () => {
           />
         </ContainerComponent>
       </Stack>
+
+  
     </Fragment>
   );
 };
