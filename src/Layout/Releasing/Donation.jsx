@@ -56,7 +56,7 @@ const Donation = ({
 
   const [donationBrand, setDonationBrand] = useState(null); //Primary key of Donation Brand Product
   const [donationSource, setDonationSource] = useState(null); // ID: Identify as Donation[2] or Regular[1]
-  const [donationQuantity, setDonationQuantity] = useState(1);
+  const [donationQuantity, setDonationQuantity] = useState(0);
   const [donationExpirationDate, setDonationExpirationDate] = useState(null);
 
   function currentTotatlQuantity() {
@@ -75,7 +75,7 @@ const Donation = ({
   }
 
   const handleAddBrand = () => {
-    let initialQty = 1;
+    let initialQty = 0;
 
     setDonationBrands((prevList) => [
       ...prevList,
@@ -91,7 +91,7 @@ const Donation = ({
     // Reset the state for brand and quantity inputs
     setDonationBrand(null);
     setDonationSource(null);
-    setDonationQuantity(initialQty);
+    setDonationQuantity(0);
     setDonationExpirationDate(null);
   };
 
@@ -102,15 +102,17 @@ const Donation = ({
 
   function handleQuantityValueChange(e, index) {
     const newQuantityValue = parseFloat(e.target.value) || 0;
-
+    console.log(newQuantityValue)
+    console.log(qtyRequest)
+ 
     const updatedList = [...donationBrands];
 
     const currentTotatlQuantity = donationBrands.reduce((total, brand) => {
       const quantity = parseFloat(brand.quantity) || 0;
       return total + quantity;
     }, 0);
-
-    if (newQuantityValue + currentTotatlQuantity > qtyRequest) {
+   
+    if (  newQuantityValue > qtyRequest) {
       setIsValid(true);
       updatedList[index].quantity = 0;
       updatedList[index].exceed = true;
@@ -122,6 +124,7 @@ const Donation = ({
 
     setDonationBrands(updatedList);
   }
+
 
   return (
     <Box

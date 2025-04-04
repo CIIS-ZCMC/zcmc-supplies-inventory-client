@@ -59,7 +59,7 @@ const Regular = ({
   const [regularBrand, setRegularBrand] = useState(null); //Primary key of Regular Brand Product
   const [regularSource, setRegularSource] = useState(null); // ID: Identify as Donation[2] or Regular[1]
   const [regularSupplier, setRegularSuppier] = useState(null)
-  const [regularQuantity, setRegularQuantity] = useState(1);
+  const [regularQuantity, setRegularQuantity] = useState(0);
   const [regularExpirationDate, setRegularExpirationDate] = useState(null);
 
   function currentTotatlQuantity() {
@@ -78,7 +78,7 @@ const Regular = ({
   }
 
   const handleAddBrand = () => {
-    let initialQty = 1;
+    let initialQty = 0;
 
     
     setRegularBrands((prevList) => [
@@ -144,7 +144,7 @@ const Regular = ({
         borderRadius: "8px",
       }}
     >
-      {console.log(regularBrands)}
+    
       {regularBrands.map((item, index) => (
        
         <BrandInput

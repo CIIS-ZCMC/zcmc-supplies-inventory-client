@@ -222,15 +222,18 @@ const FormDialog = ({
       closeDialog();
     },
     onError: (error) => {
-      showSnackbar;
+      console.log(error);
+     // showSnackbar;
       // setSnackbar({ open: true, color: "danger", message: `${error}` });
-      setSnackbar("Failed to stockout", "danger");
+     // setSnackbar("Failed to stockout", "danger");
 
       showSnackbar(
-        `Stockout failed!. Please try again. ${error}`,
+        `Stockout failed!. Please try again. ${error.response.data.error}`,
         "danger",
         "filled"
       );
+
+      return;
     },
     onSettled: () => {
       closeDialog();

@@ -214,7 +214,15 @@ const BrandInput = (props) => {
             size="lg"
             value={props.item.quantity }
             error={!props.item.quantity && props.errors.quantity}
-            onChange={(e) => props.handleQuantityValueChange(e, props.index)}
+            onChange={(e) =>{
+
+              if(!BrandValue(props.brandRegularOptions.find(
+                (option) => option.id === props.item.brand_id
+              ))){
+                return;
+              }
+               props.handleQuantityValueChange(e, props.index)
+            }}
             helperText={
               <Stack
                 direction="row"

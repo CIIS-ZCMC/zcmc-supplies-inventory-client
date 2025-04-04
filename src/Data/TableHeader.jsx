@@ -244,12 +244,12 @@ export const releasingHeader = [
 ];
 
 export const updateStockHeader = [
-  {
-    // id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   // id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "source_name",
@@ -288,12 +288,12 @@ export const updateStockHeader = [
 ];
 
 export const receivingHeader = [
-  {
-    // id: 1,
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   // id: 1,
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
 
   {
     id: "source_name",
