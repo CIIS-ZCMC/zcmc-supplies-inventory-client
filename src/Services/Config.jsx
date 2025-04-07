@@ -48,6 +48,7 @@ export const API = {
   SOURCE_STORE: "source-store",
   SOURCE_UPDATE: "source-update",
   SOURCE_SHOW: "source-view",
+  SOURCE_LIST:"source-list",
 
   CATEGORIES: "categories",
   CATEGORY_STORE: "category-store",

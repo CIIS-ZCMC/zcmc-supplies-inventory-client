@@ -155,7 +155,7 @@ const BrandInput = (props) => {
       <Grid container spacing={2}>
         {/* Brand Selection */}
         <Grid md={7} lg={7}>
-          
+          {console.log(props.brandRegularOptions)}
           <AutoCompleteComponent
           
             name={"brandRegular"}

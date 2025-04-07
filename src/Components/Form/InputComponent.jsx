@@ -38,12 +38,14 @@ function InputComponent({
   size,
   isRequired,
   action = false,
+  disabled= false
 }) {
   return (
     <FormControl fullWidth>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Box display="flex" alignItems="center" mb={1}>
         <Input
+          disabled={disabled}
           required={isRequired}
           width={width}
           name={name}

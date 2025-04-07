@@ -47,7 +47,7 @@ function ViewDetails(props) {
     subPath: "/viewing/:id",
   };
   const columns = [
-    { id: "id", label: "#" },
+    // { id: "id", label: "#" },
     { id: "supply_name", label: "Item Name" },
     { id: "category_name", label: "Category" },
     { id: "unit_name", label: "Unit" },

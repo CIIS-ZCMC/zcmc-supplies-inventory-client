@@ -56,6 +56,8 @@ const Regular = ({
     [brandRegularData]
   );
 
+  console.log(brandRegularOptions)
+
   const [regularBrand, setRegularBrand] = useState(null); //Primary key of Regular Brand Product
   const [regularSource, setRegularSource] = useState(null); // ID: Identify as Donation[2] or Regular[1]
   const [regularSupplier, setRegularSuppier] = useState(null)
@@ -143,7 +145,8 @@ const Regular = ({
         border: "1px solid #ddd",
         borderRadius: "8px",
       }}
-    >
+    > 
+   
     
       {regularBrands.map((item, index) => (
        

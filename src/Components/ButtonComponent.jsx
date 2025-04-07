@@ -29,6 +29,7 @@ function ButtonComponent({
   type,
   loading,
   width,
+  disabled = false
 }) {
   const theme = useTheme();
 
@@ -68,6 +69,7 @@ function ButtonComponent({
       startDecorator={startDecorator}
       endDecorator={endDecorator}
       loading={loading}
+      disabled={disabled}
     >
       {label}
     </Button>

@@ -44,6 +44,7 @@ const ItemCount = ({ filter, header, InfoDescription, currentYear }) => {
 
     return (
         <div>
+        
             <PaginatedTable
                 // tableTitle={"Item Count"}
                 tableDesc={<TableDescription />}

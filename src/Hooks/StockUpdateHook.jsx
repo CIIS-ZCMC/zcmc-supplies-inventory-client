@@ -6,12 +6,15 @@ import inventory_api from "../Services/ApiName";
 
 const useStockUpdateHook = create((set) => ({
   initialValues: {
+    DonationSource:null,
+    RegularSource:null,
+    donationQuantity:null,
+    regularQuantity:null,
     itemName: "",
     sources: [],
     brand_id: "",
     remarks: "",
   },
-
   validationSchema: Yup.object({
     itemName: Yup.string().required("Item Name is required"),
     // regularQuantity: Yup.string().required('Regular Quantity is required'),
@@ -42,6 +45,15 @@ const useStockUpdateHook = create((set) => ({
       throw error;
     }
   },
+  // getSourcesData : async () => {
+  //   try {
+  //     const response = await inventory_api.get(`/${API.SOURCE_LIST}`);
+
+  //     return response.data;
+  //   } catch (error) {
+  //     error.message;
+  //   }
+  // }
 }));
 
 export default useStockUpdateHook;

@@ -104,12 +104,13 @@ function PaginatedTable({
 
   const currentPath = location.pathname;
 
-  useEffect(() => {
-    console.log(receiving);
-  }, [receiving]);
+  // useEffect(() => {
+  //   console.log(receiving);
+  // }, [receiving]);
 
   const handleNavigate = (row) => {
     const { id } = row;
+    localStorage.setItem("supply_name",row.supply_name)
     navigate(`${currentPath}/${id}`); //dynamic route handling
     setSelectedRow(row);
   };

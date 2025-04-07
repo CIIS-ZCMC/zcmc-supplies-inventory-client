@@ -263,11 +263,11 @@ function Reports(props) {
   //   </Button>
   // ))
 
-
+ 
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
-
+      
       <ContainerComponent
         marginTop={30}
         title={"System-generated reports"}
