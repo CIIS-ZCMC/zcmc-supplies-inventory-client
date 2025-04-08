@@ -40,15 +40,34 @@ const Donation = ({
       cacheTime: Infinity,
     });
 
-  const mapOptions = (data, labelKey) =>
-    data?.map((item) => ({
-      id: item.brand_id,
-      label: item[labelKey],
-      source_id: item.source_id,
-      quantity: item.quantity,
-      expiration_date: item.expiration_date,
-    })) || [];
-
+    const mapOptions = (data, labelKey) => {
+      const labelCounts = {};
+    
+      return (
+        data?.map((item) => {
+          let baseLabel = item[labelKey];
+          let label = baseLabel;
+    
+          // Check for duplicates and append count if necessary
+          if (labelCounts[baseLabel] !== undefined) {
+            labelCounts[baseLabel]++;
+            label = `${baseLabel} (${labelCounts[baseLabel]})`;
+          } else {
+            labelCounts[baseLabel] = 0;
+          }
+    
+          return {
+            inventory_stock_id: item.inventory_stock_id,
+            id: item.brand_id,
+            label,
+            supplier_id: item.supplier_id,
+            source_id: item.source_id,
+            quantity: item.quantity,
+            expiration_date: item.expiration_date,
+          };
+        }) || []
+      );
+    };
   const brandDonationOptions = useMemo(
     () => mapOptions(brandDonationData, "concatenated_info"),
     [brandDonationData]
@@ -102,26 +121,32 @@ const Donation = ({
 
   function handleQuantityValueChange(e, index) {
     const newQuantityValue = parseFloat(e.target.value) || 0;
-    console.log(newQuantityValue)
-    console.log(qtyRequest)
- 
+   
     const updatedList = [...donationBrands];
+
+    const selectedProduct = brandDonationOptions.find(
+      (value) => value.inventory_stock_id === updatedList[index].brand_id
+    );
 
     const currentTotatlQuantity = donationBrands.reduce((total, brand) => {
       const quantity = parseFloat(brand.quantity) || 0;
       return total + quantity;
     }, 0);
-   
-    if (  newQuantityValue > qtyRequest) {
-      setIsValid(true);
-      updatedList[index].quantity = 0;
-      updatedList[index].exceed = true;
-    } else {
+
+    if(
+      newQuantityValue <= selectedProduct.quantity &&
+      newQuantityValue <= qtyRequest
+    ){
+//Good
       setIsValid(false);
       updatedList[index].quantity = newQuantityValue;
       updatedList[index].exceed = false;
+    }else {
+//Exceed
+     setIsValid(true);
+      updatedList[index].quantity = 0;
+      updatedList[index].exceed = true;
     }
-
     setDonationBrands(updatedList);
   }
 

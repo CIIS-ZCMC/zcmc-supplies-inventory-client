@@ -60,6 +60,7 @@ const useReleasingHook = create((set) => ({
         })),
 
     retrieveKey: (selectedBrand) => {
+    
         return `${selectedBrand.source_id}-${selectedBrand.id}`
     },
 
@@ -91,7 +92,7 @@ const useReleasingHook = create((set) => ({
         try {
             const response = await inventory_api.get(`/${API.BRAND_REGULAR}/${id}`);
             const brandData = response.data;
-
+       
             if (brandData?.source_id) {
                 set((state) => ({
                     brandQuantities: {

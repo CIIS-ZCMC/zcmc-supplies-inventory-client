@@ -41,22 +41,41 @@ const Regular = ({
     }
   );
 
-  const mapOptions = (data, labelKey) =>
-    data?.map((item) => ({
-      id: item.brand_id,
-      label: item[labelKey],
-      supplier_id: item.supplier_id,
-      source_id: item.source_id,
-      quantity: item.quantity,
-      expiration_date: item.expiration_date,
-    })) || [];
-
+  const mapOptions = (data, labelKey) => {
+    const labelCounts = {};
+  
+    return (
+      data?.map((item) => {
+        let baseLabel = item[labelKey];
+        let label = baseLabel;
+  
+        // Check for duplicates and append count if necessary
+        if (labelCounts[baseLabel] !== undefined) {
+          labelCounts[baseLabel]++;
+          label = `${baseLabel} (${labelCounts[baseLabel]})`;
+        } else {
+          labelCounts[baseLabel] = 0;
+        }
+  
+        return {
+          inventory_stock_id: item.inventory_stock_id,
+          id: item.brand_id,
+          label,
+          supplier_id: item.supplier_id,
+          source_id: item.source_id,
+          quantity: item.quantity,
+          expiration_date: item.expiration_date,
+        };
+      }) || []
+    );
+  };
+  
   const brandRegularOptions = useMemo(
     () => mapOptions(brandRegularData, "concatenated_info"),
     [brandRegularData]
   );
 
-  console.log(brandRegularOptions)
+  //console.log(brandRegularOptions)
 
   const [regularBrand, setRegularBrand] = useState(null); //Primary key of Regular Brand Product
   const [regularSource, setRegularSource] = useState(null); // ID: Identify as Donation[2] or Regular[1]
@@ -110,9 +129,10 @@ const Regular = ({
   function handleQuantityValueChange(e, index) {
     const newQuantityValue = parseFloat(e.target.value) || 0;
 
+ 
     const updatedList = [...regularBrands];
     const selectedProduct = brandRegularOptions.find(
-      (value) => value.id === updatedList[index].brand_id
+      (value) => value.inventory_stock_id === updatedList[index].brand_id
     );
 
     updatedList[index].quantity = newQuantityValue;

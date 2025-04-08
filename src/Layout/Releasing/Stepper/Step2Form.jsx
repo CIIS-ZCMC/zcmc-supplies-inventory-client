@@ -39,6 +39,7 @@ const Step2Form = ({
         }
         onChange={(e, value) => {
           setSelectedId(value?.id || null);
+          console.log(value)
         }}
         error={!selectedId && errors.selectedId}
         helperText={

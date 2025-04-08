@@ -13,12 +13,15 @@ const BrandInput = (props) => {
   const { brandQuantities, setBrandQuantity, retrieveKey } = useReleasingHook();
   const {nobrandRegular,noBrandDonation,setBrandRegular,setBrandDonation} = useSnackbarHook();
 
+  
   function selectedBrand() {
     const filteredBrands = props.brandRegularOptions.find(
       (option) =>
         // console.log(option.id, props.item.brand_id)
-        option.id === props.item.brand_id
-        && option.supplier_id === props.item.supplier_id
+      option.inventory_stock_id === props.item.brand_id
+      // ||
+      //   (option.id === props.item.brand_id
+      //   && option.supplier_id === props.item.supplier_id)
     );
     return filteredBrands
   }
@@ -28,22 +31,24 @@ const BrandInput = (props) => {
 
     const selectedItem = selectedBrand();
     if (!selectedItem) return 0;
+
     return brandQuantities[retrieveKey(selectedItem)];
   }
 
+
   useEffect(() => {
-
     if (props.item.brand_id) {
-
+      
       if (selectedBrand()) {
         setBrandQuantity(retrieveKey(selectedBrand()), selectedBrand().quantity || 0);
       }
     }
-  }, [props.item.brand_id, props.brandRegularOptions, setBrandQuantity,]);
+  }, [props.item.brand_id, props.brandRegularOptions, setBrandQuantity]);
 
 
 
   // Get the correct quantity for the current source_id
+
   const filterBrandOptions =
     props.regularBrands.length === 0
       ? props.brandRegularOptions
@@ -51,11 +56,11 @@ const BrandInput = (props) => {
         (outerValue) =>
           !props.regularBrands.find(
             (innerValue) =>
-              innerValue.brand_id === outerValue.id &&
-              innerValue.supplier_id === outerValue.supplier_id
+              innerValue.inventory_stock_id === outerValue.inventory_stock_id 
           )
       );
 
+    
   const QuantityDisplay = () => {
     if (props.item.exceed) {
       return (
@@ -134,10 +139,13 @@ const BrandInput = (props) => {
   }
 
   function BrandValue(value){
+    
     if(props.isRegular){
+    
       if(nobrandRegular){
         return null;
       }else{
+       
         return value
       }
     }else {
@@ -155,7 +163,7 @@ const BrandInput = (props) => {
       <Grid container spacing={2}>
         {/* Brand Selection */}
         <Grid md={7} lg={7}>
-          {console.log(props.brandRegularOptions)}
+         
           <AutoCompleteComponent
           
             name={"brandRegular"}
@@ -164,16 +172,19 @@ const BrandInput = (props) => {
             options={filterBrandOptions}
             loading={props.isBrandRegularloading}
             value={BrandValue(props.brandRegularOptions.find(
-              (option) => option.id === props.item.brand_id
+              (option) => option.inventory_stock_id === props.item.brand_id
             ))}
             onChange={(e, value) => {
+
+           
               const updatedList = [...props.regularBrands];
-              updatedList[props.index].brand_id = value?.id;
+              updatedList[props.index].brand_id = value?.inventory_stock_id;
               updatedList[props.index].source_id = value?.source_id;
               updatedList[props.index].supplier_id = value?.supplier_id;
               updatedList[props.index].quantity =
                 value?.quantity === null ? 0 : value?.quantity > 0 ? 1 : 0;
               updatedList[props.index].expiration_date = value?.expiration_date;
+     
               props.setRegularBrands(updatedList);
             }}
             fullWidth={true}
@@ -215,12 +226,14 @@ const BrandInput = (props) => {
             value={props.item.quantity }
             error={!props.item.quantity && props.errors.quantity}
             onChange={(e) =>{
-
+           
               if(!BrandValue(props.brandRegularOptions.find(
-                (option) => option.id === props.item.brand_id
+                (option) => option.inventory_stock_id === props.item.brand_id
               ))){
+              
                 return;
               }
+
                props.handleQuantityValueChange(e, props.index)
             }}
             helperText={
