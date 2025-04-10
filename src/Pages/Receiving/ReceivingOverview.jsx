@@ -107,6 +107,7 @@ const ReceivingOverview = () => {
 
             showSnackbar("Report generated successfully!", "success", "filled");
         } catch (error) {
+           
             showSnackbar(
                 "Failed to generate the report. Please try again.",
                 "danger",

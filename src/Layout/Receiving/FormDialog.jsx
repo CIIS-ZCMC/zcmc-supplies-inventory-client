@@ -267,15 +267,17 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
         },
         onError: (error) => {
             showSnackbar(
-                `Stockin failed!.Please try again.${error} `,
+                `Stock-in failed! | ${error.response.data.error}`,
                 "danger",
-                "filled"
+                "outlined"
             );
+
+       
             console.error("Error stockin form:", error);
         },
         onSettled: (data, error, variables) => {
             // Always close the dialog after the mutation is finished (whether successful or error)
-            handleClose();
+          handleClose();
         },
     });
 

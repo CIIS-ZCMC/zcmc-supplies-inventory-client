@@ -12,7 +12,7 @@ const useSnackbarHook = create((set) => ({
   brandDonationQty:1,
   showSnackbar: (message, color = "success", variant = "filled") => {
     set({ open: true, message, color, variant });
-    setTimeout(() => set({ open: false }), 3000); // Auto-hide after 3 seconds
+    setTimeout(() => set({ open: false }), 5000); // Auto-hide after 3 seconds
   },
   setBrandRegular:(bool)=>{
     set({nobrandRegular:bool})
