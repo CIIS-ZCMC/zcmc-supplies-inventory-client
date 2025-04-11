@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Stack, Box, Divider } from "@mui/joy";
+import { Stack, Box, Divider,Button } from "@mui/joy";
 
 import Header from "../../Layout/Header/Header";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
@@ -12,7 +12,7 @@ import { SearchIcon } from "lucide-react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 
 import { user, sortFilter } from "../../Data/index";
-
+import ButtonComponent from "../../Components/ButtonComponent";
 //pages
 import AreasOverview from "./Areas/AreasOverview";
 import BrandsOverview from "./Brands/BrandsOverview";
@@ -25,6 +25,7 @@ import UnitsOverview from "./Units/UnitsOverview";
 //custom hooks
 import useFilterHook from "../../Hooks/FilterHook";
 import { useQuery } from "@tanstack/react-query";
+import { Fetch } from "./Fetch";
 
 const Libraries = () => {
   const {
@@ -97,6 +98,11 @@ const Libraries = () => {
                 selectedOption={selectedOption}
                 onChange={handleOnButtonGroupClick}
               />
+              
+            </Box>
+            <Box sx={{padding:"6px 0 0 0"}}>
+          
+             <Fetch/>
             </Box>
 
             {/* <Box>
@@ -140,6 +146,7 @@ const Libraries = () => {
             <SuppliesOverview filter={filteredInventory} />
           )}
         </ContainerComponent>
+        
       </Stack>
     </>
   );

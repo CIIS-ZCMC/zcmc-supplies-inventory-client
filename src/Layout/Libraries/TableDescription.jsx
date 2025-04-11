@@ -20,7 +20,7 @@ const TableDescription = ({
       mt={1}
     >
       <ButtonComponent size="sm" label={label} onClick={onClick} />
-      {syncLabel && (
+      {/* {syncLabel && (
         // disabled={}>
         // {isUpdating ? "Updating..." : "Update Database"}
         <ButtonComponent
@@ -30,7 +30,7 @@ const TableDescription = ({
           label={syncLabel}
           onClick={syncAction}
         />
-      )}
+      )} */}
     </Box>
   );
 };
