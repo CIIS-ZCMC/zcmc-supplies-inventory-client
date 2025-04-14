@@ -61,7 +61,7 @@ const ReleasingDetails = () => {
     }
 
     const columns = [
-        { id: "id", label: "#" },
+        //{ id: "id", label: "#" },
         { id: "brand_name", label: "Brand" },
         { id: "supplier_name", label: "Suppliers" },
         { id: "source_name", label: "Source" },

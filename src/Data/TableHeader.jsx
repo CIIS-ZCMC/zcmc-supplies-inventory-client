@@ -1,10 +1,10 @@
 export const receivingTableHeader = [
-  {
-    id: "id",
-    numeric: true,
-    disablePadding: true,
-    label: "#",
-  },
+  // {
+  //   id: "id",
+  //   numeric: true,
+  //   disablePadding: true,
+  //   label: "#",
+  // },
   {
     id: "item_name",
     numeric: false,
@@ -142,7 +142,7 @@ export const reorderHeader = [
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
-  { id: "current_balance", label: "Quantity" },
+  { id: "quantity", label: "Quantity" },
   { id: "average_monthly_consumption", label: "Monthly consumption" },
   { id: "months_left_to_consume", label: "Months left to consume" },
 ];

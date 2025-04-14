@@ -1,11 +1,12 @@
 import { create } from "zustand";
+import moment from "moment";
 
 const useFilterHook = create((set) => ({
   selectedCategory: "",
   sortOrder: "",
   searchTerm: "",
   month: "",
-  year: "",
+  year: moment().format('YYYY'),
   fromDate: "",
   toDate: "",
 

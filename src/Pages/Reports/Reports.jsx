@@ -146,7 +146,6 @@ function Reports(props) {
     queryKey: ['areas'],
     queryFn: () => getAreas(),
   })
-
   const [areaId, setAreaId] = useState(null);
 
   const areasData = data?.data;
@@ -312,8 +311,8 @@ function Reports(props) {
                 placeholder={"Filter by Area"}
                 options={areasOptions}
                 loading={isLoading}
-                value={areasOptions?.find(option => option.id === areaId) || areasOptions?.find(option => option.id === 1)}
-                onChange={(event, value) => setAreaId(value ? value.id : 1)}
+                value={areasOptions?.find(option => option.id === areaId) ?? null}
+                onChange={(event, value) => setAreaId(value ? value.id : null)}
               />
             }
 
@@ -430,6 +429,7 @@ function Reports(props) {
             areaId={areaId}
           />
         }
+       
 
         {extractedPath === 'regular-supplies' &&
           <RegularSupplies
@@ -439,6 +439,8 @@ function Reports(props) {
             currentYear={year}
           />
         }
+
+        
       </ContainerComponent>
 
       <ModalComponent

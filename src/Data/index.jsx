@@ -37,15 +37,15 @@ export const sortFilter = [
     // { name: "By Date (Oldest First)", value: "date_asc" },
 ];
 
-const baseYear = 2024;
+const baseYear = 2022;
 const currentYear = new Date().getFullYear();
 
 // Ensure 2024 is always included
-const filterByYear = [{ name: `Year ${baseYear}`, value: baseYear.toString() }];
+const filterByYear = [{ name: `${baseYear}`, value: baseYear.toString() }];
 
 // Add each new year only when it passes
 for (let year = baseYear + 1; year <= currentYear; year++) {
-    filterByYear.push({ name: `Year ${year}`, value: year.toString() });
+    filterByYear.push({ name: `${year}`, value: year.toString() });
 }
 
 export { filterByYear };

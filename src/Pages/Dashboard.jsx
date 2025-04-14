@@ -21,7 +21,7 @@ import useSnackbarHook from "../Hooks/AlertHook";
 
 import { user, legends } from '../Data/index';
 import { dashboardHeader } from "../Data/TableHeader";
-
+import { Fetch } from "./Libraries/Fetch";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
@@ -165,7 +165,9 @@ function Dashboard() {
           </Stack>
 
           <Divider /> */}
-
+      <Box sx={{padding:"6px 0 0 0"}}>
+                         <Fetch/>
+                        </Box>
           <Stack my={2} direction="row" spacing={2}>
             {statistics.map(({ count, title, link, label }, index) => (
               <BoxComponent key={index}>
@@ -194,7 +196,7 @@ function Dashboard() {
               </BoxComponent>
             ))}
           </Stack>
-
+       
           <Box
             display='flex'
             direction='row'

@@ -94,6 +94,13 @@ export const API = {
   REPORTS_ITEM_COUNT_IAR: "get-item-iar",
   REPORTS_AREA_SUPPLY: "get-area-supply",
   REPORTS_SUPPLY_REGULAR: "get-supply-regular",
+
+  FETCH_AREA:"fetch-Area-data-bizbox",
+  FETCH_CATEGORIES:"fetch-Category-data-bizbox",
+  FETCH_UNITS:"fetch-Unit-data-bizbox",
+  FETCH_SUPPLIERS:"fetch-Supplier-data-bizbox",
+  FETCH_SUPPLIES:"fetch-items-data-bizbox",
+  GET_LASTSYNCED:"lastsynced-items"
 };
 
 /**

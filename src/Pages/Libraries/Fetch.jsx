@@ -18,10 +18,16 @@ import Groups3Icon from '@mui/icons-material/Groups3';
 import moment from 'moment/moment';
 import InputComponent from '../../Components/Form/InputComponent';
 import useSnackbarHook from '../../Hooks/AlertHook';
+import { API } from '../../Services/Config';
+import useFetchHook from '../../Hooks/FetchHooks';
+
+
+import Sheet from '@mui/joy/Sheet';
 
 export const Fetch = () => {
 const [open, setOpen] = React.useState(false);
 const {showSnackbar} = useSnackbarHook();
+const {fetchURL,lastSynced,getLastSynced } = useFetchHook();
 const toggleDrawer = (inOpen) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
           return;
@@ -32,34 +38,42 @@ const toggleDrawer = (inOpen) => (event) => {
     const [supplies,setSupplies] = useState([]);
     const [btnFetchDisabled,setBtnfetchDisabled] = useState(true);
     const [btnFetchLoader,setBtnFetchLoader] = useState(false);
+    const [viewHistory,setViewHistory] = useState(false);
+
+    useEffect(()=>{
+      if(open){
+        getLastSynced()
+      }
+    },[open])
+
 const syncData = [
     {
         id:1,
         type:"area",
-         url:"",
+         url:API.FETCH_AREA,
          icon:<AreaChartIcon/>
     },
     {
         id:2,
         type:"categories",
-         url:"",
+         url:API.FETCH_CATEGORIES,
          icon:<ListIcon/>
     },
     {
         id:3,
         type:"units",
-         url:"",
+         url:API.FETCH_UNITS,
          icon:<ApartmentIcon/>
     },
     {
         id:4,
         type:"suppliers",
-         url:"",
+         url:API.FETCH_SUPPLIERS,
          icon:<Groups3Icon/>
     }
 ];
 const months = Array.from({ length: 12 }, (_, i) => i + 1);
-const years = Array.from({ length: moment().format('YYYY') - 2020 + 1 }, (_, i) => 2020 + i);
+const years = Array.from({ length: moment().format('YYYY') - 2022 + 1 }, (_, i) => 2022 + i);
 const inputStyle = {
     marginBottom:"10px"
 };
@@ -70,35 +84,38 @@ const handleChange = (name) => (event, value) => {
     }));
   };
 const handleFetchSupplies = () =>{
-    setBtnFetchLoader(true);
 
-    setTimeout(() => {
-        showSnackbar("Supplies data fetched successfully!","success","filled")
-        setBtnFetchLoader(false)
-    }, 4000);
-  
+
+  setBtnFetchLoader(true)
+  try {
+    fetchURL({
+      url:`${API.FETCH_SUPPLIES}?month=${supplies.month}&year=${supplies.year}`
+    }).then(()=>{
+      setBtnFetchLoader(false)
+      getLastSynced()
+      showSnackbar("Supplies data fetched successfully!","success","filled")
+    });
+  } catch (error) {
+    setBtnFetchLoader(false)
+    showSnackbar(`Something went wrong.`,"error","filled")
+    console.log(error);
+  }
+   
 }
 const handleFetchOthers = (row) => {
     if (!loader.includes(row.id)) {
-        setLoader((prev) => [...prev, row.id]);
-
-        setTimeout(() => {
-            setLoader((prev) => prev.filter((id) => id !== row.id));
-            showSnackbar(`${row.type} data fetched successfully!`,"success","filled")
-        }, 4000);
-    
-        // try {
-        //   // Your async request here (replace with actual call)
-        //   await yourAsyncFunction(row.id);
-    
-        //   // You can handle success here (e.g., show a message)
-        // } catch (error) {
-        //   // Handle error (e.g., show error message)
-        //   console.error("Request failed:", error);
-        // } finally {
-        //   // Remove row.id from loader after request finishes (success or fail)
-        //   setLoader((prev) => prev.filter((id) => id !== row.id));
-        // }
+      setLoader((prev) => [...prev, row.id]);
+      try {
+        fetchURL(row).then(()=>{
+          setLoader((prev) => prev.filter((id) => id !== row.id));
+          getLastSynced()
+         showSnackbar(`${row.type} data fetched successfully!`,"success","filled")
+        });
+      } catch (error) {
+        setLoader((prev) => prev.filter((id) => id !== row.id));
+        showSnackbar(`Something went wrong.`,"error","filled")
+        console.log(error);
+      }
       }
 }
 useEffect(() => {
@@ -113,7 +130,7 @@ useEffect(() => {
   return (
     <Box sx={{ display: 'flex' }}>
        <ButtonComponent
-                  label={"Fetch from BIZBOX"}
+                  label={"Fetch data from BIZBOX"}
                   size="sm"
                   variant={"plain"} 
                   startDecorator={<CloudSyncIcon/>}
@@ -149,12 +166,14 @@ useEffect(() => {
             </Button>
             <Box ml="auto">
                 <Typography level="body-xs">
-                Last synced: {moment().subtract(6, "days").calendar()}
+                Last synced: {moment(lastSynced[row.type]).subtract(6, "days").calendar()}
                 </Typography>
             </Box>
             </Stack>
         </Card>  
         )}
+        
+
         <Card sx={{background:"#EFEFEF"}}>
          
            {/* <Box ml="auto">
@@ -166,25 +185,64 @@ useEffect(() => {
 
   
  <Box>
+  
  <Box ml="auto" mb={1}>
+
+
                 <Typography level="body-xs">
-                Last synced: {moment().subtract(6, "days").calendar()}
+                Last synced: {moment(lastSynced?.supplies?.lastsynced).subtract(6, "days").calendar()}
                 </Typography>
             </Box>
             <Stack ml="auto" mb={1}>
                 <Typography level="body-xs">
-               Year: 2002 
+               Year: {lastSynced?.supplies?.year} 
                 </Typography>
                 <Typography level="body-xs">
-               Month : 3 
+               Month : {lastSynced?.supplies?.month} 
                 </Typography>
             </Stack>
-    <Typography>
+
+      <Button
+      variant='plain'
+      sx={{textTransform:"uppercase",fontSize:"11px"}}
+      onClick={()=>{
+        if(viewHistory){
+          setViewHistory(false);
+        }else {
+          setViewHistory(true);
+        }
+      }}
+      >
+        {viewHistory ? "Back" : "Histories"}
+           
+      </Button>
+
+
+      {viewHistory  ?
+  <Box sx={{ maxHeight: 300, overflowY: 'auto',padding:"10px" }}>
+  <Stack spacing={1}>
+    {lastSynced?.supplies?.listofSynced.map((row, index) => (
+      <Stack
+        key={index}
+        direction="row"
+        justifyContent="space-between"
+        sx={{ width: '100%' }}
+      >
+        <Typography>{row.year}</Typography>
+        <Typography>{row.month}</Typography>
+      </Stack>
+    ))}
+  </Stack>
+</Box>
+
+      : <Box>
+        <Typography>
        Select Year
     </Typography>
     <Select 
     onChange={handleChange("year")}
- 
+    disabled={btnFetchLoader}
+    value={supplies?.year}
     >
   {years.map((year) => (
     <Option key={year} value={year}>
@@ -197,7 +255,8 @@ useEffect(() => {
     </Typography>
     <Select sx={inputStyle}
       onChange={handleChange("month")}
-      
+      disabled={btnFetchLoader}
+      value={supplies?.month}
     >
   {months.map((month) => (
     <Option key={month} value={month}>
@@ -219,9 +278,15 @@ useEffect(() => {
     loading={btnFetchLoader}
     loadingPosition='end'
   >
-    Fetch-Supplies
+{btnFetchLoader ? "Fetching supplies": "Fetch-Supplies"}
+    
   </Button>
  </Box>
+        </Box>}
+
+
+
+   
  </Box>
   </Card>  
     </Stack>
