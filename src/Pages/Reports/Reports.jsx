@@ -196,8 +196,6 @@ function Reports(props) {
     if (year === null) {
       setYear(fullyear)
     }
-    console.log(year)
-    console.log(fullyear)
   }, [year])
 
 
@@ -334,6 +332,7 @@ function Reports(props) {
               selectedOption={selectedOption}
               onChange={handleOnButtonGroupClick}
             />
+            
           </Box>
         </Stack>
 

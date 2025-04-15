@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 import { API } from "../Services/Config";
 import inventory_api from "../Services/ApiName";
+import moment from "moment";
 
 const useReportsHook = create((set) => ({
   item_count: [],
@@ -131,11 +132,11 @@ const useReportsHook = create((set) => ({
     }
   },
 
-  getItemCountDetails: async (id) => {
+  getItemCountDetails: async (id,year = new Date().getFullYear()) => {
     try {
       // Include the id in the API request URL
       const response = await inventory_api.get(
-        `/${API.REPORTS_ITEM_COUNT_BREAKDOWN}/${id}`
+        `/${API.REPORTS_ITEM_COUNT_BREAKDOWN}/${id}?year=${year}`
       );
 
       // Update the state with the fetched data
@@ -147,11 +148,11 @@ const useReportsHook = create((set) => ({
       console.error("Error fetching inventory:", error.message);
     }
   },
-  getItemCountInfo: async (id) => {
+  getItemCountInfo: async (id,year = new Date().getFullYear()) => {
     try {
       // Include the id in the API request URL
       const response = await inventory_api.get(
-        `/${API.REPORTS_ITEM_COUNT_TOTAL}/${id}`
+        `/${API.REPORTS_ITEM_COUNT_TOTAL}/${id}?year=${year}`
       );
 
       // Update the state with the fetched data
@@ -162,11 +163,11 @@ const useReportsHook = create((set) => ({
       console.error("Error fetching inventory:", error.message);
     }
   },
-  getItemCountIAR: async (id) => {
+  getItemCountIAR: async (id,year = new Date().getFullYear()) => {
     try {
       // Include the id in the API request URL
       const response = await inventory_api.get(
-        `/${API.REPORTS_ITEM_COUNT_IAR}/${id}`
+        `/${API.REPORTS_ITEM_COUNT_IAR}/${id}?year=${year}`
       );
 
       // Update the state with the fetched data

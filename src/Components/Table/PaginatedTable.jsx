@@ -110,6 +110,7 @@ function PaginatedTable({
 
   const handleNavigate = (row) => {
     const { id } = row;
+    localStorage.setItem("supply_year",row.year)
     localStorage.setItem("supply_name",row.supply_name)
     navigate(`${currentPath}/${id}`); //dynamic route handling
     setSelectedRow(row);

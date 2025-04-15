@@ -82,6 +82,7 @@ function ViewItemDetails(props) {
   } = useReportsHook();
 
   const storedSupplyName = localStorage.getItem("supply_name");
+  const storedYear = localStorage.getItem("supply_year");
   const location = useLocation();
 
   const currentPath = location.pathname;
@@ -114,9 +115,9 @@ function ViewItemDetails(props) {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      getItemCountDetails(id);
-      getItemCountInfo(id);
-      getItemCountIAR(id);
+      getItemCountDetails(id,storedYear);
+      getItemCountInfo(id,storedYear);
+      getItemCountIAR(id,storedYear);
     }, 300);
     return () => {
       clearTimeout(timeout);
@@ -211,7 +212,7 @@ function ViewItemDetails(props) {
                     }
                   />
                   <BoxItem
-                    categoryTitle={"2024 starting balance"}
+                    categoryTitle={`${storedYear} starting balance`}
                     categoryName={getValueByTitle("2024 starting balance")}
                     icon={
                       <MdTune
@@ -259,6 +260,7 @@ function ViewItemDetails(props) {
                     bgColor="#FEF2E6"
                     color="#934A00"
                   />
+                  
                 </Stack>
               </AccordionDetails>
             </Accordion>

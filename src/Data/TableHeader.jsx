@@ -50,7 +50,7 @@ export const itemHeader = [
   { id: "current_month_end_balance", label: "Current month end balance" },
   { id: "average_monthly_consumption", label: "Average monthly consumption" },
   { id: "months_left_to_consume", label: "Months left to consume" },
-  { id: "starting_balance", label: "2024 starting balance" },
+  { id: "starting_balance", label: "Starting balance" },
   // { id: "actions", label: "Actions" },
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];

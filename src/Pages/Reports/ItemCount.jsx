@@ -11,11 +11,13 @@ import PaginatedTable from '../../Components/Table/PaginatedTable'
 const ItemCount = ({ filter, header, InfoDescription, currentYear }) => {
 
     const { getItemCount } = useReportsHook();
-
+  
     const { data, isLoading, error } = useQuery({
         queryKey: ['itemCount', currentYear],
         queryFn: () => getItemCount(currentYear)
     })
+
+    
 
     const itemCount = data || [];
 
@@ -29,7 +31,6 @@ const ItemCount = ({ filter, header, InfoDescription, currentYear }) => {
             >
                 <Stack direction={'row'} gap={1}>
                     <InfoDescription />
-
                     <Typography
                         bgcolor={"#FEF2E6"}
                         sx={{ color: '#666666' }}
@@ -44,7 +45,7 @@ const ItemCount = ({ filter, header, InfoDescription, currentYear }) => {
 
     return (
         <div>
-        
+    
             <PaginatedTable
                 // tableTitle={"Item Count"}
                 tableDesc={<TableDescription />}
