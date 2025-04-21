@@ -66,6 +66,21 @@ export const startingBalHeader = [
   { id: "unit_name", label: "Unit" },
   { id: "regular_quantity", label: "Regular starting balance" },
   { id: "donation_quantity", label: "Donation starting balance" },
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+];
+
+export const startingBalancesHeader = [
+  // {
+  //   // id: "id",
+  //   label: "#",
+  //   width: "5%",
+  // },
+  { id: "is_IAR", label: "Receiving (IAR)" },
+  { id: "balance_date", label: "Year" },
+  { id: "month", label: "Month" },
+  { id: "source_name", label: "Source" },
+  { id: "created_at", label: "Created At" },
+  { id: "quantity", label: "Starting Balance" },
 ];
 
 export const nearExpHeader = [

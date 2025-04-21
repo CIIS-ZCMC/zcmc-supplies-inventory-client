@@ -5,6 +5,7 @@ import inventory_api from "../Services/ApiName";
 const useInventoryHook = create((set) => ({
   inventory: [],
   details: [],
+  stockouts:0,
 
   getInventory: async () => {
     try {
@@ -27,6 +28,7 @@ const useInventoryHook = create((set) => ({
       // Update the state with the fetched data
       set({ details: response.data.data });
       console.log(response.data);
+      set({stockouts:response.data.stockouts});
       // Return the response data
       return response.data;
     } catch (error) {

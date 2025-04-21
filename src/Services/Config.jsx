@@ -66,6 +66,7 @@ export const API = {
   STOCK_IN_DETAILS: "stock-in-details",
 
   RELEASING: "releasing-list",
+  SUPPLY_RELEASING_LIST: "supply-releasing-list",
   SELECTED_RELEASING_LIST: "selected-releasing-list",
 
   BRAND_REGULAR: "selected-supply-brand-regular",
@@ -94,6 +95,7 @@ export const API = {
   REPORTS_ITEM_COUNT_IAR: "get-item-iar",
   REPORTS_AREA_SUPPLY: "get-area-supply",
   REPORTS_SUPPLY_REGULAR: "get-supply-regular",
+  REPORTS_STARTINGBAL_FETCHDATA:"get-supply-starting-balances",
 
   FETCH_AREA:"fetch-Area-data-bizbox",
   FETCH_CATEGORIES:"fetch-Category-data-bizbox",

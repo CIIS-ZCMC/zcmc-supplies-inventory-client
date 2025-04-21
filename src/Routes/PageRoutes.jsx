@@ -46,7 +46,8 @@ import RegularSupplies from "../Pages/Reports/RegularSupplies";
 import { PiInvoiceDuotone } from "react-icons/pi";
 import PurchaseReq from "../Pages/PurchaseRequest/PurchaseReq";
 import NewItem from "../Pages/Inventory/NewItem";
-
+import ViewStartingBalance from "../Pages/Reports/Views/ViewStartingBalance";
+import ViewReleasedItem from "../Pages/Reports/Views/viewReleasedItem";
 export const sidebarRoutes = [
   {
     path: "/dashboard",
@@ -101,6 +102,7 @@ export const sidebarRoutes = [
       { path: "without-ris-items", element: <WithoutRISItems /> },
       { path: "area-supplies", element: <AreaSupplies /> },
       { path: "regular-supplies", element: <RegularSupplies /> },
+   
     ],
   },
   {
@@ -157,4 +159,17 @@ export const childrenRoutes = [
     icon: null,
     permissions: ["view"],
   },
+  {
+    path: "/reports/starting-balance/:id",
+    element: <ViewStartingBalance/>,
+    icon: null,
+    permissions: ["view"],
+  },
+  {
+    path: "/reports/releasing/:id",
+    element: <ViewReleasedItem/>,
+    icon: null,
+    permissions: ["view"],
+  },
+ 
 ];

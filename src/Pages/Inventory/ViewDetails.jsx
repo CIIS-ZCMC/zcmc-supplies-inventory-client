@@ -13,6 +13,10 @@ import { MdAppShortcut, MdTune } from "react-icons/md";
 import { GrApps } from "react-icons/gr";
 import ButtonComponent from "../../Components/ButtonComponent";
 import { useParams } from "react-router-dom";
+import { TbTruckDelivery } from "react-icons/tb";
+import { BsColumnsGap } from "react-icons/bs";
+
+import { useNavigate } from "react-router-dom";
 
 export const BoxItem = ({ icon, iconColor, categoryTitle, categoryName }) => {
   const theme = useTheme(); // Access the theme
@@ -35,8 +39,9 @@ function ViewDetails(props) {
   const { selectedRow } = useSelectedRow();
   const { id } = useParams();
   // const storedSupplyName = localStorage.getItem("selectedRow");
-  const { details, getInventoryDetails } = useInventoryHook();
-
+  const { details, getInventoryDetails,stockouts } = useInventoryHook();
+  const navigate = useNavigate();
+  
   const pageDetails = {
     pageTitle: `Viewing "${selectedRow?.supply_name}"`,
     title: "Inventory",
@@ -99,6 +104,22 @@ function ViewDetails(props) {
             categoryName={selectedRow?.quantity}
             categoryTitle={"Total quantity"}
           />
+
+
+             <BoxItem
+            icon={
+              <TbTruckDelivery
+                fontSize={30}
+                color="darkBlue"
+                style={{
+                  padding: 10,
+                  backgroundColor: theme.palette.custom.lighter,
+                }}
+              />
+            }
+            categoryName={stockouts}
+            categoryTitle={"Total quantity Released (RIS)"}
+          />
           <BoxItem
             icon={
               <MdTune
@@ -125,11 +146,39 @@ function ViewDetails(props) {
           columns={columns}
           rows={details}
           actionBtns={
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={1} mt={2}>
               <ButtonComponent
-                variant={"outlined"}
+                variant={"solid"}
                 label="Generate report"
                 size="lg"
+              />
+
+          <ButtonComponent
+                variant={"outlined"}
+                label="Released ( IAR )"
+                size="lg"
+                color="neutral"
+                onClick={()=>{
+                  navigate(`/reports/releasing/${selectedRow?.id}`)        
+                }}
+                endDecorator={<TbTruckDelivery
+                  fontSize={18}
+                  />}
+              />
+
+        <ButtonComponent
+                variant={"plain"}
+                label="View Starting Balance"
+                size="lg"
+                color="warning"
+                onClick={()=>{
+                //  console.log(selectedRow?.id)
+                  navigate(`/reports/starting-balance/${selectedRow?.id}`)
+                  
+                }}
+                endDecorator={<BsColumnsGap
+                  fontSize={18}
+                  />}
               />
             </Stack>
           }

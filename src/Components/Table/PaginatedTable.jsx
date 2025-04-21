@@ -77,6 +77,8 @@ function PaginatedTable({
   editRow,
   editable,
   viewable,
+  customAction=false,
+  handleCustomAction
 }) {
   const [isOpenDialog, setIsDialogOpen] = useState(false);
 
@@ -240,6 +242,11 @@ function PaginatedTable({
                                 }
                               />
                             )}
+
+                          {customAction && (
+                            handleCustomAction(row)
+                            )}
+
                             {editable && (
                               <ButtonComponent
                                 size={"sm"}

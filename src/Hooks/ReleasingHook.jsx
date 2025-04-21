@@ -49,6 +49,21 @@ const useReleasingHook = create((set) => ({
     }
 },
 
+getSuppliesStockOutList: async (id) => {
+  try {
+      const response = await inventory_api.get(`/${API.SUPPLY_RELEASING_LIST}/${id}`);
+      
+      // The fetch API doesn't have `ok` in Axios, remove this check if using Axios
+     
+      return response.data;
+  } catch (error) {
+      console.error("Error fetching stockouts:", error.message);
+      
+      // Return a default value to avoid returning `undefined`
+      return  error.message;
+  }
+},
+
 
     // Store quantity per source_id
     brandQuantities: {},

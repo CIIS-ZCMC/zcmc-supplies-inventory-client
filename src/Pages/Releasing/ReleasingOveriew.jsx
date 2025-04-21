@@ -57,7 +57,7 @@ const Releasing = () => {
 
   const pageDetails = {
     title: "Requisition and issue slip",
-    description: "this is a sample description",
+    description: "Releasing item's ( RIS )",
   };
 
   const handleSnackbarClose = () => {
@@ -178,13 +178,13 @@ const Releasing = () => {
         <ContainerComponent>
           <PaginatedTable
             tableTitle={"List of stock-out transactions"}
-            tableDesc={"Sample Table Desription"}
+            tableDesc={""}
             columns={releasingHeader}
             rows={filteredInventory(stockoutData)}
             loading={isLoading}
             actions={<ViewIcon />}
             actionBtns={
-              <Stack direction="row" spacing={1}>
+              <Stack direction="row" spacing={1} mt={2}>
                 <ButtonComponent
                   variant={"outlined"}
                   label="Generate report"
