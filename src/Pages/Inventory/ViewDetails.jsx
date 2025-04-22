@@ -15,31 +15,40 @@ import ButtonComponent from "../../Components/ButtonComponent";
 import { useParams } from "react-router-dom";
 import { TbTruckDelivery } from "react-icons/tb";
 import { BsColumnsGap } from "react-icons/bs";
-
+import { IoLogOutOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-
-export const BoxItem = ({ icon, iconColor, categoryTitle, categoryName }) => {
+import { ImBoxAdd } from "react-icons/im";
+export const BoxItem = ({ icon, iconColor, categoryTitle, categoryName ,option}) => {
   const theme = useTheme(); // Access the theme
 
   return (
     <BoxComponent>
+    
       <Box display="flex" alignItems="center" padding={1}>
         {icon}
-        <Box ml={1}>
-          <Typography level="body-sm">{categoryTitle}</Typography>
-          <Typography level="title-lg">{categoryName}</Typography>
-        </Box>
+        <Stack direction="row" justifyContent="space-between" width="100%" ml={1}>
+  <Box>
+    <Typography level="body-sm">{categoryTitle}</Typography>
+    <Typography level="title-lg">{categoryName}</Typography>
+  </Box>
+  <Box>
+    {option}
+  </Box>
+</Stack>
+
+      
       </Box>
+
     </BoxComponent>
   );
 };
 
 function ViewDetails(props) {
   const theme = useTheme();
-  const { selectedRow } = useSelectedRow();
+  const { selectedRow ,setSelectedItem} = useSelectedRow();
   const { id } = useParams();
   // const storedSupplyName = localStorage.getItem("selectedRow");
-  const { details, getInventoryDetails,stockouts } = useInventoryHook();
+  const { details, getInventoryDetails,stockouts,startingBalance ,stockins} = useInventoryHook();
   const navigate = useNavigate();
   
   const pageDetails = {
@@ -53,10 +62,12 @@ function ViewDetails(props) {
   };
   const columns = [
     // { id: "id", label: "#" },
-    { id: "supply_name", label: "Item Name" },
+    { id: "supplier_name", label: "Supplier" },
     { id: "category_name", label: "Category" },
+    { id: "brand_name", label: "Brand" },
     { id: "unit_name", label: "Unit" },
     { id: "source_name", label: "Source" },
+    { id: "delivery_date", label: "Delivery Date" },
     { id: "quantity", label: "Quantity" }
   ];
 
@@ -75,21 +86,7 @@ function ViewDetails(props) {
       <Header pageDetails={pageDetails} data={user} />
       <Stack my={2}>
         <Stack direction="row" justifyContent="space-between" spacing={2}>
-          <BoxItem
-            icon={
-              <BiCategory
-                fontSize={25}
-                color="darkBlue"
-                style={{
-                  padding: 10,
-                  backgroundColor: theme.palette.custom.lighter,
-                  borderRadius: 5,
-                }}
-              />
-            }
-            categoryName={selectedRow?.category_name}
-            categoryTitle={"Item category"}
-          />
+     
           <BoxItem
             icon={
               <GrApps
@@ -101,12 +98,41 @@ function ViewDetails(props) {
                 }}
               />
             }
-            categoryName={selectedRow?.quantity}
-            categoryTitle={"Total quantity"}
+            categoryName={`${selectedRow?.quantity} | ${selectedRow?.unit_name}`}
+            categoryTitle={"Total quantity | Unit type"}
           />
+
+<BoxItem           
+             icon={
+               <ImBoxAdd
+                 fontSize={30}
+                 color="darkBlue"
+                 style={{
+                   padding: 10,
+                   backgroundColor: theme.palette.custom.lighter,
+                 }}
+               />
+             }
+             option={  <ButtonComponent
+               variant={"outlined"}   
+               size="lg"
+               color="neutral"
+               onClick={()=>{
+                 navigate(`/reports/receiving/${selectedRow?.id}`)        
+              //  //  setSelectedItem(selectedRow)
+               }}
+              label={<IoLogOutOutline
+               fontSize={20}           
+               />}
+             />}
+             categoryName={stockins}
+             categoryTitle={"Total quantity received (IAR)"}
+           />
+             
 
 
              <BoxItem
+             
             icon={
               <TbTruckDelivery
                 fontSize={30}
@@ -117,9 +143,22 @@ function ViewDetails(props) {
                 }}
               />
             }
+            option={  <ButtonComponent
+              variant={"outlined"}   
+              size="lg"
+              color="neutral"
+              onClick={()=>{
+                navigate(`/reports/releasing/${selectedRow?.id}`)        
+              //  setSelectedItem(selectedRow)
+              }}
+             label={<IoLogOutOutline
+              fontSize={20}           
+              />}
+            />}
             categoryName={stockouts}
-            categoryTitle={"Total quantity Released (RIS)"}
+            categoryTitle={"Total quantity released (RIS)"}
           />
+            
           <BoxItem
             icon={
               <MdTune
@@ -131,8 +170,25 @@ function ViewDetails(props) {
                 }}
               />
             }
-            categoryName={selectedRow?.unit_name}
-            categoryTitle={"Type of unit"}
+            option={
+
+              <ButtonComponent
+              variant={"outlined"}
+              label={<IoLogOutOutline
+                fontSize={20}           
+                />}
+              size="lg"
+              color="neutral"
+              onClick={()=>{
+              //  console.log(selectedRow?.id)
+                navigate(`/reports/starting-balance/${selectedRow?.id}`)
+               
+              }}
+            
+            />
+            }
+            categoryName={startingBalance}
+            categoryTitle={"Starting balance"}
           />
 
         </Stack>
@@ -151,34 +207,6 @@ function ViewDetails(props) {
                 variant={"solid"}
                 label="Generate report"
                 size="lg"
-              />
-
-          <ButtonComponent
-                variant={"outlined"}
-                label="Released ( IAR )"
-                size="lg"
-                color="neutral"
-                onClick={()=>{
-                  navigate(`/reports/releasing/${selectedRow?.id}`)        
-                }}
-                endDecorator={<TbTruckDelivery
-                  fontSize={18}
-                  />}
-              />
-
-        <ButtonComponent
-                variant={"plain"}
-                label="View Starting Balance"
-                size="lg"
-                color="warning"
-                onClick={()=>{
-                //  console.log(selectedRow?.id)
-                  navigate(`/reports/starting-balance/${selectedRow?.id}`)
-                  
-                }}
-                endDecorator={<BsColumnsGap
-                  fontSize={18}
-                  />}
               />
             </Stack>
           }

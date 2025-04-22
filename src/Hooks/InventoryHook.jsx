@@ -6,6 +6,8 @@ const useInventoryHook = create((set) => ({
   inventory: [],
   details: [],
   stockouts:0,
+  startingBalance:0,
+  stockins:0,
 
   getInventory: async () => {
     try {
@@ -26,9 +28,13 @@ const useInventoryHook = create((set) => ({
       const response = await inventory_api.get(`/${API.INVENTORY}/${id}`);
 
       // Update the state with the fetched data
-      set({ details: response.data.data });
-      console.log(response.data);
-      set({stockouts:response.data.stockouts});
+      set({
+         details: response.data.data,
+         stockouts:response.data.stockouts,
+         startingBalance:response.data.startingBalance,
+         stockins:response.data.stockins 
+        });
+    
       // Return the response data
       return response.data;
     } catch (error) {

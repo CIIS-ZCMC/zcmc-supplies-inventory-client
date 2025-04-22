@@ -67,6 +67,7 @@ export const API = {
 
   RELEASING: "releasing-list",
   SUPPLY_RELEASING_LIST: "supply-releasing-list",
+  SUPPLY_RECEIVING_LIST: "supply-receiving-list",
   SELECTED_RELEASING_LIST: "selected-releasing-list",
 
   BRAND_REGULAR: "selected-supply-brand-regular",

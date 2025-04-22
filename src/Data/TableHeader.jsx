@@ -1,3 +1,5 @@
+import { Divider, Typography,Box } from "@mui/joy";
+import StartingBalanceStepper from "../Pages/Reports/Views/StartingBalStepper";
 export const receivingTableHeader = [
   // {
   //   id: "id",
@@ -79,7 +81,15 @@ export const startingBalancesHeader = [
   { id: "balance_date", label: "Year" },
   { id: "month", label: "Month" },
   { id: "source_name", label: "Source" },
-  { id: "created_at", label: "Created At" },
+  { id: "key", label: "History ( RIS )",render : (row,index)=>{
+    return <>
+    {row.inventoryTransactionLog.length ? 
+    <StartingBalanceStepper row={row}/>
+   : <Divider> <Typography level="body-xs" fontSize={9} textColor={"#94B4C1"}>
+    NO RECORDS FOUND
+    </Typography></Divider>}
+    </>
+  } },
   { id: "quantity", label: "Starting Balance" },
 ];
 
@@ -224,17 +234,18 @@ export const releasingHeader = [
   //   disablePadding: true,
   //   label: "#",
   // },
-  {
-    id: "supply_name",
-    numeric: false,
-    disablePadding: false,
-    label: "Item Name",
-  },
+ 
   {
     id: "category_name",
     numeric: false,
     disablePadding: false,
     label: "Category",
+  },
+  {
+    id: "area_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Allocation Area ",
   },
   {
     id: "requested_quantity",
@@ -249,10 +260,27 @@ export const releasingHeader = [
     label: "Total Quantity Served",
   },
   {
-    id: "unit_name",
-    numeric: false,
-    disablePadding: false,
-    label: "Unit",
+    id: "key", // or any field name
+    label: "Information",
+    render: (row, index) => {
+      return <>
+      <Typography level="body-xs">
+       <span style={{fontSize:"10px"}}> RIS #</span> : {row.ris_no}
+      </Typography>
+      <Divider></Divider>
+      <Typography level="body-xs">
+      <span style={{fontSize:"10px"}}> RIS Date </span>: {row.ris_date}
+      </Typography>
+      <Divider></Divider>
+      <Typography level="body-xs">
+      <span style={{fontSize:"10px"}}>Supplier </span>: {row.supplier_name}
+      </Typography>
+      <Divider></Divider>
+      <Typography level="body-xs">
+      <span style={{fontSize:"10px"}}>Remarks </span> : {row.remarks}
+      </Typography>
+      </>
+    },
   },
 
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },

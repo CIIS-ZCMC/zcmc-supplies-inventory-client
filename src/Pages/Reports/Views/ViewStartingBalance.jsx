@@ -11,7 +11,7 @@ import useStartingBalanceHook from '../../../Hooks/StartingBalanceHooks';
 import { startingBalancesHeader } from '../../../Data/TableHeader';
 
 function ViewStartingBalance(props) {
-    const { selectedRow } = useSelectedRow();
+    const { selectedRow,selectedItem } = useSelectedRow();
     const { getSupplyBalances } = useStartingBalanceHook();
 
     const pageDetails = {

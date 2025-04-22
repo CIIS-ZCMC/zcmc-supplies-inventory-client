@@ -48,6 +48,7 @@ import PurchaseReq from "../Pages/PurchaseRequest/PurchaseReq";
 import NewItem from "../Pages/Inventory/NewItem";
 import ViewStartingBalance from "../Pages/Reports/Views/ViewStartingBalance";
 import ViewReleasedItem from "../Pages/Reports/Views/viewReleasedItem";
+import ViewReceivedItem from "../Pages/Reports/Views/ViewReceivedItem";
 export const sidebarRoutes = [
   {
     path: "/dashboard",
@@ -171,5 +172,11 @@ export const childrenRoutes = [
     icon: null,
     permissions: ["view"],
   },
- 
+  {
+    path: "/reports/receiving/:id",
+    element: <ViewReceivedItem/>,
+    icon: null,
+    permissions: ["view"],
+  },
+  
 ];

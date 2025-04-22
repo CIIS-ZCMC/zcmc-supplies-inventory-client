@@ -3,7 +3,7 @@ import { create } from "zustand";
 // Define the Zustand store
 const useSelectedRow = create((set) => ({
   selectedRow: JSON.parse(localStorage.getItem("selectedRow")) || null,
-
+  selectedItem:null,
   setSelectedRow: (row) => {
     set({ selectedRow: row });
     if (row) {
@@ -16,6 +16,9 @@ const useSelectedRow = create((set) => ({
     set({ selectedRow: null });
     localStorage.removeItem("selectedRow");
   },
+  setSelectedItem: (id)=>{
+    set({selectedItem : id})
+  }
 }));
 
 export default useSelectedRow;

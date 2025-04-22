@@ -38,7 +38,7 @@ export const BoxItem = ({ icon, categoryTitle, categoryName }) => {
 
 const ReleasingDetails = () => {
     const theme = useTheme();
-    const { selectedRow } = useSelectedRow();
+    const { selectedRow ,selectedItem} = useSelectedRow();
     const { id: urlId } = useParams(); // Get the `id` from the URL
 
     const { getSelectedReleasingList } = useReleasingHook();
@@ -115,25 +115,11 @@ const ReleasingDetails = () => {
                                 }}
                             />
                         }
-                        categoryName={`${selectedRow?.requested_quantity} | ${quantityServed} `}
+                        categoryName={`${selectedRow?.requested_quantity ?? selectedItem?.requested_quantity } | ${quantityServed} `}
                         categoryTitle={"Requested | Served"}
                     />
-
-                    <BoxItem
-                        icon={
-                            <MdTune
-                                fontSize={25}
-                                color="darkBlue"
-                                style={{
-                                    padding: 10,
-                                    backgroundColor: theme.palette.custom.lighter,
-                                }}
-                            />
-                        }
-                        categoryName={selectedRow?.area_name}
-                        categoryTitle={"Type of unit"}
-                    />
-
+                {console.log(selectedRow)}
+                
                     <BoxItem
                         icon={
                             <MdTune

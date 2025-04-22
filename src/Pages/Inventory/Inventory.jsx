@@ -36,7 +36,14 @@ const data = Array.from({ length: 1000 }, (_, i) => ({
 }));
 
 const columns = [
-  { id: "id", label: "#", width: "5%" },
+  {
+    id: "key", // or any field name
+    label: "#",
+    width: "5%",
+    render: (row, index) => {
+      return index + 1;
+    },
+  },
   { id: "supply_name", label: "Item Name", width: "30%" },
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },

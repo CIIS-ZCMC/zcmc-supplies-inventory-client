@@ -237,7 +237,7 @@ const ReceivingOverview = () => {
                     />
                 }
                 actionBtns={false}
-                title="Record a new Requisition and Issue slip"
+                title="Record a new IAR"
                 description={
                     "Describe how would you like to release items from your inventory. All fields are required."
                 }

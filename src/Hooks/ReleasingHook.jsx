@@ -17,6 +17,9 @@ const useReleasingHook = create((set) => ({
     quantityServed: "",
     remarks: "",
   },
+  stockoutList:[],
+  stockinList:[],
+
 
   resetForm: () => {
     set(initialValues);
@@ -54,7 +57,25 @@ getSuppliesStockOutList: async (id) => {
       const response = await inventory_api.get(`/${API.SUPPLY_RELEASING_LIST}/${id}`);
       
       // The fetch API doesn't have `ok` in Axios, remove this check if using Axios
-     
+  
+     set({stockoutList:response.data.data})
+      return response.data;
+  } catch (error) {
+      console.error("Error fetching stockouts:", error.message);
+      
+      // Return a default value to avoid returning `undefined`
+      return  error.message;
+  }
+},
+
+
+getSuppliesStockInList: async (id) => {
+  try {
+      const response = await inventory_api.get(`/${API.SUPPLY_RECEIVING_LIST}/${id}`);
+      
+      // The fetch API doesn't have `ok` in Axios, remove this check if using Axios
+  
+     set({stockinList:response.data.data})
       return response.data;
   } catch (error) {
       console.error("Error fetching stockouts:", error.message);
@@ -161,6 +182,7 @@ getSuppliesStockOutList: async (id) => {
       error.message;
     }
   },
+ 
 }));
 
 export default useReleasingHook;
