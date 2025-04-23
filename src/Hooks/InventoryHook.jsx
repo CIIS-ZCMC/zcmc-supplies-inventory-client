@@ -22,6 +22,20 @@ const useInventoryHook = create((set) => ({
     }
   },
 
+
+  getPurchaseOrders: async () => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.PURCHASED_ORDERS}`
+      );
+      // set({ inventory: response.data.data });
+      return response.data;
+    } catch (error) {
+      console.error(error.message);
+      ``;
+    }
+  },
+
   getInventoryDetails: async (id) => {
     try {
       // Include the id in the API request URL

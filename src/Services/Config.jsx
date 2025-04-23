@@ -103,7 +103,9 @@ export const API = {
   FETCH_UNITS:"fetch-Unit-data-bizbox",
   FETCH_SUPPLIERS:"fetch-Supplier-data-bizbox",
   FETCH_SUPPLIES:"fetch-items-data-bizbox",
-  GET_LASTSYNCED:"lastsynced-items"
+  GET_LASTSYNCED:"lastsynced-items",
+
+  PURCHASED_ORDERS:"get-purchased-orders"
 };
 
 /**

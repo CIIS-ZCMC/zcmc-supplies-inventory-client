@@ -41,7 +41,7 @@ function Dashboard() {
     queryFn: getDashboardSupplies,
   })
 
-  const { items_for_disposal, most_consumed_items, not_consumed_without_ris, reorder_items, sufficient_but_not_consumed, zero_stocks } = dashboardTotal || {}
+  const { items_for_disposal, most_consumed_items, not_consumed_without_ris, reorder_items, sufficient_but_not_consumed, zero_stocks,total_records } = dashboardTotal || {}
 
   const dashboardSuppiesData = dashboardSupplies || []
 
@@ -166,7 +166,19 @@ function Dashboard() {
 
           <Divider /> */}
       <Box sx={{padding:"6px 0 0 0"}}>
-                         <Fetch/>
+                      
+          
+                <Stack p={1} direction={"row"} justifyContent={"space-between"} sx={{userSelect:"none"}}>
+              
+                  <Stack sx={{ color: '#1D70BC' }} direction={'row'} justifyContent={'flex-end'} alignItems={'center'}>
+                    <Typography level="h1" fontSize={60} fontWeight={700} textColor={'#547792'}>{total_records}</Typography>
+                    <Typography fontSize={14} ml={3}>Inventory records in total.</Typography>
+                  </Stack>
+
+                  <Fetch/>
+                </Stack>
+           
+            
                         </Box>
           <Stack my={2} direction="row" spacing={2}>
             {statistics.map(({ count, title, link, label }, index) => (

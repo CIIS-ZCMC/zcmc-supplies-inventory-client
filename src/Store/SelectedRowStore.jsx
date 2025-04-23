@@ -4,6 +4,7 @@ import { create } from "zustand";
 const useSelectedRow = create((set) => ({
   selectedRow: JSON.parse(localStorage.getItem("selectedRow")) || null,
   selectedItem:null,
+  selectedPo:{},
   setSelectedRow: (row) => {
     set({ selectedRow: row });
     if (row) {
@@ -18,6 +19,9 @@ const useSelectedRow = create((set) => ({
   },
   setSelectedItem: (id)=>{
     set({selectedItem : id})
+  },
+  setSelectedPO:(data)=>{
+    set({ selectedPo: data });
   }
 }));
 

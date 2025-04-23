@@ -48,11 +48,11 @@ export const itemHeader = [
   { id: "supply_name", label: "Item Name" },
   { id: "category_name", label: "Category Name" },
   { id: "unit_name", label: "Unit" },
-  { id: "months_with_consumptions", label: "No. of months with consumption" },
-  { id: "current_month_end_balance", label: "Current month end balance" },
   { id: "average_monthly_consumption", label: "Average monthly consumption" },
+  { id: "months_with_consumptions", label: "No. of months with consumption" },
   { id: "months_left_to_consume", label: "Months left to consume" },
   { id: "starting_balance", label: "Starting balance" },
+  { id: "current_month_end_balance", label: "Current month end balance" },
   // { id: "actions", label: "Actions" },
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
@@ -659,4 +659,90 @@ export const dashboardHeader = [
     disablePadding: true,
     label: "This year's starting balance",
   },
+
+  
 ];
+
+export const PurchaseOrderHeader = [
+
+  {
+    id: "PO_number",
+    numeric: true,
+    disablePadding: true,
+    label: "PO#",
+  },
+  {
+    id: "Category",
+    numeric: true,
+    disablePadding: true,
+    label: "Category",
+  },
+  {
+    id: "itemdesc",
+    numeric: true,
+    disablePadding: true,
+    label: "Description",
+  },
+ 
+  {
+    id: "purcprice",
+    numeric: true,
+    disablePadding: true,
+    label: "Price",
+    render:(row,index)=>{
+      return <>
+   ₱ {Number(row.purcprice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+// Example output: "1,234.57"
+}
+      
+      </>
+    }
+  },
+
+  {
+    id: "totqty",
+    numeric: true,
+    disablePadding: true,
+    label: "Quantity",
+    render:(row,index)=>{
+      return <>
+    {Number(row.totqty).toLocaleString()}
+
+      
+      </>
+    }
+  },
+  {
+    id: "key",
+    numeric: true,
+    disablePadding: true,
+    label: "Other Information",
+    render:(row,index)=>{
+      return <>
+       <Typography level="body-xs">
+       <span style={{fontSize:"10px"}}> Old PO#</span> : {row.pr_old_po_number}
+      </Typography>
+      <Divider></Divider>
+      <Typography level="body-xs">
+       <span style={{fontSize:"10px"}}>PO Doc_Date</span> : <br /> {row.PO_docdate}
+      </Typography>
+      <Divider></Divider>
+      <Typography level="body-xs">
+       <span style={{fontSize:"10px"}}>PO Status</span> :  {row.postatus}
+      </Typography>
+      <Divider></Divider>
+      <Typography level="body-xs">
+       <span style={{fontSize:"10px"}}>PO Item Unit</span> :  {row.PO_ITEM_UNIT}
+      </Typography>
+      <Divider></Divider>
+      <Typography level="body-xs">
+       <span style={{fontSize:"10px"}}>Barcode ID</span> :  {row.barcodeid}
+      </Typography>
+      <Divider></Divider>
+      
+      </>
+    }
+  },
+
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+]

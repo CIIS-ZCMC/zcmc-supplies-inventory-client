@@ -14,7 +14,9 @@ import useFilterHook from "../../Hooks/FilterHook";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-
+import { PurchaseOrderHeader } from "../../Data/TableHeader";
+import { SquareArrowOutUpRight, Pencil } from "lucide-react";
+import useSelectedRow from "../../Store/SelectedRowStore";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -46,7 +48,7 @@ const columns = [
 const PurchaseReq = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { inventory, getInventory } = useInventoryHook();
+  const { inventory, getPurchaseOrders } = useInventoryHook();
   const {
     filteredInventory,
     selectedCategory,
@@ -57,11 +59,12 @@ const PurchaseReq = () => {
     setSearchTerm,
     clearFilters,
   } = useFilterHook();
+  const {setSelectedPO} = useSelectedRow();
 
   const theme = useTheme();
 
   const pageDetails = {
-    title: "Purchase Request Information Tagging",
+    title: "Purchase Orders Information Tagging",
     description:
       "Enhance purchase request records by tagging critical financial information, including available funds and ORS/BURS numbers.",
     pagePath: "/purchase-order",
@@ -72,11 +75,11 @@ const PurchaseReq = () => {
   };
 
   const { data, isLoading, error } = useQuery({
-    queryKey: "inventory",
-    queryFn: getInventory,
+    queryKey: "purchased_orders",
+    queryFn: getPurchaseOrders,
   });
 
-  const inventoryData = data?.data;
+  const purchaseORderData = data?.data;
 
   return (
     <Fragment>
@@ -88,13 +91,7 @@ const PurchaseReq = () => {
             justifyContent="space-between"
             alignItems="flex-end"
           >
-            {/* search*/}
-            <ButtonComponent
-              label="navigate"
-              onClick={() => {
-                navigate(id ? "/purchase-order" : "/purchase-order/1");
-              }}
-            />
+      
             <InputComponent
               label="Find a slip"
               placeholder="Find by item name, category, unit"
@@ -102,19 +99,19 @@ const PurchaseReq = () => {
               value={searchTerm}
               setValue={setSearchTerm}
               width={300}
-              action={{
-                label: "Search",
-                onClick: () => console.log("searching..."),
-              }}
+              // action={{
+              //   label: "Search",
+              //   onClick: () => console.log("searching..."),
+              // }}
             />
             <Box display="flex" gap={1}>
-              <SelectComponent
+              {/* <SelectComponent
                 startIcon={"Sort by:"}
                 placeholder={"category"}
                 options={categoryFilter}
                 value={selectedCategory}
                 onChange={setCategory}
-              />
+              /> */}
               <SelectComponent
                 startIcon={"Sort by:"}
                 placeholder={"highest"}
@@ -136,27 +133,45 @@ const PurchaseReq = () => {
             <Outlet />
           ) : (
             <PaginatedTable
-              viewable={true}
+              customAction={true}
+              handleCustomAction={(perRow)=>{
+                return <>
+               <ButtonComponent
+                 startDecorator={
+                            <SquareArrowOutUpRight size={"1rem"} />                                             }
+                          variant={"plain"}
+                          size="sm"
+                          onClick={()=>{
+                           setSelectedPO(perRow)
+                           navigate(`${perRow.id}`)
+                          }}
+                      />
+
+                      
+                </>
+              }}
+             // viewable={true}
               loading={isLoading}
-              tableTitle={"List of items"}
+              tableTitle={"List of purchased orders"}
               tableDesc={
-                "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
+                "Select items to add tagging of : ORS/BURS no., Amount etc.."
               }
-              columns={columns}
-              rows={filteredInventory(inventoryData)}
+              columns={PurchaseOrderHeader}
+              rows={purchaseORderData}
               actions={<ViewIcon />}
               btnLabel={"Add new item name"}
               actionBtns={
-                <Stack direction="row" spacing={1}>
+                <Stack direction="row" spacing={1} mt={2}>
                   <ButtonComponent
+                    
                     variant={"outlined"}
                     label="Generate report"
                     size="lg"
                   />
-                  <ButtonComponent
+                  {/* <ButtonComponent
                     label="Add new item name"
                     onClick={navigateToItemSupplies}
-                  />
+                  /> */}
                 </Stack>
               }
               icon={
@@ -171,10 +186,10 @@ const PurchaseReq = () => {
                   }}
                 />
               }
-              label={"Fill-up your inventory by creating a New item"}
-              desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
-                  inventory items in filling-up IARs and RIS requests.`}
-              btn={<ButtonComponent label={"Create new item"} onClick={"/"} />}
+              // label={"Fill-up your inventory by creating a New item"}
+              // desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
+              //     inventory items in filling-up IARs and RIS requests.`}
+              // btn={<ButtonComponent label={"Create new item"} onClick={"/"} />}
             />
           )}
         </ContainerComponent>

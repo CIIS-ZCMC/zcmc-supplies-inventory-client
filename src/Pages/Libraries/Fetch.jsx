@@ -132,7 +132,8 @@ useEffect(() => {
        <ButtonComponent
                   label={"Fetch data from BIZBOX"}
                   size="sm"
-                  variant={"plain"} 
+                  variant={"soft"}
+                  color={"neutral"} 
                   startDecorator={<CloudSyncIcon/>}
                   onClick={toggleDrawer(true)}
                  />

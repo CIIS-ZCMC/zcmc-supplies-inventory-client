@@ -49,6 +49,7 @@ import NewItem from "../Pages/Inventory/NewItem";
 import ViewStartingBalance from "../Pages/Reports/Views/ViewStartingBalance";
 import ViewReleasedItem from "../Pages/Reports/Views/viewReleasedItem";
 import ViewReceivedItem from "../Pages/Reports/Views/ViewReceivedItem";
+import TaggingPurchasedOrder from "../Pages/PurchaseRequest/TaggingPurchasedOrder";
 export const sidebarRoutes = [
   {
     path: "/dashboard",
@@ -56,6 +57,14 @@ export const sidebarRoutes = [
     element: <Dashboard />,
     icon: <BiCategory />,
     permissions: ["view"],
+  },
+  {
+    path: "/purchase-order",
+    name: "Purchase Orders (Tagging)",
+    element: <PurchaseReq />,
+    icon: <NotebookTextIcon />,
+    permissions: ["view"],
+    //children: [{ path: ":id", element: <>this will displayxx</> }],
   },
   {
     path: "/inventory",
@@ -106,14 +115,7 @@ export const sidebarRoutes = [
    
     ],
   },
-  {
-    path: "/purchase-order",
-    name: "po",
-    element: <PurchaseReq />,
-    icon: <NotebookTextIcon />,
-    permissions: ["view"],
-    children: [{ path: ":id", element: <>this will display</> }],
-  },
+
 ];
 
 export const childrenRoutes = [
@@ -175,6 +177,13 @@ export const childrenRoutes = [
   {
     path: "/reports/receiving/:id",
     element: <ViewReceivedItem/>,
+    icon: null,
+    permissions: ["view"],
+  },
+
+  {
+    path: "/purchase-order/:id",
+    element: <TaggingPurchasedOrder/>,
     icon: null,
     permissions: ["view"],
   },
