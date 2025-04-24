@@ -48,7 +48,9 @@ export const API = {
   SOURCE_STORE: "source-store",
   SOURCE_UPDATE: "source-update",
   SOURCE_SHOW: "source-view",
-  SOURCE_LIST:"source-list",
+  SOURCE_LIST: "source-list",
+
+  STORE_PO_TAGGING: "submit-tagging",
 
   CATEGORIES: "categories",
   CATEGORY_STORE: "category-store",
@@ -96,16 +98,17 @@ export const API = {
   REPORTS_ITEM_COUNT_IAR: "get-item-iar",
   REPORTS_AREA_SUPPLY: "get-area-supply",
   REPORTS_SUPPLY_REGULAR: "get-supply-regular",
-  REPORTS_STARTINGBAL_FETCHDATA:"get-supply-starting-balances",
+  REPORTS_STARTINGBAL_FETCHDATA: "get-supply-starting-balances",
 
-  FETCH_AREA:"fetch-Area-data-bizbox",
-  FETCH_CATEGORIES:"fetch-Category-data-bizbox",
-  FETCH_UNITS:"fetch-Unit-data-bizbox",
-  FETCH_SUPPLIERS:"fetch-Supplier-data-bizbox",
-  FETCH_SUPPLIES:"fetch-items-data-bizbox",
-  GET_LASTSYNCED:"lastsynced-items",
+  FETCH_AREA: "fetch-Area-data-bizbox",
+  FETCH_CATEGORIES: "fetch-Category-data-bizbox",
+  FETCH_UNITS: "fetch-Unit-data-bizbox",
+  FETCH_SUPPLIERS: "fetch-Supplier-data-bizbox",
+  FETCH_SUPPLIES: "fetch-items-data-bizbox",
+  GET_LASTSYNCED: "lastsynced-items",
 
-  PURCHASED_ORDERS:"get-purchased-orders"
+  PURCHASED_ORDERS: "get-purchased-orders",
+  PURCHASED_ORDERS_ITEMS: "get-purchased-orders-items",
 };
 
 /**
@@ -117,7 +120,7 @@ export const API = {
  * use the production for your system url
  */
 export const BASE_URL = {
-  development_landing_page: "http://192.168.8.95:8000/api",//127.0.0.1:8000/api", // This will be the landing page
+  development_landing_page: "http://192.168.8.95:8000/api", //127.0.0.1:8000/api", // This will be the landing page
   production_landing_page: "https://zcmc.online", // This will be the production landing page url
   production: "http://192.168.8.95:8000/api", // Change the sub domain name to your prefer name
   development: "http://192.168.8.95:8000/api", // You can change the port or ip here

@@ -48,6 +48,7 @@ const columns = [
 const PurchaseReq = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+
   const { inventory, getPurchaseOrders } = useInventoryHook();
   const {
     filteredInventory,
@@ -58,8 +59,10 @@ const PurchaseReq = () => {
     setSortOrder,
     setSearchTerm,
     clearFilters,
+    searchkey,
+    setSearchKey,
   } = useFilterHook();
-  const {setSelectedPO} = useSelectedRow();
+  const { setSelectedPO } = useSelectedRow();
 
   const theme = useTheme();
 
@@ -79,7 +82,13 @@ const PurchaseReq = () => {
     queryFn: getPurchaseOrders,
   });
 
-  const purchaseORderData = data?.data;
+  const purchaseORderData = searchkey
+    ? data?.data.filter((x) => {
+        return x.PO_number.toLowerCase().includes(searchkey.toLowerCase());
+      })
+    : data?.data;
+
+  console.log(purchaseORderData);
 
   return (
     <Fragment>
@@ -91,13 +100,12 @@ const PurchaseReq = () => {
             justifyContent="space-between"
             alignItems="flex-end"
           >
-      
             <InputComponent
               label="Find a slip"
-              placeholder="Find by item name, category, unit"
+              placeholder="Search PO# "
               startIcon={<SearchIcon />}
-              value={searchTerm}
-              setValue={setSearchTerm}
+              value={searchkey}
+              setValue={setSearchKey}
               width={300}
               // action={{
               //   label: "Search",
@@ -134,23 +142,22 @@ const PurchaseReq = () => {
           ) : (
             <PaginatedTable
               customAction={true}
-              handleCustomAction={(perRow)=>{
-                return <>
-               <ButtonComponent
-                 startDecorator={
-                            <SquareArrowOutUpRight size={"1rem"} />                                             }
-                          variant={"plain"}
-                          size="sm"
-                          onClick={()=>{
-                           setSelectedPO(perRow)
-                           navigate(`${perRow.id}`)
-                          }}
-                      />
-
-                      
-                </>
+              handleCustomAction={(perRow) => {
+                return (
+                  <>
+                    <ButtonComponent
+                      startDecorator={<SquareArrowOutUpRight size={"1rem"} />}
+                      variant={"plain"}
+                      size="sm"
+                      onClick={() => {
+                        setSelectedPO(perRow);
+                        navigate(`${perRow.PO_number}`);
+                      }}
+                    />
+                  </>
+                );
               }}
-             // viewable={true}
+              // viewable={true}
               loading={isLoading}
               tableTitle={"List of purchased orders"}
               tableDesc={
@@ -163,7 +170,6 @@ const PurchaseReq = () => {
               actionBtns={
                 <Stack direction="row" spacing={1} mt={2}>
                   <ButtonComponent
-                    
                     variant={"outlined"}
                     label="Generate report"
                     size="lg"

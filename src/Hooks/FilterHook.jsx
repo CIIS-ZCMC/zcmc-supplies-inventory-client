@@ -6,10 +6,11 @@ const useFilterHook = create((set) => ({
   sortOrder: "",
   searchTerm: "",
   month: "",
-  year: moment().format('YYYY'),
+  year: moment().format("YYYY"),
   fromDate: "",
   toDate: "",
-
+  searchkey: null,
+  setSearchKey: (search) => set({ searchkey: search }),
   // Update selected category filter
   setCategory: (category) => set({ selectedCategory: category }),
 
@@ -42,7 +43,6 @@ const useFilterHook = create((set) => ({
   filteredInventory: (data) => {
     // Ensure data is an array
 
-   
     if (!Array.isArray(data)) {
       console.error("Expected an array but got:", data);
       return [];
@@ -57,7 +57,9 @@ const useFilterHook = create((set) => ({
       const matchesSearch =
         !searchTerm ||
         item.supply_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.purchase_order_no?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.purchase_order_no
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         item.iar_no?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.unit_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.area_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||

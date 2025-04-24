@@ -1,4 +1,4 @@
-import { Divider, Typography,Box } from "@mui/joy";
+import { Divider, Typography, Box } from "@mui/joy";
 import StartingBalanceStepper from "../Pages/Reports/Views/StartingBalStepper";
 export const receivingTableHeader = [
   // {
@@ -81,15 +81,26 @@ export const startingBalancesHeader = [
   { id: "balance_date", label: "Year" },
   { id: "month", label: "Month" },
   { id: "source_name", label: "Source" },
-  { id: "key", label: "History ( RIS )",render : (row,index)=>{
-    return <>
-    {row.inventoryTransactionLog.length ? 
-    <StartingBalanceStepper row={row}/>
-   : <Divider> <Typography level="body-xs" fontSize={9} textColor={"#94B4C1"}>
-    NO RECORDS FOUND
-    </Typography></Divider>}
-    </>
-  } },
+  {
+    id: "key",
+    label: "History ( RIS )",
+    render: (row, index) => {
+      return (
+        <>
+          {row.inventoryTransactionLog.length ? (
+            <StartingBalanceStepper row={row} />
+          ) : (
+            <Divider>
+              {" "}
+              <Typography level="body-xs" fontSize={9} textColor={"#94B4C1"}>
+                NO RECORDS FOUND
+              </Typography>
+            </Divider>
+          )}
+        </>
+      );
+    },
+  },
   { id: "quantity", label: "Starting Balance" },
 ];
 
@@ -234,7 +245,7 @@ export const releasingHeader = [
   //   disablePadding: true,
   //   label: "#",
   // },
- 
+
   {
     id: "category_name",
     numeric: false,
@@ -263,23 +274,26 @@ export const releasingHeader = [
     id: "key", // or any field name
     label: "Information",
     render: (row, index) => {
-      return <>
-      <Typography level="body-xs">
-       <span style={{fontSize:"10px"}}> RIS #</span> : {row.ris_no}
-      </Typography>
-      <Divider></Divider>
-      <Typography level="body-xs">
-      <span style={{fontSize:"10px"}}> RIS Date </span>: {row.ris_date}
-      </Typography>
-      <Divider></Divider>
-      <Typography level="body-xs">
-      <span style={{fontSize:"10px"}}>Supplier </span>: {row.supplier_name}
-      </Typography>
-      <Divider></Divider>
-      <Typography level="body-xs">
-      <span style={{fontSize:"10px"}}>Remarks </span> : {row.remarks}
-      </Typography>
-      </>
+      return (
+        <>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}> RIS #</span> : {row.ris_no}
+          </Typography>
+          <Divider></Divider>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}> RIS Date </span>: {row.ris_date}
+          </Typography>
+          <Divider></Divider>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}>Supplier </span>:{" "}
+            {row.supplier_name}
+          </Typography>
+          <Divider></Divider>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}>Remarks </span> : {row.remarks}
+          </Typography>
+        </>
+      );
     },
   },
 
@@ -659,90 +673,86 @@ export const dashboardHeader = [
     disablePadding: true,
     label: "This year's starting balance",
   },
-
-  
 ];
 
 export const PurchaseOrderHeader = [
-
   {
     id: "PO_number",
     numeric: true,
     disablePadding: true,
     label: "PO#",
   },
-  {
-    id: "Category",
-    numeric: true,
-    disablePadding: true,
-    label: "Category",
-  },
-  {
-    id: "itemdesc",
-    numeric: true,
-    disablePadding: true,
-    label: "Description",
-  },
- 
-  {
-    id: "purcprice",
-    numeric: true,
-    disablePadding: true,
-    label: "Price",
-    render:(row,index)=>{
-      return <>
-   ₱ {Number(row.purcprice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-// Example output: "1,234.57"
-}
-      
-      </>
-    }
-  },
+  //   {
+  //     id: "Category",
+  //     numeric: true,
+  //     disablePadding: true,
+  //     label: "Category",
+  //   },
+  //   {
+  //     id: "itemdesc",
+  //     numeric: true,
+  //     disablePadding: true,
+  //     label: "Description",
+  //   },
 
-  {
-    id: "totqty",
-    numeric: true,
-    disablePadding: true,
-    label: "Quantity",
-    render:(row,index)=>{
-      return <>
-    {Number(row.totqty).toLocaleString()}
+  //   {
+  //     id: "purcprice",
+  //     numeric: true,
+  //     disablePadding: true,
+  //     label: "Price",
+  //     render:(row,index)=>{
+  //       return <>
+  //    ₱ {Number(row.purcprice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  // // Example output: "1,234.57"
+  // }
 
-      
-      </>
-    }
-  },
-  {
-    id: "key",
-    numeric: true,
-    disablePadding: true,
-    label: "Other Information",
-    render:(row,index)=>{
-      return <>
-       <Typography level="body-xs">
-       <span style={{fontSize:"10px"}}> Old PO#</span> : {row.pr_old_po_number}
-      </Typography>
-      <Divider></Divider>
-      <Typography level="body-xs">
-       <span style={{fontSize:"10px"}}>PO Doc_Date</span> : <br /> {row.PO_docdate}
-      </Typography>
-      <Divider></Divider>
-      <Typography level="body-xs">
-       <span style={{fontSize:"10px"}}>PO Status</span> :  {row.postatus}
-      </Typography>
-      <Divider></Divider>
-      <Typography level="body-xs">
-       <span style={{fontSize:"10px"}}>PO Item Unit</span> :  {row.PO_ITEM_UNIT}
-      </Typography>
-      <Divider></Divider>
-      <Typography level="body-xs">
-       <span style={{fontSize:"10px"}}>Barcode ID</span> :  {row.barcodeid}
-      </Typography>
-      <Divider></Divider>
-      
-      </>
-    }
-  },
+  //       </>
+  //     }
+  //   },
+
+  //   {
+  //     id: "totqty",
+  //     numeric: true,
+  //     disablePadding: true,
+  //     label: "Quantity",
+  //     render:(row,index)=>{
+  //       return <>
+  //     {Number(row.totqty).toLocaleString()}
+
+  //       </>
+  //     }
+  //   },
+  //   {
+  //     id: "key",
+  //     numeric: true,
+  //     disablePadding: true,
+  //     label: "Other Information",
+  //     render:(row,index)=>{
+  //       return <>
+  //        <Typography level="body-xs">
+  //        <span style={{fontSize:"10px"}}> Old PO#</span> : {row.pr_old_po_number}
+  //       </Typography>
+  //       <Divider></Divider>
+  //       <Typography level="body-xs">
+  //        <span style={{fontSize:"10px"}}>PO Doc_Date</span> : <br /> {row.PO_docdate}
+  //       </Typography>
+  //       <Divider></Divider>
+  //       <Typography level="body-xs">
+  //        <span style={{fontSize:"10px"}}>PO Status</span> :  {row.postatus}
+  //       </Typography>
+  //       <Divider></Divider>
+  //       <Typography level="body-xs">
+  //        <span style={{fontSize:"10px"}}>PO Item Unit</span> :  {row.PO_ITEM_UNIT}
+  //       </Typography>
+  //       <Divider></Divider>
+  //       <Typography level="body-xs">
+  //        <span style={{fontSize:"10px"}}>Barcode ID</span> :  {row.barcodeid}
+  //       </Typography>
+  //       <Divider></Divider>
+
+  //       </>
+  //     }
+  //   },
 
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
-]
+];
