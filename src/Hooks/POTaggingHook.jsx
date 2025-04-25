@@ -15,6 +15,16 @@ const usePOTaggingHooks = create((set) => ({
       throw error.response?.data || error;
     }
   },
+  getPOTagged: async () => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.PURCHASED_ORDERS_TAGGED}`
+      );
+      return response.data.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
   storeTagging: async (formData, pulledID) => {
     try {
       const response = await inventory_api.post(

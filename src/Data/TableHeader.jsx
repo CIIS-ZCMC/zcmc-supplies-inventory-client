@@ -756,3 +756,50 @@ export const PurchaseOrderHeader = [
 
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
+
+export const PurchaseOrderHeaderView = [
+  {
+    id: "po_number",
+    numeric: true,
+    disablePadding: true,
+    label: "PO#",
+  },
+  {
+    id: "key",
+    numeric: true,
+    disablePadding: true,
+    label: "Tagged Information",
+    render: (row, index) => {
+      return (
+        <>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}> Fund Cluster</span> :{" "}
+            {row.fund_cluster}
+          </Typography>
+          <Divider></Divider>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}>Funds Available</span> : <br />{" "}
+            {row.funds_available}
+          </Typography>
+          <Divider></Divider>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}>ORS/BURS No.</span> :{" "}
+            {row.ors_burs_no}
+          </Typography>
+          <Divider></Divider>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}>ORS/BURS Date</span> :{" "}
+            {row.ors_burs_date}
+          </Typography>
+          <Divider></Divider>
+          <Typography level="body-xs">
+            <span style={{ fontSize: "10px" }}>Amount</span> : ₱ {row.amount}
+          </Typography>
+          <Divider></Divider>
+        </>
+      );
+    },
+  },
+
+  { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
+];

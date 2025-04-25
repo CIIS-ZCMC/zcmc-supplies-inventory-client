@@ -109,6 +109,7 @@ export const API = {
 
   PURCHASED_ORDERS: "get-purchased-orders",
   PURCHASED_ORDERS_ITEMS: "get-purchased-orders-items",
+  PURCHASED_ORDERS_TAGGED: "get-purchased-orders-tagged",
 };
 
 /**

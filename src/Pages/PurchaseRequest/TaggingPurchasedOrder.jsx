@@ -23,7 +23,8 @@ import useSnackbarHook from "../../Hooks/AlertHook";
 import SnackbarComponent from "../../Components/SnackbarComponent";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-
+import { useSearchParams } from "react-router-dom";
+import swal from "sweetalert";
 function TaggingPurchasedOrder(props) {
   const { selectedPo } = useSelectedRow();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
@@ -31,14 +32,18 @@ function TaggingPurchasedOrder(props) {
   const { storeTagging, getPOitems } = usePOTaggingHooks();
   const navigate = useNavigate();
   const [submit, setSubmit] = useState(false);
+  const [searchParams] = useSearchParams();
+  const viewingOnly = searchParams.get("viewingOnly");
+  let po_number = selectedPo?.PO_number ?? selectedPo?.po_number;
 
+  console.log(selectedPo);
   const { data, isLoading, error } = useQuery({
-    queryKey: ["purchased_orders_items", selectedPo?.PO_number],
-    queryFn: () => getPOitems(selectedPo?.PO_number),
+    queryKey: ["purchased_orders_items", po_number],
+    queryFn: () => getPOitems(po_number),
   });
 
   const pageDetails = {
-    pageTitle: `Tagging  PO#"${selectedPo.PO_number}" `,
+    pageTitle: `Tagging  PO#"${po_number}" `,
     title: "Reports",
     description: "Tag ORS/BURS no., Amount etc.",
     pagePath: null,
@@ -107,22 +112,37 @@ function TaggingPurchasedOrder(props) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const formValues = Object.fromEntries(formData.entries());
-    setSubmit(true);
-    storeTagging(formValues, selectedPo.PO_number).then((row) => {
-      if (row?.request?.status === 200) {
-        showSnackbar("Tagging Saved Successfully!", "success", "filled");
-        setSubmit(false);
-        navigate(-1);
-        return;
-      }
 
-      if (row?.request?.status !== 422) {
-        const { message } = JSON.parse(row.request.response);
-        showSnackbar(message, "danger", "solid");
-        setSubmit(false);
-        return;
+    swal({
+      title: "Please review carefully",
+      text: "Once submitted, you will no longer be able to edit this information. Do you want to proceed?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        setSubmit(true);
+        storeTagging(formValues, po_number).then((row) => {
+          if (row?.request?.status === 200) {
+            swal("Tagging Saved Successfully!", {
+              icon: "success",
+            });
+            setSubmit(false);
+            navigate(-1);
+            return;
+          }
+
+          if (row?.request?.status !== 200) {
+            const { message } = JSON.parse(row.request.response);
+            swal(message, {
+              icon: "error",
+            });
+            setSubmit(false);
+            return;
+          }
+          setSubmit(false);
+        });
       }
-      setSubmit(false);
     });
   };
 
@@ -170,7 +190,7 @@ function TaggingPurchasedOrder(props) {
                   >
                     {/* Left side (first half of fields) */}
                     <div style={{ flex: "1 1 48%" }}>
-                      <h4>PO#: {selectedPo.PO_number}</h4>
+                      <h4>PO#: {po_number}</h4>
                       <table
                         style={{
                           width: "100%",
@@ -288,9 +308,12 @@ function TaggingPurchasedOrder(props) {
               <Accordion
                 sx={{
                   marginTop: "10px",
-                  border: "3px solid #536493",
+                  border: viewingOnly
+                    ? "10px solid #81E7AF"
+                    : "3px solid  #536493",
                   borderRadius: "15px",
                 }}
+                defaultExpanded={viewingOnly ? true : false}
               >
                 <AccordionSummary
                   expandIcon={<>open</>}
@@ -307,15 +330,15 @@ function TaggingPurchasedOrder(props) {
                   >
                     <Typography
                       level="body-lg"
-                      color="danger"
+                      color={viewingOnly ? "primary" : "danger"}
                       sx={{ padding: "0 0 0 20px" }}
                     >
-                      TAGGING
+                      {viewingOnly ? "TAGGED DETAILS" : "TAGGING"}
                     </Typography>
                     <Chip color="primary" size="sm">
                       {data?.length ?? 0}
                       <span style={{ fontSize: "11px", marginLeft: "5px" }}>
-                        Record's found
+                        Record(s) found
                       </span>
                     </Chip>
                   </Stack>
@@ -329,9 +352,47 @@ function TaggingPurchasedOrder(props) {
                     borderRadius: "15px",
                   }}
                 >
-                  <form onSubmit={handleSubmit}>
-                    <Card>
-                      {/* <Stack direction={"row"} justifyContent={"space-between"}>
+                  {viewingOnly ? (
+                    <>
+                      <Grid container spacing={2}>
+                        <Grid xs={6}>
+                          <Box>
+                            <Typography level="body-xs">
+                              Fund Cluster :
+                            </Typography>
+                            {selectedPo?.fund_cluster}
+                          </Box>
+                          <Box>
+                            <Typography level="body-xs">
+                              Funds Available :
+                            </Typography>
+                            {selectedPo?.funds_available}
+                          </Box>
+                        </Grid>
+                        <Grid xs={6}>
+                          <Box>
+                            <Typography level="body-xs">
+                              ORS/BURS No.:
+                            </Typography>
+                            {selectedPo?.ors_burs_no}
+                          </Box>
+                          <Box>
+                            <Typography level="body-xs">
+                              Date of ORS/BURS :
+                            </Typography>
+                            {selectedPo?.ors_burs_date}
+                          </Box>
+                          <Box>
+                            <Typography level="body-xs">Amount:</Typography>
+                            {selectedPo?.amount}
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </>
+                  ) : (
+                    <form onSubmit={handleSubmit}>
+                      <Card>
+                        {/* <Stack direction={"row"} justifyContent={"space-between"}>
                         <Typography level="body-xs">TAGGING</Typography>
                         <Chip color="primary">
                           {data?.length ?? 0}
@@ -342,60 +403,61 @@ function TaggingPurchasedOrder(props) {
                         </Chip>
                       </Stack> */}
 
-                      <Grid container spacing={2}>
-                        <Grid xs={6}>
-                          <Box>
-                            <Typography>Fund Cluster :</Typography>
-                            <InputComponent
-                              fullWidth
-                              isRequired
-                              name={"fund_cluster"}
-                            />
-                          </Box>
-                          <Box>
-                            <Typography>Funds Available :</Typography>
-                            <InputComponent
-                              fullWidth
-                              isRequired
-                              name={"fund_available"}
-                            />
-                          </Box>
+                        <Grid container spacing={2}>
+                          <Grid xs={6}>
+                            <Box>
+                              <Typography>Fund Cluster :</Typography>
+                              <InputComponent
+                                fullWidth
+                                isRequired
+                                name={"fund_cluster"}
+                              />
+                            </Box>
+                            <Box>
+                              <Typography>Funds Available :</Typography>
+                              <InputComponent
+                                fullWidth
+                                isRequired
+                                name={"fund_available"}
+                              />
+                            </Box>
+                          </Grid>
+                          <Grid xs={6}>
+                            <Box>
+                              <Typography>ORS/BURS No.:</Typography>
+                              <InputComponent
+                                fullWidth
+                                isRequired
+                                name={"ors_burs_no"}
+                              />
+                            </Box>
+                            <Box>
+                              <Typography>Date of ORS/BURS :</Typography>
+                              <InputComponent
+                                fullWidth
+                                type={"date"}
+                                isRequired
+                                name={"ors_burs_date"}
+                              />
+                            </Box>
+                            <Box>
+                              <Typography>Amount:</Typography>
+                              <InputComponent
+                                fullWidth
+                                isRequired
+                                name={"amount"}
+                              />
+                            </Box>
+                          </Grid>
                         </Grid>
-                        <Grid xs={6}>
-                          <Box>
-                            <Typography>ORS/BURS No.:</Typography>
-                            <InputComponent
-                              fullWidth
-                              isRequired
-                              name={"ors_burs_no"}
-                            />
-                          </Box>
-                          <Box>
-                            <Typography>Date of ORS/BURS :</Typography>
-                            <InputComponent
-                              fullWidth
-                              type={"date"}
-                              isRequired
-                              name={"ors_burs_date"}
-                            />
-                          </Box>
-                          <Box>
-                            <Typography>Amount:</Typography>
-                            <InputComponent
-                              fullWidth
-                              isRequired
-                              name={"amount"}
-                            />
-                          </Box>
-                        </Grid>
-                      </Grid>
-                      <ButtonComponent
-                        type={"submit"}
-                        label={"Submit"}
-                        loading={submit}
-                      />
-                    </Card>
-                  </form>
+                        <ButtonComponent
+                          type={"submit"}
+                          label={"Submit"}
+                          loading={submit}
+                        />
+                      </Card>
+                    </form>
+                  )}
                 </AccordionDetails>
               </Accordion>
             </Box>

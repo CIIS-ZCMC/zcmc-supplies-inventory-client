@@ -17,6 +17,8 @@ import { useQuery } from "@tanstack/react-query";
 import { PurchaseOrderHeader } from "../../Data/TableHeader";
 import { SquareArrowOutUpRight, Pencil } from "lucide-react";
 import useSelectedRow from "../../Store/SelectedRowStore";
+import ModalComponent from "../../Components/Dialogs/ModalComponent";
+import ViewTaggedPurchasedOrder from "./ViewTaggedPurchasedOrder";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -48,7 +50,7 @@ const columns = [
 const PurchaseReq = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const { inventory, getPurchaseOrders } = useInventoryHook();
   const {
     filteredInventory,
@@ -88,6 +90,9 @@ const PurchaseReq = () => {
       })
     : data?.data;
 
+  const handleViewDialogClose = (row) => {
+    setIsViewDialogOpen(false);
+  };
   console.log(purchaseORderData);
 
   return (
@@ -174,10 +179,12 @@ const PurchaseReq = () => {
                     label="Generate report"
                     size="lg"
                   />
-                  {/* <ButtonComponent
-                    label="Add new item name"
-                    onClick={navigateToItemSupplies}
-                  /> */}
+                  <ButtonComponent
+                    label="Tagged Records"
+                    onClick={() => {
+                      setIsViewDialogOpen(true);
+                    }}
+                  />
                 </Stack>
               }
               icon={
@@ -200,6 +207,15 @@ const PurchaseReq = () => {
           )}
         </ContainerComponent>
       </Stack>
+
+      <ModalComponent
+        isOpen={isViewDialogOpen}
+        handleClose={handleViewDialogClose}
+        content={<ViewTaggedPurchasedOrder />}
+        actionBtns={false}
+        title={"Tagged Purchased Order(s)"}
+        description={"Complete information about tagged PO's."}
+      />
     </Fragment>
   );
 };
