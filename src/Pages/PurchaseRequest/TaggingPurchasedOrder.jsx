@@ -242,6 +242,15 @@ function TaggingPurchasedOrder(props) {
 
                     {/* Right side (second half of fields) */}
                     <div style={{ flex: "1 1 48%" }}>
+                      <h6
+                        style={{
+                          float: "right",
+                          fontWeight: "normal",
+                          padding: "0 10px 0 0",
+                        }}
+                      >
+                        Page {rowIndex + 1} of {data.length}
+                      </h6>
                       <table
                         style={{
                           width: "100%",

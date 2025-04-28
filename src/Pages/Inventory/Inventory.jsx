@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import NewItem from "./NewItem";
+import useReportsHook from "../../Hooks/ReportsHook";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -64,7 +65,7 @@ const Inventory = () => {
     setSearchTerm,
     clearFilters,
   } = useFilterHook();
-
+  const { generateReport } = useReportsHook();
   const theme = useTheme();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -82,10 +83,9 @@ const Inventory = () => {
   };
 
   const navigateToItemSupplies = () => {
-   navigate("/newItem");
+    navigate("/newItem");
   };
 
-  
   const handleDialogClose = () => {
     setIsDialogOpen(false);
     setActiveStep(0);
@@ -153,6 +153,12 @@ const Inventory = () => {
                   variant={"outlined"}
                   label="Generate report"
                   size="lg"
+                  onClick={() => {
+                    generateReport(
+                      "Inventory",
+                      filteredInventory(inventoryData)
+                    );
+                  }}
                 />
                 <ButtonComponent
                   label="Add new item name"
@@ -179,8 +185,6 @@ const Inventory = () => {
           />
         </ContainerComponent>
       </Stack>
-
-  
     </Fragment>
   );
 };

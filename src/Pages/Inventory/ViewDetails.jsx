@@ -18,39 +18,46 @@ import { BsColumnsGap } from "react-icons/bs";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { ImBoxAdd } from "react-icons/im";
-export const BoxItem = ({ icon, iconColor, categoryTitle, categoryName ,option}) => {
+import useReportsHook from "../../Hooks/ReportsHook";
+export const BoxItem = ({
+  icon,
+  iconColor,
+  categoryTitle,
+  categoryName,
+  option,
+}) => {
   const theme = useTheme(); // Access the theme
 
   return (
     <BoxComponent>
-    
       <Box display="flex" alignItems="center" padding={1}>
         {icon}
-        <Stack direction="row" justifyContent="space-between" width="100%" ml={1}>
-  <Box>
-    <Typography level="body-sm">{categoryTitle}</Typography>
-    <Typography level="title-lg">{categoryName}</Typography>
-  </Box>
-  <Box>
-    {option}
-  </Box>
-</Stack>
-
-      
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          width="100%"
+          ml={1}
+        >
+          <Box>
+            <Typography level="body-sm">{categoryTitle}</Typography>
+            <Typography level="title-lg">{categoryName}</Typography>
+          </Box>
+          <Box>{option}</Box>
+        </Stack>
       </Box>
-
     </BoxComponent>
   );
 };
 
 function ViewDetails(props) {
   const theme = useTheme();
-  const { selectedRow ,setSelectedItem} = useSelectedRow();
+  const { selectedRow, setSelectedItem } = useSelectedRow();
   const { id } = useParams();
   // const storedSupplyName = localStorage.getItem("selectedRow");
-  const { details, getInventoryDetails,stockouts,startingBalance ,stockins} = useInventoryHook();
+  const { details, getInventoryDetails, stockouts, startingBalance, stockins } =
+    useInventoryHook();
   const navigate = useNavigate();
-  
+  const { generateReport } = useReportsHook();
   const pageDetails = {
     pageTitle: `Viewing "${selectedRow?.supply_name}"`,
     title: "Inventory",
@@ -68,7 +75,7 @@ function ViewDetails(props) {
     { id: "unit_name", label: "Unit" },
     { id: "source_name", label: "Source" },
     { id: "delivery_date", label: "Delivery Date" },
-    { id: "quantity", label: "Quantity" }
+    { id: "quantity", label: "Quantity" },
   ];
 
   const totalQuantity = details.reduce((sum, item) => sum + item.quantity, 0);
@@ -86,7 +93,6 @@ function ViewDetails(props) {
       <Header pageDetails={pageDetails} data={user} />
       <Stack my={2}>
         <Stack direction="row" justifyContent="space-between" spacing={2}>
-     
           <BoxItem
             icon={
               <GrApps
@@ -102,37 +108,34 @@ function ViewDetails(props) {
             categoryTitle={"Total quantity | Unit type"}
           />
 
-<BoxItem           
-             icon={
-               <ImBoxAdd
-                 fontSize={30}
-                 color="darkBlue"
-                 style={{
-                   padding: 10,
-                   backgroundColor: theme.palette.custom.lighter,
-                 }}
-               />
-             }
-             option={  <ButtonComponent
-               variant={"outlined"}   
-               size="lg"
-               color="neutral"
-               onClick={()=>{
-                 navigate(`/reports/receiving/${selectedRow?.id}`)        
-              //  //  setSelectedItem(selectedRow)
-               }}
-              label={<IoLogOutOutline
-               fontSize={20}           
-               />}
-             />}
-             categoryName={stockins}
-             categoryTitle={"Total quantity received (IAR)"}
-           />
-             
+          <BoxItem
+            icon={
+              <ImBoxAdd
+                fontSize={30}
+                color="darkBlue"
+                style={{
+                  padding: 10,
+                  backgroundColor: theme.palette.custom.lighter,
+                }}
+              />
+            }
+            option={
+              <ButtonComponent
+                variant={"outlined"}
+                size="lg"
+                color="neutral"
+                onClick={() => {
+                  navigate(`/reports/receiving/${selectedRow?.id}`);
+                  //  //  setSelectedItem(selectedRow)
+                }}
+                label={<IoLogOutOutline fontSize={20} />}
+              />
+            }
+            categoryName={stockins}
+            categoryTitle={"Total quantity received (IAR)"}
+          />
 
-
-             <BoxItem
-             
+          <BoxItem
             icon={
               <TbTruckDelivery
                 fontSize={30}
@@ -143,22 +146,22 @@ function ViewDetails(props) {
                 }}
               />
             }
-            option={  <ButtonComponent
-              variant={"outlined"}   
-              size="lg"
-              color="neutral"
-              onClick={()=>{
-                navigate(`/reports/releasing/${selectedRow?.id}`)        
-              //  setSelectedItem(selectedRow)
-              }}
-             label={<IoLogOutOutline
-              fontSize={20}           
-              />}
-            />}
+            option={
+              <ButtonComponent
+                variant={"outlined"}
+                size="lg"
+                color="neutral"
+                onClick={() => {
+                  navigate(`/reports/releasing/${selectedRow?.id}`);
+                  //  setSelectedItem(selectedRow)
+                }}
+                label={<IoLogOutOutline fontSize={20} />}
+              />
+            }
             categoryName={stockouts}
             categoryTitle={"Total quantity released (RIS)"}
           />
-            
+
           <BoxItem
             icon={
               <MdTune
@@ -171,26 +174,20 @@ function ViewDetails(props) {
               />
             }
             option={
-
               <ButtonComponent
-              variant={"outlined"}
-              label={<IoLogOutOutline
-                fontSize={20}           
-                />}
-              size="lg"
-              color="neutral"
-              onClick={()=>{
-              //  console.log(selectedRow?.id)
-                navigate(`/reports/starting-balance/${selectedRow?.id}`)
-               
-              }}
-            
-            />
+                variant={"outlined"}
+                label={<IoLogOutOutline fontSize={20} />}
+                size="lg"
+                color="neutral"
+                onClick={() => {
+                  //  console.log(selectedRow?.id)
+                  navigate(`/reports/starting-balance/${selectedRow?.id}`);
+                }}
+              />
             }
             categoryName={startingBalance}
             categoryTitle={"Starting balance"}
           />
-
         </Stack>
       </Stack>
       <ContainerComponent>
@@ -207,6 +204,7 @@ function ViewDetails(props) {
                 variant={"solid"}
                 label="Generate report"
                 size="lg"
+                onClick={() => generateReport(selectedRow.supply_name, details)}
               />
             </Stack>
           }

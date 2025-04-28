@@ -11,7 +11,7 @@ import ButtonGroupComponent from "../../Components/ButtonGroupComponent";
 import InputComponent from "../../Components/Form/InputComponent";
 import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
 
-import { SearchIcon } from 'lucide-react';
+import { SearchIcon } from "lucide-react";
 
 import { user, sortFilter, filterByYear } from "../../Data/index";
 
@@ -78,7 +78,6 @@ const getCurrentMonthYear = () => {
 };
 
 function Reports(props) {
-
   const {
     filteredInventory,
     selectedCategory,
@@ -94,12 +93,22 @@ function Reports(props) {
   const {
     dates,
     getUnconsumed,
+    generateReport,
+    item_count,
+    starting_bal,
+    near_exp,
+    zero_stocks,
+    consumed,
+    sufficient_sup,
+    unconsumed,
+    reorder,
+    disposal,
+    details,
+    areaSupplies,
+    regularSupplies,
   } = useReportsHook();
 
-
-  const {
-    getAreas
-  } = useAreasHook()
+  const { getAreas } = useAreasHook();
 
   const expire_legends = [
     { label: "1 month", color: "red" },
@@ -115,17 +124,21 @@ function Reports(props) {
   ];
 
   const routes = [
-    { id: 1, label: 'Item count', path: 'reports/item-count' },
-    { id: 2, label: 'Starting balance', path: 'reports/starting-balance' },
-    { id: 3, label: 'Near expiration', path: 'reports/near-expiration' },
-    { id: 4, label: 'Zero stocks', path: 'reports/zero-stocks-items' },
-    { id: 5, label: 'Most consumed items', path: 'reports/consumed-items' },
-    { id: 6, label: 'Unconsumed without RIS', path: 'reports/unconsumed-items' },
-    { id: 7, label: 'Reorder Items', path: 'reports/reordered-items' },
-    { id: 8, label: 'For Disposal', path: 'reports/disposal-items' },
-    { id: 9, label: 'Area Supplies', path: 'reports/area-supplies' },
-    { id: 10, label: 'Regular Supplies', path: 'reports/regular-supplies' },
-  ]
+    { id: 1, label: "Item count", path: "reports/item-count" },
+    { id: 2, label: "Starting balance", path: "reports/starting-balance" },
+    { id: 3, label: "Near expiration", path: "reports/near-expiration" },
+    { id: 4, label: "Zero stocks", path: "reports/zero-stocks-items" },
+    { id: 5, label: "Most consumed items", path: "reports/consumed-items" },
+    {
+      id: 6,
+      label: "Unconsumed without RIS",
+      path: "reports/unconsumed-items",
+    },
+    { id: 7, label: "Reorder Items", path: "reports/reordered-items" },
+    { id: 8, label: "For Disposal", path: "reports/disposal-items" },
+    { id: 9, label: "Area Supplies", path: "reports/area-supplies" },
+    { id: 10, label: "Regular Supplies", path: "reports/regular-supplies" },
+  ];
 
   // const [searchTerm, setSearchTerm] = useState("");
 
@@ -140,30 +153,35 @@ function Reports(props) {
   const currentDate = new Date();
   const fullyear = currentDate.getFullYear(); // 2024
   const currentMonth = currentDate.getMonth() + 1; // 11 (November)
-  const currentMonthYear = `${fullyear}-${currentMonth < 10 ? "0" + currentMonth : currentMonth}`// "2024-11"
+  const currentMonthYear = `${fullyear}-${
+    currentMonth < 10 ? "0" + currentMonth : currentMonth
+  }`; // "2024-11"
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['areas'],
+    queryKey: ["areas"],
     queryFn: () => getAreas(),
-  })
+  });
   const [areaId, setAreaId] = useState(null);
 
   const areasData = data?.data;
 
-  const areasOptions = areasData?.map(area => ({ label: area.area_name, id: area.id }));
+  const areasOptions = areasData?.map((area) => ({
+    label: area.area_name,
+    id: area.id,
+  }));
 
   useEffect(() => {
     // Redirect to the default route if no child route is selected
     if (location.pathname === "/reports") {
       navigate(`/reports/${defaultOption}`);
     }
-
   }, [location.pathname, navigate, defaultOption]);
 
   const theme = useTheme();
 
   const { isOpen, openModal, closeModal } = useModalHook();
-  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } = useSnackbarHook();
+  const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
+    useSnackbarHook();
 
   const pageDetails = {
     title: "Reports",
@@ -174,85 +192,65 @@ function Reports(props) {
 
   const [selectedOption, setSelectedOption] = useState(routes[0].path);
 
-
   const InfoDescription = () => (
     <>
       <InfoIcon size="18px" style={{ color: "#1D70BC" }} />
-      <Typography
-        sx={{ color: theme.palette.custom.fontLight }}
-        fontSize={13}
-      >
+      <Typography sx={{ color: theme.palette.custom.fontLight }} fontSize={13}>
         Items listed on this tab shows
       </Typography>
     </>
-  )
+  );
 
   const handleOnButtonGroupClick = (path) => {
-    setSelectedOption(path)
-    navigate(`/${path}`)
+    setSelectedOption(path);
+    navigate(`/${path}`);
   };
 
   useEffect(() => {
     if (year === null) {
-      setYear(fullyear)
+      setYear(fullyear);
     }
-  }, [year])
+  }, [year]);
 
-
-  // const generateExcel = () => {
-  //   try {
-  //     const data = tabsData[selectedTabIndex].rows; // Get the current tab's rows
-  //     const worksheet = XLSX.utils.json_to_sheet(data); // Convert rows to worksheet
-
-  //     // Define the same width for all columns (in pixels)
-  //     const columnWidth = { wpx: 150 }; // Set desired column width in pixels
-
-  //     // Set the same column width for all columns
-  //     worksheet["!cols"] = new Array(
-  //       data[0] ? Object.keys(data[0]).length : 0
-  //     ).fill(columnWidth);
-
-  //     // Enable text wrap for all header cells
-  //     const header = worksheet["!cols"] ? worksheet["!cols"] : [];
-  //     header.forEach((col, index) => {
-  //       if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
-  //     });
-
-  //     // Enable text wrap for all data cells
-  //     for (const cellAddress in worksheet) {
-  //       const cell = worksheet[cellAddress];
-  //       if (cell && cell.v) {
-  //         if (!cell.s) {
-  //           cell.s = {};
-  //         }
-  //         cell.s.alignment = { wrapText: true }; // Set text wrap style for the cell
-  //       }
-  //     }
-
-  //     const workbook = XLSX.utils.book_new(); // Create a new workbook
-  //     XLSX.utils.book_append_sheet(
-  //       workbook,
-  //       worksheet,
-  //       tabsData[selectedTabIndex].label
-  //     ); // Append sheet to workbook
-
-  //     // Generate the Excel file and trigger download
-  //     XLSX.writeFile(
-  //       workbook,
-  //       `${tabsData[selectedTabIndex].label} _report.xlsx`
-  //     );
-
-  //     // Show success snackbar
-  //     showSnackbar("Report generated successfully!", "success", "filled");
-  //   } catch (error) {
-  //     // Show error snackbar if something goes wrong
-  //     showSnackbar(
-  //       "Failed to generate the report. Please try again.",
-  //       "error",
-  //       "filled"
-  //     );
-  //   }
-  // };
+  const generateExcel = () => {
+    //console.log();
+    let reportData = [];
+    switch (extractedPath) {
+      case "item-count":
+        reportData = item_count;
+        break;
+      case "starting-balance":
+        reportData = starting_bal;
+        break;
+      case "near-expiration":
+        reportData = near_exp;
+        break;
+      case "zero-stocks-items":
+        reportData = zero_stocks;
+        break;
+      case "consumed-items":
+        reportData = consumed;
+        break;
+      case "unconsumed-items":
+        reportData = unconsumed;
+        break;
+      case "reordered-items":
+        reportData = reorder;
+        break;
+      case "disposal-items":
+        reportData = disposal;
+        break;
+      case "area-supplies":
+        reportData = areaSupplies;
+        break;
+      case "regular-supplies":
+        reportData = regularSupplies;
+        break;
+      default:
+        break;
+    }
+    generateReport(extractedPath, reportData);
+  };
 
   // const ButtonOptions = () => routes.map(({ id, label, value }) => (
   //   <Button key={id} value={value} onChange={handleOnButtonGroupClick(value)}>
@@ -260,11 +258,10 @@ function Reports(props) {
   //   </Button>
   // ))
 
- 
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
-      
+
       <ContainerComponent
         marginTop={30}
         title={"System-generated reports"}
@@ -276,8 +273,13 @@ function Reports(props) {
           </Stack>
         }
       >
-
-        <Stack direction="row" justifyContent={"space-between"} alignItems="center" spacing={2} my={1}>
+        <Stack
+          direction="row"
+          justifyContent={"space-between"}
+          alignItems="center"
+          spacing={2}
+          my={1}
+        >
           {/* Search */}
           <InputComponent
             placeholder="Find by names, brands, categories, etc."
@@ -293,8 +295,12 @@ function Reports(props) {
             alignItems={"center"}
             spacing={2}
           >
-
-            {!['/reports/near-expiration', '/reports/zero-stocks-items', '/reports/reordered-items', '/reports/disposal-items'].includes(currentPath) && (
+            {![
+              "/reports/near-expiration",
+              "/reports/zero-stocks-items",
+              "/reports/reordered-items",
+              "/reports/disposal-items",
+            ].includes(currentPath) && (
               <SelectComponent
                 startIcon={"Filter by year:"}
                 placeholder={"Year"}
@@ -304,15 +310,17 @@ function Reports(props) {
               />
             )}
 
-            {['/reports/area-supplies'].includes(currentPath) &&
+            {["/reports/area-supplies"].includes(currentPath) && (
               <AutoCompleteComponent
                 placeholder={"Filter by Area"}
                 options={areasOptions}
                 loading={isLoading}
-                value={areasOptions?.find(option => option.id === areaId) ?? null}
+                value={
+                  areasOptions?.find((option) => option.id === areaId) ?? null
+                }
                 onChange={(event, value) => setAreaId(value ? value.id : null)}
               />
-            }
+            )}
 
             <SelectComponent
               startIcon={"Sort by:"}
@@ -322,7 +330,6 @@ function Reports(props) {
               onChange={setSortOrder}
             />
           </Stack>
-
         </Stack>
 
         <Stack my={2}>
@@ -332,94 +339,91 @@ function Reports(props) {
               selectedOption={selectedOption}
               onChange={handleOnButtonGroupClick}
             />
-            
           </Box>
         </Stack>
 
         <Divider></Divider>
 
-        {extractedPath === 'item-count' &&
+        {extractedPath === "item-count" && (
           <ItemCount
             currentYear={year}
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={itemHeader}
           />
-        }
+        )}
 
-        {extractedPath === 'starting-balance' &&
+        {extractedPath === "starting-balance" && (
           <StartingBalance
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={startingBalHeader}
             currentYear={year}
           />
-        }
+        )}
 
-        {extractedPath === 'near-expiration' &&
+        {extractedPath === "near-expiration" && (
           <NearExpiration
             InfoDescription={InfoDescription}
             expire_legends={expire_legends}
             filter={filteredInventory}
             header={nearExpHeader}
           />
-        }
+        )}
 
-        {extractedPath === 'reordered-items' &&
+        {extractedPath === "reordered-items" && (
           <ReorderedItems
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             currentMonthYear={currentMonthYear}
             header={reorderHeader}
             stock_legends={stock_legends}
-          />}
+          />
+        )}
 
-        {extractedPath === 'consumed-items'
-          &&
+        {extractedPath === "consumed-items" && (
           <ConsumedItems
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={consumedHeader}
             currentYear={year}
           />
-        }
+        )}
 
-        {extractedPath === 'unconsumed-items' &&
+        {extractedPath === "unconsumed-items" && (
           <UnconsumedItems
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={unconsumedHeader}
             fullyear={year}
           />
-        }
+        )}
 
-        {extractedPath === 'disposal-items'
-          &&
+        {extractedPath === "disposal-items" && (
           <DisposalItems
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={disposalHeader}
             currentMonthYear={currentMonthYear}
           />
-        }
-        {extractedPath === 'zero-stocks-items' &&
+        )}
+        {extractedPath === "zero-stocks-items" && (
           <ZeroStockItems
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={zeroStocksHeader}
           />
-        }
+        )}
 
-
-        {extractedPath === 'without-ris-items' &&
+        {extractedPath === "without-ris-items" && (
           <WithoutRISItems
             filter={filteredInventory}
             header={unconsumedHeader}
             currentYear={fullyear}
           />
-        }
+        )}
 
-        {extractedPath === 'area-supplies' &&
+        {extractedPath === "area-supplies" && (
           <AreaSupplies
             InfoDescription={InfoDescription}
             filter={filteredInventory}
@@ -427,19 +431,16 @@ function Reports(props) {
             currentYear={year}
             areaId={areaId}
           />
-        }
-       
+        )}
 
-        {extractedPath === 'regular-supplies' &&
+        {extractedPath === "regular-supplies" && (
           <RegularSupplies
             InfoDescription={InfoDescription}
             filter={filteredInventory}
             header={regularSuppliesHeader}
             currentYear={year}
           />
-        }
-
-        
+        )}
       </ContainerComponent>
 
       <ModalComponent
@@ -448,7 +449,7 @@ function Reports(props) {
         actionBtns={true}
         leftButtonLabel={"Close"}
         leftButtonAction={closeModal}
-        // rightButtonAction={generateExcel}
+        rightButtonAction={generateExcel}
         rightButtonLabel={"Generate"}
         title="Inventory report summary"
         description={
@@ -509,11 +510,9 @@ function Reports(props) {
                   <FilterInfo
                     label={`For the entire period from ${moment(
                       dates.start_date
-                    ).format("LL")
-                      } - ${moment(dates.current_date).format(
-                        "LL"
-                      )
-                      } `}
+                    ).format("LL")} - ${moment(dates.current_date).format(
+                      "LL"
+                    )} `}
                   />
                 )}
               </Stack>

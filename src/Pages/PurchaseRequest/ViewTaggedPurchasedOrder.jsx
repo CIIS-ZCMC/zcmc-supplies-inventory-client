@@ -8,12 +8,15 @@ import { SquareArrowOutUpRight } from "lucide-react";
 import useSelectedRow from "../../Store/SelectedRowStore";
 import { useNavigate } from "react-router-dom";
 import InputComponent from "../../Components/Form/InputComponent";
+import { MdOutlineLocalPrintshop } from "react-icons/md";
+import usePrintHooks from "../../Hooks/PrintHooks";
+import { BASE_URL } from "../../Services/Config";
 function ViewTaggedPurchasedOrder(props) {
   const { getPOTagged } = usePOTaggingHooks();
   const { setSelectedPO } = useSelectedRow();
   const navigate = useNavigate();
   const [search, setSearch] = useState(null);
-
+  const { PrintPurchaseOrders, OpenSmallWindow } = usePrintHooks();
   const { data, isLoading, error } = useQuery({
     queryKey: ["purchased_tagged"],
     queryFn: getPOTagged,
@@ -38,6 +41,15 @@ function ViewTaggedPurchasedOrder(props) {
                 onClick={() => {
                   setSelectedPO(perRow);
                   navigate(`${perRow.po_number}?viewingOnly=true`);
+                }}
+              />
+              <ButtonComponent
+                startDecorator={<MdOutlineLocalPrintshop size={"18px"} />}
+                variant={"plain"}
+                size="sm"
+                color={"warning"}
+                onClick={() => {
+                  OpenSmallWindow(PrintPurchaseOrders(perRow.po_number));
                 }}
               />
             </>

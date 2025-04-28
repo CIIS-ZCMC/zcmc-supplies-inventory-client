@@ -76,12 +76,11 @@ function ModalComponent({
           sx={{ alignItems: "start", justifyContent: "space-between" }}
         >
           <Stack gap={0.4}>
-
-            {steps &&
-              <Typography level="body-sm" color="primary" >
+            {steps && (
+              <Typography level="body-sm" color="primary">
                 Step {activeStep + 1} of {steps.length}
               </Typography>
-            }
+            )}
 
             <Typography level="title-lg" fontWeight={600}>
               {title}
@@ -110,7 +109,7 @@ function ModalComponent({
 
         {/* FOOTER */}
         {/* <Divider sx={{ mx: 0.2 }} /> */}
-        {actionBtns &&
+        {actionBtns && (
           <DialogActions>
             <ButtonComponent
               label={rightButtonLabel}
@@ -124,8 +123,8 @@ function ModalComponent({
               fullWidth
               onClick={leftButtonAction}
             />
-          </DialogActions>}
-
+          </DialogActions>
+        )}
       </ModalDialog>
     </Modal>
   );

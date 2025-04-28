@@ -247,6 +247,12 @@ export const releasingHeader = [
   // },
 
   {
+    id: "supply_name",
+    numeric: false,
+    disablePadding: false,
+    label: "Supply",
+  },
+  {
     id: "category_name",
     numeric: false,
     disablePadding: false,

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-
+import * as XLSX from "xlsx";
 import { API } from "../Services/Config";
 import inventory_api from "../Services/ApiName";
 import moment from "moment";
@@ -20,7 +20,39 @@ const useReportsHook = create((set) => ({
   dates: [],
   areaSupplies: [],
   regularSupplies: [],
+  generateReport: (FileName, ReportData) => {
+    try {
+      const worksheet = XLSX.utils.json_to_sheet(ReportData); // Convert JSON to sheet
+      const workbook = XLSX.utils.book_new(); // Create a new workbook
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      XLSX.writeFile(workbook, `${FileName}.xlsx`);
+      // const columnWidth = { wpx: 150 }; // Set desired column width in pixels
 
+      // //Set the same column width for all columns
+      // worksheet["!cols"] = new Array(
+      //   ReportData[0] ? Object.keys(ReportData[0]).length : 0
+      // ).fill(columnWidth);
+
+      // // Enable text wrap for all header cells
+      // const header = worksheet["!cols"] ? worksheet["!cols"] : [];
+      // header.forEach((col, index) => {
+      //   if (!col) header[index] = { alignment: { wrapText: true } }; // Apply wrapText to each header
+      // });
+
+      // const workbook = XLSX.utils.book_new();
+      // XLSX.utils.book_append_sheet(workbook, worksheet);
+
+      // XLSX.writeFile(workbook, `${FileName}.xlsx`);
+
+      //  showSnackbar("Report generated successfully!", "success", "filled");
+    } catch (error) {
+      // showSnackbar(
+      //   `Failed to generate the report. Please try again. ${error}`,
+      //   "danger",
+      //   "filled"
+      // );
+    }
+  },
   getItemCount: async (year) => {
     try {
       const response = await inventory_api.get(
@@ -132,7 +164,7 @@ const useReportsHook = create((set) => ({
     }
   },
 
-  getItemCountDetails: async (id,year = new Date().getFullYear()) => {
+  getItemCountDetails: async (id, year = new Date().getFullYear()) => {
     try {
       // Include the id in the API request URL
       const response = await inventory_api.get(
@@ -148,7 +180,7 @@ const useReportsHook = create((set) => ({
       console.error("Error fetching inventory:", error.message);
     }
   },
-  getItemCountInfo: async (id,year = new Date().getFullYear()) => {
+  getItemCountInfo: async (id, year = new Date().getFullYear()) => {
     try {
       // Include the id in the API request URL
       const response = await inventory_api.get(
@@ -163,7 +195,7 @@ const useReportsHook = create((set) => ({
       console.error("Error fetching inventory:", error.message);
     }
   },
-  getItemCountIAR: async (id,year = new Date().getFullYear()) => {
+  getItemCountIAR: async (id, year = new Date().getFullYear()) => {
     try {
       // Include the id in the API request URL
       const response = await inventory_api.get(
@@ -223,6 +255,5 @@ const useReportsHook = create((set) => ({
       console.error("Error fetching inventory:", error.message);
     }
   },
-
 }));
 export default useReportsHook;
