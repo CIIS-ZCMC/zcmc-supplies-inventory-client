@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useSelectedRow from "../../Store/SelectedRowStore";
 import Header from "../../Layout/Header/Header";
 import { user } from "../../Data/index";
-import { Stack, Typography, Box } from "@mui/joy";
+import { Stack, Typography, Box, Textarea } from "@mui/joy";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import {
   Card,
@@ -91,6 +91,7 @@ function TaggingPurchasedOrder(props) {
     vat: "VAT (%)",
     vatamt: "VAT Amount",
     totitm: "Total Items",
+    purcprice: "Purchase Price",
     totqty: "Total Quantity",
     curramt: "Current Amount",
     locamt: "Local Amount",
@@ -100,7 +101,6 @@ function TaggingPurchasedOrder(props) {
     postatus: "PO Status",
     postdate: "Post Date",
 
-    purcprice: "Purchase Price",
     reorderdatestart: "Reorder Date Start",
     saleprice: "Sale Price",
     surgicaltype: "Surgical Type",
@@ -366,6 +366,33 @@ function TaggingPurchasedOrder(props) {
                       <Grid container spacing={2}>
                         <Grid xs={6}>
                           <Box>
+                            <Typography level="body-xs">CAF No :</Typography>
+                            {selectedPo?.caf_no}
+                          </Box>
+                          <Box>
+                            <Typography level="body-xs">
+                              Mode of Procurement :
+                            </Typography>
+                            {selectedPo?.mode_of_procurement}
+                          </Box>
+                        </Grid>
+
+                        <Grid xs={6}>
+                          <Box>
+                            <Typography level="body-xs">
+                              Delivery Term :
+                            </Typography>
+                            {selectedPo?.delivery_term}
+                          </Box>
+                          <Box>
+                            <Typography level="body-xs">
+                              Payment Term :
+                            </Typography>
+                            {selectedPo?.payment_term}
+                          </Box>
+                        </Grid>
+                        <Grid xs={6}>
+                          <Box>
                             <Typography level="body-xs">
                               Fund Cluster :
                             </Typography>
@@ -396,6 +423,13 @@ function TaggingPurchasedOrder(props) {
                             {selectedPo?.amount}
                           </Box>
                         </Grid>
+
+                        <Grid xs={12}>
+                          <Box>
+                            <Typography level="body-xs">Remarks :</Typography>
+                            {selectedPo?.remarks}
+                          </Box>
+                        </Grid>
                       </Grid>
                     </>
                   ) : (
@@ -415,6 +449,44 @@ function TaggingPurchasedOrder(props) {
                         <Grid container spacing={2}>
                           <Grid xs={6}>
                             <Box>
+                              <Typography>CAF No :</Typography>
+                              <InputComponent
+                                fullWidth
+                                isRequired
+                                name={"caf_no"}
+                              />
+                            </Box>
+                            <Box>
+                              <Typography>Mode of Procurement :</Typography>
+                              <InputComponent
+                                fullWidth
+                                isRequired
+                                name={"mode_of_procurement"}
+                              />
+                            </Box>
+                          </Grid>
+
+                          <Grid xs={6}>
+                            <Box>
+                              <Typography>Delivery Term :</Typography>
+                              <InputComponent
+                                fullWidth
+                                isRequired
+                                name={"delivery_term"}
+                              />
+                            </Box>
+                            <Box>
+                              <Typography>Payment Term :</Typography>
+                              <InputComponent
+                                fullWidth
+                                isRequired
+                                name={"payment_term"}
+                              />
+                            </Box>
+                          </Grid>
+
+                          <Grid xs={6}>
+                            <Box>
                               <Typography>Fund Cluster :</Typography>
                               <InputComponent
                                 fullWidth
@@ -425,6 +497,7 @@ function TaggingPurchasedOrder(props) {
                             <Box>
                               <Typography>Funds Available :</Typography>
                               <InputComponent
+                                type={"number"}
                                 fullWidth
                                 isRequired
                                 name={"fund_available"}
@@ -449,14 +522,21 @@ function TaggingPurchasedOrder(props) {
                                 name={"ors_burs_date"}
                               />
                             </Box>
+
                             <Box>
                               <Typography>Amount:</Typography>
                               <InputComponent
+                                type={"number"}
                                 fullWidth
                                 isRequired
                                 name={"amount"}
                               />
                             </Box>
+                          </Grid>
+
+                          <Grid xs={12}>
+                            <Typography>Remarks :</Typography>
+                            <Textarea minRows={3} required name="remarks" />
                           </Grid>
                         </Grid>
                         <ButtonComponent

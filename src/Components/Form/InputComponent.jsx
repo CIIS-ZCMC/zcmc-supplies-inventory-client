@@ -38,14 +38,17 @@ function InputComponent({
   size,
   isRequired,
   action = false,
-  disabled= false,
-  type
+  disabled = false,
+  type,
+  defaultvalue = null,
+  onBlur,
 }) {
   return (
     <FormControl fullWidth>
       <FormLabel sx={{ fontSize: 14, fontWeight: 500 }}>{label}</FormLabel>
       <Box display="flex" alignItems="center" mb={1}>
         <Input
+          defaultValue={defaultvalue}
           type={type}
           disabled={disabled}
           required={isRequired}
@@ -65,6 +68,7 @@ function InputComponent({
               action.onClick();
             }
           }}
+          onBlur={onBlur}
         />
         {action && (
           <ButtonComponent label={action.label} onClick={action.onClick} />
