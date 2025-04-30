@@ -34,5 +34,17 @@ const usePrintHooks = create((set) => ({
   PrintPurchaseOrders: (po_number) => {
     return `${BASE_URL.production}/${API.PRINT_GUARD}/purchased_orders/${po_number}`;
   },
+  PrintIARTransmittal: (selectedIARs) => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/IAR_transmittal/${selectedIARs}`;
+  },
+  printStockCard: (stockID) => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/stockCard/${stockID}`;
+  },
+  printStockCardBulk: () => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/stockCardBulk/1`;
+  },
+  printMonthlyDistReport: () => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/monthlyDistReport/1`;
+  },
 }));
 export default usePrintHooks;

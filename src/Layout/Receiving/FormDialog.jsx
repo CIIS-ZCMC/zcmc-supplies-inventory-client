@@ -33,13 +33,22 @@ import useReceivingHook from "../../Hooks/ReceivingHook";
 import usePaginatedTableHook from "../../Hooks/PaginatedTableHook";
 import swal from "sweetalert";
 
-const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
+const FormDialog = ({
+  opening,
+  handleDialogClose,
+  showSnackbar,
+  isLoading,
+}) => {
   const [isSupplyFormDialogOpen, setIsSupplyFormDialogOpen] = useState(false);
   const [isBrandFormDialogOpen, setIsBrandFormDialogOpen] = useState(false);
   const [isSourceFormDialogOpen, setIsSourceFormDialogOpen] = useState(false);
 
   const [lookup, setLookup] = useState(false);
-  const [poTaggedInformation, setpoTaggedInformation] = useState(null);
+  const [poTaggedInformation, setpoTaggedInformation] = useState({
+    fund_cluster: null,
+    amount: null,
+  });
+
   const [isSupplierFormDialogOpen, setIsSupplierFormDialogOpen] =
     useState(false);
 
@@ -148,6 +157,17 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
       );
     },
   });
+
+  useEffect(() => {
+    if (opening) {
+      formik.setValues({
+        fund_cluster: "",
+        amount: "",
+      });
+    }
+
+    console.log(opening);
+  }, [opening]);
 
   useEffect(() => {
     if (isUpdate && id) {
@@ -474,9 +494,7 @@ const FormDialog = ({ handleDialogClose, showSnackbar, isLoading }) => {
                 placeholder="xxx.xxx"
                 fullWidth={true}
                 name={"invoice_no"}
-                value={
-                  formik.values.invoice_no ?? poTaggedInformation.invoice_no
-                }
+                value={formik.values.invoice_no ?? ""}
                 onChange={formik.handleChange}
                 error={
                   formik.touched.invoice_no && Boolean(formik.errors.invoice_no)

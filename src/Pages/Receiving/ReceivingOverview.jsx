@@ -1,40 +1,40 @@
 import { useEffect, useState } from "react";
-
 import { Box, Stack } from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
 import * as XLSX from "xlsx";
-
 import { ViewIcon, SearchIcon } from "lucide-react";
-
 //hooks
 import useReceivingHook from "../../Hooks/ReceivingHook";
 import useSnackbarHook from "../../Hooks/AlertHook";
 import useFilterHook from "../../Hooks/FilterHook";
-
 //layouts
 import Header from "../../Layout/Header/Header";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import ButtonComponent from "../../Components/ButtonComponent";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
-
 //custom components
 import SelectComponent from "../../Components/Form/SelectComponent";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import FormDialog from "../../Layout/Receiving/FormDialog";
 import SnackbarComponent from "../../Components/SnackbarComponent";
 import InputComponent from "../../Components/Form/InputComponent";
-
 //datas
 import { user, categoryFilter } from "../../Data/index";
 import { receivingHeader } from "../../Data/TableHeader";
 import ReceivingDetails from "./ReceivingDetails";
 import useReportsHook from "../../Hooks/ReportsHook";
+import { CiShare1 } from "react-icons/ci";
+import { MdOutlineCancel } from "react-icons/md";
+import Checkbox from "@mui/joy/Checkbox";
+import usePrintHooks from "../../Hooks/PrintHooks";
 const ReceivingOverview = () => {
   const { getStockIn, setInitialValues } = useReceivingHook();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
     useSnackbarHook();
   const { selectedCategory, setCategory, filteredInventory, clearFilters } =
     useFilterHook();
+
+  const { PrintIARTransmittal, OpenSmallWindow } = usePrintHooks();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["stockin"],
@@ -54,6 +54,8 @@ const ReceivingOverview = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [generateIARBool, setGenerateIARBool] = useState(false);
+  const [selectedIARs, setSelectedIARs] = useState([]);
 
   const pageDetails = {
     title: "Receiving (IAR Management)",
@@ -196,21 +198,106 @@ const ReceivingOverview = () => {
             columns={receivingHeader}
             rows={filteredData}
             actions={<ViewIcon />}
+            customAction={generateIARBool ? true : false}
+            handleCustomAction={(perRow) => {
+              return (
+                <>
+                  {" "}
+                  <Checkbox
+                    label="Select"
+                    sx={{
+                      color: "red",
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                    }}
+                    color="danger"
+                    checked={selectedIARs.includes(perRow.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        // Add
+                        setSelectedIARs((prev) => [...prev, perRow.id]);
+                      } else {
+                        // Delete
+                        setSelectedIARs((prev) =>
+                          prev.filter((id) => id !== perRow.id)
+                        );
+                      }
+                    }}
+                  />
+                </>
+              );
+            }}
             actionBtns={
-              <Stack direction="row" spacing={1}>
-                <ButtonComponent
-                  variant={"outlined"}
-                  label="Generate report"
-                  size="lg"
-                  onClick={generateReport}
-                />
-                <ButtonComponent label="New IAR" onClick={handleDialogOpen} />
-              </Stack>
+              <>
+                <Stack direction={"row"} justifyContent={"space-between"}>
+                  <Stack direction="row" spacing={1} mb={1} mt={2}>
+                    <ButtonComponent
+                      variant={"outlined"}
+                      label="Generate report"
+                      size="lg"
+                      onClick={generateReport}
+                    />
+                    <ButtonComponent
+                      label="New IAR"
+                      onClick={handleDialogOpen}
+                    />
+                    <ButtonComponent
+                      variant={generateIARBool ? "solid" : "plain"}
+                      color={generateIARBool ? "danger" : "warning"}
+                      label={
+                        generateIARBool ? "Cancel" : "Generate IAR Transmittal"
+                      }
+                      onClick={() => {
+                        if (generateIARBool) {
+                          setGenerateIARBool(false);
+                          setSelectedIARs([]);
+                        } else {
+                          setGenerateIARBool(true);
+                        }
+                      }}
+                      endDecorator={
+                        <Box sx={{ padding: "5px 0 0 0" }}>
+                          {generateIARBool ? (
+                            <MdOutlineCancel fontSize={18} />
+                          ) : (
+                            <CiShare1 fontSize={18} />
+                          )}
+                        </Box>
+                      }
+                    />
+                  </Stack>
+                  {generateIARBool && (
+                    <Box display={"flex"} justifyContent={"flex-end"}>
+                      <ButtonComponent
+                        color={"success"}
+                        disabled={selectedIARs.length >= 1 ? false : true}
+                        label={
+                          <>
+                            Generate IAR Transmittal{" "}
+                            {selectedIARs.length >= 1 && (
+                              <span
+                                style={{ fontSize: "11px", marginLeft: "10px" }}
+                              >
+                                ( {selectedIARs.length} Item/s selected )
+                              </span>
+                            )}
+                          </>
+                        }
+                        onClick={() => {
+                          OpenSmallWindow(
+                            PrintIARTransmittal(JSON.stringify(selectedIARs))
+                          );
+                        }}
+                      />
+                    </Box>
+                  )}
+                </Stack>
+              </>
             }
             viewModal={true}
             viewModalContent={handleViewDialogOpen}
-            editable={true}
-            viewable={true}
+            editable={generateIARBool ? false : true} // Turn this false
+            viewable={generateIARBool ? false : true} // Turn this false
             editRow={handleEditRow}
           />
         </ContainerComponent>
@@ -223,6 +310,7 @@ const ReceivingOverview = () => {
         content={
           <FormDialog
             open={open}
+            opening={isDialogOpen}
             message={message}
             color={color}
             showSnackbar={showSnackbar}
