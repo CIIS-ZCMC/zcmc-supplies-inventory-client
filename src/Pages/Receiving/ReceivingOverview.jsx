@@ -272,7 +272,7 @@ const ReceivingOverview = () => {
                         color={"success"}
                         disabled={selectedIARs.length >= 1 ? false : true}
                         label={
-                          <>
+                          <Stack direction={"column"}>
                             Generate IAR Transmittal{" "}
                             {selectedIARs.length >= 1 && (
                               <span
@@ -281,7 +281,7 @@ const ReceivingOverview = () => {
                                 ( {selectedIARs.length} Item/s selected )
                               </span>
                             )}
-                          </>
+                          </Stack>
                         }
                         onClick={() => {
                           OpenSmallWindow(

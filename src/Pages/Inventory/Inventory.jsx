@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PageTitle from "../../Components/PageSetup/PageTitle";
-import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
+import { Box, Divider, Stack, Typography, useTheme, Checkbox } from "@mui/joy";
 import ButtonComponent from "../../Components/ButtonComponent";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import InputComponent from "../../Components/Form/InputComponent";
@@ -17,6 +17,9 @@ import { useQuery } from "@tanstack/react-query";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import NewItem from "./NewItem";
 import useReportsHook from "../../Hooks/ReportsHook";
+import { CiShare1 } from "react-icons/ci";
+import { MdOutlineCancel } from "react-icons/md";
+import usePrintHooks from "../../Hooks/PrintHooks";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -49,7 +52,7 @@ const columns = [
   { id: "category_name", label: "Category" },
   { id: "unit_name", label: "Unit" },
   { id: "quantity", label: "Quantity", width: "10%" },
-  { id: "actions", label: "Actions", width: "5%" },
+  { id: "actions", label: "Actions", width: "10%" },
 ];
 
 const Inventory = () => {
@@ -67,9 +70,12 @@ const Inventory = () => {
   } = useFilterHook();
   const { generateReport } = useReportsHook();
   const theme = useTheme();
-
+  const [generateStockCard, setGenerateStockCard] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [activeStep, setActiveStep] = useState(0);
+  const { printStockCard, printStockCardBulk, OpenSmallWindow } =
+    usePrintHooks();
   const steps = ["Step 1", "Step 2", "Step 3"];
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -80,6 +86,14 @@ const Inventory = () => {
     title: "Inventory",
     description: "See the list of items in your inventory.",
     pagePath: "/inventory",
+  };
+
+  const handleGenerateStockCard = () => {
+    if (selectedItems.length >= 2) {
+      OpenSmallWindow(printStockCardBulk(selectedItems));
+    } else {
+      OpenSmallWindow(printStockCard(selectedItems[0]));
+    }
   };
 
   const navigateToItemSupplies = () => {
@@ -137,7 +151,7 @@ const Inventory = () => {
         </ContainerComponent>
         <ContainerComponent>
           <PaginatedTable
-            viewable={true}
+            viewable={generateStockCard ? false : true}
             loading={isLoading}
             tableTitle={"List of items"}
             tableDesc={
@@ -147,23 +161,93 @@ const Inventory = () => {
             rows={filteredInventory(inventoryData)}
             actions={<ViewIcon />}
             btnLabel={"Add new item name"}
+            customAction={generateStockCard}
+            handleCustomAction={(perRow) => {
+              return (
+                <>
+                  {" "}
+                  <Checkbox
+                    label="Select"
+                    sx={{
+                      color: "red",
+                      fontSize: "11px",
+                      textTransform: "uppercase",
+                    }}
+                    color="danger"
+                    checked={selectedItems.includes(perRow.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        // Add
+                        setSelectedItems((prev) => [...prev, perRow.id]);
+                      } else {
+                        // Delete
+                        setSelectedItems((prev) =>
+                          prev.filter((id) => id !== perRow.id)
+                        );
+                      }
+                    }}
+                  />
+                </>
+              );
+            }}
             actionBtns={
-              <Stack direction="row" spacing={1}>
-                <ButtonComponent
-                  variant={"outlined"}
-                  label="Generate report"
-                  size="lg"
-                  onClick={() => {
-                    generateReport(
-                      "Inventory",
-                      filteredInventory(inventoryData)
-                    );
-                  }}
-                />
-                <ButtonComponent
-                  label="Add new item name"
-                  onClick={navigateToItemSupplies}
-                />
+              <Stack direction={"row"} justifyContent={"space-between"} mt={2}>
+                <Stack direction="row" spacing={1}>
+                  <ButtonComponent
+                    variant={"outlined"}
+                    label="Generate report"
+                    size="lg"
+                    onClick={() => {
+                      generateReport(
+                        "Inventory",
+                        filteredInventory(inventoryData)
+                      );
+                    }}
+                  />
+                  <ButtonComponent
+                    label="Add new item name"
+                    onClick={navigateToItemSupplies}
+                  />
+
+                  <ButtonComponent
+                    label={generateStockCard ? "Cancel" : "Generate Stock Card"}
+                    variant={generateStockCard ? "solid" : "plain"}
+                    color={generateStockCard ? "danger" : "warning"}
+                    endDecorator={
+                      generateStockCard ? (
+                        <MdOutlineCancel fontSize={18} />
+                      ) : (
+                        <CiShare1 fontSize={18} />
+                      )
+                    }
+                    onClick={() => {
+                      if (generateStockCard) {
+                        setGenerateStockCard(false);
+                        setSelectedItems([]);
+                      } else {
+                        setGenerateStockCard(true);
+                      }
+                    }}
+                  />
+                </Stack>
+                {generateStockCard && (
+                  <ButtonComponent
+                    disabled={selectedItems.length >= 1 ? false : true}
+                    label={
+                      <Stack direction={"column"}>
+                        Generate Stock-Card
+                        {selectedItems.length >= 1 && (
+                          <Box style={{ fontSize: "11px", marginLeft: 5 }}>
+                            ({selectedItems.length} item's selected)
+                          </Box>
+                        )}
+                      </Stack>
+                    }
+                    variant={"solid"}
+                    color={"success"}
+                    onClick={handleGenerateStockCard}
+                  />
+                )}
               </Stack>
             }
             icon={

@@ -37,11 +37,13 @@ const usePrintHooks = create((set) => ({
   PrintIARTransmittal: (selectedIARs) => {
     return `${BASE_URL.production}/${API.PRINT_GUARD}/IAR_transmittal/${selectedIARs}`;
   },
-  printStockCard: (stockID) => {
-    return `${BASE_URL.production}/${API.PRINT_GUARD}/stockCard/${stockID}`;
+  printStockCard: (masterListID) => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/stockCard/${masterListID}`;
   },
-  printStockCardBulk: () => {
-    return `${BASE_URL.production}/${API.PRINT_GUARD}/stockCardBulk/1`;
+  printStockCardBulk: (selectedIDs) => {
+    return `${BASE_URL.production}/${
+      API.PRINT_GUARD
+    }/stockCardBulk/${JSON.stringify(selectedIDs)}`;
   },
   printMonthlyDistReport: () => {
     return `${BASE_URL.production}/${API.PRINT_GUARD}/monthlyDistReport/1`;
