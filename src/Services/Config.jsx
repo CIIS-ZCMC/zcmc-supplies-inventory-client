@@ -56,6 +56,7 @@ export const API = {
   CATEGORY_STORE: "category-store",
   CATEGORY_UPDATE: "category-update",
   CATEGORY_SHOW: "category-view",
+  CATEGORIESWITEMS: "category-witem",
 
   SUPPLIES: "supplies",
   SUPPLY_STORE: "supply-store",

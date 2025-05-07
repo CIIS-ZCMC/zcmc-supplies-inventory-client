@@ -36,11 +36,18 @@ const useCategoriesHook = create((set) => ({
     }
   },
 
+  getCategoryWItems: async () => {
+    try {
+      const response = await inventory_api.get(`/${API.CATEGORIESWITEMS}`);
+
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
   getCategory: async (id) => {
     try {
-      const response = await inventory_api.get(
-        `/${API.CATEGORY_SHOW}/${id}`
-      );
+      const response = await inventory_api.get(`/${API.CATEGORY_SHOW}/${id}`);
       return response.data;
     } catch (error) {
       error.message;

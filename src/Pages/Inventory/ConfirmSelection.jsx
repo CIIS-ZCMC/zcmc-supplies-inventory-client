@@ -9,9 +9,9 @@ import RadioGroup from "@mui/joy/RadioGroup";
 import useAreasHook from "../../Hooks/AreasHook";
 import usePrintHooks from "../../Hooks/PrintHooks";
 import useCategoriesHook from "../../Hooks/CategoriesHook";
-export const ConfirmSelection = ({ selectedItems }) => {
-  const { getCategories } = useCategoriesHook();
-  const { printStockCard, printStockCardBulk, OpenSmallWindow } =
+export const ConfirmSelection = ({ isMonthlyDistribution, selectedItems }) => {
+  const { getCategoryWItems } = useCategoriesHook();
+  const { printMonthlyDistReport, printStockCardBulk, OpenSmallWindow } =
     usePrintHooks();
   const [category, setCategory] = useState([]);
   const months = [
@@ -36,7 +36,7 @@ export const ConfirmSelection = ({ selectedItems }) => {
   ).reverse();
 
   useEffect(() => {
-    getCategories().then((res) => {
+    getCategoryWItems().then((res) => {
       setCategory(res.data);
     });
   }, []);
@@ -49,26 +49,31 @@ export const ConfirmSelection = ({ selectedItems }) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries());
+
+    if (isMonthlyDistribution) {
+      window.open(printMonthlyDistReport(JSON.stringify(data)), "_blank");
+      return;
+    }
     data.selectedItems = selectedItems;
     OpenSmallWindow(printStockCardBulk(data));
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
-        <Select
-          placeholder="Select Category"
-          name="category"
-          required
-          sx={{ width: "100%" }}
-        >
-          {category.map((row) => (
-            <Option value={row.id}>{row.category_name}</Option>
-          ))}
-        </Select>
-      </Stack>
-
-      <Divider />
+      <>
+        <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
+          <Select
+            placeholder="Select Category"
+            name="category"
+            required
+            sx={{ width: "100%" }}
+          >
+            {category.map((row) => (
+              <Option value={row.id}>{row.category_name}</Option>
+            ))}
+          </Select>
+        </Stack>
+      </>
 
       <Stack direction={"row"} spacing={1} mt={2}>
         <Select

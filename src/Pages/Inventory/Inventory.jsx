@@ -87,6 +87,7 @@ const Inventory = () => {
   const [generateStockCard, setGenerateStockCard] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState(null);
+  const [monthlyDistribution, setMonthlyDistribution] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const { printStockCard, printStockCardBulk, OpenSmallWindow } =
     usePrintHooks();
@@ -221,7 +222,12 @@ const Inventory = () => {
                         >
                           Export to Excel
                         </MenuItem>
-                        <MenuItem onClick={() => setIsDialogOpen(true)}>
+                        <MenuItem
+                          onClick={() => {
+                            setIsDialogOpen(true);
+                            setMonthlyDistribution(false);
+                          }}
+                        >
                           Balance Card
                         </MenuItem>
                         <MenuItem
@@ -230,6 +236,14 @@ const Inventory = () => {
                           }}
                         >
                           Stock Card
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            setIsDialogOpen(true);
+                            setMonthlyDistribution(true);
+                          }}
+                        >
+                          Monthly Distribution Report
                         </MenuItem>
                       </Menu>
                     </Dropdown>
@@ -302,9 +316,20 @@ const Inventory = () => {
       <ModalComponent
         isOpen={isDialogOpen}
         handleClose={handleDialogClose}
-        content={<ConfirmSelection selectedItems={selectedItems} />}
-        title={`Confirm Selection`}
-        description={"Manage/select options for generating Balance-card"}
+        content={
+          <ConfirmSelection
+            isMonthlyDistribution={monthlyDistribution}
+            selectedItems={selectedItems}
+          />
+        }
+        title={
+          monthlyDistribution
+            ? `Confirm Monthly Distibution`
+            : `Confirm Selection Balance-card`
+        }
+        description={`Manage/select options for generating ${
+          monthlyDistribution ? "Monthly Distibution" : "Balance-card"
+        } `}
       />
     </Fragment>
   );

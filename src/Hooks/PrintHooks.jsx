@@ -45,8 +45,8 @@ const usePrintHooks = create((set) => ({
       API.PRINT_GUARD
     }/stockCardBulk/${JSON.stringify(selectedIDs)}`;
   },
-  printMonthlyDistReport: () => {
-    return `${BASE_URL.production}/${API.PRINT_GUARD}/monthlyDistReport/1`;
+  printMonthlyDistReport: (request) => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/monthlyDistReport/${request}`;
   },
 }));
 export default usePrintHooks;
