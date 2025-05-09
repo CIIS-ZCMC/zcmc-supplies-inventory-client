@@ -88,9 +88,14 @@ const Inventory = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState(null);
   const [monthlyDistribution, setMonthlyDistribution] = useState(false);
+  const [openIssuance, setopenIssuance] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
-  const { printStockCard, printStockCardBulk, OpenSmallWindow } =
-    usePrintHooks();
+  const {
+    printStockCard,
+    printStockCardBulk,
+    OpenSmallWindow,
+    printSuppliesIssuance,
+  } = usePrintHooks();
   const steps = ["Step 1", "Step 2", "Step 3"];
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -226,6 +231,7 @@ const Inventory = () => {
                           onClick={() => {
                             setIsDialogOpen(true);
                             setMonthlyDistribution(false);
+                            setopenIssuance(false);
                           }}
                         >
                           Balance Card
@@ -241,9 +247,21 @@ const Inventory = () => {
                           onClick={() => {
                             setIsDialogOpen(true);
                             setMonthlyDistribution(true);
+                            setopenIssuance(false);
                           }}
                         >
                           Monthly Distribution Report
+                        </MenuItem>
+
+                        <MenuItem
+                          onClick={() => {
+                            setIsDialogOpen(true);
+                            setMonthlyDistribution(false);
+                            setopenIssuance(true);
+                            // OpenSmallWindow(printSuppliesIssuance("test"));
+                          }}
+                        >
+                          Supplies Issuance
                         </MenuItem>
                       </Menu>
                     </Dropdown>
@@ -319,18 +337,27 @@ const Inventory = () => {
         content={
           <ConfirmSelection
             isMonthlyDistribution={monthlyDistribution}
+            openIssuance={openIssuance}
             selectedItems={selectedItems}
           />
         }
         title={
           monthlyDistribution
             ? `Confirm Monthly Distibution`
+            : openIssuance
+            ? `Confirm Selection`
             : `Confirm Selection Balance-card`
         }
         description={`Manage/select options for generating ${
-          monthlyDistribution ? "Monthly Distibution" : "Balance-card"
+          monthlyDistribution
+            ? "Monthly Distibution"
+            : openIssuance
+            ? "Item issuance"
+            : "Balance-card"
         } `}
       />
+
+      {/* setopenIssuance */}
     </Fragment>
   );
 };

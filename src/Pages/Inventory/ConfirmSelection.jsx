@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
-import { Stack, Divider, Button } from "@mui/joy";
+import { Stack, Divider, Button, Grid } from "@mui/joy";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Radio from "@mui/joy/Radio";
@@ -9,10 +9,19 @@ import RadioGroup from "@mui/joy/RadioGroup";
 import useAreasHook from "../../Hooks/AreasHook";
 import usePrintHooks from "../../Hooks/PrintHooks";
 import useCategoriesHook from "../../Hooks/CategoriesHook";
-export const ConfirmSelection = ({ isMonthlyDistribution, selectedItems }) => {
+import InputComponent from "../../Components/Form/InputComponent";
+export const ConfirmSelection = ({
+  isMonthlyDistribution,
+  selectedItems,
+  openIssuance,
+}) => {
   const { getCategoryWItems } = useCategoriesHook();
-  const { printMonthlyDistReport, printStockCardBulk, OpenSmallWindow } =
-    usePrintHooks();
+  const {
+    printMonthlyDistReport,
+    printStockCardBulk,
+    OpenSmallWindow,
+    printSuppliesIssuance,
+  } = usePrintHooks();
   const [category, setCategory] = useState([]);
   const months = [
     { name: "January", value: 1 },
@@ -49,9 +58,12 @@ export const ConfirmSelection = ({ isMonthlyDistribution, selectedItems }) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries());
-
     if (isMonthlyDistribution) {
       window.open(printMonthlyDistReport(JSON.stringify(data)), "_blank");
+      return;
+    }
+    if (openIssuance) {
+      OpenSmallWindow(printSuppliesIssuance(data));
       return;
     }
     data.selectedItems = selectedItems;
@@ -60,47 +72,58 @@ export const ConfirmSelection = ({ isMonthlyDistribution, selectedItems }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <>
-        <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
-          <Select
-            placeholder="Select Category"
-            name="category"
-            required
-            sx={{ width: "100%" }}
-          >
-            {category.map((row) => (
-              <Option value={row.id}>{row.category_name}</Option>
-            ))}
-          </Select>
-        </Stack>
-      </>
+      {openIssuance ? (
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <InputComponent type={"date"} name="from" isRequired label="From" />
+          </Grid>
+          <Grid item xs={6}>
+            <InputComponent type={"date"} name="to" isRequired label="To" />
+          </Grid>
+        </Grid>
+      ) : (
+        <>
+          <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
+            <Select
+              placeholder="Select Category"
+              name="category"
+              required
+              sx={{ width: "100%" }}
+            >
+              {category.map((row) => (
+                <Option value={row.id}>{row.category_name}</Option>
+              ))}
+            </Select>
+          </Stack>
 
-      <Stack direction={"row"} spacing={1} mt={2}>
-        <Select
-          placeholder="Select Month"
-          name="month"
-          required
-          sx={{ width: "100%" }}
-        >
-          {months.map((month) => (
-            <Option key={month.value} value={month.value}>
-              {month.name}
-            </Option>
-          ))}
-        </Select>
-        <Select
-          placeholder="Select Year"
-          name="year"
-          required
-          sx={{ width: "100%" }}
-        >
-          {years.map((year) => (
-            <Option key={year} value={year}>
-              {year}
-            </Option>
-          ))}
-        </Select>
-      </Stack>
+          <Stack direction={"row"} spacing={1} mt={2}>
+            <Select
+              placeholder="Select Month"
+              name="month"
+              required
+              sx={{ width: "100%" }}
+            >
+              {months.map((month) => (
+                <Option key={month.value} value={month.value}>
+                  {month.name}
+                </Option>
+              ))}
+            </Select>
+            <Select
+              placeholder="Select Year"
+              name="year"
+              required
+              sx={{ width: "100%" }}
+            >
+              {years.map((year) => (
+                <Option key={year} value={year}>
+                  {year}
+                </Option>
+              ))}
+            </Select>
+          </Stack>
+        </>
+      )}
 
       <Stack display={"flex"} justifyContent={"flex-end"}>
         <Button sx={{ marginTop: "20px", padding: "10px" }} type="submit">

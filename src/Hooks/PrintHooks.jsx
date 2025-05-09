@@ -48,5 +48,10 @@ const usePrintHooks = create((set) => ({
   printMonthlyDistReport: (request) => {
     return `${BASE_URL.production}/${API.PRINT_GUARD}/monthlyDistReport/${request}`;
   },
+  printSuppliesIssuance: (data) => {
+    return `${BASE_URL.production}/${
+      API.PRINT_GUARD
+    }/suppliesIssuance/${JSON.stringify(data)}`;
+  },
 }));
 export default usePrintHooks;
