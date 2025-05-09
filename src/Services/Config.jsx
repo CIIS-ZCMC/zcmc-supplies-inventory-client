@@ -64,6 +64,7 @@ export const API = {
   SUPPLY_SHOW: "supply-view",
 
   INVENTORY: "get-inventory",
+  INVENTORY_STORE: "store-invetory",
   RECEIVING: "receiving-list",
   STOCK_IN_UPDATE: "stock-in-update",
   STOCK_IN_DETAILS: "stock-in-details",
@@ -115,6 +116,8 @@ export const API = {
   TAGGED_PO_INFORMATION: "get-tagged-po-info",
 
   PRINT_GUARD: "print",
+
+  VALIDATOR: "validate-data",
 };
 
 /**

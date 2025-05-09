@@ -29,6 +29,9 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import { AddInventoryStocks } from "./AddInventoryStocks";
 import { CiCircleMinus } from "react-icons/ci";
+import { useValidatorHooks } from "../../Hooks/ValidatorHooks";
+import useInventoryHook from "../../Hooks/InventoryHook";
+import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 const pageDetails = {
   pageTitle: "Saving New Item",
@@ -49,12 +52,16 @@ const NewItem = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [inventoryStocks, setInventoryStocks] = useState([]);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [IsnotAllowed, setIsnotAllowed] = useState(true);
   const { getCategories } = useCategoriesHook();
   const { getUnits } = useUnitsHook();
   const { getBrands } = useBrandsHook();
   const { getSources } = useSourceHook();
   const { getSuppliers } = useSuppliersHook();
-
+  const { validateSupplyName } = useValidatorHooks();
+  const { saveToInventory } = useInventoryHook();
+  const navigate = useNavigate();
   useEffect(() => {
     getCategories().then((res) => {
       setCategory(res.data);
@@ -88,7 +95,6 @@ const NewItem = () => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries());
-
     if (inventoryStocks.length <= 0) {
       swal(
         "Please add stocks",
@@ -104,11 +110,23 @@ const NewItem = () => {
       buttons: true,
       dangerMode: true,
     }).then((willSave) => {
+      setSubmitted(true);
       if (willSave) {
-        swal("Item saved", "Item successfully added in inventory.", "success");
-        console.log(inventoryStocks);
-        console.log(data);
+        saveToInventory({
+          inventoryStocks: inventoryStocks,
+          data: data,
+        }).then((res) => {
+          if (res.status == 200) {
+            swal("Item saved", res.data.message, "success");
+            navigate(-1);
+            return;
+          }
+          swal("Action Failed.", res.data.message, "error");
+          return;
+        });
+        // swal("Item saved", "Item successfully added in inventory.", "success");
       }
+      setSubmitted(false);
     });
   };
   return (
@@ -168,6 +186,23 @@ const NewItem = () => {
                       name={"supply_name"}
                       isRequired
                       onChange={(e) => handleChange(e, "supply_name")}
+                      onBlur={(e) => {
+                        const value = e.target.value;
+                        validateSupplyName("supplyName", value).then((res) => {
+                          if (res.status == 202) {
+                            setIsnotAllowed(false);
+                          }
+                          if (res.status == 306) {
+                            swal(
+                              "Supply name exists.",
+                              "Item name already in the supplies masterlists, please revised it",
+                              "error"
+                            );
+
+                            setIsnotAllowed(true);
+                          }
+                        });
+                      }}
                     />
                   </FormControl>
                 </Grid>
@@ -458,10 +493,17 @@ const NewItem = () => {
                   variant="soft"
                   sx={{ padding: "10px 40px" }}
                   type="button"
+                  onClick={() => navigate(-1)}
                 >
                   Cancel
                 </Button>
-                <Button sx={{ padding: "10px 40px" }} type="submit">
+                <Button
+                  sx={{ padding: "10px 40px" }}
+                  type="submit"
+                  loading={submitted}
+                  loadingPosition="end"
+                  disabled={IsnotAllowed}
+                >
                   Save Item
                 </Button>
               </Stack>

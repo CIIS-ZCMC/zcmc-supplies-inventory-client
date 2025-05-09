@@ -59,6 +59,7 @@ export const AddInventoryStocks = ({
           <FormControl fullWidth sx={{ padding: "5px 0 0 0" }}>
             <FormLabel>Select Brand</FormLabel>
             <Autocomplete
+              required
               freeSolo
               disableClearable
               options={brands.map((row) => row.brand_name)}
@@ -79,6 +80,7 @@ export const AddInventoryStocks = ({
           <FormControl fullWidth sx={{ padding: "5px 0 0 0" }}>
             <FormLabel>Select Source</FormLabel>
             <Autocomplete
+              required
               freeSolo
               disableClearable
               options={sources.map((row) => row.source_name)}
@@ -99,6 +101,7 @@ export const AddInventoryStocks = ({
           <FormControl fullWidth sx={{ padding: "5px 0 0 0" }}>
             <FormLabel>Select Supplier</FormLabel>
             <Autocomplete
+              required
               freeSolo
               disableClearable
               options={suppliers.map((row) => row.supplier_name)}
