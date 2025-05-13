@@ -116,6 +116,8 @@ export const API = {
   TAGGED_PO_INFORMATION: "get-tagged-po-info",
 
   PRINT_GUARD: "print",
+  SIGN_IN: "signin",
+  REAUTHENTICATE: "reauthenticate",
 
   VALIDATOR: "validate-data",
 };

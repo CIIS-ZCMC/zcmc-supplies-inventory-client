@@ -9,7 +9,7 @@ import axios from "axios";
 function ProtectedRoutes({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { sessionValidation } = useUserHook();
+  const { sessionValidation, reAuthenticate } = useUserHook();
   const [loading, setLoading] = useState(true);
 
   function initialize(token) {
@@ -18,7 +18,6 @@ function ProtectedRoutes({ children }) {
     //   navigate(regenerateSigningSessionURL);
     //   return;
     // }
-
     // sessionValidation(token, (status, feedback) => {
     //   if (!(status >= 200 && status < 300)) {
     //     /**
@@ -32,7 +31,24 @@ function ProtectedRoutes({ children }) {
     //   setLoading(false);
     // });
   }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      reAuthenticate().then((res) => {
+        if (res.status === 451) {
+          swal(
+            "Session Ended",
+            "You have been automatically logged out.",
+            "warning"
+          );
 
+          navigate("/signin");
+        }
+      });
+    }, 10000); // 10 seconds
+
+    // Clean up on unmount
+    return () => clearInterval(interval);
+  }, []);
   useEffect(() => {
     const cancelToken = axios.CancelToken.source();
 

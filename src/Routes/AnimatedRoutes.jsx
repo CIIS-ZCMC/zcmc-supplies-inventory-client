@@ -7,7 +7,7 @@ import PageNotFound from "../Pages/404/PageNotFound";
 import { Suspense } from "react";
 import Layout from "../Layout";
 import Authentication from "../Pages/Authentication/Authentication";
-
+import CustomAuth from "../Pages/Authentication/CustomAuth";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     children: sidebarRoutes, // Custom page routes
   },
   {
-     //path: "/releasing",
+    //path: "/releasing",
     element: (
       <ProtectedRoutes>
         <Layout />
@@ -30,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/signing-in/:id",
     element: <Authentication />,
+  },
+  {
+    path: "/signin",
+    element: <CustomAuth />,
   },
   {
     path: "*",

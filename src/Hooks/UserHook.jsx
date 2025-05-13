@@ -1,8 +1,26 @@
 import { create } from "zustand";
 import { read, remove } from "../Services/RequestMethods";
-
+import { API } from "../Services/Config";
+import inventory_api from "../Services/ApiName";
 const useUserHook = create((set) => ({
   user: null,
+  signIn: async (credentials) => {
+    try {
+      const response = await inventory_api.post(`/${API.SIGN_IN}`, credentials);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching inventory:", error.message);
+    }
+  },
+  reAuthenticate: async () => {
+    try {
+      const response = await inventory_api.post(`/${API.REAUTHENTICATE}`);
+
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
   authenticate: (token, params, callBack) => {
     read({
       url: "/authenticate",
