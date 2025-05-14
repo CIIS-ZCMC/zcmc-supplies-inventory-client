@@ -31,24 +31,7 @@ function ProtectedRoutes({ children }) {
     //   setLoading(false);
     // });
   }
-  useEffect(() => {
-    const interval = setInterval(() => {
-      reAuthenticate().then((res) => {
-        if (res.status === 451) {
-          swal(
-            "Session Ended",
-            "You have been automatically logged out.",
-            "warning"
-          );
 
-          navigate("/signin");
-        }
-      });
-    }, 10000); // 10 seconds
-
-    // Clean up on unmount
-    return () => clearInterval(interval);
-  }, []);
   useEffect(() => {
     const cancelToken = axios.CancelToken.source();
 

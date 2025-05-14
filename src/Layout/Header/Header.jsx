@@ -7,8 +7,9 @@ import SheetComponent from "../../Components/SheetComponent";
 import ButtonComponent from "../../Components/ButtonComponent";
 import useUserHook from "../../hooks/UserHook";
 import SignOut from "../../Components/Signout";
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { useNavigate } from "react-router-dom";
+import mms from "../../Assets/material-management.png";
 const FlexContainer = ({
   children,
   direction = "row",
@@ -32,8 +33,9 @@ const FlexContainer = ({
 
 const Header = ({ pageDetails, data }) => {
   const theme = useTheme();
-  const { user } = useUserHook();
+  const { user, userData } = useUserHook();
   const navigate = useNavigate();
+
   return (
     <FlexContainer
       direction="row"
@@ -41,13 +43,8 @@ const Header = ({ pageDetails, data }) => {
       justifyContent="space-between"
     >
       <Box>
-     
         <FlexContainer direction="row" alignItems="center">
-          {data ? (
-            <AvatarComponent alt={data.name} src={data.src} />
-          ) : (
-            <AvatarComponent />
-          )}
+          <img src={mms} alt="" style={{ width: "60px" }} />
           <BreadcrumbsComponent
             name={user?.name ?? ""}
             pageTitle={pageDetails.title}
@@ -56,12 +53,19 @@ const Header = ({ pageDetails, data }) => {
             subTitle={pageDetails?.subTitle}
           />
         </FlexContainer>
-        {pageDetails?.subTitle &&    <Button onClick={()=>{
-          navigate(-1)
-        }} sx={{position:"relative",top:"10px",fontSize:"12px"}} variant="plain" startDecorator={<KeyboardBackspaceIcon sx={{fontSize:"15px"}} />}>
-          Back
-        </Button>}
-      
+        {pageDetails?.subTitle && (
+          <Button
+            onClick={() => {
+              navigate(-1);
+            }}
+            sx={{ position: "relative", top: "10px", fontSize: "12px" }}
+            variant="plain"
+            startDecorator={<KeyboardBackspaceIcon sx={{ fontSize: "15px" }} />}
+          >
+            Back
+          </Button>
+        )}
+
         <Stack mt={3}>
           <Typography fontSize={30} fontWeight={600}>
             {pageDetails?.pageTitle
@@ -101,9 +105,9 @@ const Header = ({ pageDetails, data }) => {
 
             <Stack>
               <Typography level="body-md" fontWeight={600}>
-                {user?.name ?? ""}
+                {userData?.name ?? ""}
               </Typography>
-              <Typography level="body-xs">{data.email}</Typography>
+              <Typography level="body-xs">{userData.email}</Typography>
             </Stack>
 
             <SignOut />
@@ -117,10 +121,7 @@ const Header = ({ pageDetails, data }) => {
             size="lg"
           />
         </Box> */}
-        
       </FlexContainer>
-
-     
     </FlexContainer>
   );
 };

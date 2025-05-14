@@ -28,6 +28,8 @@ export const AddInventoryStocks = ({
         ? valueOrEvent.target.value
         : valueOrEvent;
 
+    console.log(value);
+
     setInputs((prev) => ({
       ...prev,
       [name]: value,
@@ -65,6 +67,7 @@ export const AddInventoryStocks = ({
               options={brands.map((row) => row.brand_name)}
               value={inputs?.brand ?? ""}
               onChange={(e, value) => handleChange(value, "brand")}
+              onInputChange={(e, value) => handleChange(value, "brand")}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -86,6 +89,7 @@ export const AddInventoryStocks = ({
               options={sources.map((row) => row.source_name)}
               value={inputs?.source ?? ""}
               onChange={(e, value) => handleChange(value, "source")}
+              onInputChange={(e, value) => handleChange(value, "source")}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -107,6 +111,7 @@ export const AddInventoryStocks = ({
               options={suppliers.map((row) => row.supplier_name)}
               value={inputs?.supplier ?? ""}
               onChange={(e, value) => handleChange(value, "supplier")}
+              onInputChange={(e, value) => handleChange(value, "supplier")}
               renderInput={(params) => (
                 <TextField
                   {...params}

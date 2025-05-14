@@ -118,6 +118,7 @@ export const API = {
   PRINT_GUARD: "print",
   SIGN_IN: "signin",
   REAUTHENTICATE: "reauthenticate",
+  LOGOUT: "logOut",
 
   VALIDATOR: "validate-data",
 };

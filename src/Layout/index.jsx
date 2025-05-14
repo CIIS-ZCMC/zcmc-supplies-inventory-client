@@ -1,12 +1,41 @@
 import { Outlet } from "react-router-dom";
 import { Box, CircularProgress, Grid, useTheme } from "@mui/joy";
 import Sidebar from "./Sidebar";
-import { Suspense } from "react";
-
+import { Suspense, useEffect } from "react";
+import useUserHook from "../hooks/UserHook";
+import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 function Layout() {
   const theme = useTheme();
   const color = theme.palette.custom;
+  const { sessionValidation, reAuthenticate, setAutoLogout } = useUserHook();
+  const navigate = useNavigate();
 
+  const auth = () => {
+    reAuthenticate().then((res) => {
+      if (res.status === 451 || res.status === 401) {
+        if (res.status == 451) {
+          swal(
+            "Session Ended",
+            "You have been automatically logged out.",
+            "warning"
+          );
+        }
+        navigate("/signin");
+        setAutoLogout(true);
+        return;
+      }
+    });
+  };
+  useEffect(() => {
+    auth();
+    const interval = setInterval(() => {
+      auth();
+    }, 10000); // 10 seconds
+
+    navigate("/dashboard");
+    return () => clearInterval(interval);
+  }, []);
   return (
     <Grid container sx={{ maxHeight: "100vh" }}>
       {/* Sidebar */}

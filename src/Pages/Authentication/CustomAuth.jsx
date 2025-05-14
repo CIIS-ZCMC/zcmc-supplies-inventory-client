@@ -25,7 +25,7 @@ export default function CustomAuth() {
 
   React.useEffect(() => {
     reAuthenticate().then((res) => {
-      if (res.status !== 451) {
+      if (res.status !== 451 && res.status !== 401) {
         navigate(-1);
       }
     });
@@ -65,6 +65,13 @@ export default function CustomAuth() {
       username: data.username,
       password: data.password,
     }).then((res) => {
+      if (res.status == 401 || res.status == 500) {
+        swal("Login Failed", res.response?.data?.message, "error");
+        console.log(res);
+        setLoginLoad(false);
+        return;
+      }
+
       setTimeout(() => {
         setLoginLoad(false);
         navigate("/dashboard");
@@ -121,7 +128,7 @@ export default function CustomAuth() {
                 name="username"
                 inputRef={usernameRef}
                 required
-                placeholder="mms.zcmc@gmail.com"
+                placeholder="mms_user "
                 autoComplete="off"
                 // Additional anti-autofill techniques
                 data-lpignore="true"

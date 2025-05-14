@@ -6,18 +6,42 @@ import { AiOutlineLogout } from "react-icons/ai"; // Logout Icon
 
 import useUserHook from "../hooks/UserHook";
 import { BASE_URL } from "../Services/Config";
+import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 
 const SignOut = () => {
-  const { signOut } = useUserHook();
+  const { signOut, logOut } = useUserHook();
+  const navigate = useNavigate();
 
   function onSignOut() {
-    signOut((status, feedback) => {
-      if (!(status >= 200 && status < 300)) {
-        return console.log(feedback);
+    swal({
+      title: " Are you sure?",
+      text: "You have unsaved changes. Please save them before leaving.",
+      icon: "warning",
+      buttons: {
+        cancel: "Stay Logged In",
+        confirm: {
+          text: "Log Out Anyway",
+          value: true,
+          visible: true,
+          className: "",
+          closeModal: true,
+        },
+      },
+      dangerMode: true,
+    }).then((logout) => {
+      if (logout) {
+        logOut().then(() => navigate("/signin"));
       }
-
-      window.location.href = BASE_URL.production_landing_page;
     });
+
+    // signOut((status, feedback) => {
+    //   if (!(status >= 200 && status < 300)) {
+    //     return console.log(feedback);
+    //   }
+
+    //   window.location.href = BASE_URL.production_landing_page;
+    // });
   }
 
   return (

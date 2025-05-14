@@ -4,18 +4,32 @@ import { API } from "../Services/Config";
 import inventory_api from "../Services/ApiName";
 const useUserHook = create((set) => ({
   user: null,
+  userData: [],
+  autoLogout: false,
+  setAutoLogout: (boolean) => {
+    set({ autoLogout: boolean });
+  },
   signIn: async (credentials) => {
     try {
       const response = await inventory_api.post(`/${API.SIGN_IN}`, credentials);
-      return response.data;
+      set({ userData: response.data.user });
+      return response;
     } catch (error) {
-      console.error("Error fetching inventory:", error.message);
+      return error;
     }
   },
   reAuthenticate: async () => {
     try {
       const response = await inventory_api.post(`/${API.REAUTHENTICATE}`);
-
+      set({ userData: response.data });
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  logOut: async () => {
+    try {
+      const response = await inventory_api.post(`/${API.LOGOUT}`);
       return response;
     } catch (error) {
       return error;
