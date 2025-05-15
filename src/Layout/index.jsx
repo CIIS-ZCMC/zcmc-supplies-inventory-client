@@ -5,6 +5,7 @@ import { Suspense, useEffect } from "react";
 import useUserHook from "../hooks/UserHook";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
+import switcher from "../../../Switcher.json";
 function Layout() {
   const theme = useTheme();
   const color = theme.palette.custom;
@@ -28,13 +29,14 @@ function Layout() {
     });
   };
   useEffect(() => {
-    auth();
-    const interval = setInterval(() => {
-      auth();
-    }, 10000); // 10 seconds
-
     navigate("/dashboard");
-    return () => clearInterval(interval);
+    if (switcher.customAuth) {
+      auth();
+      const interval = setInterval(() => {
+        auth();
+      }, 10000);
+      return () => clearInterval(interval);
+    }
   }, []);
   return (
     <Grid container sx={{ maxHeight: "100vh" }}>
