@@ -42,6 +42,7 @@ function InputComponent({
   type,
   defaultvalue = null,
   onBlur,
+  style,
 }) {
   return (
     <FormControl fullWidth>

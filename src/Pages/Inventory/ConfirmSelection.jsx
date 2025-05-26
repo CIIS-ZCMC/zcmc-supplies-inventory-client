@@ -10,10 +10,14 @@ import useAreasHook from "../../Hooks/AreasHook";
 import usePrintHooks from "../../Hooks/PrintHooks";
 import useCategoriesHook from "../../Hooks/CategoriesHook";
 import InputComponent from "../../Components/Form/InputComponent";
+import useInventoryHook from "../../Hooks/InventoryHook";
 export const ConfirmSelection = ({
   isMonthlyDistribution,
   selectedItems,
   openIssuance,
+  isStockCard,
+  setGenerateStockCard,
+  setIsDialogOpen,
 }) => {
   const { getCategoryWItems } = useCategoriesHook();
   const {
@@ -37,6 +41,9 @@ export const ConfirmSelection = ({
     { name: "November", value: 11 },
     { name: "December", value: 12 },
   ];
+  const setInventoryFilter = useInventoryHook(
+    (state) => state.setInventoryFilter
+  );
 
   const currentYear = new Date().getFullYear();
   const years = Array.from(
@@ -66,6 +73,13 @@ export const ConfirmSelection = ({
       OpenSmallWindow(printSuppliesIssuance(data));
       return;
     }
+
+    if (isStockCard) {
+      setInventoryFilter(data);
+      setGenerateStockCard(true);
+      setIsDialogOpen(false);
+      return;
+    }
     data.selectedItems = selectedItems;
     OpenSmallWindow(printStockCardBulk(data));
   };
@@ -81,6 +95,33 @@ export const ConfirmSelection = ({
             <InputComponent type={"date"} name="to" isRequired label="To" />
           </Grid>
         </Grid>
+      ) : isStockCard ? (
+        <Stack direction={"row"} spacing={1} mt={2}>
+          <Select
+            placeholder="Select Month"
+            name="month"
+            required
+            sx={{ width: "100%" }}
+          >
+            {months.map((month) => (
+              <Option key={month.value} value={month.value}>
+                {month.name}
+              </Option>
+            ))}
+          </Select>
+          <Select
+            placeholder="Select Year"
+            name="year"
+            required
+            sx={{ width: "100%" }}
+          >
+            {years.map((year) => (
+              <Option key={year} value={year}>
+                {year}
+              </Option>
+            ))}
+          </Select>
+        </Stack>
       ) : (
         <>
           <Stack spacing={2} sx={{ alignItems: "flex-start" }}>

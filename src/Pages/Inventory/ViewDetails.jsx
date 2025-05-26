@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Header from "../../Layout/Header/Header";
 import useSelectedRow from "../../Store/SelectedRowStore";
 import { items, user } from "../../Data/index";
@@ -19,6 +19,9 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { ImBoxAdd } from "react-icons/im";
 import useReportsHook from "../../Hooks/ReportsHook";
+import InputComponent from "../../Components/Form/InputComponent";
+import { Input } from "@mui/joy";
+import { CiEdit } from "react-icons/ci";
 export const BoxItem = ({
   icon,
   iconColor,
@@ -26,7 +29,7 @@ export const BoxItem = ({
   categoryName,
   option,
 }) => {
-  const theme = useTheme(); // Access the theme
+  const theme = useTheme();
 
   return (
     <BoxComponent>
@@ -53,6 +56,7 @@ function ViewDetails(props) {
   const theme = useTheme();
   const { selectedRow, setSelectedItem } = useSelectedRow();
   const { id } = useParams();
+  const { stockno, getStockNo, updateStockNo, setStockno } = useInventoryHook();
   // const storedSupplyName = localStorage.getItem("selectedRow");
   const { details, getInventoryDetails, stockouts, startingBalance, stockins } =
     useInventoryHook();
@@ -79,6 +83,13 @@ function ViewDetails(props) {
   ];
 
   const totalQuantity = details.reduce((sum, item) => sum + item.quantity, 0);
+  const [load, setLoad] = useState(false);
+  useEffect(() => {
+    setLoad(true);
+    getStockNo(id).then((response) => {
+      setLoad(false);
+    });
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -88,6 +99,15 @@ function ViewDetails(props) {
       clearTimeout(timeout);
     };
   }, [getInventoryDetails]);
+
+  const handleUpdateStockNo = (event) => {
+    updateStockNo({ stock_no: event.target.value }, id).then((response) => {
+      if (response.status === 306) {
+        swal("No changes made", "Stock number already exists", "error");
+      }
+    });
+  };
+
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
@@ -190,6 +210,7 @@ function ViewDetails(props) {
           />
         </Stack>
       </Stack>
+
       <ContainerComponent>
         <PaginatedTable
           tableTitle={"More information"}
@@ -199,13 +220,76 @@ function ViewDetails(props) {
           columns={columns}
           rows={details}
           actionBtns={
-            <Stack direction="row" spacing={1} mt={2}>
+            <Stack
+              direction="row"
+              spacing={1}
+              mt={2}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
               <ButtonComponent
                 variant={"solid"}
                 label="Generate report"
                 size="lg"
                 onClick={() => generateReport(selectedRow.supply_name, details)}
               />
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Stack direction={"row"} spacing={1}>
+                  <Typography
+                    sx={{
+                      padding: "16px 0 0 0",
+                      textTransform: "uppercase",
+                      fontWeight: "bold",
+                      color: "#7E99A3",
+                    }}
+                    level="body-sm"
+                  >
+                    Stock No :
+                  </Typography>
+                  <Input
+                    startDecorator={<CiEdit style={{ fontSize: "25px" }} />}
+                    variant="plain"
+                    sx={{
+                      padding: "6px",
+                      backgroundColor: "#ECFAE5",
+                      fontWeight: "bold",
+                      color: "#4CAF50",
+                      fontSize: "25px",
+                      "--Input-radius": "0px",
+                      borderBottom: "2px solid",
+                      borderColor: "neutral.outlinedBorder",
+                      "&:hover": {
+                        borderColor: "neutral.outlinedHoverBorder",
+                      },
+                      "&::before": {
+                        border: "1px solid var(--Input-focusedHighlight)",
+                        transform: "scaleX(0)",
+                        left: 0,
+                        right: 0,
+                        bottom: "-2px",
+                        top: "unset",
+                        transition:
+                          "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                        borderRadius: 0,
+                      },
+                      "&:focus-within::before": {
+                        transform: "scaleX(1)",
+                      },
+                    }}
+                    slotProps={{
+                      input: {
+                        style: {
+                          textAlign: "center",
+                          textTransform: "uppercase",
+                        },
+                      },
+                    }}
+                    onChange={(e) => setStockno(e.target.value)}
+                    value={load ? "Loading..." : stockno}
+                    onBlur={handleUpdateStockNo}
+                  />
+                </Stack>
+              </Box>
             </Stack>
           }
         />

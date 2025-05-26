@@ -71,39 +71,6 @@ export const startingBalHeader = [
   { id: "actions", numeric: false, disablePadding: false, label: "Actions" },
 ];
 
-export const startingBalancesHeader = [
-  // {
-  //   // id: "id",
-  //   label: "#",
-  //   width: "5%",
-  // },
-  { id: "is_IAR", label: "Receiving (IAR)" },
-  { id: "balance_date", label: "Year" },
-  { id: "month", label: "Month" },
-  { id: "source_name", label: "Source" },
-  {
-    id: "key",
-    label: "History ( RIS )",
-    render: (row, index) => {
-      return (
-        <>
-          {row.inventoryTransactionLog.length ? (
-            <StartingBalanceStepper row={row} />
-          ) : (
-            <Divider>
-              {" "}
-              <Typography level="body-xs" fontSize={9} textColor={"#94B4C1"}>
-                NO RECORDS FOUND
-              </Typography>
-            </Divider>
-          )}
-        </>
-      );
-    },
-  },
-  { id: "quantity", label: "Starting Balance" },
-];
-
 export const nearExpHeader = [
   // {
   //   // id: "id",

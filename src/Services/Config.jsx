@@ -109,6 +109,9 @@ export const API = {
   FETCH_SUPPLIES: "fetch-items-data-bizbox",
   GET_LASTSYNCED: "lastsynced-items",
 
+  RETRIEVED_STOCKNO: "retrieve-stock-no",
+  UPDATE_STOCKNO: "update-stock-no",
+
   PURCHASED_ORDERS: "get-purchased-orders",
   PURCHASED_ORDERS_ITEMS: "get-purchased-orders-items",
   PURCHASED_ORDERS_TAGGED: "get-purchased-orders-tagged",

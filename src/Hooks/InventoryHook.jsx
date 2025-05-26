@@ -8,7 +8,37 @@ const useInventoryHook = create((set) => ({
   stockouts: 0,
   startingBalance: 0,
   stockins: 0,
-
+  stockno: null,
+  InventoryFilter: {},
+  setStockno: (stockno) => {
+    set({ stockno: stockno });
+  },
+  getStockNo: async (supplyID) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.RETRIEVED_STOCKNO}/${supplyID}`
+      );
+      console.log(response.data.stock_no);
+      set({ stockno: response.data.stock_no });
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  updateStockNo: async (data, supplyID) => {
+    try {
+      const response = await inventory_api.post(
+        `/${API.UPDATE_STOCKNO}/${supplyID}`,
+        data
+      );
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  setInventoryFilter: (filter) => {
+    set({ InventoryFilter: filter });
+  },
   saveToInventory: async (data) => {
     try {
       const response = await inventory_api.post(

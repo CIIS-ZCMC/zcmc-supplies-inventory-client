@@ -34,6 +34,7 @@ import MenuButton from "@mui/joy/MenuButton";
 import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
+import { CiFilter } from "react-icons/ci";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -89,7 +90,9 @@ const Inventory = () => {
   const [selectedItems, setSelectedItems] = useState(null);
   const [monthlyDistribution, setMonthlyDistribution] = useState(false);
   const [openIssuance, setopenIssuance] = useState(false);
+  const [stockCard, setStockCard] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const InventoryFilter = useInventoryHook((state) => state.InventoryFilter);
   const {
     printStockCard,
     printStockCardBulk,
@@ -109,7 +112,11 @@ const Inventory = () => {
   };
 
   const handleGenerateStockCard = () => {
-    OpenSmallWindow(printStockCard(selectedItems));
+    const PrintItem = JSON.stringify({
+      selected: selectedItems,
+      filter: InventoryFilter,
+    });
+    OpenSmallWindow(printStockCard(PrintItem));
   };
 
   const navigateToItemSupplies = () => {
@@ -238,7 +245,10 @@ const Inventory = () => {
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
-                            setGenerateStockCard(true);
+                            //   setGenerateStockCard(true);
+                            // setMonthlyDistribution(false);
+                            setIsDialogOpen(true);
+                            setStockCard(true);
                           }}
                         >
                           Stock Card
@@ -299,6 +309,16 @@ const Inventory = () => {
                       />
                     </Box>
                     <ButtonComponent
+                      label={"Show Filter"}
+                      variant={"outlined"}
+                      color="primary"
+                      endDecorator={<CiFilter />}
+                      onClick={() => {
+                        setIsDialogOpen(true);
+                        setStockCard(true);
+                      }}
+                    />
+                    <ButtonComponent
                       disabled={selectedItems ? false : true}
                       label={
                         <Stack direction={"column"}>Generate Stock-Card</Stack>
@@ -339,6 +359,9 @@ const Inventory = () => {
             isMonthlyDistribution={monthlyDistribution}
             openIssuance={openIssuance}
             selectedItems={selectedItems}
+            isStockCard={stockCard}
+            setGenerateStockCard={setGenerateStockCard}
+            setIsDialogOpen={setIsDialogOpen}
           />
         }
         title={
