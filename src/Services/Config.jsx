@@ -124,6 +124,9 @@ export const API = {
   LOGOUT: "logOut",
 
   VALIDATOR: "validate-data",
+
+  STARTINGBAL_UPDATE: "starting-balance-update",
+  STARTINGBAL_DELETE: "starting-balance-delete",
 };
 
 /**

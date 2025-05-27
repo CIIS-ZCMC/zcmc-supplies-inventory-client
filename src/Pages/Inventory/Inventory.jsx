@@ -54,22 +54,6 @@ const data = Array.from({ length: 1000 }, (_, i) => ({
   quantity: "1,000",
 }));
 
-const columns = [
-  {
-    id: "key", // or any field name
-    label: "#",
-    width: "5%",
-    render: (row, index) => {
-      return index + 1;
-    },
-  },
-  { id: "supply_name", label: "Item Name", width: "30%" },
-  { id: "category_name", label: "Category" },
-  { id: "unit_name", label: "Unit" },
-  { id: "quantity", label: "Quantity", width: "10%" },
-  { id: "actions", label: "Actions", width: "10%" },
-];
-
 const Inventory = () => {
   const navigate = useNavigate();
   const { inventory, getInventory } = useInventoryHook();
@@ -93,6 +77,10 @@ const Inventory = () => {
   const [stockCard, setStockCard] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const InventoryFilter = useInventoryHook((state) => state.InventoryFilter);
+  const setInventoryFilter = useInventoryHook(
+    (state) => state.setInventoryFilter
+  );
+  const [startingBal, setStartingBal] = useState(null);
   const {
     printStockCard,
     printStockCardBulk,
@@ -115,6 +103,7 @@ const Inventory = () => {
     const PrintItem = JSON.stringify({
       selected: selectedItems,
       filter: InventoryFilter,
+      startingBalance: startingBal,
     });
     OpenSmallWindow(printStockCard(PrintItem));
   };
@@ -132,8 +121,86 @@ const Inventory = () => {
     queryKey: "inventory",
     queryFn: getInventory,
   });
+  const inventoryData =
+    InventoryFilter?.month && InventoryFilter?.year
+      ? data?.data.filter((item) =>
+          item.transaction.some((x) => {
+            const date = new Date(x.created_at);
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
 
-  const inventoryData = data?.data;
+            return (
+              month === parseInt(InventoryFilter.month, 10) &&
+              year === parseInt(InventoryFilter.year, 10)
+            );
+          })
+        )
+      : data?.data;
+
+  const getMonthName = (monthNumber) => {
+    const date = new Date();
+    date.setMonth(monthNumber - 1); // JS months are 0-based
+    return date.toLocaleString("default", { month: "long" });
+  };
+
+  const columns = [
+    {
+      id: "key", // or any field name
+      label: "#",
+      width: "5%",
+      render: (row, index) => {
+        return index + 1;
+      },
+    },
+    { id: "supply_name", label: "Item Name", width: "30%" },
+    { id: "category_name", label: "Category" },
+    { id: "unit_name", label: "Unit" },
+    { id: "quantity", label: "Quantity", width: "10%" },
+    { id: "actions", label: "Actions", width: "20%" },
+  ];
+
+  const handleSelection = (perRow) => {
+    const form = document.createElement("div");
+
+    // Create input for starting balance
+    const inputBalance = document.createElement("input");
+    inputBalance.placeholder = "Enter starting balance";
+    inputBalance.type = "number";
+    inputBalance.style.marginBottom = "10px";
+    inputBalance.className = "swal-content__input";
+
+    // Create input for remarks
+    const inputRemarks = document.createElement("input");
+    inputRemarks.placeholder = "Enter reference (optional)";
+    inputRemarks.type = "text";
+    inputRemarks.className = "swal-content__input";
+
+    form.appendChild(inputBalance);
+    form.appendChild(inputRemarks);
+
+    swal("No starting balance detected. Please set to proceed.", {
+      content: form,
+      buttons: {
+        cancel: true,
+        confirm: {
+          text: "Set",
+        },
+      },
+    }).then(() => {
+      const value = inputBalance.value;
+      const remarks = inputRemarks.value;
+
+      if (value !== "") {
+        setStartingBal(null);
+        setStartingBal({
+          itemId: perRow.id,
+          value: value,
+          remarks: remarks,
+        });
+      } else {
+      }
+    });
+  };
 
   return (
     <Fragment>
@@ -187,13 +254,40 @@ const Inventory = () => {
             customAction={generateStockCard}
             handleCustomAction={(perRow) => {
               return (
-                <>
+                <Stack direction={"column"} spacing={2}>
                   {" "}
+                  <Box>
+                    {startingBal && startingBal.itemId === perRow.id && (
+                      <Stack direction={"row"} sx={{ marginBottom: "-10px" }}>
+                        <Typography
+                          onClick={() => {
+                            handleSelection(perRow);
+                          }}
+                          color="primary"
+                          variant="body-xs"
+                          sx={{
+                            fontSize: "10px",
+                            textTransform: "uppercase",
+                            fontWeight: "bold",
+                            marginRight: "5px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Starting Balance :
+                        </Typography>
+                        {startingBal.value}
+                      </Stack>
+                    )}
+                  </Box>
                   <Radio
                     label="Select"
                     value={perRow.id}
                     checked={selectedItems === perRow.id}
                     onChange={() => {
+                      setStartingBal(null);
+                      if (perRow.quantity === 0) {
+                        handleSelection(perRow);
+                      }
                       setSelectedItems(perRow.id);
                     }}
                     color="danger"
@@ -203,7 +297,7 @@ const Inventory = () => {
                       textTransform: "uppercase",
                     }}
                   />
-                </>
+                </Stack>
               );
             }}
             actionBtns={
@@ -239,6 +333,7 @@ const Inventory = () => {
                             setIsDialogOpen(true);
                             setMonthlyDistribution(false);
                             setopenIssuance(false);
+                            setStockCard(false);
                           }}
                         >
                           Balance Card
@@ -246,9 +341,10 @@ const Inventory = () => {
                         <MenuItem
                           onClick={() => {
                             //   setGenerateStockCard(true);
-                            // setMonthlyDistribution(false);
+                            setMonthlyDistribution(false);
                             setIsDialogOpen(true);
                             setStockCard(true);
+                            setopenIssuance(false);
                           }}
                         >
                           Stock Card
@@ -302,6 +398,8 @@ const Inventory = () => {
                           if (generateStockCard) {
                             setGenerateStockCard(false);
                             setSelectedItems(null);
+                            setInventoryFilter({});
+                            setStartingBal(null);
                           } else {
                             setGenerateStockCard(true);
                           }
@@ -309,7 +407,25 @@ const Inventory = () => {
                       />
                     </Box>
                     <ButtonComponent
-                      label={"Show Filter"}
+                      label={
+                        <Stack>
+                          <Typography
+                            variant=""
+                            level="body-sm"
+                            sx={{ fontWeight: "bold" }}
+                          >
+                            Show Filter
+                          </Typography>
+                          <Typography variant="" level="body-xs">
+                            <Stack>
+                              <Box>
+                                Month : {getMonthName(InventoryFilter?.month)}
+                              </Box>
+                              <Box>Year : {InventoryFilter?.year}</Box>
+                            </Stack>
+                          </Typography>
+                        </Stack>
+                      }
                       variant={"outlined"}
                       color="primary"
                       endDecorator={<CiFilter />}
@@ -318,6 +434,7 @@ const Inventory = () => {
                         setStockCard(true);
                       }}
                     />
+
                     <ButtonComponent
                       disabled={selectedItems ? false : true}
                       label={
@@ -346,7 +463,7 @@ const Inventory = () => {
             label={"Fill-up your inventory by creating a New item"}
             desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
                   inventory items in filling-up IARs and RIS requests.`}
-            btn={<ButtonComponent label={"Create new item"} onClick={"/"} />}
+            // btn={<ButtonComponent label={"Create new item"} onClick={"/"} />}
           />
         </ContainerComponent>
       </Stack>
@@ -369,6 +486,8 @@ const Inventory = () => {
             ? `Confirm Monthly Distibution`
             : openIssuance
             ? `Confirm Selection`
+            : stockCard
+            ? `Confirm Selection Stock-card`
             : `Confirm Selection Balance-card`
         }
         description={`Manage/select options for generating ${
@@ -376,6 +495,8 @@ const Inventory = () => {
             ? "Monthly Distibution"
             : openIssuance
             ? "Item issuance"
+            : stockCard
+            ? `Stock card`
             : "Balance-card"
         } `}
       />

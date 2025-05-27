@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../../../Layout/Header/Header";
 import { user } from "../../../Data/index";
 import useSelectedRow from "../../../Store/SelectedRowStore";
@@ -11,9 +11,12 @@ import useStartingBalanceHook from "../../../Hooks/StartingBalanceHooks";
 import StartingBalanceStepper from "./StartingBalStepper";
 import useReportsHook from "../../../Hooks/ReportsHook";
 import { CiEdit } from "react-icons/ci";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { IoAddCircleOutline } from "react-icons/io5";
 function ViewStartingBalance(props) {
   const { selectedRow, selectedItem } = useSelectedRow();
-  const { getSupplyBalances } = useStartingBalanceHook();
+  const { getSupplyBalances, updateStartingBalance, deleteStartingBalance } =
+    useStartingBalanceHook();
   const { generateReport } = useReportsHook();
 
   const pageDetails = {
@@ -66,7 +69,31 @@ function ViewStartingBalance(props) {
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   event.preventDefault();
-                  console.log("Enter key pressed");
+                  const value = event.target.value;
+                  swal({
+                    title: "Are you sure?",
+                    text: "Please confirm if you want to update the starting balance.",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                  }).then((Update) => {
+                    if (Update) {
+                      updateStartingBalance(
+                        {
+                          quantity: value,
+                        },
+                        row.id
+                      ).then((response) => {
+                        if (response?.status === 200) {
+                          swal(
+                            "Changes Saved",
+                            "Starting balance updated successfully!",
+                            "success"
+                          );
+                        }
+                      });
+                    }
+                  });
                 }
               }}
               startDecorator={<CiEdit />}
@@ -111,14 +138,15 @@ function ViewStartingBalance(props) {
     // { id: "actions", label: "Actions", width: "10%" },
   ];
 
-  console.log(selectedRow);
-
   const { data, isLoading, error } = useQuery({
     queryKey: ["suppliesStartingBal", selectedRow?.id],
     queryFn: () => getSupplyBalances(selectedRow?.id),
   });
 
-  console.log(data);
+  useEffect(() => {
+    getSupplyBalances(selectedRow?.id);
+  }, []);
+
   return (
     <div>
       <Header pageDetails={pageDetails} data={user} />
@@ -158,17 +186,47 @@ function ViewStartingBalance(props) {
                   )
                 }
               />
+
+              {/* <ButtonComponent
+                endDecorator={
+                  <IoAddCircleOutline style={{ fontSize: "17px" }} />
+                }
+                variant={"solid"}
+                label="New"
+                size="lg"
+                onClick={() => {}}
+              /> */}
             </Stack>
           }
           customAction={true}
-          handleCustomAction={(selectedRow) => {
+          handleCustomAction={(row) => {
             return (
               <ButtonComponent
-                variant={"outlined"}
-                label="view"
-                size="lg"
+                variant={"plain"}
+                color="danger"
+                size="sm"
+                label={<RiDeleteBin5Line style={{ fontSize: "18px" }} />}
                 onClick={() => {
-                  console.log(selectedRow);
+                  swal({
+                    title: "Are you sure?",
+                    text: "Please confirm if you want to delete this starting balance.",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                  }).then((Delete) => {
+                    if (Delete) {
+                      deleteStartingBalance(row.id).then((response) => {
+                        if (response?.status === 204) {
+                          getSupplyBalances(selectedRow?.id);
+                          swal(
+                            "Changes Saved",
+                            "Starting balance deleted successfully!",
+                            "success"
+                          );
+                        }
+                      });
+                    }
+                  });
                 }}
               />
             );
