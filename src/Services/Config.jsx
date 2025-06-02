@@ -116,6 +116,8 @@ export const API = {
   PURCHASED_ORDERS_ITEMS: "get-purchased-orders-items",
   PURCHASED_ORDERS_TAGGED: "get-purchased-orders-tagged",
 
+  OPEN_PO: "fetchPO",
+
   TAGGED_PO_INFORMATION: "get-tagged-po-info",
 
   PRINT_GUARD: "print",

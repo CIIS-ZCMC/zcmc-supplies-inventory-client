@@ -16,6 +16,7 @@ const useSuppliersHook = create((set) => ({
     praddress: "",
     prcountry: "Philippines", // Default to Philippines
   },
+  PO_result: [],
 
   // ✅ Validation Schema
   validationSchema: Yup.object({
@@ -53,9 +54,7 @@ const useSuppliersHook = create((set) => ({
   // ✅ Fetch All Suppliers
   getSuppliers: async () => {
     try {
-      const response = await inventory_api.get(
-        `/${API.SUPPLIERS}`
-      );
+      const response = await inventory_api.get(`/${API.SUPPLIERS}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching suppliers:", error.message);
@@ -66,9 +65,7 @@ const useSuppliersHook = create((set) => ({
   // ✅ Fetch Single Supplier by ID
   getSupplier: async (id) => {
     try {
-      const response = await inventory_api.get(
-        `/${API.SUPPLIER_SHOW}/${id}`
-      );
+      const response = await inventory_api.get(`/${API.SUPPLIER_SHOW}/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching supplier:", error.message);
@@ -103,6 +100,18 @@ const useSuppliersHook = create((set) => ({
       throw error;
     }
   },
+
+  fetchPOs: async (PO_number) => {
+    try {
+      const response = await inventory_api.get(`/${API.OPEN_PO}/${PO_number}`);
+      set({ PO_result: response.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching POs:", error.message);
+      throw error;
+    }
+  },
+  clearPOResult: () => set({ PO_result: [] }),
 }));
 
 export default useSuppliersHook;

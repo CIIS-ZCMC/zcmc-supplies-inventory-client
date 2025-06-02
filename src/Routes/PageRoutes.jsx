@@ -50,6 +50,7 @@ import ViewStartingBalance from "../Pages/Reports/Views/ViewStartingBalance";
 import ViewReleasedItem from "../Pages/Reports/Views/viewReleasedItem";
 import ViewReceivedItem from "../Pages/Reports/Views/ViewReceivedItem";
 import TaggingPurchasedOrder from "../Pages/PurchaseRequest/TaggingPurchasedOrder";
+import { SupplierMonitoring } from "../Pages/SupplierMonitoring/SupplierMonitoring";
 export const sidebarRoutes = [
   {
     path: "/dashboard",
@@ -112,10 +113,8 @@ export const sidebarRoutes = [
       { path: "without-ris-items", element: <WithoutRISItems /> },
       { path: "area-supplies", element: <AreaSupplies /> },
       { path: "regular-supplies", element: <RegularSupplies /> },
-   
     ],
   },
-
 ];
 
 export const childrenRoutes = [
@@ -164,28 +163,32 @@ export const childrenRoutes = [
   },
   {
     path: "/reports/starting-balance/:id",
-    element: <ViewStartingBalance/>,
+    element: <ViewStartingBalance />,
     icon: null,
     permissions: ["view"],
   },
   {
     path: "/reports/releasing/:id",
-    element: <ViewReleasedItem/>,
+    element: <ViewReleasedItem />,
     icon: null,
     permissions: ["view"],
   },
   {
     path: "/reports/receiving/:id",
-    element: <ViewReceivedItem/>,
+    element: <ViewReceivedItem />,
     icon: null,
     permissions: ["view"],
   },
-
+  {
+    path: "/reports/supplier-monitoring",
+    element: <SupplierMonitoring />,
+    icon: null,
+    permissions: ["view"],
+  },
   {
     path: "/purchase-order/:id",
-    element: <TaggingPurchasedOrder/>,
+    element: <TaggingPurchasedOrder />,
     icon: null,
     permissions: ["view"],
   },
-  
 ];

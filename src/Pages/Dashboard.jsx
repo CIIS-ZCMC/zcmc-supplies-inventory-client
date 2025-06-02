@@ -18,7 +18,7 @@ import SnackbarComponent from "../Components/SnackbarComponent";
 
 import useDashboardHook from "../Hooks/DashboardHook";
 import useSnackbarHook from "../Hooks/AlertHook";
-
+import { Button } from "@mui/joy";
 import { user, legends } from "../Data/index";
 import { dashboardHeader } from "../Data/TableHeader";
 import { Fetch } from "./Libraries/Fetch";
@@ -182,6 +182,7 @@ function Dashboard() {
                 direction={"row"}
                 justifyContent={"flex-end"}
                 alignItems={"center"}
+                spacing={2}
               >
                 <Typography
                   level="h1"
@@ -194,6 +195,17 @@ function Dashboard() {
                 <Typography fontSize={14} ml={3}>
                   Inventory records in total.
                 </Typography>
+                <Divider orientation="vertical" />
+                <Button
+                  variant="soft"
+                  color="primary"
+                  size="sm"
+                  sx={{ textTransform: "uppercase" }}
+                  component={Link}
+                  to="/reports/supplier-monitoring"
+                >
+                  PO - Supplier Monitoring
+                </Button>
               </Stack>
 
               <Fetch />
