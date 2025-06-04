@@ -19,24 +19,22 @@ import {
 } from "@mui/joy";
 import useSuppliersHook from "../../Hooks/SuppliersHook";
 import { IoMdCloseCircleOutline } from "react-icons/io";
-export const POResult = ({ data }) => {
-  const [form, setForm] = useState({
-    emailedDate: "",
-    delivered: false,
-    extended: false,
-    deliveredDate: "",
-    iar: "",
-    qtyDelivered: "",
-    remarks: "",
-    complaintReason: "",
-    complaintResponse: "",
-    status: "",
-  });
+import { useEffect } from "react";
+import { use } from "react";
 
-  const { clearPOResult } = useSuppliersHook();
-
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+export const POResult = ({ searchedPo }) => {
+  const { fetchPOs, clearPOResult, UpdatePos, PO_result } = useSuppliersHook();
+  const [form, setForm] = useState(PO_result.data);
+  const handleChange = (key, value, id) => {
+    setForm((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [key]: value } : item))
+    );
+    UpdatePos(id, {
+      [key]: value,
+    });
+    setTimeout(() => {
+      fetchPOs(searchedPo);
+    }, 4000);
   };
 
   return (
@@ -61,7 +59,7 @@ export const POResult = ({ data }) => {
               Clear Results
             </Button>
           </Stack>
-          {data.map((item, index) => (
+          {PO_result.data?.map((item, index) => (
             <Sheet key={1} variant="outlined" sx={{ p: 1, fontSize: "xs" }}>
               <Grid container spacing={1}>
                 <Grid xs={6}>
@@ -103,16 +101,49 @@ export const POResult = ({ data }) => {
                   <Box>
                     <Divider sx={{ my: 1 }} />
                     <Grid container spacing={1}>
+                      <Grid xs={12} md={12}>
+                        <FormControl>
+                          <FormLabel sx={{ fontSize: "11px" }}>
+                            is Disbursment Voucher processed?
+                          </FormLabel>
+                          <Checkbox
+                            color="success"
+                            key={item.id}
+                            size="sm"
+                            checked={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.isDVprocessed
+                            }
+                            onChange={(e) =>
+                              handleChange(
+                                "isDVprocessed",
+                                e.target.checked,
+                                item.id
+                              )
+                            }
+                            label="Yes"
+                          />
+                        </FormControl>
+                      </Grid>
                       <Grid xs={12} md={6}>
                         <FormControl>
                           <FormLabel sx={{ fontSize: "11px" }}>
                             Delivered/Received
                           </FormLabel>
+
                           <Checkbox
+                            key={item.id}
                             size="sm"
-                            checked={form.delivered}
+                            checked={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.delivered
+                            }
                             onChange={(e) =>
-                              handleChange("delivered", e.target.checked)
+                              handleChange(
+                                "delivered",
+                                e.target.checked,
+                                item.id
+                              )
                             }
                             label="Yes"
                           />
@@ -124,10 +155,18 @@ export const POResult = ({ data }) => {
                             Extended
                           </FormLabel>
                           <Checkbox
+                            color="danger"
+                            key={item.id}
                             size="sm"
-                            checked={form.extended}
+                            checked={
+                              form?.filter((x) => x.id === item.id)[0]?.extended
+                            }
                             onChange={(e) =>
-                              handleChange("extended", e.target.checked)
+                              handleChange(
+                                "extended",
+                                e.target.checked,
+                                item.id
+                              )
                             }
                             label="Yes"
                           />
@@ -139,7 +178,21 @@ export const POResult = ({ data }) => {
                           <FormLabel sx={{ fontSize: "11px" }}>
                             Emailed Date
                           </FormLabel>
-                          <Input type="date" size="sm" />
+                          <Input
+                            type="date"
+                            size="sm"
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.emailed_date
+                            }
+                            onChange={(e) =>
+                              handleChange(
+                                "emailed_date",
+                                e.target.value,
+                                item.id
+                              )
+                            }
+                          />
                         </FormControl>
                       </Grid>
 
@@ -151,9 +204,16 @@ export const POResult = ({ data }) => {
                           <Input
                             size="sm"
                             type="date"
-                            value={form.deliveredDate}
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.delivered_date
+                            }
                             onChange={(e) =>
-                              handleChange("deliveredDate", e.target.value)
+                              handleChange(
+                                "delivered_date",
+                                e.target.value,
+                                item.id
+                              )
                             }
                           />
                         </FormControl>
@@ -164,9 +224,11 @@ export const POResult = ({ data }) => {
                           <FormLabel sx={{ fontSize: "11px" }}>IAR</FormLabel>
                           <Input
                             size="sm"
-                            value={form.iar}
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]?.IAR
+                            }
                             onChange={(e) =>
-                              handleChange("iar", e.target.value)
+                              handleChange("IAR", e.target.value, item.id)
                             }
                           />
                         </FormControl>
@@ -180,9 +242,16 @@ export const POResult = ({ data }) => {
                           <Input
                             size="sm"
                             type="number"
-                            value={form.qtyDelivered}
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.quantity_delivered
+                            }
                             onChange={(e) =>
-                              handleChange("qtyDelivered", e.target.value)
+                              handleChange(
+                                "quantity_delivered",
+                                e.target.value,
+                                item.id
+                              )
                             }
                           />
                         </FormControl>
@@ -202,9 +271,16 @@ export const POResult = ({ data }) => {
                           <Textarea
                             size="sm"
                             minRows={2}
-                            value={form.remarks}
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.response_remarks
+                            }
                             onChange={(e) =>
-                              handleChange("remarks", e.target.value)
+                              handleChange(
+                                "response_remarks",
+                                e.target.value,
+                                item.id
+                              )
                             }
                           />
                         </FormControl>
@@ -224,9 +300,16 @@ export const POResult = ({ data }) => {
                           <Textarea
                             size="sm"
                             minRows={2}
-                            value={form.complaintReason}
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.product_complain_reason
+                            }
                             onChange={(e) =>
-                              handleChange("complaintReason", e.target.value)
+                              handleChange(
+                                "product_complain_reason",
+                                e.target.value,
+                                item.id
+                              )
                             }
                           />
                         </FormControl>
@@ -240,9 +323,16 @@ export const POResult = ({ data }) => {
                           <Textarea
                             size="sm"
                             minRows={2}
-                            value={form.complaintResponse}
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.product_complain_response
+                            }
                             onChange={(e) =>
-                              handleChange("complaintResponse", e.target.value)
+                              handleChange(
+                                "product_complain_response",
+                                e.target.value,
+                                item.id
+                              )
                             }
                           />
                         </FormControl>
@@ -255,9 +345,11 @@ export const POResult = ({ data }) => {
                           </FormLabel>
                           <Select
                             size="sm"
-                            value={form.status}
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]?.status
+                            }
                             onChange={(_, value) =>
-                              handleChange("status", value)
+                              handleChange("status", value, item.id)
                             }
                             placeholder="Select status"
                           >

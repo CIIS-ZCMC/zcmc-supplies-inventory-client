@@ -6,6 +6,7 @@ import {
   ClipboardList,
   ChartCandlestick,
   NotebookTextIcon,
+  NotebookTabs,
 } from "lucide-react";
 import { BiCategory } from "react-icons/bi";
 import { GrDocument } from "react-icons/gr";
@@ -59,9 +60,10 @@ export const sidebarRoutes = [
     icon: <BiCategory />,
     permissions: ["view"],
   },
+
   {
     path: "/purchase-order",
-    name: "Purchase Orders (Tagging)",
+    name: "Purchase Request/Orders (Tagging)",
     element: <PurchaseReq />,
     icon: <NotebookTextIcon />,
     permissions: ["view"],

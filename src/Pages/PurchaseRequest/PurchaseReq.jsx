@@ -4,7 +4,14 @@ import { Box, Divider, Stack, Typography, useTheme } from "@mui/joy";
 import ButtonComponent from "../../Components/ButtonComponent";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import InputComponent from "../../Components/Form/InputComponent";
-import { ArrowDown, ArrowUp, SearchIcon, ViewIcon } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  FileSymlink,
+  SearchIcon,
+  ViewIcon,
+  ExternalLink,
+} from "lucide-react";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import useInventoryHook from "../../Hooks/InventoryHook";
 import { user } from "../../Data/index";
@@ -19,6 +26,13 @@ import { SquareArrowOutUpRight, Pencil } from "lucide-react";
 import useSelectedRow from "../../Store/SelectedRowStore";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import ViewTaggedPurchasedOrder from "./ViewTaggedPurchasedOrder";
+import Tabs from "@mui/joy/Tabs";
+import TabList from "@mui/joy/TabList";
+import Tab from "@mui/joy/Tab";
+import TabPanel from "@mui/joy/TabPanel";
+import { Scroll, ScrollText, Tag } from "lucide-react";
+import { CAF } from "./CAF";
+
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -69,7 +83,7 @@ const PurchaseReq = () => {
   const theme = useTheme();
 
   const pageDetails = {
-    title: "Purchase Orders Information Tagging",
+    title: "Purchase Request/Orders Information Tagging",
     description:
       "Enhance purchase request records by tagging critical financial information, including available funds and ORS/BURS numbers.",
     pagePath: "/purchase-order",
@@ -125,13 +139,7 @@ const PurchaseReq = () => {
                 value={selectedCategory}
                 onChange={setCategory}
               /> */}
-              <SelectComponent
-                startIcon={"Sort by:"}
-                placeholder={"highest"}
-                options={sortFilter}
-                value={sortOrder}
-                onChange={setSortOrder}
-              />
+
               <ButtonComponent
                 size="sm"
                 variant={"soft"}
@@ -145,65 +153,104 @@ const PurchaseReq = () => {
           {id ? (
             <Outlet />
           ) : (
-            <PaginatedTable
-              customAction={true}
-              handleCustomAction={(perRow) => {
-                return (
-                  <>
-                    <ButtonComponent
-                      startDecorator={<SquareArrowOutUpRight size={"1rem"} />}
-                      variant={"plain"}
-                      size="sm"
-                      onClick={() => {
-                        setSelectedPO(perRow);
-                        navigate(`${perRow.PO_number}`);
-                      }}
-                    />
-                  </>
-                );
-              }}
-              // viewable={true}
-              loading={isLoading}
-              tableTitle={"List of purchased orders"}
-              tableDesc={
-                "Select items to add tagging of : ORS/BURS no., Amount etc.."
-              }
-              columns={PurchaseOrderHeader}
-              rows={purchaseORderData}
-              actions={<ViewIcon />}
-              btnLabel={"Add new item name"}
-              actionBtns={
-                <Stack direction="row" spacing={1} mt={2}>
-                  <ButtonComponent
-                    variant={"outlined"}
-                    label="Generate report"
-                    size="lg"
-                  />
-                  <ButtonComponent
-                    label="Tagged Records"
-                    onClick={() => {
-                      setIsViewDialogOpen(true);
+            <>
+              <Tabs aria-label="Basic tabs" defaultValue={0}>
+                <TabList>
+                  <Tab>
+                    <Typography
+                      level="body-xs"
+                      sx={{ fontWeight: "bold" }}
+                      startDecorator={<Scroll size={16} />}
+                    >
+                      Purchased Requests
+                    </Typography>
+                  </Tab>
+                  <Tab>
+                    <Typography
+                      level="body-xs"
+                      sx={{ fontWeight: "bold" }}
+                      startDecorator={<ScrollText size={16} />}
+                    >
+                      Purchased Orders
+                    </Typography>
+                  </Tab>
+                  {/* <Tab>
+                    <Typography
+                      level="body-xs"
+                      sx={{ fontWeight: "bold" }}
+                      startDecorator={<Tag size={16} />}
+                    >
+                      Tagged Records
+                    </Typography>
+                  </Tab> */}
+                </TabList>
+                <TabPanel value={0}>
+                  <CAF />
+                </TabPanel>
+                <TabPanel value={1}>
+                  <PaginatedTable
+                    customAction={true}
+                    handleCustomAction={(perRow) => {
+                      return (
+                        <>
+                          <ButtonComponent
+                            startDecorator={
+                              <SquareArrowOutUpRight size={"1rem"} />
+                            }
+                            variant={"plain"}
+                            size="sm"
+                            onClick={() => {
+                              setSelectedPO(perRow);
+                              navigate(`${perRow.PO_number}`);
+                            }}
+                          />
+                        </>
+                      );
                     }}
+                    // viewable={true}
+                    loading={isLoading}
+                    tableTitle={"List of purchased orders"}
+                    tableDesc={
+                      "Select items to add tagging of : ORS/BURS no., Amount etc.."
+                    }
+                    columns={PurchaseOrderHeader}
+                    rows={purchaseORderData}
+                    actions={<ViewIcon />}
+                    btnLabel={"Add new item name"}
+                    actionBtns={
+                      <Stack direction="row" spacing={1} mt={2}>
+                        <ButtonComponent
+                          variant={"outlined"}
+                          label="Generate report"
+                          size="lg"
+                        />
+                        <ButtonComponent
+                          variant={"soft"}
+                          endDecorator={<ExternalLink size={17} />}
+                          label=" PO Tagged Records"
+                          onClick={() => {
+                            setIsViewDialogOpen(true);
+                          }}
+                        />
+                      </Stack>
+                    }
+                    icon={
+                      <MdOutlineLibraryAdd
+                        style={{
+                          verticalAlign: "middle",
+                          color: theme.palette.custom.buttonBg,
+                          fontSize: 30,
+                          backgroundColor: "#EBF2F9",
+                          padding: 10,
+                          borderRadius: 5,
+                        }}
+                      />
+                    }
                   />
-                </Stack>
-              }
-              icon={
-                <MdOutlineLibraryAdd
-                  style={{
-                    verticalAlign: "middle",
-                    color: theme.palette.custom.buttonBg,
-                    fontSize: 30,
-                    backgroundColor: "#EBF2F9",
-                    padding: 10,
-                    borderRadius: 5,
-                  }}
-                />
-              }
-              // label={"Fill-up your inventory by creating a New item"}
-              // desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
-              //     inventory items in filling-up IARs and RIS requests.`}
-              // btn={<ButtonComponent label={"Create new item"} onClick={"/"} />}
-            />
+                </TabPanel>
+                <TabPanel value={2}></TabPanel>
+              </Tabs>
+            </>
           )}
         </ContainerComponent>
       </Stack>

@@ -17,6 +17,8 @@ const useSuppliersHook = create((set) => ({
     prcountry: "Philippines", // Default to Philippines
   },
   PO_result: [],
+  supplierData: [],
+  dashboardData: [],
 
   // ✅ Validation Schema
   validationSchema: Yup.object({
@@ -112,6 +114,50 @@ const useSuppliersHook = create((set) => ({
     }
   },
   clearPOResult: () => set({ PO_result: [] }),
+  UpdatePos: async (id, formData) => {
+    try {
+      const response = await inventory_api.post(
+        `/${API.UPDATE_PO}/${id}`,
+        formData
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating PO:", error.message);
+      throw error;
+    }
+  },
+
+  getPODashboard: async () => {
+    try {
+      const response = await inventory_api.get(`/${API.PO_DASHBOARD}`);
+      set({ dashboardData: response.data.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching PO dashboard:", error.message);
+      throw error;
+    }
+  },
+  getPOSRecords: async (type) => {
+    try {
+      const response = await inventory_api.get(`/${API.PO_RECORDS}/${type}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching PO dashboard:", error.message);
+      throw error;
+    }
+  },
+  getSuppliersPerformanceRatings: async () => {
+    try {
+      const response = await inventory_api.get(`/${API.SUPPLIERS_PERFORMANCE}`);
+
+      console.log(response.data);
+      set({ supplierData: response.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching PO dashboard:", error.message);
+      throw error;
+    }
+  },
 }));
 
 export default useSuppliersHook;
