@@ -121,6 +121,9 @@ export const API = {
   PO_DASHBOARD: "fetchDashboard",
   PO_RECORDS: "getPOSRecords",
   SUPPLIERS_PERFORMANCE: "getSuppliersPerformanceRatings",
+  PR_RECORDS: "fetchPR",
+  CAf_Store: "storeCaf",
+  GETCAF: "caflist",
 
   TAGGED_PO_INFORMATION: "get-tagged-po-info",
 

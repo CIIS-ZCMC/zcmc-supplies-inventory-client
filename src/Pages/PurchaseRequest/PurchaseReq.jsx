@@ -32,6 +32,7 @@ import Tab from "@mui/joy/Tab";
 import TabPanel from "@mui/joy/TabPanel";
 import { Scroll, ScrollText, Tag } from "lucide-react";
 import { CAF } from "./CAF";
+import { POtag } from "./POtag";
 
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
@@ -165,6 +166,15 @@ const PurchaseReq = () => {
                       Purchased Requests
                     </Typography>
                   </Tab>
+                  <Tab sx={{ display: "none" }}>
+                    {/* <Typography
+                      level="body-xs"
+                      sx={{ fontWeight: "bold" }}
+                      startDecorator={<ScrollText size={16} />}
+                    >
+                      Purchased Orders
+                    </Typography> */}
+                  </Tab>
                   <Tab>
                     <Typography
                       level="body-xs"
@@ -174,15 +184,6 @@ const PurchaseReq = () => {
                       Purchased Orders
                     </Typography>
                   </Tab>
-                  {/* <Tab>
-                    <Typography
-                      level="body-xs"
-                      sx={{ fontWeight: "bold" }}
-                      startDecorator={<Tag size={16} />}
-                    >
-                      Tagged Records
-                    </Typography>
-                  </Tab> */}
                 </TabList>
                 <TabPanel value={0}>
                   <CAF />
@@ -248,7 +249,9 @@ const PurchaseReq = () => {
                     }
                   />
                 </TabPanel>
-                <TabPanel value={2}></TabPanel>
+                <TabPanel value={2}>
+                  <POtag />
+                </TabPanel>
               </Tabs>
             </>
           )}

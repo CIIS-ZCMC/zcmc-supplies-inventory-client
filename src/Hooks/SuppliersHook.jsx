@@ -19,6 +19,8 @@ const useSuppliersHook = create((set) => ({
   PO_result: [],
   supplierData: [],
   dashboardData: [],
+  PR_result: [],
+  CAF_list: [],
 
   // ✅ Validation Schema
   validationSchema: Yup.object({
@@ -152,6 +154,36 @@ const useSuppliersHook = create((set) => ({
 
       console.log(response.data);
       set({ supplierData: response.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching PO dashboard:", error.message);
+      throw error;
+    }
+  },
+
+  getPRrecords: async (PR) => {
+    try {
+      const response = await inventory_api.get(`/${API.PR_RECORDS}/${PR}`);
+      set({ PR_result: response.data.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching PO dashboard:", error.message);
+      throw error;
+    }
+  },
+  storeCAF: async (data) => {
+    try {
+      const response = await inventory_api.post(`/${API.CAf_Store}`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching PO dashboard:", error.message);
+      throw error;
+    }
+  },
+  getCAF: async () => {
+    try {
+      const response = await inventory_api.get(`/${API.GETCAF}`);
+      set({ CAF_list: response.data.data });
       return response.data;
     } catch (error) {
       console.error("Error fetching PO dashboard:", error.message);

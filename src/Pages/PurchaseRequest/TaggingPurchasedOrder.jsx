@@ -24,8 +24,13 @@ import SnackbarComponent from "../../Components/SnackbarComponent";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+
 import swal from "sweetalert";
 function TaggingPurchasedOrder(props) {
+  const path = window.location.pathname; // "/purchase-order/22030086"
+  const segments = path.split("/");
+  const poNumber = segments[2];
+
   const { selectedPo } = useSelectedRow();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
     useSnackbarHook();
@@ -34,16 +39,17 @@ function TaggingPurchasedOrder(props) {
   const [submit, setSubmit] = useState(false);
   const [searchParams] = useSearchParams();
   const viewingOnly = searchParams.get("viewingOnly");
-  let po_number = selectedPo?.PO_number ?? selectedPo?.po_number;
+  //let po_number = selectedPo?.PO_number ?? selectedPo?.po_number;
 
-  console.log(selectedPo);
   const { data, isLoading, error } = useQuery({
-    queryKey: ["purchased_orders_items", po_number],
-    queryFn: () => getPOitems(po_number),
+    queryKey: ["purchased_orders_items", poNumber],
+    queryFn: () => getPOitems(poNumber),
   });
 
+  console.log(data);
+
   const pageDetails = {
-    pageTitle: `Tagging  PO#"${po_number}" `,
+    pageTitle: `Tagging  PO#"${poNumber}" `,
     title: "Reports",
     description: "Tag ORS/BURS no., Amount etc.",
     pagePath: null,
@@ -52,60 +58,14 @@ function TaggingPurchasedOrder(props) {
   };
 
   const fieldLabels = {
-    Category: "Category",
-    barcodeid: "Barcode ID",
-
-    //  FK_iwItems: "Item Code",
-    PO_ITEM_UNIT: "Item Unit",
-    //PO_number: "PO Number",
-    pr_old_po_number: "Old PO Number",
-
-    PO_docdate: "PO Document Date",
-    SourceFunds: "Source of Funds",
-    DTdelivery: "Delivery Date",
-    billto: "Bill To",
-    billtoaddress: "Billing Address",
-    deliverDate: "Actual Delivery Date",
-    delivertoaddress: "Delivery Address",
-    deliveryTerms: "Delivery Terms",
-    FK_faVendors: "Vendor ID",
-    //IAR: "IAR Number",
-
-    //  api_docno: "API Document No.",
-
-    barcodeidcustom: "Custom Barcode",
-
-    created_at: "Created At",
-
-    discount: "Discount",
-    docbarcodeid: "Document Barcode ID",
-    fullname: "Supplier Name",
-    id: "Record ID",
-    isInmms: "Included in MMS",
-    itemSpec: "Item Specification",
-    itemabbrev: "Item Abbreviation",
-    itemgroup: "Item Group",
+    itemabbrev: "Item Name",
     itemdesc: "Item Description",
-    itemdesccustom: "Custom Item Description",
-
-    vat: "VAT (%)",
-    vatamt: "VAT Amount",
-    totitm: "Total Items",
-    purcprice: "Purchase Price",
+    unit: "Unit",
+    supplier: "Supplier",
     totqty: "Total Quantity",
-    curramt: "Current Amount",
-    locamt: "Local Amount",
-    netcurramt: "Net Current Amount",
-    netlocamt: "Net Local Amount",
-    phicprice: "PHIC Price",
-    postatus: "PO Status",
-    postdate: "Post Date",
-
-    reorderdatestart: "Reorder Date Start",
-    saleprice: "Sale Price",
-    surgicaltype: "Surgical Type",
-
-    updated_at: "Updated At",
+    price: "Price",
+    vat: "VAT (%)",
+    remarks: "Remarks",
   };
 
   const handleSubmit = (event) => {
@@ -122,7 +82,8 @@ function TaggingPurchasedOrder(props) {
     }).then((willDelete) => {
       if (willDelete) {
         setSubmit(true);
-        storeTagging(formValues, po_number).then((row) => {
+
+        storeTagging(formValues, poNumber).then((row) => {
           if (row?.request?.status === 200) {
             swal("Tagging Saved Successfully!", {
               icon: "success",
@@ -190,7 +151,7 @@ function TaggingPurchasedOrder(props) {
                   >
                     {/* Left side (first half of fields) */}
                     <div style={{ flex: "1 1 48%" }}>
-                      <h4>PO#: {po_number}</h4>
+                      <h4>PO#: {poNumber}</h4>
                       <table
                         style={{
                           width: "100%",
