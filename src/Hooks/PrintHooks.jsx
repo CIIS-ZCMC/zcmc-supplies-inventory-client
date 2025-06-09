@@ -53,5 +53,10 @@ const usePrintHooks = create((set) => ({
       API.PRINT_GUARD
     }/suppliesIssuance/${JSON.stringify(data)}`;
   },
+  printCaf: (data) => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/printcaf/${JSON.stringify(
+      data
+    )}`;
+  },
 }));
 export default usePrintHooks;

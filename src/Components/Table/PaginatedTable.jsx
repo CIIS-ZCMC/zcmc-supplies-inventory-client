@@ -58,6 +58,7 @@ PaginatedTable.propTypes = {
   editRow: PropTypes.func,
 };
 function PaginatedTable({
+  size = "sm",
   rowsPage = 10,
   columns,
   rows,
@@ -77,8 +78,8 @@ function PaginatedTable({
   editRow,
   editable,
   viewable,
-  customAction=false,
-  handleCustomAction
+  customAction = false,
+  handleCustomAction,
 }) {
   const [isOpenDialog, setIsDialogOpen] = useState(false);
 
@@ -112,8 +113,8 @@ function PaginatedTable({
 
   const handleNavigate = (row) => {
     const { id } = row;
-    localStorage.setItem("supply_year",row.year)
-    localStorage.setItem("supply_name",row.supply_name)
+    localStorage.setItem("supply_year", row.year);
+    localStorage.setItem("supply_name", row.supply_name);
     navigate(`${currentPath}/${id}`); //dynamic route handling
     setSelectedRow(row);
   };
@@ -199,7 +200,7 @@ function PaginatedTable({
           </Box>
         ) : rows?.length > 0 ? (
           <>
-            <Table stripe="odd" borderAxis="both">
+            <Table stripe="odd" borderAxis="both" size={size}>
               <thead>
                 <tr>
                   {columns?.map((col, index) => (
@@ -243,9 +244,7 @@ function PaginatedTable({
                               />
                             )}
 
-                          {customAction && (
-                            handleCustomAction(row)
-                            )}
+                            {customAction && handleCustomAction(row)}
 
                             {editable && (
                               <ButtonComponent
@@ -256,11 +255,12 @@ function PaginatedTable({
                               />
                             )}
                           </>
+                        ) : // row[column?.id] ?? `${startIdx + index + 1}`
+                        column?.render &&
+                          typeof column.render === "function" ? (
+                          column.render(row, index)
                         ) : (
-                          // row[column?.id] ?? `${startIdx + index + 1}`
-                          column?.render && typeof column.render === "function"
-                           ? column.render(row, index)
-                           : row[column?.id]
+                          row[column?.id]
                         )}
                       </td>
                     ))}

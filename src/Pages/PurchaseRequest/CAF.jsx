@@ -7,12 +7,13 @@ import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import { PRresults } from "./PRresults";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import { Printer } from "lucide-react";
+import usePrintHooks from "../../Hooks/PrintHooks";
 export const CAF = () => {
   const [searchPR, setSearchPR] = useState("");
   const [prresult, setprresult] = useState(false);
   const [load, setLoad] = useState(false);
   const { getPRrecords, getCAF, CAF_list } = useSuppliersHook();
-
+  const { printCaf, OpenSmallWindow } = usePrintHooks();
   const columns = [
     {
       id: "id",
@@ -35,6 +36,7 @@ export const CAF = () => {
             size="sm"
             color="warning"
             onClick={() => {
+              OpenSmallWindow(printCaf(row));
               console.log(row);
             }}
           >
@@ -76,6 +78,15 @@ export const CAF = () => {
                 if (searchPR) {
                   setLoad(true);
                   getPRrecords(searchPR).then((res) => {
+                    if (res.data.length == 0) {
+                      setLoad(false);
+                      swal(
+                        "No Data",
+                        `no records found for searched PR : ${searchPR}`,
+                        "error"
+                      );
+                      return;
+                    }
                     setprresult(true);
                     setLoad(false);
                   });

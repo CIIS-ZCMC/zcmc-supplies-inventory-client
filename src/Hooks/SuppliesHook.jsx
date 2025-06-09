@@ -10,6 +10,7 @@ const useSuppliesHook = create((set) => ({
     category: "",
     unit: "",
   },
+  IARResult: [],
 
   validationSchema: Yup.object({
     supplyName: Yup.string().required("Supply name is required"),
@@ -86,6 +87,22 @@ const useSuppliesHook = create((set) => ({
       console.error("Error updating supply:", error.message);
       throw error;
     }
+  },
+
+  getIAR: async (data) => {
+    try {
+      const response = await inventory_api.get(
+        `/fetch-iar/${data.poNo}/${data.invoice_date}`
+      );
+      set({ IARResult: response.data.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error updating supply:", error.message);
+      throw error;
+    }
+  },
+  clearIARResult: () => {
+    set({ IARResult: [] });
   },
 }));
 

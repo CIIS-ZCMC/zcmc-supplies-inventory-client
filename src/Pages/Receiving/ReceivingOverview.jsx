@@ -27,6 +27,12 @@ import { CiShare1 } from "react-icons/ci";
 import { MdOutlineCancel } from "react-icons/md";
 import Checkbox from "@mui/joy/Checkbox";
 import usePrintHooks from "../../Hooks/PrintHooks";
+import Menu from "@mui/joy/Menu";
+import MenuButton from "@mui/joy/MenuButton";
+import MenuItem from "@mui/joy/MenuItem";
+import Dropdown from "@mui/joy/Dropdown";
+import { IoMdArrowDropdownCircle } from "react-icons/io";
+import { SearchPOForIAR } from "./SearchPOForIAR";
 const ReceivingOverview = () => {
   const { getStockIn, setInitialValues } = useReceivingHook();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
@@ -49,13 +55,14 @@ const ReceivingOverview = () => {
   useEffect(() => {
     // Update filtered data whenever stockinData changes
     setFilteredData(stockinData);
-  }, [stockinData]);
+  }, []);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [generateIARBool, setGenerateIARBool] = useState(false);
   const [selectedIARs, setSelectedIARs] = useState([]);
+  const [printIARModal, setPrintIARModal] = useState(false);
 
   const pageDetails = {
     title: "Receiving (IAR Management)",
@@ -231,12 +238,39 @@ const ReceivingOverview = () => {
               <>
                 <Stack direction={"row"} justifyContent={"space-between"}>
                   <Stack direction="row" spacing={1} mb={1} mt={2}>
-                    <ButtonComponent
+                    {/* <ButtonComponent
                       variant={"outlined"}
                       label="Generate report"
                       size="lg"
                       onClick={generateReport}
-                    />
+                    /> */}
+                    <Dropdown>
+                      <MenuButton
+                        variant="soft"
+                        color="primary"
+                        sx={{
+                          padding: "11px 20px ",
+                          fontWeight: "500",
+                          fontSize: "13px",
+                        }}
+                        endDecorator={<IoMdArrowDropdownCircle fontSize={18} />}
+                      >
+                        Generate Report
+                      </MenuButton>
+                      <Menu sx={{ fontSize: "14px" }}>
+                        <MenuItem onClick={generateReport}>
+                          Export to Excel
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            setPrintIARModal(true);
+                          }}
+                        >
+                          IAR
+                        </MenuItem>
+                      </Menu>
+                    </Dropdown>
+
                     <ButtonComponent
                       label="New IAR"
                       onClick={handleDialogOpen}
@@ -335,6 +369,16 @@ const ReceivingOverview = () => {
           "Complete information about an IAR. This record cannot be edited."
         }
       />
+
+      <ModalComponent
+        isOpen={printIARModal}
+        handleClose={() => setPrintIARModal(false)}
+        content={<SearchPOForIAR />}
+        actionBtns={false}
+        title={"GENERATE - INSPECTION AND ACCEPTANCE REPORT"}
+        description={"Search for PO to print.."}
+      />
+      {/* asdasdasd */}
 
       <SnackbarComponent
         open={open}
