@@ -57,7 +57,7 @@ const FormDialog = ({
   const { getSuppliers } = useSuppliersHook();
   const { getBrands } = useBrandsHook();
   const { getSources } = useSourceHook();
-  const { getSupplies } = useSuppliesHook();
+  const getSupplies = useSuppliesHook((state) => state.getSupplies);
   const { isUpdate, id } = usePaginatedTableHook();
 
   const {

@@ -58,5 +58,10 @@ const usePrintHooks = create((set) => ({
       data
     )}`;
   },
+  printIAR: (data) => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/printiar/${JSON.stringify(
+      data
+    )}`;
+  },
 }));
 export default usePrintHooks;

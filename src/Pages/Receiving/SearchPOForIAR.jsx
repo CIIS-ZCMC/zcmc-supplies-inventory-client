@@ -8,11 +8,13 @@ import {
   Button,
   Divider,
   Table,
+  Checkbox,
 } from "@mui/joy";
 import { Search } from "lucide-react";
 import useSuppliesHook from "../../Hooks/SuppliesHook";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import { X, Printer } from "lucide-react";
+import usePrintHooks from "../../Hooks/PrintHooks";
 import moment from "moment";
 export const SearchPOForIAR = () => {
   const [load, setLoad] = useState(false);
@@ -20,7 +22,8 @@ export const SearchPOForIAR = () => {
   const getIAR = useSuppliesHook((state) => state.getIAR);
   const IARResult = useSuppliesHook((state) => state.IARResult);
   const clearIARResult = useSuppliesHook((state) => state.clearIARResult);
-
+  const { OpenSmallWindow, printIAR } = usePrintHooks();
+  const [selectedIAR, setSelectedIAR] = useState([]);
   const handleChange = (key, value) => {
     setData((prev) => ({
       ...prev,
@@ -28,6 +31,25 @@ export const SearchPOForIAR = () => {
     }));
   };
   const columns = [
+    {
+      id: "key", // or any field name
+      label: "",
+      width: "8%",
+      render: (row, index) => {
+        return (
+          <Checkbox
+            checked={selectedIAR.includes(row.id)}
+            onChange={(e) => {
+              if (e.currentTarget.checked) {
+                setSelectedIAR((prev) => [...prev, row.id]);
+              } else {
+                setSelectedIAR((prev) => prev.filter((id) => id !== row.id));
+              }
+            }}
+          />
+        );
+      },
+    },
     {
       id: "key", // or any field name
       label: "#",
@@ -93,8 +115,7 @@ export const SearchPOForIAR = () => {
                 setLoad(false);
                 return;
               }
-
-              getIAR(data).then(() => {
+              getIAR(data).then((res) => {
                 setLoad(false);
                 return;
               });
@@ -106,7 +127,7 @@ export const SearchPOForIAR = () => {
         {/* </ContainerComponent> */}
         <Divider sx={{ marginTop: "10px" }} />
         <Box mt={1}>
-          {IARResult.length >= 1 && (
+          {IARResult?.length >= 1 && (
             <PaginatedTable
               size={"sm"}
               actionBtns={
@@ -137,7 +158,7 @@ export const SearchPOForIAR = () => {
                       color="warning"
                       variant="soft"
                       onClick={() => {
-                        console.log(row);
+                        OpenSmallWindow(printIAR([row.id]));
                       }}
                     >
                       <Printer size={17} />

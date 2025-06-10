@@ -97,8 +97,7 @@ const useSuppliesHook = create((set) => ({
       set({ IARResult: response.data.data });
       return response.data;
     } catch (error) {
-      console.error("Error updating supply:", error.message);
-      throw error;
+      return error;
     }
   },
   clearIARResult: () => {
