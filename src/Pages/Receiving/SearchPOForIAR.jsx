@@ -131,20 +131,48 @@ export const SearchPOForIAR = () => {
             <PaginatedTable
               size={"sm"}
               actionBtns={
-                <Button
-                  sx={{
-                    marginTop: "10px",
-                    float: "right",
-                    fontWeight: "normal",
-                  }}
-                  size="sm"
-                  variant="outlined"
-                  color="danger"
-                  endDecorator={<X size={15} />}
-                  onClick={clearIARResult}
+                <Stack
+                  direction={"row"}
+                  spacing={2}
+                  justifyContent={"flex-end"}
                 >
-                  Clear Filter
-                </Button>
+                  {selectedIAR.length >= 1 && (
+                    <Button
+                      sx={{
+                        marginTop: "10px",
+
+                        fontWeight: "normal",
+                      }}
+                      size="sm"
+                      variant="outlined"
+                      color="warning"
+                      endDecorator={<Printer size={17} />}
+                      onClick={() => {
+                        OpenSmallWindow(printIAR(selectedIAR));
+                      }}
+                    >
+                      Print ({selectedIAR.length})
+                    </Button>
+                  )}
+
+                  <Button
+                    sx={{
+                      marginTop: "10px",
+
+                      fontWeight: "normal",
+                    }}
+                    size="sm"
+                    variant="outlined"
+                    color="danger"
+                    endDecorator={<X size={15} />}
+                    onClick={() => {
+                      clearIARResult();
+                      setSelectedIAR([]);
+                    }}
+                  >
+                    Clear Filter
+                  </Button>
+                </Stack>
               }
               rows={IARResult}
               columns={columns}

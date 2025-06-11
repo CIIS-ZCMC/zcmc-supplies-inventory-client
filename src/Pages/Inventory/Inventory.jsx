@@ -155,7 +155,7 @@ const Inventory = () => {
     { id: "supply_name", label: "Item Name", width: "30%" },
     { id: "category_name", label: "Category" },
     { id: "unit_name", label: "Unit" },
-    { id: "quantity", label: "Quantity", width: "10%" },
+    // { id: "quantity", label: "Quantity", width: "10%" },
     { id: "actions", label: "Actions", width: "20%" },
   ];
 
