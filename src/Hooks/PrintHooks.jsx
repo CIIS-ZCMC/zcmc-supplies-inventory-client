@@ -63,5 +63,10 @@ const usePrintHooks = create((set) => ({
       data
     )}`;
   },
+  printDisbursementVoucher: (data) => {
+    return `${BASE_URL.production}/${API.PRINT_GUARD}/printdv/${JSON.stringify(
+      data
+    )}`;
+  },
 }));
 export default usePrintHooks;

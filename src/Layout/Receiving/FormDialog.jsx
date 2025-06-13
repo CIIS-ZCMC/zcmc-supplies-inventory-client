@@ -78,8 +78,15 @@ const FormDialog = ({
     { key: "suppliers", fn: getSuppliers },
   ];
 
+  // const queries = queryConfigs.map(({ key, fn }) =>
+  //   useQuery({ queryKey: [key], queryFn: fn })
+  // );
   const queries = queryConfigs.map(({ key, fn }) =>
-    useQuery({ queryKey: [key], queryFn: fn })
+    useQuery({
+      queryKey: [key],
+      queryFn: fn,
+      enabled: !queryClient.getQueryData([key]), // only run if data doesn't exist
+    })
   );
 
   // Destructure data and loading states from queries for cleaner access

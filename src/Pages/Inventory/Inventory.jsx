@@ -35,6 +35,7 @@ import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
 import { CiFilter } from "react-icons/ci";
+import { NewDisbursement } from "./NewDisbursement";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -77,6 +78,7 @@ const Inventory = () => {
   const [stockCard, setStockCard] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const InventoryFilter = useInventoryHook((state) => state.InventoryFilter);
+  const [isDV, setIsDV] = useState(false);
   const setInventoryFilter = useInventoryHook(
     (state) => state.setInventoryFilter
   );
@@ -121,21 +123,23 @@ const Inventory = () => {
     queryKey: "inventory",
     queryFn: getInventory,
   });
-  const inventoryData =
-    InventoryFilter?.month && InventoryFilter?.year
-      ? data?.data.filter((item) =>
-          item.transaction.some((x) => {
-            const date = new Date(x.created_at);
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
+  // const inventoryData =
+  //   InventoryFilter?.month && InventoryFilter?.year
+  //     ? data?.data.filter((item) =>
+  //         item.transaction.some((x) => {
+  //           const date = new Date(x.created_at);
+  //           const month = date.getMonth() + 1;
+  //           const year = date.getFullYear();
 
-            return (
-              month === parseInt(InventoryFilter.month, 10) &&
-              year === parseInt(InventoryFilter.year, 10)
-            );
-          })
-        )
-      : data?.data;
+  //           return (
+  //             month === parseInt(InventoryFilter.month, 10) &&
+  //             year === parseInt(InventoryFilter.year, 10)
+  //           );
+  //         })
+  //       )
+  //     : data?.data;
+
+  const inventoryData = data?.data;
 
   const getMonthName = (monthNumber) => {
     const date = new Date();
@@ -178,7 +182,7 @@ const Inventory = () => {
     form.appendChild(inputBalance);
     form.appendChild(inputRemarks);
 
-    swal("No starting balance detected. Please set to proceed.", {
+    swal("Custom Starting Balance. Please set or cancel to proceed.", {
       content: form,
       buttons: {
         cancel: true,
@@ -286,8 +290,8 @@ const Inventory = () => {
                     onChange={() => {
                       setStartingBal(null);
                       if (perRow.quantity === 0) {
-                        handleSelection(perRow);
                       }
+                      handleSelection(perRow);
                       setSelectedItems(perRow.id);
                     }}
                     color="danger"
@@ -368,6 +372,14 @@ const Inventory = () => {
                           }}
                         >
                           Supplies Issuance
+                        </MenuItem>
+
+                        <MenuItem
+                          onClick={() => {
+                            setIsDV(true);
+                          }}
+                        >
+                          Disbursement Voucher
                         </MenuItem>
                       </Menu>
                     </Dropdown>
@@ -467,6 +479,13 @@ const Inventory = () => {
           />
         </ContainerComponent>
       </Stack>
+
+      <ModalComponent
+        isOpen={isDV}
+        handleClose={() => setIsDV(false)}
+        title="Generate Disbursement Voucher"
+        content={<NewDisbursement />}
+      />
 
       <ModalComponent
         isOpen={isDialogOpen}
