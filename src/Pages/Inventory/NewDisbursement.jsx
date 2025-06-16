@@ -4,6 +4,7 @@ import {
   Checkbox,
   Divider,
   Input,
+  Radio,
   Stack,
   Typography,
 } from "@mui/joy";
@@ -70,6 +71,13 @@ export const NewDisbursement = () => {
           handleChange("orsbursno", e.target.value);
         }}
       />
+      <Typography sx={{ mt: 1 }}>Invoice No:</Typography>
+      <Input
+        placeholder="eg.0012,0013"
+        onChange={(e) => {
+          handleChange("invoiceno", e.target.value);
+        }}
+      />
 
       <Box>
         <Button
@@ -104,24 +112,79 @@ export const NewDisbursement = () => {
             <Input
               placeholder="Deduction Name e.g. Less 1% Holding Tax"
               value={row.name}
-              onChange={(e) =>
-                handleDeductionChange(index, "name", e.target.value)
-              }
+              onChange={(e) => {
+                handleDeductionChange(index, "name", e.target.value);
+              }}
               sx={{ mb: 0.5 }}
             />
-            <Checkbox
-              label="Is Percentage"
-              checked={row.isPercentage}
-              onChange={(e) =>
-                handleDeductionChange(index, "isPercentage", e.target.checked)
-              }
-              sx={{ mb: 0.5 }}
-            />
+            <Stack sx={{ mb: 2, mt: 2 }}>
+              <Checkbox
+                label={<>Is Percentage</>}
+                checked={row.isPercentage}
+                onChange={(e) =>
+                  handleDeductionChange(index, "isPercentage", e.target.checked)
+                }
+                sx={{ mb: 0.5 }}
+              />
+
+              {row.isPercentage && (
+                <Stack direction="row" padding={1} spacing={1}>
+                  <Radio
+                    checked={row.baseType === "total"}
+                    onChange={() =>
+                      handleDeductionChange(index, "baseType", "total")
+                    }
+                    label={
+                      <Typography level="body-xs">
+                        ( Based on Total Amount )
+                      </Typography>
+                    }
+                  />
+                  <Radio
+                    checked={row.baseType === "displayed"}
+                    onChange={() =>
+                      handleDeductionChange(index, "baseType", "displayed")
+                    }
+                    label={
+                      <Typography level="body-xs">
+                        ( Based on Displayed Value )
+                      </Typography>
+                    }
+                  />
+                </Stack>
+              )}
+            </Stack>
+
+            <Divider />
+
+            <Typography level="body-sm" sx={{ mb: 0.5, mt: 1 }}>
+              Value / Percentage
+            </Typography>
             <Input
-              placeholder="Value (e.g. 1%)"
+              placeholder="Value (e.g. 1%) or 12345"
               value={row.value}
               onChange={(e) =>
-                handleDeductionChange(index, "value", e.target.value)
+                handleDeductionChange(
+                  index,
+                  "value",
+                  String(e.target.value).trim()
+                )
+              }
+            />
+
+            <Typography level="body-sm" sx={{ mb: 0.5, mt: 1 }}>
+              Display value
+            </Typography>
+            <Input
+              placeholder="Display Value : eg. 298650"
+              value={row.displayValue}
+              sx={{ mb: 1 }}
+              onChange={(e) =>
+                handleDeductionChange(
+                  index,
+                  "displayValue",
+                  String(e.target.value).trim()
+                )
               }
             />
             <Divider sx={{ mt: 2, mb: 2 }} />
@@ -136,10 +199,20 @@ export const NewDisbursement = () => {
           sx={{ mt: 1 }}
           size="md"
           onClick={() => {
+            const safeDeductions = Deductions.map((d) => ({
+              ...d,
+              name: String(d.name).trim().replace(/\//g, "^"),
+            }));
+
+            printDisbursementVoucher({
+              input: inputs,
+              deductions: safeDeductions,
+            });
+
             OpenSmallWindow(
               printDisbursementVoucher({
                 input: inputs,
-                deductions: Deductions,
+                deductions: safeDeductions,
               })
             );
           }}
