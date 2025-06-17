@@ -11,11 +11,15 @@ import {
 import React, { useState } from "react";
 import { Delete } from "lucide-react";
 import usePrintHooks from "../../Hooks/PrintHooks";
+import usePOTaggingHooks from "../../Hooks/POTaggingHook";
+import { ScanSearch } from "lucide-react";
 export const NewDisbursement = () => {
   const [inputs, setInputs] = useState([]);
   const [Deductions, setDeductions] = useState([]);
+  const [orsburs, setOrsburs] = useState();
   const { printDisbursementVoucher, OpenSmallWindow } = usePrintHooks();
-
+  const [load, setLoad] = useState(false);
+  const { fetchORSBurs } = usePOTaggingHooks();
   const handleAddDeduction = () => {
     setDeductions((prev) => [
       ...prev,
@@ -43,6 +47,7 @@ export const NewDisbursement = () => {
     <div>
       <Typography>Enter PR Number:</Typography>
       <Input
+        value={inputs?.pr_number}
         placeholder="Type here ..."
         sx={{ mb: 2 }}
         onChange={(e) => {
@@ -52,20 +57,33 @@ export const NewDisbursement = () => {
 
       <Stack direction={"row"} justifyContent={"space-between"} sx={{ mb: 1 }}>
         <Typography>ORS/BURS No:</Typography>
+
         <Button
           variant="soft"
+          color="danger"
+          disabled={inputs?.pr_number ? false : true}
           sx={{
             fontSize: "11px",
             fontWeight: "normal",
             textTransform: "uppercase",
           }}
           size="sm"
+          loading={load}
+          onClick={() => {
+            setLoad(true);
+            fetchORSBurs(inputs?.pr_number).then((response) => {
+              handleChange("orsbursno", response.data);
+              setLoad(false);
+            });
+          }}
+          endDecorator={<ScanSearch />}
         >
-          Fetch ORS/BURS if theres any.
+          Fetch ORS/BURS
         </Button>
       </Stack>
 
       <Input
+        value={inputs?.orsbursno}
         placeholder="eg.123456-789"
         onChange={(e) => {
           handleChange("orsbursno", e.target.value);

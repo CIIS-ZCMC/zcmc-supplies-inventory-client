@@ -36,6 +36,16 @@ const usePOTaggingHooks = create((set) => ({
       return error;
     }
   },
+  fetchORSBurs: async (pr_number) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.FETCH_ORSBURS}/${pr_number}`
+      );
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
 }));
 
 export default usePOTaggingHooks;

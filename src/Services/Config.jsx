@@ -51,6 +51,7 @@ export const API = {
   SOURCE_LIST: "source-list",
 
   STORE_PO_TAGGING: "submit-tagging",
+  FETCH_ORSBURS: "fetchorsburs",
 
   CATEGORIES: "categories",
   CATEGORY_STORE: "category-store",
