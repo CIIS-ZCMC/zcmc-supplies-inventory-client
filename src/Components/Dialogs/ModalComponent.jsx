@@ -47,6 +47,7 @@ function ModalComponent({
   steps,
   activeStep,
   actionBtns = false,
+  layout = "center",
 }) {
   const handleCloseModal = (event, reason) => {
     // Prevent closing the modal when backdrop is clicked
@@ -67,6 +68,7 @@ function ModalComponent({
       onClose={handleCloseModal} // Use the updated handler
     >
       <ModalDialog
+        layout={layout}
         minWidth={minWidth}
         maxWidth={maxWidth}
         sx={{ width: "auto", p: 4, borderRadius: 20 }}

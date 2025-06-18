@@ -33,13 +33,14 @@ import MenuItem from "@mui/joy/MenuItem";
 import Dropdown from "@mui/joy/Dropdown";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
 import { SearchPOForIAR } from "./SearchPOForIAR";
+import { IARTransmittal } from "./IARTransmittal";
 const ReceivingOverview = () => {
   const { getStockIn, setInitialValues } = useReceivingHook();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
     useSnackbarHook();
   const { selectedCategory, setCategory, filteredInventory, clearFilters } =
     useFilterHook();
-
+  const [transmittal, setTransmittal] = useState(false);
   const { PrintIARTransmittal, OpenSmallWindow } = usePrintHooks();
 
   const { data, isLoading, error } = useQuery({
@@ -282,12 +283,13 @@ const ReceivingOverview = () => {
                         generateIARBool ? "Cancel" : "Generate IAR Transmittal"
                       }
                       onClick={() => {
-                        if (generateIARBool) {
-                          setGenerateIARBool(false);
-                          setSelectedIARs([]);
-                        } else {
-                          setGenerateIARBool(true);
-                        }
+                        setTransmittal(true);
+                        // if (generateIARBool) {
+                        //   setGenerateIARBool(false);
+                        //   setSelectedIARs([]);
+                        // } else {
+                        //   setGenerateIARBool(true);
+                        // }
                       }}
                       endDecorator={
                         <Box sx={{ padding: "5px 0 0 0" }}>
@@ -336,6 +338,17 @@ const ReceivingOverview = () => {
           />
         </ContainerComponent>
       </Stack>
+
+      <ModalComponent
+        layout="fullscreen"
+        maxWidth={"100wh"}
+        isOpen={transmittal}
+        handleClose={() => setTransmittal(false)}
+        content={<IARTransmittal />}
+        actionBtns={false}
+        title={"GENERATE - IAR-TRANSMITTAL"}
+        description={"Set Params.."}
+      />
 
       {/* stock in form */}
       <ModalComponent

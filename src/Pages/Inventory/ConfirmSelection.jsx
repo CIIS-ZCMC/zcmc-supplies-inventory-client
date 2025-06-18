@@ -75,13 +75,50 @@ export const ConfirmSelection = ({
     }
 
     if (isStockCard) {
+      // swal({
+      //   title: "Generating Stock Cards",
+      //   text: "This may take a few moments as we process a large volume of data from BizBox. Do you want to proceed?",
+      //   icon: "info",
+      //   buttons: {
+      //     cancel: "Cancel",
+      //     confirm: {
+      //       text: "Proceed",
+      //       value: true,
+      //       closeModal: false, // Keeps the modal open while processing (if needed)
+      //     },
+      //   },
+      //   dangerMode: true, // Only include if this is a high-risk action
+      // }).then((willGenerate) => {
+      //   if (willGenerate) {
+
+      //     swal.close();
+      //   }
+      // });
       setInventoryFilter(data);
       setGenerateStockCard(true);
       setIsDialogOpen(false);
       return;
     }
     data.selectedItems = selectedItems;
-    OpenSmallWindow(printStockCardBulk(data));
+    swal({
+      title: "Generating Balance Cards",
+      text: "This may take a few moments as we process a large volume of data from BizBox. Do you want to proceed?",
+      icon: "info",
+      buttons: {
+        cancel: "Cancel",
+        confirm: {
+          text: "Proceed",
+          value: true,
+          closeModal: false, // Keeps the modal open while processing (if needed)
+        },
+      },
+      dangerMode: true, // Only include if this is a high-risk action
+    }).then((willGenerate) => {
+      if (willGenerate) {
+        OpenSmallWindow(printStockCardBulk(data));
+        swal.close();
+      }
+    });
   };
 
   return (

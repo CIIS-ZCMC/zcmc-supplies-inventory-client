@@ -70,6 +70,8 @@ export const API = {
   STOCK_IN_UPDATE: "stock-in-update",
   STOCK_IN_DETAILS: "stock-in-details",
 
+  IARRECORDS: "fetchIARRecords",
+
   RELEASING: "releasing-list",
   SUPPLY_RELEASING_LIST: "supply-releasing-list",
   SUPPLY_RECEIVING_LIST: "supply-receiving-list",
@@ -108,6 +110,7 @@ export const API = {
   FETCH_UNITS: "fetch-Unit-data-bizbox",
   FETCH_SUPPLIERS: "fetch-Supplier-data-bizbox",
   FETCH_SUPPLIES: "fetch-items-data-bizbox",
+  FETCH_ITEMS: "fetch-items",
   GET_LASTSYNCED: "lastsynced-items",
 
   RETRIEVED_STOCKNO: "retrieve-stock-no",

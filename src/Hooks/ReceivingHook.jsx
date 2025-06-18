@@ -79,6 +79,16 @@ const useReceivingHook = create((set) => ({
     });
   },
 
+  fetchIARRecords: async (from, to) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.IARRECORDS}/${from}/${to}`
+      );
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
   //fetch the fata of stock into / receiving list
   getStockIn: async () => {
     try {

@@ -79,8 +79,12 @@ const Inventory = () => {
   const [activeStep, setActiveStep] = useState(0);
   const InventoryFilter = useInventoryHook((state) => state.InventoryFilter);
   const [isDV, setIsDV] = useState(false);
+  const [items, setItems] = useState([]);
   const setInventoryFilter = useInventoryHook(
     (state) => state.setInventoryFilter
+  );
+  const retrieveBizboxItems = useInventoryHook(
+    (state) => state.retrieveBizboxItems
   );
   const [startingBal, setStartingBal] = useState(null);
   const {
@@ -147,6 +151,29 @@ const Inventory = () => {
     return date.toLocaleString("default", { month: "long" });
   };
 
+  useEffect(() => {
+    if (generateStockCard) {
+      retrieveBizboxItems(InventoryFilter?.month, InventoryFilter?.year).then(
+        (data) => {
+          setItems(data.data);
+        }
+      );
+    }
+  }, [generateStockCard]);
+
+  const itemColumn = [
+    {
+      id: "key", // or any field name
+      label: "#",
+      width: "5%",
+      render: (row, index) => {
+        return index + 1;
+      },
+    },
+    { id: "supply_name", label: "Item Name", width: "30%" },
+    { id: "unit_name", label: "Category" },
+    { id: "actions", label: "Actions", width: "20%" },
+  ];
   const columns = [
     {
       id: "key", // or any field name
@@ -251,8 +278,12 @@ const Inventory = () => {
             tableDesc={
               "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
             }
-            columns={columns}
-            rows={filteredInventory(inventoryData)}
+            columns={generateStockCard ? itemColumn : columns}
+            rows={
+              generateStockCard
+                ? filteredInventory(items)
+                : filteredInventory(inventoryData)
+            }
             actions={<ViewIcon />}
             btnLabel={"Add new item name"}
             customAction={generateStockCard}
@@ -358,6 +389,7 @@ const Inventory = () => {
                             setIsDialogOpen(true);
                             setMonthlyDistribution(true);
                             setopenIssuance(false);
+                            setStockCard(false);
                           }}
                         >
                           Monthly Distribution Report
@@ -384,10 +416,10 @@ const Inventory = () => {
                       </Menu>
                     </Dropdown>
                   </Box>
-                  <ButtonComponent
+                  {/* <ButtonComponent
                     label="Add new item name"
                     onClick={navigateToItemSupplies}
-                  />
+                  /> */}
                 </Stack>
 
                 {generateStockCard && (

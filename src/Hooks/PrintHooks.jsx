@@ -18,7 +18,7 @@ const usePrintHooks = create((set) => ({
       document.body.clientHeight;
     const newWindow = window.open(
       url,
-      "_blank",
+      "Generating_Report_Window", // Name for window reference (optional)
       `width=${screenWidth},height=${screenHeight},top=0,left=0,resizable=yes,scrollbars=yes`
     );
     if (newWindow) {

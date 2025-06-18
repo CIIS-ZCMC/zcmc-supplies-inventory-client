@@ -13,6 +13,16 @@ const useInventoryHook = create((set) => ({
   setStockno: (stockno) => {
     set({ stockno: stockno });
   },
+  retrieveBizboxItems: async (month, year) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.FETCH_ITEMS}/${month}/${year}`
+      );
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  },
   getStockNo: async (supplyID) => {
     try {
       const response = await inventory_api.get(
