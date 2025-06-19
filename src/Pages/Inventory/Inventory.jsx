@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import PageTitle from "../../Components/PageSetup/PageTitle";
 import {
   Box,
@@ -8,6 +8,7 @@ import {
   useTheme,
   Checkbox,
   Radio,
+  Button,
 } from "@mui/joy";
 import ButtonComponent from "../../Components/ButtonComponent";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
@@ -36,6 +37,7 @@ import Dropdown from "@mui/joy/Dropdown";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
 import { CiFilter } from "react-icons/ci";
 import { NewDisbursement } from "./NewDisbursement";
+import "../../App.css";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -80,6 +82,7 @@ const Inventory = () => {
   const InventoryFilter = useInventoryHook((state) => state.InventoryFilter);
   const [isDV, setIsDV] = useState(false);
   const [items, setItems] = useState([]);
+  const btnGenerateStockCard = useRef();
   const setInventoryFilter = useInventoryHook(
     (state) => state.setInventoryFilter
   );
@@ -106,11 +109,12 @@ const Inventory = () => {
   };
 
   const handleGenerateStockCard = () => {
-    const PrintItem = JSON.stringify({
+    let PrintItem = JSON.stringify({
       selected: selectedItems,
       filter: InventoryFilter,
       startingBalance: startingBal,
     });
+
     OpenSmallWindow(printStockCard(PrintItem));
   };
 
@@ -159,7 +163,7 @@ const Inventory = () => {
         }
       );
     }
-  }, [generateStockCard]);
+  }, [generateStockCard, InventoryFilter]);
 
   const itemColumn = [
     {
@@ -209,27 +213,68 @@ const Inventory = () => {
     form.appendChild(inputBalance);
     form.appendChild(inputRemarks);
 
-    swal("Custom Starting Balance. Please set or cancel to proceed.", {
+    swal("Custom Starting Balance. Please set or proceed without setting.", {
       content: form,
       buttons: {
-        cancel: true,
+        cancel: {
+          text: "Cancel",
+          value: null,
+          visible: true,
+          className: "btn-cancel",
+        },
+        proceed: {
+          text: "Proceed without setting",
+          value: "proceed",
+          className: "btn-proceed",
+        },
         confirm: {
           text: "Set",
+          value: "set",
+          className: "btn-set",
         },
       },
-    }).then(() => {
+    }).then((action) => {
       const value = inputBalance.value;
       const remarks = inputRemarks.value;
-
-      if (value !== "") {
+      let yes = false;
+      if (action === "set") {
+        if (value !== "") {
+          setStartingBal(null);
+          setStartingBal({
+            itemId: perRow.id,
+            value: value,
+            remarks: remarks,
+          });
+          setTimeout(() => {
+            btnGenerateStockCard.current.click();
+          }, 2000);
+        } else {
+          swal("Please enter a balance value.", { icon: "warning" });
+          return;
+        }
+      } else if (action === "proceed") {
+        //  handleGenerateStockCard();
         setStartingBal(null);
-        setStartingBal({
-          itemId: perRow.id,
-          value: value,
-          remarks: remarks,
-        });
+        setTimeout(() => {
+          btnGenerateStockCard.current.click();
+        }, 2000);
       } else {
+        // User clicked "Cancel"
+        console.log("User cancelled the operation.");
       }
+      swal({
+        title: "Report Generating...",
+        text: "Please wait while we generate your report",
+        icon: "info",
+        button: false, // Hide the "OK" button
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+        timer: 2000, // Auto-close after 3000ms (3 seconds)
+      });
+      setTimeout(() => {
+        //  setSelectedItems(null);
+        setStartingBal(null);
+      }, 3000);
     });
   };
 
@@ -318,7 +363,7 @@ const Inventory = () => {
                     label="Select"
                     value={perRow.id}
                     checked={selectedItems === perRow.id}
-                    onChange={() => {
+                    onClick={() => {
                       setStartingBal(null);
                       if (perRow.quantity === 0) {
                       }
@@ -479,15 +524,16 @@ const Inventory = () => {
                       }}
                     />
 
-                    <ButtonComponent
+                    <Button
                       disabled={selectedItems ? false : true}
-                      label={
-                        <Stack direction={"column"}>Generate Stock-Card</Stack>
-                      }
                       variant={"solid"}
+                      sx={{ display: "none" }}
                       color={"success"}
                       onClick={handleGenerateStockCard}
-                    />
+                      ref={btnGenerateStockCard}
+                    >
+                      <Stack direction={"column"}>Generate Stock-Card</Stack>
+                    </Button>
                   </Stack>
                 )}
               </Stack>

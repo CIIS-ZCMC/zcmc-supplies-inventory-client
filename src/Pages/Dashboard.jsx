@@ -23,14 +23,14 @@ import { user, legends } from "../Data/index";
 import { dashboardHeader } from "../Data/TableHeader";
 import { Fetch } from "./Libraries/Fetch";
 import { useNavigate } from "react-router-dom";
-
+import useUserHook from "../hooks/UserHook";
 function Dashboard() {
   const navigate = useNavigate();
 
   const { getDashboardTotal, getDashboardSupplies } = useDashboardHook();
   const { open, message, color, variant, anchor, showSnackbar, closeSnackbar } =
     useSnackbarHook();
-
+  const moduleData = useUserHook((state) => state.moduleData);
   const {
     data: dashboardTotal,
     isLoading,
@@ -56,10 +56,9 @@ function Dashboard() {
   } = dashboardTotal || {};
 
   const dashboardSuppiesData = dashboardSupplies || [];
-
-  // useEffect(() => {
-  //   console.log(dashboardSuppiesData)
-  // }, [dashboardSuppiesData])
+  useEffect(() => {
+    navigate(moduleData[0]);
+  }, [moduleData]);
 
   const [selectedOption, setSelectedOption] = useState("All areas"); // Initial view
 

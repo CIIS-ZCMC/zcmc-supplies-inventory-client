@@ -15,7 +15,7 @@ function NoRows({ pageTitle, label = "No records found", icon, desc, button }) {
           textAlign: "center",
           height: "100%", // Adjust as needed
           width: "100%",
-          minHeight: "40vh",
+          minHeight: "5vh",
           display: "table", // This allows children to align vertically
         }}
       >
@@ -38,15 +38,15 @@ function NoRows({ pageTitle, label = "No records found", icon, desc, button }) {
             />
           )}
           <Typography component="span" level="title-lg" sx={{ ml: 1 }}>
-            {label}
+            {/* {label} */}
           </Typography>
           <Typography textAlign="center" level="body-sm" px={30}>
-            {desc
+            {/* {desc
               ? desc
               : `There are no records found that are eligible for processing
                  "${pageTitle}" as of this moment.
                  Some records are not yet ready for reporting. You may need to manage
-                 some records to accumulate data for reporting.`}
+                 some records to accumulate data for reporting.`} */}
           </Typography>
           {button && button}
         </Stack>

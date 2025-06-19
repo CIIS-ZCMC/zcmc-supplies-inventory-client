@@ -5,6 +5,7 @@ import inventory_api from "../Services/ApiName";
 const useUserHook = create((set) => ({
   user: null,
   userData: [],
+  moduleData: [],
   autoLogout: false,
   setAutoLogout: (boolean) => {
     set({ autoLogout: boolean });
@@ -13,6 +14,7 @@ const useUserHook = create((set) => ({
     try {
       const response = await inventory_api.post(`/${API.SIGN_IN}`, credentials);
       set({ userData: response.data.user });
+      set({ moduleData: response.data.module });
       return response;
     } catch (error) {
       return error;
@@ -21,7 +23,8 @@ const useUserHook = create((set) => ({
   reAuthenticate: async () => {
     try {
       const response = await inventory_api.post(`/${API.REAUTHENTICATE}`);
-      set({ userData: response.data });
+      set({ userData: response.data.user });
+      set({ moduleData: response.data.module });
       return response;
     } catch (error) {
       return error;

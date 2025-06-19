@@ -30,6 +30,7 @@ function Layout() {
   };
   useEffect(() => {
     navigate("/dashboard");
+    console.log(switcher.customAuth);
     if (switcher.customAuth) {
       auth();
       const interval = setInterval(() => {

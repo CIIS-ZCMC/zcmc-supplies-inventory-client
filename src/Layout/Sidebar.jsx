@@ -6,14 +6,14 @@ import { Link, useLocation } from "react-router-dom";
 import { BookCopy, ExternalLink, MessageCircleQuestion } from "lucide-react";
 
 import BrandLogo from "../Components/Sidebar/BrandLogo";
-
+import useUserHook from "../hooks/UserHook";
 function Sidebar() {
   const theme = useTheme();
   const color = theme.palette.custom;
 
   const location = useLocation();
   const currentPath = location.pathname;
-
+  const { moduleData } = useUserHook();
   const CustomLink = styled(({ ...props }) => <Link {...props} />)(
     ({ theme, path }) => ({
       display: "flex",
@@ -41,22 +41,24 @@ function Sidebar() {
     >
       <BrandLogo />
       <Stack mt={4} gap={1} flexGrow={1}>
-        {sidebarRoutes?.map(({ path, name, icon }, key) => (
-          <CustomLink to={path} path={path} key={key}>
-            <Box
-              sx={{
-                fontSize: { xs: 16, md: 20 }, // Responsive font size
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {icon}
-            </Box>
-            <Typography color="white" fontSize={{ xs: 12, md: 14 }}>
-              {name}
-            </Typography>
-          </CustomLink>
-        ))}
+        {sidebarRoutes
+          ?.filter((x) => moduleData.includes(x.path))
+          .map(({ path, name, icon }, key) => (
+            <CustomLink to={path} path={path} key={key}>
+              <Box
+                sx={{
+                  fontSize: { xs: 16, md: 20 }, // Responsive font size
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {icon}
+              </Box>
+              <Typography color="white" fontSize={{ xs: 12, md: 14 }}>
+                {name}
+              </Typography>
+            </CustomLink>
+          ))}
       </Stack>
 
       <Sheet
