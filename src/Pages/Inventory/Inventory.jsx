@@ -261,6 +261,7 @@ const Inventory = () => {
       } else {
         // User clicked "Cancel"
         console.log("User cancelled the operation.");
+        return;
       }
       swal({
         title: "Report Generating...",
@@ -448,7 +449,7 @@ const Inventory = () => {
                             // OpenSmallWindow(printSuppliesIssuance("test"));
                           }}
                         >
-                          Supplies Issuance
+                          Reports of supplies and materials issued
                         </MenuItem>
 
                         <MenuItem
@@ -591,7 +592,7 @@ const Inventory = () => {
           monthlyDistribution
             ? "Monthly Distibution"
             : openIssuance
-            ? "Item issuance"
+            ? "Item Issuance"
             : stockCard
             ? `Stock card`
             : "Balance-card"

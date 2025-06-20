@@ -11,6 +11,7 @@ import usePrintHooks from "../../Hooks/PrintHooks";
 import useCategoriesHook from "../../Hooks/CategoriesHook";
 import InputComponent from "../../Components/Form/InputComponent";
 import useInventoryHook from "../../Hooks/InventoryHook";
+import { useNavigate } from "react-router-dom";
 export const ConfirmSelection = ({
   isMonthlyDistribution,
   selectedItems,
@@ -45,6 +46,7 @@ export const ConfirmSelection = ({
     (state) => state.setInventoryFilter
   );
 
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
   const years = Array.from(
     { length: currentYear - 2022 + 1 },
@@ -70,7 +72,12 @@ export const ConfirmSelection = ({
       return;
     }
     if (openIssuance) {
-      OpenSmallWindow(printSuppliesIssuance(data));
+      console.log(data);
+
+      navigate("/supplies-masterlist-issued", {
+        state: data, // pass the data here
+      });
+      //OpenSmallWindow(printSuppliesIssuance(data));
       return;
     }
 

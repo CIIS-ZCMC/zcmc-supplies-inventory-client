@@ -129,6 +129,8 @@ export const API = {
   CAf_Store: "storeCaf",
   GETCAF: "caflist",
 
+  APPLYTOALL: "apply-supplier-settings",
+
   TAGGED_PO_INFORMATION: "get-tagged-po-info",
 
   PRINT_GUARD: "print",

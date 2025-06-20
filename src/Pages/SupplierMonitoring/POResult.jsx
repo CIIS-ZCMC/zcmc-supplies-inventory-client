@@ -18,13 +18,14 @@ import {
   Box,
 } from "@mui/joy";
 import useSuppliersHook from "../../Hooks/SuppliersHook";
-import { IoMdCloseCircleOutline } from "react-icons/io";
-import { useEffect } from "react";
 import { use } from "react";
+import { GlobalSetting } from "./GlobalSetting";
+import { useEffect } from "react";
 
 export const POResult = ({ searchedPo }) => {
   const { fetchPOs, clearPOResult, UpdatePos, PO_result } = useSuppliersHook();
   const [form, setForm] = useState(PO_result.data);
+  const [fetch, setFetch] = useState(false);
   const handleChange = (key, value, id) => {
     setForm((prev) =>
       prev.map((item) => (item.id === id ? { ...item, [key]: value } : item))
@@ -37,10 +38,31 @@ export const POResult = ({ searchedPo }) => {
     }, 4000);
   };
 
+  useEffect(() => {
+    if (fetch) {
+      clearPOResult();
+      swal("Changes Saved", "Changes saved successfully", "success");
+      fetchPOs(searchedPo);
+      setFetch(false);
+    }
+  }, [fetch]);
+
   return (
     <Card variant="outlined">
       <Card variant="soft">
+        <Button
+          variant="soft"
+          color="danger"
+          //  endDecorator={<IoMdCloseCircleOutline />}
+          onClick={clearPOResult}
+        >
+          Clear Results
+        </Button>
         <CardContent>
+          <Box>
+            <GlobalSetting PO_result={PO_result} setFetch={setFetch} />
+          </Box>
+
           <Stack
             direction={"row"}
             justifyContent="space-between"
@@ -50,17 +72,12 @@ export const POResult = ({ searchedPo }) => {
             <Typography level="title-sm" mb={1}>
               PO Items (Compact)
             </Typography>
-            <Button
-              variant="soft"
-              color="danger"
-              endDecorator={<IoMdCloseCircleOutline />}
-              onClick={clearPOResult}
-            >
-              Clear Results
-            </Button>
           </Stack>
-          {PO_result.data?.map((item, index) => (
+          {PO_result?.data?.map((item, index) => (
             <Sheet key={1} variant="outlined" sx={{ p: 1, fontSize: "xs" }}>
+              <Box display={"flex"} justifyContent={"flex-end"}>
+                <Typography level="body-xs">Row #: {index + 1} </Typography>
+              </Box>
               <Grid container spacing={1}>
                 <Grid xs={6}>
                   <Grid xs={6}>

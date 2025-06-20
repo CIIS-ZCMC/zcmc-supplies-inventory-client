@@ -52,6 +52,7 @@ import ViewReleasedItem from "../Pages/Reports/Views/viewReleasedItem";
 import ViewReceivedItem from "../Pages/Reports/Views/ViewReceivedItem";
 import TaggingPurchasedOrder from "../Pages/PurchaseRequest/TaggingPurchasedOrder";
 import { SupplierMonitoring } from "../Pages/SupplierMonitoring/SupplierMonitoring";
+import { MaterialsIssuanceReport } from "../Pages/SupplierMonitoring/MaterialsIssuanceReport";
 export const sidebarRoutes = [
   {
     path: "/dashboard",
@@ -190,6 +191,13 @@ export const childrenRoutes = [
   {
     path: "/purchase-order/:id",
     element: <TaggingPurchasedOrder />,
+    icon: null,
+    permissions: ["view"],
+  },
+
+  {
+    path: "/supplies-masterlist-issued",
+    element: <MaterialsIssuanceReport />,
     icon: null,
     permissions: ["view"],
   },

@@ -66,6 +66,15 @@ const useSuppliersHook = create((set) => ({
     }
   },
 
+  setToAll: async (data) => {
+    try {
+      const response = await inventory_api.post(`/${API.APPLYTOALL}`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching suppliers:", error.message);
+      throw error;
+    }
+  },
   // ✅ Fetch Single Supplier by ID
   getSupplier: async (id) => {
     try {
