@@ -5,6 +5,16 @@ import { API } from "../Services/Config";
 import inventory_api from "../Services/ApiName";
 
 const usePOTaggingHooks = create((set) => ({
+  fetchTagItemsFundClusters: async (PO_numbers) => {
+    try {
+      const response = await inventory_api.post(`/${API.FETCH_FC_POTAGS}`, {
+        po_numbers: PO_numbers,
+      });
+      return response.data.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
   getPOitems: async (PO_number) => {
     try {
       const response = await inventory_api.get(

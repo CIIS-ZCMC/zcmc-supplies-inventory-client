@@ -80,6 +80,7 @@ function PaginatedTable({
   viewable,
   customAction = false,
   handleCustomAction,
+  stripes = "odd",
 }) {
   const [isOpenDialog, setIsDialogOpen] = useState(false);
 
@@ -200,7 +201,7 @@ function PaginatedTable({
           </Box>
         ) : rows?.length > 0 ? (
           <>
-            <Table stripe="odd" borderAxis="both" size={size}>
+            <Table stripe={stripes} borderAxis="both" size={size}>
               <thead>
                 <tr>
                   {columns?.map((col, index) => (

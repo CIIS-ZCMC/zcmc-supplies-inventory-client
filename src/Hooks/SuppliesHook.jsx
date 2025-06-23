@@ -11,7 +11,7 @@ const useSuppliesHook = create((set) => ({
     unit: "",
   },
   IARResult: [],
-
+  RSMIResult: [],
   validationSchema: Yup.object({
     supplyName: Yup.string().required("Supply name is required"),
     category: Yup.string().required("Category is required"),
@@ -22,6 +22,17 @@ const useSuppliesHook = create((set) => ({
     try {
       const response = await inventory_api.get(`/${API.SUPPLIES}`);
 
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
+  getIssued: async (dates) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.SUPPLIES_ISSUED_LIST}/${dates.from}/${dates.to}`
+      );
+      set({ RSMIResult: response.data.data });
       return response.data;
     } catch (error) {
       error.message;

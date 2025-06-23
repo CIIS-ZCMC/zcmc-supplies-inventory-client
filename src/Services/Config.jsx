@@ -119,6 +119,9 @@ export const API = {
   PURCHASED_ORDERS: "get-purchased-orders",
   PURCHASED_ORDERS_ITEMS: "get-purchased-orders-items",
   PURCHASED_ORDERS_TAGGED: "get-purchased-orders-tagged",
+  FETCH_FC_POTAGS: "get-tagged-fundcluster",
+
+  SUPPLIES_ISSUED_LIST: "RSMI",
 
   OPEN_PO: "fetchPO",
   UPDATE_PO: "updatePO",
