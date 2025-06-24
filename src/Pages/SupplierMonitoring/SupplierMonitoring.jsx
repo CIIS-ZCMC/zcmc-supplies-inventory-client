@@ -9,6 +9,8 @@ import {
   Grid,
   Stack,
   Divider,
+  Select,
+  Option,
 } from "@mui/joy";
 import Avatar from "@mui/joy/Avatar";
 
@@ -38,6 +40,8 @@ import { GoFileSubmodule } from "react-icons/go";
 import { RiStarSLine } from "react-icons/ri";
 import Header from "../../Layout/Header/Header";
 import { user } from "../../Data/index";
+import { SupplierPE } from "./SupplierPE";
+
 export const SupplierMonitoring = () => {
   const theme = useTheme();
   const {
@@ -49,16 +53,17 @@ export const SupplierMonitoring = () => {
     getSuppliersPerformanceRatings,
     supplierData,
     dashboardData,
+    getSuppliers,
+    suppliersList,
   } = useSuppliersHook();
   const [searchedPo, setSearchPo] = React.useState("");
-
   const [showData, setShowData] = React.useState(null);
   const [POsRecords, setPOsRecords] = React.useState([]);
   const [searchkeyPo, setSearchKeyPo] = React.useState("");
-
+  const [selectedSupplier, setSelectedSupplier] = React.useState(null);
   useEffect(() => {
     getPODashboard();
-
+    getSuppliers();
     getSuppliersPerformanceRatings()
       .then((data) => {})
       .catch((error) => {
@@ -408,6 +413,23 @@ export const SupplierMonitoring = () => {
 
         <Box mt={1}>
           <ContainerComponent>
+            <Stack mb={2}>
+              <Typography level="body-md" fontWeight={"bold"}>
+                Generate Report | Select Supplier
+              </Typography>
+              <Select
+                placeholder={"Select Supplier ..."}
+                onChange={(e, value) => {
+                  setSelectedSupplier(value);
+                }}
+              >
+                {suppliersList?.map((row) => {
+                  return <Option value={row}>{row.supplier_name}</Option>;
+                })}
+              </Select>
+            </Stack>
+
+            <Divider sx={{ mb: 1 }} />
             <Box width={"100%"}>
               <Box mb={2} width={"40%"}>
                 <Typography level="body-md">Rating Legend :</Typography>
@@ -500,6 +522,17 @@ export const SupplierMonitoring = () => {
         </ContainerComponent>
       </Box> */}
       </Box>
+
+      <ModalComponent
+        title={`Suppliers Performance Evaluation `}
+        description={`Generate report for suppliers performance evaluation ( Goods ) `}
+        layout="fullscreen"
+        content={<SupplierPE selectedSupplier={selectedSupplier} />}
+        isOpen={selectedSupplier ? true : false}
+        handleClose={() => {
+          setSelectedSupplier(null);
+        }}
+      />
     </>
   );
 };

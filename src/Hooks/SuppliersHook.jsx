@@ -21,6 +21,7 @@ const useSuppliersHook = create((set) => ({
   dashboardData: [],
   PR_result: [],
   CAF_list: [],
+  suppliersList: [],
 
   // ✅ Validation Schema
   validationSchema: Yup.object({
@@ -59,6 +60,7 @@ const useSuppliersHook = create((set) => ({
   getSuppliers: async () => {
     try {
       const response = await inventory_api.get(`/${API.SUPPLIERS}`);
+      set({ suppliersList: response.data.data });
       return response.data;
     } catch (error) {
       console.error("Error fetching suppliers:", error.message);
