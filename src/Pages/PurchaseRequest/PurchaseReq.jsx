@@ -33,7 +33,7 @@ import TabPanel from "@mui/joy/TabPanel";
 import { Scroll, ScrollText, Tag } from "lucide-react";
 import { CAF } from "./CAF";
 import { POtag } from "./POtag";
-
+import { useSearchParams } from "react-router-dom";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -65,8 +65,17 @@ const columns = [
 const PurchaseReq = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const page = searchParams.get("page") ?? 0;
+  const [pagetab, setPageTab] = useState(page);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const { inventory, getPurchaseOrders } = useInventoryHook();
+
+  useEffect(() => {
+    const pageParam = parseInt(searchParams.get("page")) || 0;
+    setPageTab(pageParam);
+  }, [searchParams]);
   const {
     filteredInventory,
     selectedCategory,
@@ -108,7 +117,6 @@ const PurchaseReq = () => {
   const handleViewDialogClose = (row) => {
     setIsViewDialogOpen(false);
   };
-  console.log(purchaseORderData);
 
   return (
     <Fragment>
@@ -155,7 +163,16 @@ const PurchaseReq = () => {
             <Outlet />
           ) : (
             <>
-              <Tabs aria-label="Basic tabs" defaultValue={0}>
+              <Tabs
+                aria-label="Basic tabs"
+                // defaultValue={0}
+
+                value={pagetab}
+                onChange={(e, tab) => {
+                  navigate(`?page=${tab}`);
+                  setPageTab(tab);
+                }}
+              >
                 <TabList>
                   <Tab>
                     <Typography
@@ -163,7 +180,7 @@ const PurchaseReq = () => {
                       sx={{ fontWeight: "bold" }}
                       startDecorator={<Scroll size={16} />}
                     >
-                      Purchased Requests
+                      CAF Generation
                     </Typography>
                   </Tab>
                   <Tab sx={{ display: "none" }}>
@@ -181,7 +198,7 @@ const PurchaseReq = () => {
                       sx={{ fontWeight: "bold" }}
                       startDecorator={<ScrollText size={16} />}
                     >
-                      Purchased Orders
+                      P.O Tagging
                     </Typography>
                   </Tab>
                 </TabList>
