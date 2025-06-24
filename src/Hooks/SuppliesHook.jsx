@@ -12,12 +12,36 @@ const useSuppliesHook = create((set) => ({
   },
   IARResult: [],
   RSMIResult: [],
+  Stock_Numbers: [],
   validationSchema: Yup.object({
     supplyName: Yup.string().required("Supply name is required"),
     category: Yup.string().required("Category is required"),
     unit: Yup.string().required("Unit is required"),
   }),
 
+  getStocksNos: async (data) => {
+    try {
+      const response = await inventory_api.post(
+        `/${API.MASTERLIST_STOCKNO}`,
+        data
+      );
+      set({ Stock_Numbers: response.data.data });
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  updateItemStockNo: async (data) => {
+    try {
+      const response = await inventory_api.post(
+        `/${API.UPDATE_MASTERLIST_STOCKNO}`,
+        data
+      );
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
   getSupplies: async () => {
     try {
       const response = await inventory_api.get(`/${API.SUPPLIES}`);

@@ -60,9 +60,7 @@ export const SupplierMonitoring = () => {
     getPODashboard();
 
     getSuppliersPerformanceRatings()
-      .then((data) => {
-        console.log("Supplier Performance Ratings:", data);
-      })
+      .then((data) => {})
       .catch((error) => {
         console.error("Error fetching supplier performance ratings:", error);
       });

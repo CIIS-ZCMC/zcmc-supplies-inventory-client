@@ -122,7 +122,8 @@ export const API = {
   FETCH_FC_POTAGS: "get-tagged-fundcluster",
 
   SUPPLIES_ISSUED_LIST: "RSMI",
-
+  MASTERLIST_STOCKNO: "get-stocksNo",
+  UPDATE_MASTERLIST_STOCKNO: "update-stocksNo",
   OPEN_PO: "fetchPO",
   UPDATE_PO: "updatePO",
   PO_DASHBOARD: "fetchDashboard",

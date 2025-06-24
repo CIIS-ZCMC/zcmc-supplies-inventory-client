@@ -26,11 +26,14 @@ import { CloudDownload } from "lucide-react";
 import usePOTaggingHooks from "../../Hooks/POTaggingHook";
 import usePrintHooks from "../../Hooks/PrintHooks";
 import LinearProgress from "@mui/joy/LinearProgress";
+import { ClipboardPenLine } from "lucide-react";
+import ModalComponent from "../../Components/Dialogs/ModalComponent";
+import { ManageMastlistSelection } from "./ManageMastlistSelection";
 export const MaterialsIssuanceReport = () => {
   const getIssued = useSuppliesHook((state) => state.getIssued);
   const RSMIResult = useSuppliesHook((state) => state.RSMIResult);
   const [fundcluster, setFundCluster] = useState("");
-
+  const [openManage, setOpenManage] = useState(false);
   const [selection, setSelection] = useState(new Set());
   const [selectall, setSelectall] = useState(new Set());
   const { OpenSmallWindow, printSuppliesIssuance } = usePrintHooks();
@@ -63,7 +66,7 @@ export const MaterialsIssuanceReport = () => {
 
   useEffect(() => {
     setFetching(true);
-
+    setSelection(new Set());
     getIssued(dataDates).then(() => setFetching(false));
   }, [dataDates]);
 
@@ -338,18 +341,34 @@ export const MaterialsIssuanceReport = () => {
                   </Button>
                 }
               />
+
+              <Button
+                sx={{
+                  paddingX: "10px",
+                  mt: 1,
+                  fontSize: "11px",
+                  textTransform: "uppercase",
+                }}
+                startDecorator={<ClipboardPenLine size={15} />}
+                variant="outlined"
+                disabled={selection.size == 0}
+                onClick={() => setOpenManage(true)}
+              >
+                {" "}
+                Manage Stock-No({selection.size})
+              </Button>
               <Button
                 sx={{
                   paddingX: "40px",
                   mt: 1,
-                  fontSize: "12px",
+                  fontSize: "11px",
                   textTransform: "uppercase",
                 }}
                 disabled={selection.size == 0}
                 onClick={handlePrintRSMI}
               >
                 {" "}
-                Print {selection.size >= 1 && `Selection (${selection.size})`}
+                Print {selection.size >= 1 && `Selection(${selection.size})`}
               </Button>
 
               {selection.size >= 1 && (
@@ -357,7 +376,7 @@ export const MaterialsIssuanceReport = () => {
                   sx={{
                     paddingX: "40px",
                     mt: 1,
-                    fontSize: "12px",
+                    fontSize: "11px",
                     textTransform: "uppercase",
                   }}
                   variant="soft"
@@ -394,6 +413,21 @@ export const MaterialsIssuanceReport = () => {
           />
         </ContainerComponent>
       </Box>
+      <ModalComponent
+        isOpen={openManage}
+        handleClose={() => setOpenManage(false)}
+        title={`Manage Stock-No`}
+        description={"Manage masterlist stock no's"}
+        content={
+          <ManageMastlistSelection
+            selection={selection}
+            openManage={openManage}
+            from={dataDates.from}
+            to={dataDates.to}
+          />
+        }
+        layout="fullscreen"
+      />
     </div>
   );
 };
