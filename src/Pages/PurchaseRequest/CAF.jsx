@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
-import { Typography, Box, Input, Stack, Button } from "@mui/joy";
+import { Typography, Box, Input, Stack, Button, Badge, Chip } from "@mui/joy";
 import { Search } from "lucide-react";
 import useSuppliersHook from "../../Hooks/SuppliersHook";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
@@ -8,12 +8,17 @@ import { PRresults } from "./PRresults";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import { Printer } from "lucide-react";
 import usePrintHooks from "../../Hooks/PrintHooks";
+import { CircleX } from "lucide-react";
+import usePOTaggingHooks from "../../Hooks/POTaggingHook";
 export const CAF = () => {
   const [searchPR, setSearchPR] = useState("");
   const [prresult, setprresult] = useState(false);
   const [load, setLoad] = useState(false);
   const { getPRrecords, getCAF, CAF_list } = useSuppliersHook();
   const { printCaf, OpenSmallWindow } = usePrintHooks();
+  const [searchCAFinRecords, setSearchCAFinRecords] = useState("");
+  const deleteCaf = usePOTaggingHooks((state) => state.deleteCaf);
+  const [refresh, setRefresh] = useState(false);
   const columns = [
     {
       id: "id",
@@ -24,32 +29,109 @@ export const CAF = () => {
       },
     },
     { id: "details", label: "Details" },
-    { id: "prno", label: "PR No.", width: "30%" },
+    { id: "prno", label: "PR No." },
     { id: "fundsource", label: "Fund Source" },
+    { id: "cafno", label: "CAF no" },
+    { id: "remarks", label: "Remarks", width: "25%" },
+    {
+      id: "id",
+      label: "Status",
+      render: (row, index) => {
+        return (
+          <Box textAlign={"center"}>
+            {row.deleted_at ? (
+              <Chip variant="soft" size="sm" color="danger">
+                <Typography fontSize={10} textTransform={"uppercase"}>
+                  Inactive
+                </Typography>
+              </Chip>
+            ) : (
+              <Chip variant="soft" size="sm" color="success">
+                <Typography fontSize={10} textTransform={"uppercase"}>
+                  Active
+                </Typography>
+              </Chip>
+            )}
+          </Box>
+        );
+      },
+    },
     {
       id: "csutom",
       label: "Action",
+      width: "15%",
       render: (row) => {
         return (
-          <Button
-            variant="soft"
-            size="sm"
-            color="warning"
-            onClick={() => {
-              OpenSmallWindow(printCaf(row));
-              console.log(row);
-            }}
-          >
-            <Printer size={17} />
-          </Button>
+          <Box>
+            {row.deleted_at ? (
+              <Typography
+                level="body-xs"
+                textTransform={"uppercase"}
+                fontSize={9}
+                textAlign={"center"}
+              >
+                No action required
+              </Typography>
+            ) : (
+              <Stack direction={"row"} spacing={1} justifyContent={"center"}>
+                <Button
+                  variant="soft"
+                  size="sm"
+                  color="warning"
+                  onClick={() => {
+                    OpenSmallWindow(printCaf(row));
+                    console.log(row);
+                  }}
+                >
+                  <Printer size={17} />
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="sm"
+                  color="danger"
+                  onClick={() => {
+                    swal({
+                      title: "Are you sure?",
+                      text: "Once deleted, you will not be able to recover this data!",
+                      icon: "warning",
+                      buttons: true,
+                      dangerMode: true,
+                    }).then((willDelete) => {
+                      if (willDelete) {
+                        deleteCaf(row.id).then((res) => {
+                          setRefresh(true);
+                        });
+                      }
+                    });
+                  }}
+                >
+                  <CircleX size={17} />
+                </Button>
+              </Stack>
+            )}
+          </Box>
         );
       },
     },
   ];
 
+  const displayCaf = () => {
+    if (searchCAFinRecords) {
+      return CAF_list.filter(
+        (x) =>
+          x.prno.toLowerCase().includes(searchCAFinRecords.toLowerCase()) ||
+          x.details.toLowerCase().includes(searchCAFinRecords.toLowerCase()) ||
+          x.cafno.toLowerCase().includes(searchCAFinRecords.toLowerCase())
+      );
+    }
+
+    return CAF_list;
+  };
+
   useEffect(() => {
     getCAF();
-  }, []);
+    setRefresh(false);
+  }, [refresh]);
 
   return (
     <div>
@@ -99,7 +181,22 @@ export const CAF = () => {
         </ContainerComponent>
       </Box>
       <Box mt={2}>
-        <PaginatedTable columns={columns} rows={CAF_list} />
+        <PaginatedTable
+          columns={columns}
+          rows={displayCaf()}
+          actionBtns={
+            <>
+              <Box mt={1}>
+                <Input
+                  placeholder="Find in Records : PR No, Details ..."
+                  startDecorator={<Search size={16} />}
+                  value={searchCAFinRecords}
+                  onChange={(e) => setSearchCAFinRecords(e.target.value)}
+                />
+              </Box>
+            </>
+          }
+        />
       </Box>
       <ModalComponent
         isOpen={prresult}

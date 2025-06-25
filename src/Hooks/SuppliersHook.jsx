@@ -22,6 +22,8 @@ const useSuppliersHook = create((set) => ({
   PR_result: [],
   CAF_list: [],
   suppliersList: [],
+  HasCaf: [],
+  nextCaf: null,
 
   // ✅ Validation Schema
   validationSchema: Yup.object({
@@ -175,7 +177,11 @@ const useSuppliersHook = create((set) => ({
   getPRrecords: async (PR) => {
     try {
       const response = await inventory_api.get(`/${API.PR_RECORDS}/${PR}`);
-      set({ PR_result: response.data.data });
+      set({
+        PR_result: response.data.data,
+        HasCaf: response.data.Caf,
+        nextCaf: response.data.nextCaf,
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching PO dashboard:", error.message);

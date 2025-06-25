@@ -5,6 +5,7 @@ import { API } from "../Services/Config";
 import inventory_api from "../Services/ApiName";
 
 const usePOTaggingHooks = create((set) => ({
+  CAFRecords: null,
   fetchTagItemsFundClusters: async (PO_numbers) => {
     try {
       const response = await inventory_api.post(`/${API.FETCH_FC_POTAGS}`, {
@@ -20,6 +21,7 @@ const usePOTaggingHooks = create((set) => ({
       const response = await inventory_api.get(
         `/${API.PURCHASED_ORDERS_ITEMS}/${PO_number}`
       );
+      set({ CAFRecords: response.data.CAFrecords });
       return response.data.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -51,6 +53,16 @@ const usePOTaggingHooks = create((set) => ({
       const response = await inventory_api.get(
         `/${API.FETCH_ORSBURS}/${pr_number}`
       );
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  deleteCaf: async (id) => {
+    try {
+      const response = await inventory_api.post(`/${API.DELETECAF}`, {
+        id: id,
+      });
       return response;
     } catch (error) {
       return error;

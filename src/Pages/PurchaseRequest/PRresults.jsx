@@ -12,10 +12,11 @@ import {
   Divider,
 } from "@mui/joy";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
+import { useEffect } from "react";
 export const PRresults = ({ setprresult }) => {
   const PR_result = useSuppliersHook((state) => state.PR_result);
   const storeCAF = useSuppliersHook((state) => state.storeCAF);
-  const { getCAF } = useSuppliersHook();
+  const { getCAF, HasCaf, nextCaf } = useSuppliersHook();
   const [input, setInput] = useState({});
   const [load, setLoad] = useState(false);
 
@@ -25,6 +26,14 @@ export const PRresults = ({ setprresult }) => {
       [key]: value,
     }));
   };
+
+  useEffect(() => {
+    if (nextCaf) {
+      handleChange("cafno", nextCaf);
+    } else {
+      handleChange("cafno", "");
+    }
+  }, [nextCaf]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -58,7 +67,7 @@ export const PRresults = ({ setprresult }) => {
               Purchase Request Details
             </Typography>
             <Divider />
-            <Box sx={{ marginBottom: "250px" }}>
+            <Box sx={{ marginBottom: "320px" }}>
               <Grid container spacing={1} sx={{ fontSize: "sm", mt: 1 }}>
                 {PR_result.map((data, key) => {
                   return (
@@ -109,6 +118,16 @@ export const PRresults = ({ setprresult }) => {
                       </Grid>
                       <Grid md={12}>
                         <Divider />
+
+                        {key + 1 == PR_result.length && (
+                          <Typography
+                            level="body-xs"
+                            textAlign={"center"}
+                            mt={1}
+                          >
+                            *** Nothing Follows ***
+                          </Typography>
+                        )}
                       </Grid>
                     </>
                   );
@@ -122,7 +141,7 @@ export const PRresults = ({ setprresult }) => {
           <Box
             sx={{
               position: "fixed",
-              bottom: 20,
+              bottom: 10,
               zIndex: 100,
               width: "85%",
               border: "2px solid green",
@@ -136,25 +155,38 @@ export const PRresults = ({ setprresult }) => {
                   required
                   size="sm"
                   minRows={2}
-                  value={input?.details ?? ""}
+                  value={HasCaf ? HasCaf.details : input?.details ?? ""}
                   onChange={(e) => handleChange("details", e.target.value)}
                 />
                 <Typography>Fund Source :</Typography>
                 <Input
                   required
                   size="sm"
-                  value={input?.fundsource ?? ""}
+                  value={HasCaf ? HasCaf.fundsource : input?.fundsource ?? ""}
                   onChange={(e) => handleChange("fundsource", e.target.value)}
                 />
                 <Typography>CAF No :</Typography>
                 <Input
                   required
                   size="sm"
-                  value={input?.cafno ?? ""}
+                  value={HasCaf ? HasCaf.cafno : input?.cafno ?? ""}
                   onChange={(e) => handleChange("cafno", e.target.value)}
                 />
+
+                <Typography>Remarks :</Typography>
+                <Textarea
+                  minRows={2}
+                  placeholder="type here ..."
+                  size="sm"
+                  value={HasCaf ? HasCaf.remarks : input?.remarks ?? ""}
+                  onChange={(e) => handleChange("remarks", e.target.value)}
+                />
                 <Stack mt={2}>
-                  <Button loading={load} type="submit">
+                  <Button
+                    loading={load}
+                    type="submit"
+                    disabled={HasCaf ? true : false}
+                  >
                     Save
                   </Button>
                 </Stack>

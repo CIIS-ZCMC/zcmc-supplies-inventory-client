@@ -20,14 +20,14 @@ export const POtag = () => {
   useEffect(() => {}, []);
   return (
     <div>
-      <Typography level="body-lg">PO tagging</Typography>
+      <Typography level="body-lg">Purchase Order tagging</Typography>
       <Typography level="body-xs">
-        ( elect items to add tagging of : ORS/BURS no., Amount etc.. )
+        ( Select items to tag the ff : ORS/BURS no., Amount etc.. )
       </Typography>
 
       <Box mt={1} width={"40%"}>
         <ContainerComponent>
-          <Typography>Search PR No:</Typography>
+          <Typography>Search PO No:</Typography>
           <Stack direction={"row"} spacing={1}>
             <Input
               placeholder="Type here ..."

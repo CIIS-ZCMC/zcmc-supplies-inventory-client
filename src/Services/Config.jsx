@@ -120,6 +120,7 @@ export const API = {
   PURCHASED_ORDERS_ITEMS: "get-purchased-orders-items",
   PURCHASED_ORDERS_TAGGED: "get-purchased-orders-tagged",
   FETCH_FC_POTAGS: "get-tagged-fundcluster",
+  FETCH_FC_CAFNO: "getCAfno",
 
   SUPPLIES_ISSUED_LIST: "RSMI",
   MASTERLIST_STOCKNO: "get-stocksNo",
@@ -132,6 +133,8 @@ export const API = {
   PR_RECORDS: "fetchPR",
   CAf_Store: "storeCaf",
   GETCAF: "caflist",
+
+  DELETECAF: "delete-caf",
 
   APPLYTOALL: "apply-supplier-settings",
 

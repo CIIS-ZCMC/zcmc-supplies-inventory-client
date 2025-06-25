@@ -33,6 +33,7 @@ import TabPanel from "@mui/joy/TabPanel";
 import { Scroll, ScrollText, Tag } from "lucide-react";
 import { CAF } from "./CAF";
 import { POtag } from "./POtag";
+import useUserHook from "../../hooks/UserHook";
 import { useSearchParams } from "react-router-dom";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
@@ -71,6 +72,7 @@ const PurchaseReq = () => {
   const [pagetab, setPageTab] = useState(page);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const { inventory, getPurchaseOrders } = useInventoryHook();
+  const moduleData = useUserHook((state) => state.moduleData);
 
   useEffect(() => {
     const pageParam = parseInt(searchParams.get("page")) || 0;
@@ -117,47 +119,21 @@ const PurchaseReq = () => {
   const handleViewDialogClose = (row) => {
     setIsViewDialogOpen(false);
   };
+  useEffect(() => {
+    if (moduleData.includes("caf") && moduleData.includes("potagging")) {
+      return;
+    }
+    if (moduleData.includes("caf")) {
+      navigate("?page=0");
+    } else if (moduleData.includes("potagging")) {
+      navigate("?page=2");
+    }
+  }, []);
 
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
       <Stack gap={2} mt={2}>
-        <ContainerComponent>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="flex-end"
-          >
-            <InputComponent
-              label="Find a slip"
-              placeholder="Search PO# "
-              startIcon={<SearchIcon />}
-              value={searchkey}
-              setValue={setSearchKey}
-              width={300}
-              // action={{
-              //   label: "Search",
-              //   onClick: () => console.log("searching..."),
-              // }}
-            />
-            <Box display="flex" gap={1}>
-              {/* <SelectComponent
-                startIcon={"Sort by:"}
-                placeholder={"category"}
-                options={categoryFilter}
-                value={selectedCategory}
-                onChange={setCategory}
-              /> */}
-
-              <ButtonComponent
-                size="sm"
-                variant={"soft"}
-                label={"Clear Filters"}
-                onClick={clearFilters}
-              />
-            </Box>
-          </Stack>
-        </ContainerComponent>
         <ContainerComponent>
           {id ? (
             <Outlet />
@@ -174,7 +150,11 @@ const PurchaseReq = () => {
                 }}
               >
                 <TabList>
-                  <Tab>
+                  <Tab
+                    sx={{
+                      display: moduleData.includes("caf") ? "block" : "none",
+                    }}
+                  >
                     <Typography
                       level="body-xs"
                       sx={{ fontWeight: "bold" }}
@@ -192,7 +172,13 @@ const PurchaseReq = () => {
                       Purchased Orders
                     </Typography> */}
                   </Tab>
-                  <Tab>
+                  <Tab
+                    sx={{
+                      display: moduleData.includes("potagging")
+                        ? "block"
+                        : "none",
+                    }}
+                  >
                     <Typography
                       level="body-xs"
                       sx={{ fontWeight: "bold" }}

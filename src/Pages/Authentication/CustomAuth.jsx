@@ -71,11 +71,8 @@ export default function CustomAuth() {
         setLoginLoad(false);
         return;
       }
-
-      setTimeout(() => {
-        setLoginLoad(false);
-        navigate("/dashboard");
-      }, 1500);
+      setLoginLoad(false);
+      navigate("/dashboard");
     });
   };
 

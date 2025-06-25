@@ -11,6 +11,7 @@ import InputComponent from "../../Components/Form/InputComponent";
 import { MdOutlineLocalPrintshop } from "react-icons/md";
 import usePrintHooks from "../../Hooks/PrintHooks";
 import { BASE_URL } from "../../Services/Config";
+import { Box, Input } from "@mui/joy";
 function ViewTaggedPurchasedOrder(props) {
   const { getPOTagged } = usePOTaggingHooks();
   const { setSelectedPO } = useSelectedRow();
@@ -63,11 +64,13 @@ function ViewTaggedPurchasedOrder(props) {
         //actions={<ViewIcon />}
         btnLabel={"Add new item name"}
         actionBtns={
-          <InputComponent
-            placeholder={"Search for PO#"}
-            value={search}
-            setValue={setSearch}
-          />
+          <Box mt={1}>
+            <Input
+              placeholder={"Search for PO#"}
+              value={search}
+              setValue={setSearch}
+            />
+          </Box>
         }
 
         // label={"Fill-up your inventory by creating a New item"}
