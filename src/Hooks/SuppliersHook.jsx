@@ -24,6 +24,7 @@ const useSuppliersHook = create((set) => ({
   suppliersList: [],
   HasCaf: [],
   nextCaf: null,
+  DeliveredList: [],
 
   // ✅ Validation Schema
   validationSchema: Yup.object({
@@ -56,6 +57,19 @@ const useSuppliersHook = create((set) => ({
         prcountry: values.prcountry || "Philippines",
       },
     });
+  },
+
+  getSupplierDeliveredList: async (id) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.SUPPLIER_DELIVERED_LIST}/${id}`
+      );
+      set({ DeliveredList: response.data.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching suppliers:", error.message);
+      return error;
+    }
   },
 
   // ✅ Fetch All Suppliers

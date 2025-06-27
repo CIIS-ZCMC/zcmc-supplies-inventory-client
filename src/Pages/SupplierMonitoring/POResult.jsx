@@ -118,7 +118,7 @@ export const POResult = ({ searchedPo }) => {
                   <Box>
                     <Divider sx={{ my: 1 }} />
                     <Grid container spacing={1}>
-                      <Grid xs={12} md={12}>
+                      <Grid xs={12} md={6}>
                         <FormControl>
                           <FormLabel sx={{ fontSize: "11px" }}>
                             is Disbursment Voucher processed?
@@ -139,6 +139,31 @@ export const POResult = ({ searchedPo }) => {
                               )
                             }
                             label="Yes"
+                          />
+                        </FormControl>
+                      </Grid>
+
+                      <Grid xs={12} md={6}>
+                        <FormControl>
+                          <FormLabel sx={{ fontSize: "11px" }}>
+                            Delivery Terms
+                          </FormLabel>
+                          <Input
+                            size="sm"
+                            type="number"
+                            inputProps={{ max: 1 }}
+                            value={
+                              form?.filter((x) => x.id === item.id)[0]
+                                ?.delivery_terms ?? 1
+                            }
+                            sx={{ input: { textAlign: "center" } }}
+                            onChange={(e) =>
+                              handleChange(
+                                "delivery_terms",
+                                e.target.value,
+                                item.id
+                              )
+                            }
                           />
                         </FormControl>
                       </Grid>

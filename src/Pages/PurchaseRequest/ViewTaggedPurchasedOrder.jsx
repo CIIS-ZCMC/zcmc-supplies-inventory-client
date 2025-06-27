@@ -11,10 +11,14 @@ import InputComponent from "../../Components/Form/InputComponent";
 import { MdOutlineLocalPrintshop } from "react-icons/md";
 import usePrintHooks from "../../Hooks/PrintHooks";
 import { BASE_URL } from "../../Services/Config";
-import { Box, Input } from "@mui/joy";
+import { Box, Button, Input, Stack, Typography } from "@mui/joy";
+import { RefreshCcwDot } from "lucide-react";
+
 function ViewTaggedPurchasedOrder(props) {
-  const { getPOTagged } = usePOTaggingHooks();
+  const { getPOTagged, resyncCAFRecords, taggedRecords } = usePOTaggingHooks();
   const { setSelectedPO } = useSelectedRow();
+  const [load, setLoad] = useState([]);
+  const [tableData, setTableData] = useState(taggedRecords);
   const navigate = useNavigate();
   const [search, setSearch] = useState(null);
   const { PrintPurchaseOrders, OpenSmallWindow } = usePrintHooks();
@@ -24,19 +28,19 @@ function ViewTaggedPurchasedOrder(props) {
   });
 
   const purchaseORderData = search
-    ? data.filter((x) => {
+    ? tableData.filter((x) => {
         return x.po_number.toLowerCase().includes(search.toLowerCase());
       })
-    : data;
+    : tableData;
   return (
     <div>
       <PaginatedTable
         customAction={true}
         handleCustomAction={(perRow) => {
           return (
-            <>
+            <Stack direction={"row"} spacing={1}>
               <ButtonComponent
-                startDecorator={<SquareArrowOutUpRight size={"1rem"} />}
+                label={<SquareArrowOutUpRight size={"1rem"} />}
                 variant={"plain"}
                 size="sm"
                 onClick={() => {
@@ -44,8 +48,9 @@ function ViewTaggedPurchasedOrder(props) {
                   navigate(`${perRow.po_number}?viewingOnly=true`);
                 }}
               />
+
               <ButtonComponent
-                startDecorator={<MdOutlineLocalPrintshop size={"18px"} />}
+                label={<MdOutlineLocalPrintshop size={"18px"} />}
                 variant={"plain"}
                 size="sm"
                 color={"warning"}
@@ -53,7 +58,49 @@ function ViewTaggedPurchasedOrder(props) {
                   OpenSmallWindow(PrintPurchaseOrders(perRow.po_number));
                 }}
               />
-            </>
+              <Button
+                startDecorator={<RefreshCcwDot size={16} />}
+                variant={"plain"}
+                size="sm"
+                color={"danger"}
+                loading={load?.includes(perRow.id)}
+                loadingPosition="start"
+                onClick={() => {
+                  setLoad((prev) => [...prev, perRow.id]);
+                  resyncCAFRecords(perRow.id).then((res) => {
+                    if (res.status === 200) {
+                      console.log(res.data.data);
+                      swal("Success", "Resynced Successfully", "success");
+                      setTableData((prev) =>
+                        prev.map((item) =>
+                          item.id === perRow.id
+                            ? { ...item, ...res.data.data }
+                            : item
+                        )
+                      );
+                      setLoad((prev) => prev.filter((id) => id !== perRow.id));
+                    } else {
+                      swal(
+                        "Up to Date",
+                        "Fund Cluster and CAF Number are already up to date.",
+                        "info"
+                      );
+
+                      setLoad((prev) => prev.filter((id) => id !== perRow.id));
+                    }
+                  });
+                }}
+              >
+                <Typography
+                  color={"danger"}
+                  level="body-xs"
+                  textTransform={"uppercase"}
+                  fontSize={11}
+                >
+                  Resync ( Fund Cluster & CAF-no )
+                </Typography>
+              </Button>
+            </Stack>
           );
         }}
         // viewable={true}

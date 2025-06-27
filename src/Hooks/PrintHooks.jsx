@@ -68,5 +68,10 @@ const usePrintHooks = create((set) => ({
       data
     )}`;
   },
+  printSupplierEvaluation: (data) => {
+    return `${BASE_URL.production}/${
+      API.PRINT_GUARD
+    }/printSupplierEvaluation/${JSON.stringify(data)}`;
+  },
 }));
 export default usePrintHooks;

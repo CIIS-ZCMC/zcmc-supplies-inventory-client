@@ -11,6 +11,7 @@ import {
   Divider,
   Select,
   Option,
+  Autocomplete,
 } from "@mui/joy";
 import Avatar from "@mui/joy/Avatar";
 
@@ -21,7 +22,7 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import { RiStarSFill } from "react-icons/ri";
 import SearchIcon from "@mui/icons-material/Search";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
-import { Container } from "lucide-react";
+import { Container, Search } from "lucide-react";
 import { BoxItem } from "../Inventory/ViewDetails";
 import { GrApps } from "react-icons/gr";
 import { useTheme } from "@emotion/react";
@@ -41,6 +42,7 @@ import { RiStarSLine } from "react-icons/ri";
 import Header from "../../Layout/Header/Header";
 import { user } from "../../Data/index";
 import { SupplierPE } from "./SupplierPE";
+import AutoCompleteComponent from "../../Components/Form/AutoCompleteComponent";
 
 export const SupplierMonitoring = () => {
   const theme = useTheme();
@@ -417,16 +419,20 @@ export const SupplierMonitoring = () => {
               <Typography level="body-md" fontWeight={"bold"}>
                 Generate Report | Select Supplier
               </Typography>
-              <Select
-                placeholder={"Select Supplier ..."}
+
+              <Autocomplete
+                startDecorator={<Search />}
+                options={suppliersList || []}
+                getOptionLabel={(option) => option.supplier_name} // display supplier_name in dropdown
+                placeholder="Select Supplier ..."
                 onChange={(e, value) => {
+                  console.log("Selected Supplier", value);
                   setSelectedSupplier(value);
                 }}
-              >
-                {suppliersList?.map((row) => {
-                  return <Option value={row}>{row.supplier_name}</Option>;
-                })}
-              </Select>
+                renderInput={(params) => (
+                  <TextField {...params} label="Select Supplier ..." />
+                )}
+              />
             </Stack>
 
             <Divider sx={{ mb: 1 }} />
@@ -526,7 +532,7 @@ export const SupplierMonitoring = () => {
       <ModalComponent
         title={`Suppliers Performance Evaluation `}
         description={`Generate report for suppliers performance evaluation ( Goods ) `}
-        layout="fullscreen"
+        layout="center"
         content={<SupplierPE selectedSupplier={selectedSupplier} />}
         isOpen={selectedSupplier ? true : false}
         handleClose={() => {

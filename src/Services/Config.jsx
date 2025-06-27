@@ -112,6 +112,7 @@ export const API = {
   FETCH_SUPPLIES: "fetch-items-data-bizbox",
   FETCH_ITEMS: "fetch-items",
   GET_LASTSYNCED: "lastsynced-items",
+  SUPPLIER_DELIVERED_LIST: "supplier-delivered-list",
 
   RETRIEVED_STOCKNO: "retrieve-stock-no",
   UPDATE_STOCKNO: "update-stock-no",
@@ -121,6 +122,7 @@ export const API = {
   PURCHASED_ORDERS_TAGGED: "get-purchased-orders-tagged",
   FETCH_FC_POTAGS: "get-tagged-fundcluster",
   FETCH_FC_CAFNO: "getCAfno",
+  RENEW_POTAG_CLUSTER: "renew-tagged-fundcluster",
 
   SUPPLIES_ISSUED_LIST: "RSMI",
   MASTERLIST_STOCKNO: "get-stocksNo",

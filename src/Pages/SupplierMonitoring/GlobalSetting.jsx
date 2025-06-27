@@ -46,7 +46,7 @@ export const GlobalSetting = ({ PO_result, setFetch }) => {
         <Box>
           <Divider sx={{ my: 1 }} />
           <Grid container spacing={1}>
-            <Grid xs={12} md={12}>
+            <Grid xs={12} md={6}>
               <FormControl>
                 <FormLabel sx={{ fontSize: "11px" }}>
                   is Disbursment Voucher processed?
@@ -59,6 +59,22 @@ export const GlobalSetting = ({ PO_result, setFetch }) => {
                     handleChanges("isDVprocessed", e.target.checked)
                   }
                   label="Yes"
+                />
+              </FormControl>
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <FormControl>
+                <FormLabel sx={{ fontSize: "11px" }}>Delivery Terms</FormLabel>
+                <Input
+                  size="sm"
+                  type="number"
+                  sx={{ input: { textAlign: "center" } }}
+                  inputProps={{ max: 1 }}
+                  value={input.delivery_terms ?? 1}
+                  onChange={(e) =>
+                    handleChanges("delivery_terms", e.target.value)
+                  }
                 />
               </FormControl>
             </Grid>
