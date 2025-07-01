@@ -299,7 +299,7 @@ const Inventory = () => {
               width={300}
             />
 
-            <Box display="flex" gap={1}>
+            {/* <Box display="flex" gap={1}>
               <SelectComponent
                 startIcon={"Sort by:"}
                 placeholder={"category"}
@@ -313,7 +313,7 @@ const Inventory = () => {
                 label={"Clear Filters"}
                 onClick={clearFilters}
               />
-            </Box>
+            </Box> */}
           </Stack>
         </ContainerComponent>
         <ContainerComponent>

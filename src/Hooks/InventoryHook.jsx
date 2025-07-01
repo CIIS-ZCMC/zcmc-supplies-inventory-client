@@ -10,8 +10,22 @@ const useInventoryHook = create((set) => ({
   stockins: 0,
   stockno: null,
   InventoryFilter: {},
+  BalanceCard: [],
   setStockno: (stockno) => {
     set({ stockno: stockno });
+  },
+
+  retrieveBalanceCard: async (category, month, year) => {
+    try {
+      const response = await inventory_api.get(
+        `/${API.BALANCECARDFETCH}/${category}/${month}/${year}`
+      );
+      set({ BalanceCard: response.data.data });
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+    //
   },
   retrieveBizboxItems: async (month, year) => {
     try {

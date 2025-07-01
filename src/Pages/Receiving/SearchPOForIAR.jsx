@@ -85,7 +85,7 @@ export const SearchPOForIAR = () => {
       <Box mt={1}>
         {/* <ContainerComponent> */}
         <Typography>PO No:</Typography>
-        <Stack direction={"column"} spacing={1}>
+        <Stack direction={"column"} spacing={2}>
           <Input
             placeholder="Type here ..."
             value={data?.poNo}
@@ -94,14 +94,15 @@ export const SearchPOForIAR = () => {
               handleChange("poNo", val);
             }}
           />
-          <Typography>Invoice Date:</Typography>
-          <Input
+          {/* <Typography>Invoice Date:</Typography>
+       <Input
             type="date"
             value={data?.invoice_date}
             onChange={(e) => handleChange("invoice_date", e.target.value)}
-          />
+          /> */}
           <Button
             endDecorator={<Search size={16} />}
+            sx={{ padding: "15px" }}
             loading={load}
             loadingPosition="end"
             onClick={() => {

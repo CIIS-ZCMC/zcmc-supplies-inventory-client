@@ -125,7 +125,7 @@ export default function CustomAuth() {
                 name="username"
                 inputRef={usernameRef}
                 required
-                placeholder="mms_user "
+                placeholder="username "
                 autoComplete="off"
                 // Additional anti-autofill techniques
                 data-lpignore="true"

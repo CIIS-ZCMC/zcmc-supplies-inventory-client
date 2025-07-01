@@ -135,6 +135,7 @@ export const API = {
   PR_RECORDS: "fetchPR",
   CAf_Store: "storeCaf",
   GETCAF: "caflist",
+  BALANCECARDFETCH: "fetchBalanceCard",
 
   DELETECAF: "delete-caf",
 

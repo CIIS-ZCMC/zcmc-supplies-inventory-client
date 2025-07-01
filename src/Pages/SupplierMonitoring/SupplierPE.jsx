@@ -20,7 +20,6 @@ import { Printer } from "lucide-react";
 import usePrintHooks from "../../Hooks/PrintHooks";
 import { CircleX } from "lucide-react";
 export const SupplierPE = ({ selectedSupplier }) => {
-  console.log("selectedSupplier", selectedSupplier);
   const [input, setInputs] = useState(selectedSupplier);
   const [search, setSearch] = useState("");
   const [selection, setSelection] = useState([]);
@@ -39,13 +38,19 @@ export const SupplierPE = ({ selectedSupplier }) => {
     setInputs((prev) => ({ ...prev, [key]: value }));
   };
   const handleChangeGrade = (id, field, value) => {
-    const updatedRows = [...rowsData];
-    const rowIndex = updatedRows.findIndex((item) => item.id === id);
-
-    if (rowIndex !== -1) {
-      updatedRows[rowIndex][field] = value;
-      setGradeUpdate(updatedRows);
-    }
+    setGradeUpdate((prev) => {
+      const existingIndex = prev.findIndex((item) => item.id === id);
+      if (existingIndex !== -1) {
+        // Update existing
+        const updated = [...prev];
+        updated[existingIndex][field] = value;
+        return updated;
+      } else {
+        // Insert new
+        const originalRow = DeliveredList.find((item) => item.id === id);
+        return [...prev, { ...originalRow, [field]: value }];
+      }
+    });
   };
 
   const gradeSelection = [

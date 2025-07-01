@@ -122,7 +122,10 @@ export const ConfirmSelection = ({
       dangerMode: true, // Only include if this is a high-risk action
     }).then((willGenerate) => {
       if (willGenerate) {
-        OpenSmallWindow(printStockCardBulk(data));
+        navigate("/balance-card", {
+          state: data,
+        });
+        // OpenSmallWindow(printStockCardBulk(data));
         swal.close();
       }
     });
