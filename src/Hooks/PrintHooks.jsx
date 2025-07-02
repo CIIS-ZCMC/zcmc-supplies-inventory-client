@@ -73,5 +73,10 @@ const usePrintHooks = create((set) => ({
       API.PRINT_GUARD
     }/printSupplierEvaluation/${JSON.stringify(data)}`;
   },
+  printBinCard: (data) => {
+    return `${BASE_URL.production}/${
+      API.PRINT_GUARD
+    }/printBinCard/${JSON.stringify(data)}`;
+  },
 }));
 export default usePrintHooks;

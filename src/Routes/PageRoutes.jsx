@@ -54,6 +54,7 @@ import TaggingPurchasedOrder from "../Pages/PurchaseRequest/TaggingPurchasedOrde
 import { SupplierMonitoring } from "../Pages/SupplierMonitoring/SupplierMonitoring";
 import { MaterialsIssuanceReport } from "../Pages/Inventory/MaterialsIssuanceReport";
 import { BalanceCard } from "../Pages/Inventory/BalanceCard";
+import { BinCard } from "../Pages/Inventory/BinCard";
 export const sidebarRoutes = [
   {
     path: "/dashboard",
@@ -206,6 +207,12 @@ export const childrenRoutes = [
   {
     path: "/balance-card",
     element: <BalanceCard />,
+    icon: null,
+    permissions: ["view"],
+  },
+  {
+    path: "/bin-card",
+    element: <BinCard />,
     icon: null,
     permissions: ["view"],
   },

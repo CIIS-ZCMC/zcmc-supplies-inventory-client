@@ -432,6 +432,18 @@ const Inventory = () => {
                         </MenuItem>
                         <MenuItem
                           onClick={() => {
+                            navigate("/bin-card");
+                            //   setGenerateStockCard(true);
+                            // setMonthlyDistribution(false);
+                            // setIsDialogOpen(true);
+                            // setStockCard(true);
+                            // setopenIssuance(false);
+                          }}
+                        >
+                          Bin Card
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
                             setIsDialogOpen(true);
                             setMonthlyDistribution(true);
                             setopenIssuance(false);

@@ -24,6 +24,8 @@ export const MigrateLibraries = {
 };
 
 export const API = {
+  FETCHINVENTORY: "itemlists",
+
   AREAS: "areas",
   AREA_STORE: "area-store",
   AREA_UPDATE: "area-update",
@@ -136,6 +138,7 @@ export const API = {
   CAf_Store: "storeCaf",
   GETCAF: "caflist",
   BALANCECARDFETCH: "fetchBalanceCard",
+  UPDATEBALANCECARD: "updateBalanceCard",
 
   DELETECAF: "delete-caf",
 

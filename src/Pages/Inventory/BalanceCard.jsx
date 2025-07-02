@@ -16,7 +16,7 @@ import {
 } from "@mui/joy";
 import useCategoriesHook from "../../Hooks/CategoriesHook";
 import useInventoryHook from "../../Hooks/InventoryHook";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, RefreshCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PaginatedTable from "../../Components/Table/PaginatedTable"; //"../../Components/Table/PaginatedTable";
 import { Search } from "lucide-react";
@@ -25,6 +25,7 @@ import { X } from "lucide-react";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import { BalanceCardSeparation } from "./BalanceCardSeparation";
 import { ExternalLink } from "lucide-react";
+import usePrintHooks from "../../Hooks/PrintHooks";
 export const BalanceCard = () => {
   const location = useLocation();
   const data = location.state;
@@ -34,8 +35,11 @@ export const BalanceCard = () => {
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [selectAll, setSelectAll] = useState(false);
   const [managemodal, setManagemodal] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const { retrieveBalanceCard, BalanceCard } = useInventoryHook();
   const [selectedAllocate, setSelectedAllocate] = useState();
+
+  const { OpenSmallWindow, printStockCardBulk } = usePrintHooks();
   const pageDetails = {
     title: "Balance Card Generation",
     description: "See the list of items.",
@@ -69,7 +73,8 @@ export const BalanceCard = () => {
     });
     setFilter(data);
     retrieveBalanceCard(data?.category, data?.month, data?.year);
-  }, []);
+    setRefresh(false);
+  }, [refresh]);
 
   const toggleSelectAll = () => {
     if (selectAll) {
@@ -107,7 +112,9 @@ export const BalanceCard = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    console.log(data);
+
+    setFilter(data);
+    retrieveBalanceCard(data?.category, data?.month, data?.year);
   };
 
   const itemColumn = [
@@ -173,6 +180,17 @@ export const BalanceCard = () => {
       );
     }
     return BalanceCard;
+  };
+
+  const handlePrint = () => {
+    OpenSmallWindow(
+      printStockCardBulk({
+        category: filter.category,
+        month: filter.month,
+        year: filter.year,
+        selected: Array.from(selectedItems),
+      })
+    );
   };
 
   return (
@@ -282,13 +300,25 @@ export const BalanceCard = () => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-
+                <Button
+                  onClick={() => {
+                    setRefresh(true);
+                  }}
+                  sx={{
+                    fontWeight: "normal",
+                    textTransform: "uppercase",
+                    fontSize: "12px",
+                  }}
+                  endDecorator={<RefreshCcw size={13} />}
+                >
+                  Refetch Data
+                </Button>
                 {selectedItems.size >= 1 && (
                   <>
                     <Button
                       variant="outlined"
                       sx={{ fontWeight: "normal" }}
-                      onClick={() => {}}
+                      onClick={handlePrint}
                     >
                       Print Selection ( {selectedItems.size} )
                     </Button>
@@ -321,6 +351,7 @@ export const BalanceCard = () => {
             <BalanceCardSeparation
               selectedItem={selectedAllocate}
               managemodal={managemodal}
+              setRefresh={setRefresh}
             />
           }
           isOpen={managemodal}
