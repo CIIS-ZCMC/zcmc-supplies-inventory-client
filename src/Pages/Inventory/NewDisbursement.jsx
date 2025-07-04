@@ -17,7 +17,8 @@ export const NewDisbursement = () => {
   const [inputs, setInputs] = useState([]);
   const [Deductions, setDeductions] = useState([]);
   const [orsburs, setOrsburs] = useState();
-  const { printDisbursementVoucher, OpenSmallWindow } = usePrintHooks();
+  const { printDisbursementVoucher, OpenSmallWindow, postPrint } =
+    usePrintHooks();
   const [load, setLoad] = useState(false);
   const { fetchORSBurs } = usePOTaggingHooks();
   const handleAddDeduction = () => {
@@ -44,14 +45,14 @@ export const NewDisbursement = () => {
     setDeductions(updated);
   };
   return (
-    <div>
-      <Typography>Enter PR Number:</Typography>
+    <div style={{ width: "500px" }}>
+      <Typography>Enter PO Number:</Typography>
       <Input
-        value={inputs?.pr_number}
+        value={inputs?.po_number}
         placeholder="Type here ..."
         sx={{ mb: 2 }}
         onChange={(e) => {
-          handleChange("pr_number", e.target.value);
+          handleChange("po_number", e.target.value);
         }}
       />
 
@@ -61,7 +62,7 @@ export const NewDisbursement = () => {
         <Button
           variant="soft"
           color="danger"
-          disabled={inputs?.pr_number ? false : true}
+          disabled={inputs?.po_number ? false : true}
           sx={{
             fontSize: "11px",
             fontWeight: "normal",
@@ -71,8 +72,9 @@ export const NewDisbursement = () => {
           loading={load}
           onClick={() => {
             setLoad(true);
-            fetchORSBurs(inputs?.pr_number).then((response) => {
-              handleChange("orsbursno", response.data);
+            fetchORSBurs(inputs?.po_number).then((response) => {
+              handleChange("orsbursno", response.data.orsburs);
+              handleChange("fundcluster", response.data.fundcluster);
               setLoad(false);
             });
           }}
@@ -139,38 +141,20 @@ export const NewDisbursement = () => {
               <Checkbox
                 label={<>Is Percentage</>}
                 checked={row.isPercentage}
-                onChange={(e) =>
-                  handleDeductionChange(index, "isPercentage", e.target.checked)
-                }
+                onChange={(e) => {
+                  const updated = Deductions.map((deduction, idx) =>
+                    idx === index
+                      ? {
+                          ...deduction,
+                          isPercentage: e.target.checked,
+                          baseType: "total",
+                        }
+                      : deduction
+                  );
+                  setDeductions(updated);
+                }}
                 sx={{ mb: 0.5 }}
               />
-
-              {row.isPercentage && (
-                <Stack direction="row" padding={1} spacing={1}>
-                  <Radio
-                    checked={row.baseType === "total"}
-                    onChange={() =>
-                      handleDeductionChange(index, "baseType", "total")
-                    }
-                    label={
-                      <Typography level="body-xs">
-                        ( Based on Total Amount )
-                      </Typography>
-                    }
-                  />
-                  <Radio
-                    checked={row.baseType === "displayed"}
-                    onChange={() =>
-                      handleDeductionChange(index, "baseType", "displayed")
-                    }
-                    label={
-                      <Typography level="body-xs">
-                        ( Based on Displayed Value )
-                      </Typography>
-                    }
-                  />
-                </Stack>
-              )}
             </Stack>
 
             <Divider />
@@ -190,7 +174,7 @@ export const NewDisbursement = () => {
               }
             />
 
-            <Typography level="body-sm" sx={{ mb: 0.5, mt: 1 }}>
+            {/* <Typography level="body-sm" sx={{ mb: 0.5, mt: 1 }}>
               Display value
             </Typography>
             <Input
@@ -204,7 +188,7 @@ export const NewDisbursement = () => {
                   String(e.target.value).trim()
                 )
               }
-            />
+            /> */}
             <Divider sx={{ mt: 2, mb: 2 }} />
           </Box>
         ))}
@@ -217,22 +201,24 @@ export const NewDisbursement = () => {
           sx={{ mt: 1 }}
           size="md"
           onClick={() => {
-            const safeDeductions = Deductions.map((d) => ({
-              ...d,
-              name: String(d.name).trim().replace(/\//g, "^"),
-            }));
+            // const safeDeductions = Deductions.map((d) => ({
+            //   ...d,
+            //   name: String(d.name).trim().replace(/\//g, "^"),
+            // }));
 
-            printDisbursementVoucher({
+            postPrint("printdv", {
               input: inputs,
-              deductions: safeDeductions,
+              deductions: Deductions,
+            }).then((pathResponse) => {
+              OpenSmallWindow(pathResponse);
             });
 
-            OpenSmallWindow(
-              printDisbursementVoucher({
-                input: inputs,
-                deductions: safeDeductions,
-              })
-            );
+            // OpenSmallWindow(
+            //   printDisbursementVoucher({
+            //     input: inputs,
+            //     deductions: safeDeductions,
+            //   })
+            // );
           }}
         >
           Generate

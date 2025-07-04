@@ -68,7 +68,8 @@ export const ConfirmSelection = ({
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries());
     if (isMonthlyDistribution) {
-      window.open(printMonthlyDistReport(JSON.stringify(data)), "_blank");
+      OpenSmallWindow(printMonthlyDistReport(JSON.stringify(data)));
+      //  window.open(, "_blank");
       return;
     }
     if (openIssuance) {

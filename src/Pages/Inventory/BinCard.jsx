@@ -12,7 +12,7 @@ export const BinCard = () => {
   const navigate = useNavigate();
   const [load, setLoad] = useState(false);
   const { getItems, resultData } = useInventoryHook();
-  const { printBinCard, OpenSmallWindow } = usePrintHooks();
+  const { printBinCard, OpenSmallWindow, postPrint } = usePrintHooks();
   const [params, setParams] = useState([]);
   const pageDetails = {
     title: "Bin Card Generation",
@@ -35,13 +35,12 @@ export const BinCard = () => {
   };
 
   const handleGenerate = (row) => {
-    OpenSmallWindow(
-      printBinCard({
-        selectedItem: row,
-        params: params,
-      })
-    );
-    console.log(row);
+    postPrint("printBinCard", {
+      selectedItem: row,
+      params: params,
+    }).then((printPAth) => {
+      OpenSmallWindow(printPAth);
+    });
   };
 
   const disabledGenerate = () => {

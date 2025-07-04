@@ -458,7 +458,7 @@ const Inventory = () => {
                             setIsDialogOpen(true);
                             setMonthlyDistribution(false);
                             setopenIssuance(true);
-                            // OpenSmallWindow(printSuppliesIssuance("test"));
+                            //
                           }}
                         >
                           Reports of supplies and materials issued

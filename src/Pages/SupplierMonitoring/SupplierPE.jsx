@@ -32,6 +32,7 @@ export const SupplierPE = ({ selectedSupplier }) => {
   useEffect(() => {
     setInputs(selectedSupplier);
     getSupplierDeliveredList(selectedSupplier?.id);
+    setSelection([]);
   }, [selectedSupplier]);
 
   const handleChanges = (key, value) => {

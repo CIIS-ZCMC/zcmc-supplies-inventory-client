@@ -60,10 +60,10 @@ const usePOTaggingHooks = create((set) => ({
       return error;
     }
   },
-  fetchORSBurs: async (pr_number) => {
+  fetchORSBurs: async (po_number) => {
     try {
       const response = await inventory_api.get(
-        `/${API.FETCH_ORSBURS}/${pr_number}`
+        `/${API.FETCH_ORSBURS}/${po_number}`
       );
       return response;
     } catch (error) {

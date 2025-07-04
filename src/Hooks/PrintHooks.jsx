@@ -78,5 +78,17 @@ const usePrintHooks = create((set) => ({
       API.PRINT_GUARD
     }/printBinCard/${JSON.stringify(data)}`;
   },
+
+  postPrint: async (type, data) => {
+    try {
+      const response = await inventory_api.post(
+        `/postPrint/${type}/print`,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      error.message;
+    }
+  },
 }));
 export default usePrintHooks;
