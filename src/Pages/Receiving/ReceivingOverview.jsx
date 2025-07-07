@@ -1,8 +1,22 @@
 import { useEffect, useState } from "react";
-import { Box, Stack } from "@mui/joy";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemDecorator,
+  Stack,
+  Typography,
+} from "@mui/joy";
 import { useQuery } from "@tanstack/react-query";
 import * as XLSX from "xlsx";
-import { ViewIcon, SearchIcon } from "lucide-react";
+import {
+  ViewIcon,
+  SearchIcon,
+  Grid2x2Check,
+  ChartBar,
+  NotepadText,
+  ListChecks,
+} from "lucide-react";
 //hooks
 import useReceivingHook from "../../Hooks/ReceivingHook";
 import useSnackbarHook from "../../Hooks/AlertHook";
@@ -148,6 +162,16 @@ const ReceivingOverview = () => {
     }
   };
 
+  const reportButtonstyle = {
+    cursor: "pointer",
+    transition: "all ease-in 0.1s",
+
+    "&:hover": {
+      fontWeight: "bold",
+      color: "#447D9B",
+    },
+  };
+
   return (
     <>
       <Header pageDetails={pageDetails} data={user} />
@@ -197,7 +221,44 @@ const ReceivingOverview = () => {
         </ContainerComponent>
 
         <ContainerComponent>
-          <PaginatedTable
+          <Typography
+            level="h4"
+            color="primary"
+            startDecorator={<Grid2x2Check />}
+          >
+            GENERATE REPORTS
+          </Typography>
+          <Typography
+            id="decorated-list-demo"
+            level="body-xs"
+            sx={{ textTransform: "uppercase", fontWeight: "lg", mb: 1 }}
+          >
+            IAR Reports
+          </Typography>
+          <List aria-labelledby="decorated-list-demo">
+            <ListItem
+              sx={reportButtonstyle}
+              onClick={() => {
+                setPrintIARModal(true);
+              }}
+            >
+              <ListItemDecorator>
+                <NotepadText />
+              </ListItemDecorator>{" "}
+              Inspection and Acceptance Report ( IAR )
+            </ListItem>
+
+            <ListItem
+              sx={reportButtonstyle}
+              onClick={() => setTransmittal(true)}
+            >
+              <ListItemDecorator>
+                <ListChecks />
+              </ListItemDecorator>{" "}
+              IAR Transmittal
+            </ListItem>
+          </List>
+          {/* <PaginatedTable
             loading={isLoading}
             tableTitle={"List of stock-in transactions"}
             tableDesc={
@@ -239,12 +300,6 @@ const ReceivingOverview = () => {
               <>
                 <Stack direction={"row"} justifyContent={"space-between"}>
                   <Stack direction="row" spacing={1} mb={1} mt={2}>
-                    {/* <ButtonComponent
-                      variant={"outlined"}
-                      label="Generate report"
-                      size="lg"
-                      onClick={generateReport}
-                    /> */}
                     <Dropdown>
                       <MenuButton
                         variant="soft"
@@ -284,12 +339,6 @@ const ReceivingOverview = () => {
                       }
                       onClick={() => {
                         setTransmittal(true);
-                        // if (generateIARBool) {
-                        //   setGenerateIARBool(false);
-                        //   setSelectedIARs([]);
-                        // } else {
-                        //   setGenerateIARBool(true);
-                        // }
                       }}
                       endDecorator={
                         <Box sx={{ padding: "5px 0 0 0" }}>
@@ -335,7 +384,7 @@ const ReceivingOverview = () => {
             editable={generateIARBool ? false : true} // Turn this false
             viewable={generateIARBool ? false : true} // Turn this false
             editRow={handleEditRow}
-          />
+          /> */}
         </ContainerComponent>
       </Stack>
 

@@ -24,6 +24,7 @@ export const SearchPOForIAR = () => {
   const clearIARResult = useSuppliesHook((state) => state.clearIARResult);
   const { OpenSmallWindow, printIAR } = usePrintHooks();
   const [selectedIAR, setSelectedIAR] = useState([]);
+  const [searchlist, setSearchlist] = useState("");
   const handleChange = (key, value) => {
     setData((prev) => ({
       ...prev,
@@ -137,6 +138,12 @@ export const SearchPOForIAR = () => {
                   spacing={2}
                   justifyContent={"flex-end"}
                 >
+                  <Input
+                    placeholder="Search from list ..."
+                    startDecorator={<Search size={17} />}
+                    value={searchlist}
+                    onChange={(e) => setSearchlist(e.target.value)}
+                  />
                   {selectedIAR.length >= 1 && (
                     <Button
                       sx={{
@@ -175,7 +182,17 @@ export const SearchPOForIAR = () => {
                   </Button>
                 </Stack>
               }
-              rows={IARResult}
+              rows={
+                searchlist
+                  ? IARResult?.filter(
+                      (x) =>
+                        x.itemdesc
+                          .toLowerCase()
+                          .includes(searchlist.toLowerCase()) ||
+                        x.lotno.toLowerCase().includes(searchlist.toLowerCase())
+                    )
+                  : IARResult
+              }
               columns={columns}
               customAction={true}
               viewable={false}

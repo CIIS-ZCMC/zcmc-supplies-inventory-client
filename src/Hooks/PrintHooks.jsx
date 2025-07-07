@@ -90,5 +90,10 @@ const usePrintHooks = create((set) => ({
       error.message;
     }
   },
+  printIssuanceArea: (data) => {
+    return `${BASE_URL.production}/${
+      API.PRINT_GUARD
+    }/printIssuanceArea/${JSON.stringify(data)}`;
+  },
 }));
 export default usePrintHooks;

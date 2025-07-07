@@ -85,10 +85,11 @@ export const sidebarRoutes = [
     element: <ReleasingOverview />,
     icon: <ArrowUpFromLine />,
     permissions: ["view"],
+    hidden: true,
   },
   {
     path: "/receiving",
-    name: "Receiving (IAR)",
+    name: "Inspection and Acceptance Report ( IAR ) ", //Receiving (IAR)
     element: <ReceivingOverview />,
     icon: <ArrowDownToLine />,
     permissions: ["view"],
@@ -99,6 +100,7 @@ export const sidebarRoutes = [
     element: <StockUpdate />,
     icon: <ChartCandlestick />,
     permissions: ["view"],
+    hidden: true,
   },
   {
     path: "reports",
@@ -119,6 +121,7 @@ export const sidebarRoutes = [
       { path: "area-supplies", element: <AreaSupplies /> },
       { path: "regular-supplies", element: <RegularSupplies /> },
     ],
+    hidden: true,
   },
 ];
 

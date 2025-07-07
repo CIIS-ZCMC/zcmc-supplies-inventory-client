@@ -63,6 +63,7 @@ export const SupplierMonitoring = () => {
   const [POsRecords, setPOsRecords] = React.useState([]);
   const [searchkeyPo, setSearchKeyPo] = React.useState("");
   const [selectedSupplier, setSelectedSupplier] = React.useState(null);
+  const [searchlist, setSearchlist] = React.useState("");
   useEffect(() => {
     getPODashboard();
     getSuppliers();
@@ -95,7 +96,7 @@ export const SupplierMonitoring = () => {
       width: "30%",
       render: (row, index) => {
         const stars = [];
-        for (let i = 0; i < row.rating; i++) {
+        for (let i = 0; i <= row.rating; i++) {
           stars.push(
             <RiStarSFill
               key={i}
@@ -437,7 +438,7 @@ export const SupplierMonitoring = () => {
 
             <Divider sx={{ mb: 1 }} />
             <Box width={"100%"}>
-              <Box mb={2} width={"40%"}>
+              <Box mb={2} width={"20%"}>
                 <Typography level="body-md">Rating Legend :</Typography>
                 <ContainerComponent>
                   <Stack direction={"column"} spacing={1} ml={4}>
@@ -504,13 +505,33 @@ export const SupplierMonitoring = () => {
                   </Stack>
                 </ContainerComponent>
               </Box>
+
               <PaginatedTable
+                actionBtns={
+                  <>
+                    <Input
+                      startDecorator={<Search />}
+                      value={searchlist}
+                      onChange={(e) => setSearchlist(e.target.value)}
+                      sx={{ mt: 1 }}
+                      placeholder="Search from the list ..."
+                    />
+                  </>
+                }
                 tableTitle={"Suppliers Performance Ratings"}
                 $tableDesc={
                   "Data shown below are performance metrics evaluated by the system based on deliverables, delays, and earliest actions taken by the supplier."
                 }
                 columns={columns}
-                rows={supplierData?.data}
+                rows={
+                  searchlist
+                    ? supplierData?.data.filter((x) =>
+                        x.supplier
+                          .toLowerCase()
+                          .includes(searchlist.toLowerCase())
+                      )
+                    : supplierData?.data
+                }
               />
             </Box>
           </ContainerComponent>

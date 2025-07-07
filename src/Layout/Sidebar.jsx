@@ -43,22 +43,27 @@ function Sidebar() {
       <Stack mt={4} gap={1} flexGrow={1}>
         {sidebarRoutes
           ?.filter((x) => moduleData.includes(x.path))
-          .map(({ path, name, icon }, key) => (
-            <CustomLink to={path} path={path} key={key}>
-              <Box
-                sx={{
-                  fontSize: { xs: 16, md: 20 }, // Responsive font size
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                {icon}
-              </Box>
-              <Typography color="white" fontSize={{ xs: 12, md: 14 }}>
-                {name}
-              </Typography>
-            </CustomLink>
-          ))}
+          .map(({ path, name, icon, hidden }, key) => {
+            if (hidden) {
+              return;
+            }
+            return (
+              <CustomLink to={path} path={path} key={key}>
+                <Box
+                  sx={{
+                    fontSize: { xs: 16, md: 20 }, // Responsive font size
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {icon}
+                </Box>
+                <Typography color="white" fontSize={{ xs: 12, md: 14 }}>
+                  {name}
+                </Typography>
+              </CustomLink>
+            );
+          })}
       </Stack>
 
       <Sheet

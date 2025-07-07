@@ -291,7 +291,7 @@ function Dashboard() {
           </Box>
         </ContainerComponent>
 
-        <ContainerComponent>
+        {/* <ContainerComponent>
           <PaginatedTable
             tableTitle={"Inventory monitoring"}
             tableDesc={
@@ -311,7 +311,7 @@ function Dashboard() {
               </Stack>
             }
           />
-        </ContainerComponent>
+        </ContainerComponent> */}
       </Stack>
 
       <SnackbarComponent

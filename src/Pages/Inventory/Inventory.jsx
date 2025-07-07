@@ -13,7 +13,30 @@ import {
 import ButtonComponent from "../../Components/ButtonComponent";
 import ContainerComponent from "../../Components/Container/ContainerComponent";
 import InputComponent from "../../Components/Form/InputComponent";
-import { ArrowDown, ArrowUp, SearchIcon, ViewIcon } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  CalendarClock,
+  CalendarRange,
+  ChartBar,
+  Grid2X2,
+  Grid2x2Check,
+  Layers,
+  PackageCheck,
+  ScrollText,
+  SearchIcon,
+  SquareArrowUpRight,
+  SquareChartGantt,
+  TicketPercent,
+  ViewIcon,
+} from "lucide-react";
+
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import ListItemButton from "@mui/joy/ListItemButton";
+
+import Home from "@mui/icons-material/Home";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import useInventoryHook from "../../Hooks/InventoryHook";
 import { user } from "../../Data/index";
@@ -38,6 +61,7 @@ import { IoMdArrowDropdownCircle } from "react-icons/io";
 import { CiFilter } from "react-icons/ci";
 import { NewDisbursement } from "./NewDisbursement";
 import "../../App.css";
+import { IssuanceQuery } from "./IssuanceQuery";
 const categoryFilter = [
   { name: "Janitorial", value: "Janitorial" },
   { name: "Medical", value: "Medical" },
@@ -81,6 +105,7 @@ const Inventory = () => {
   const [activeStep, setActiveStep] = useState(0);
   const InventoryFilter = useInventoryHook((state) => state.InventoryFilter);
   const [isDV, setIsDV] = useState(false);
+  const [isItemarea, setIsItemarea] = useState(false);
   const [items, setItems] = useState([]);
   const btnGenerateStockCard = useRef();
   const setInventoryFilter = useInventoryHook(
@@ -279,6 +304,16 @@ const Inventory = () => {
     });
   };
 
+  const reportButtonstyle = {
+    cursor: "pointer",
+    transition: "all ease-in 0.1s",
+
+    "&:hover": {
+      fontWeight: "bold",
+      color: "#447D9B",
+    },
+  };
+
   return (
     <Fragment>
       <Header pageDetails={pageDetails} data={user} />
@@ -317,259 +352,378 @@ const Inventory = () => {
           </Stack>
         </ContainerComponent>
         <ContainerComponent>
-          <PaginatedTable
-            viewable={generateStockCard ? false : true}
-            loading={isLoading}
-            tableTitle={"List of items"}
-            tableDesc={
-              "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
-            }
-            columns={generateStockCard ? itemColumn : columns}
-            rows={
-              generateStockCard
-                ? filteredInventory(items)
-                : filteredInventory(inventoryData)
-            }
-            actions={<ViewIcon />}
-            btnLabel={"Add new item name"}
-            customAction={generateStockCard}
-            handleCustomAction={(perRow) => {
-              return (
-                <Stack direction={"column"} spacing={2}>
-                  {" "}
-                  <Box>
-                    {startingBal && startingBal.itemId === perRow.id && (
-                      <Stack direction={"row"} sx={{ marginBottom: "-10px" }}>
-                        <Typography
-                          onClick={() => {
-                            handleSelection(perRow);
-                          }}
-                          color="primary"
-                          variant="body-xs"
-                          sx={{
-                            fontSize: "10px",
-                            textTransform: "uppercase",
-                            fontWeight: "bold",
-                            marginRight: "5px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Starting Balance :
-                        </Typography>
-                        {startingBal.value}
-                      </Stack>
-                    )}
-                  </Box>
-                  <Radio
-                    label="Select"
-                    value={perRow.id}
-                    checked={selectedItems === perRow.id}
-                    onClick={() => {
-                      setStartingBal(null);
-                      if (perRow.quantity === 0) {
-                      }
-                      handleSelection(perRow);
-                      setSelectedItems(perRow.id);
-                    }}
-                    color="danger"
+          <Stack direction={"row"} justifyContent={"space-between"} mt={2}>
+            <Stack direction="row" spacing={1}>
+              <Box>
+                <Dropdown>
+                  <MenuButton
+                    variant="soft"
+                    color="primary"
                     sx={{
-                      color: "red",
-                      fontSize: "11px",
-                      textTransform: "uppercase",
+                      padding: "11px 20px ",
+                      fontWeight: "500",
+                      fontSize: "13px",
+                      display: "none",
                     }}
-                  />
-                </Stack>
-              );
-            }}
-            actionBtns={
-              <Stack direction={"row"} justifyContent={"space-between"} mt={2}>
-                <Stack direction="row" spacing={1}>
-                  <Box>
-                    <Dropdown>
-                      <MenuButton
-                        variant="soft"
-                        color="primary"
-                        sx={{
-                          padding: "11px 20px ",
-                          fontWeight: "500",
-                          fontSize: "13px",
-                        }}
-                        endDecorator={<IoMdArrowDropdownCircle fontSize={18} />}
-                      >
-                        Generate Report
-                      </MenuButton>
-                      <Menu sx={{ fontSize: "14px" }}>
-                        <MenuItem
-                          onClick={() => {
-                            generateReport(
-                              "Inventory",
-                              filteredInventory(inventoryData)
-                            );
-                          }}
-                        >
-                          Export to Excel
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            setIsDialogOpen(true);
-                            setMonthlyDistribution(false);
-                            setopenIssuance(false);
-                            setStockCard(false);
-                          }}
-                        >
-                          Balance Card
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            //   setGenerateStockCard(true);
-                            setMonthlyDistribution(false);
-                            setIsDialogOpen(true);
-                            setStockCard(true);
-                            setopenIssuance(false);
-                          }}
-                        >
-                          Stock Card
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            navigate("/bin-card");
-                            //   setGenerateStockCard(true);
-                            // setMonthlyDistribution(false);
-                            // setIsDialogOpen(true);
-                            // setStockCard(true);
-                            // setopenIssuance(false);
-                          }}
-                        >
-                          Bin Card
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            setIsDialogOpen(true);
-                            setMonthlyDistribution(true);
-                            setopenIssuance(false);
-                            setStockCard(false);
-                          }}
-                        >
-                          Monthly Distribution Report
-                        </MenuItem>
+                    endDecorator={<IoMdArrowDropdownCircle fontSize={18} />}
+                  >
+                    Generate Report
+                  </MenuButton>
+                  <Menu sx={{ fontSize: "14px" }}>
+                    <MenuItem
+                      onClick={() => {
+                        generateReport(
+                          "Inventory",
+                          filteredInventory(inventoryData)
+                        );
+                      }}
+                    >
+                      Export to Excel
+                    </MenuItem>
+                    {/* <MenuItem
+                      onClick={() => {
+                        setIsDialogOpen(true);
+                        setMonthlyDistribution(false);
+                        setopenIssuance(false);
+                        setStockCard(false);
+                      }}
+                    >
+                      Balance Card
+                    </MenuItem> */}
+                    {/* <MenuItem
+                      onClick={() => {
+                       
+                        setMonthlyDistribution(false);
+                        setIsDialogOpen(true);
+                        setStockCard(true);
+                        setopenIssuance(false);
+                      }}
+                    >
+                      Stock Card
+                    </MenuItem> */}
+                    {/* <MenuItem
+                      onClick={() => {
+                        navigate("/bin-card");
+                        
+                      }}
+                    >
+                      Bin Card
+                    </MenuItem> */}
+                    {/* <MenuItem
+                      onClick={() => {
+                        setIsDialogOpen(true);
+                        setMonthlyDistribution(true);
+                        setopenIssuance(false);
+                        setStockCard(false);
+                      }}
+                    >
+                      Monthly Distribution Report
+                    </MenuItem> */}
 
-                        <MenuItem
-                          onClick={() => {
-                            setIsDialogOpen(true);
-                            setMonthlyDistribution(false);
-                            setopenIssuance(true);
-                            //
-                          }}
-                        >
-                          Reports of supplies and materials issued
-                        </MenuItem>
+                    {/* <MenuItem
+                      onClick={() => {
+                        setIsDialogOpen(true);
+                        setMonthlyDistribution(false);
+                        setopenIssuance(true);
+                        //
+                      }}
+                    >
+                      Reports of supplies and materials issued
+                    </MenuItem> */}
 
-                        <MenuItem
-                          onClick={() => {
-                            setIsDV(true);
-                          }}
-                        >
-                          Disbursement Voucher
-                        </MenuItem>
-                      </Menu>
-                    </Dropdown>
-                  </Box>
-                  {/* <ButtonComponent
+                    <MenuItem
+                      onClick={() => {
+                        setIsDV(true);
+                      }}
+                    >
+                      Disbursement Voucher
+                    </MenuItem>
+                  </Menu>
+                </Dropdown>
+              </Box>
+              {/* <ButtonComponent
                     label="Add new item name"
                     onClick={navigateToItemSupplies}
                   /> */}
-                </Stack>
+            </Stack>
 
-                {generateStockCard && (
-                  <Stack direction={"row"} spacing={1}>
-                    <Box sx={{ display: generateStockCard ? "block" : "none" }}>
-                      <ButtonComponent
-                        label={
-                          generateStockCard ? "Cancel" : "Generate Stock Card"
-                        }
-                        variant={generateStockCard ? "solid" : "plain"}
-                        color={generateStockCard ? "danger" : "warning"}
-                        endDecorator={
-                          generateStockCard ? (
-                            <MdOutlineCancel fontSize={18} />
-                          ) : (
-                            <CiShare1 fontSize={18} />
-                          )
-                        }
-                        onClick={() => {
-                          if (generateStockCard) {
-                            setGenerateStockCard(false);
-                            setSelectedItems(null);
-                            setInventoryFilter({});
-                            setStartingBal(null);
-                          } else {
-                            setGenerateStockCard(true);
-                          }
-                        }}
-                      />
-                    </Box>
-                    <ButtonComponent
-                      label={
-                        <Stack>
-                          <Typography
-                            variant=""
-                            level="body-sm"
-                            sx={{ fontWeight: "bold" }}
-                          >
-                            Show Filter
-                          </Typography>
-                          <Typography variant="" level="body-xs">
-                            <Stack>
-                              <Box>
-                                Month : {getMonthName(InventoryFilter?.month)}
-                              </Box>
-                              <Box>Year : {InventoryFilter?.year}</Box>
-                            </Stack>
-                          </Typography>
-                        </Stack>
+            {generateStockCard && (
+              <Stack direction={"row"} spacing={1}>
+                <Box sx={{ display: generateStockCard ? "block" : "none" }}>
+                  <ButtonComponent
+                    label={generateStockCard ? "Cancel" : "Generate Stock Card"}
+                    variant={generateStockCard ? "solid" : "plain"}
+                    color={generateStockCard ? "danger" : "warning"}
+                    endDecorator={
+                      generateStockCard ? (
+                        <MdOutlineCancel fontSize={18} />
+                      ) : (
+                        <CiShare1 fontSize={18} />
+                      )
+                    }
+                    onClick={() => {
+                      if (generateStockCard) {
+                        setGenerateStockCard(false);
+                        setSelectedItems(null);
+                        setInventoryFilter({});
+                        setStartingBal(null);
+                      } else {
+                        setGenerateStockCard(true);
                       }
-                      variant={"outlined"}
-                      color="primary"
-                      endDecorator={<CiFilter />}
+                    }}
+                  />
+                </Box>
+                <ButtonComponent
+                  label={
+                    <Stack>
+                      <Typography
+                        variant=""
+                        level="body-sm"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        Show Filter
+                      </Typography>
+                      <Typography variant="" level="body-xs">
+                        <Stack>
+                          <Box>
+                            Month : {getMonthName(InventoryFilter?.month)}
+                          </Box>
+                          <Box>Year : {InventoryFilter?.year}</Box>
+                        </Stack>
+                      </Typography>
+                    </Stack>
+                  }
+                  variant={"outlined"}
+                  color="primary"
+                  endDecorator={<CiFilter />}
+                  onClick={() => {
+                    setIsDialogOpen(true);
+                    setStockCard(true);
+                  }}
+                />
+
+                <Button
+                  disabled={selectedItems ? false : true}
+                  variant={"solid"}
+                  sx={{ display: "none" }}
+                  color={"success"}
+                  onClick={handleGenerateStockCard}
+                  ref={btnGenerateStockCard}
+                >
+                  <Stack direction={"column"}>Generate Stock-Card</Stack>
+                </Button>
+              </Stack>
+            )}
+          </Stack>
+          {!generateStockCard && (
+            <>
+              <Typography
+                level="h4"
+                color="primary"
+                startDecorator={<Grid2x2Check />}
+              >
+                GENERATE REPORTS
+              </Typography>
+              <div>
+                <Typography
+                  id="decorated-list-demo"
+                  level="body-xs"
+                  sx={{ textTransform: "uppercase", fontWeight: "lg", mb: 1 }}
+                >
+                  Inventory Reports
+                </Typography>
+                <List aria-labelledby="decorated-list-demo">
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      setIsDialogOpen(true);
+                      setMonthlyDistribution(false);
+                      setopenIssuance(false);
+                      setStockCard(false);
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <ChartBar />
+                    </ListItemDecorator>{" "}
+                    Balance Card
+                  </ListItem>
+
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      setMonthlyDistribution(false);
+                      setIsDialogOpen(true);
+                      setStockCard(true);
+                      setopenIssuance(false);
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <Layers />
+                    </ListItemDecorator>{" "}
+                    Stock Card
+                  </ListItem>
+
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      navigate("/bin-card");
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <ScrollText />
+                    </ListItemDecorator>{" "}
+                    Bin Card
+                  </ListItem>
+
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      setIsDialogOpen(true);
+                      setMonthlyDistribution(true);
+                      setopenIssuance(false);
+                      setStockCard(false);
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <CalendarClock />
+                    </ListItemDecorator>{" "}
+                    Monthly Distribution Report
+                  </ListItem>
+
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      setIsDialogOpen(true);
+                      setMonthlyDistribution(false);
+                      setopenIssuance(true);
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <PackageCheck />
+                    </ListItemDecorator>{" "}
+                    Reports of supplies and materials issued
+                  </ListItem>
+
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      setIsDV(true);
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <TicketPercent />
+                    </ListItemDecorator>{" "}
+                    Disbursement Voucher
+                  </ListItem>
+
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      setIsItemarea(true);
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <SquareChartGantt />
+                    </ListItemDecorator>{" "}
+                    Item-Area Query
+                  </ListItem>
+                </List>
+              </div>
+            </>
+          )}
+
+          {generateStockCard && (
+            <PaginatedTable
+              viewable={generateStockCard ? false : true}
+              loading={isLoading}
+              tableTitle={"List of items"}
+              tableDesc={
+                "Inventory items with stocks are shown here real-time. You can also add a new item name if necessary."
+              }
+              columns={generateStockCard ? itemColumn : columns}
+              rows={
+                generateStockCard
+                  ? filteredInventory(items)
+                  : filteredInventory(inventoryData)
+              }
+              actions={<ViewIcon />}
+              btnLabel={"Add new item name"}
+              customAction={generateStockCard}
+              handleCustomAction={(perRow) => {
+                return (
+                  <Stack direction={"column"} spacing={2}>
+                    {" "}
+                    <Box>
+                      {startingBal && startingBal.itemId === perRow.id && (
+                        <Stack direction={"row"} sx={{ marginBottom: "-10px" }}>
+                          <Typography
+                            onClick={() => {
+                              handleSelection(perRow);
+                            }}
+                            color="primary"
+                            variant="body-xs"
+                            sx={{
+                              fontSize: "10px",
+                              textTransform: "uppercase",
+                              fontWeight: "bold",
+                              marginRight: "5px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Starting Balance :
+                          </Typography>
+                          {startingBal.value}
+                        </Stack>
+                      )}
+                    </Box>
+                    <Radio
+                      label="Select"
+                      value={perRow.id}
+                      checked={selectedItems === perRow.id}
                       onClick={() => {
-                        setIsDialogOpen(true);
-                        setStockCard(true);
+                        setStartingBal(null);
+                        if (perRow.quantity === 0) {
+                        }
+                        handleSelection(perRow);
+                        setSelectedItems(perRow.id);
+                      }}
+                      color="danger"
+                      sx={{
+                        color: "red",
+                        fontSize: "11px",
+                        textTransform: "uppercase",
                       }}
                     />
-
-                    <Button
-                      disabled={selectedItems ? false : true}
-                      variant={"solid"}
-                      sx={{ display: "none" }}
-                      color={"success"}
-                      onClick={handleGenerateStockCard}
-                      ref={btnGenerateStockCard}
-                    >
-                      <Stack direction={"column"}>Generate Stock-Card</Stack>
-                    </Button>
                   </Stack>
-                )}
-              </Stack>
-            }
-            icon={
-              <MdOutlineLibraryAdd
-                style={{
-                  verticalAlign: "middle",
-                  color: theme.palette.custom.buttonBg,
-                  fontSize: 30,
-                  backgroundColor: "#EBF2F9",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              />
-            }
-            label={"Fill-up your inventory by creating a New item"}
-            desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
+                );
+              }}
+              actionBtns={""}
+              icon={
+                <MdOutlineLibraryAdd
+                  style={{
+                    verticalAlign: "middle",
+                    color: theme.palette.custom.buttonBg,
+                    fontSize: 30,
+                    backgroundColor: "#EBF2F9",
+                    padding: 10,
+                    borderRadius: 5,
+                  }}
+                />
+              }
+              label={"Fill-up your inventory by creating a New item"}
+              desc={`Your inventory is currently empty. To manage it, you’ll need to add items. You can use
                   inventory items in filling-up IARs and RIS requests.`}
-            // btn={<ButtonComponent label={"Create new item"} onClick={"/"} />}
-          />
+            />
+          )}
         </ContainerComponent>
       </Stack>
+
+      <ModalComponent
+        isOpen={isItemarea}
+        handleClose={() => setIsItemarea(false)}
+        title="Issuance - Area"
+        content={<IssuanceQuery />}
+      />
 
       <ModalComponent
         isOpen={isDV}

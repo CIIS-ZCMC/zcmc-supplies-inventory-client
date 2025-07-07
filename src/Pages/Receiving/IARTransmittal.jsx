@@ -13,7 +13,7 @@ import InputComponent from "../../Components/Form/InputComponent";
 import useReceivingHook from "../../Hooks/ReceivingHook";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import usePrintHooks from "../../Hooks/PrintHooks";
-import { PrinterCheck } from "lucide-react";
+import { PrinterCheck, Search } from "lucide-react";
 export const IARTransmittal = () => {
   const { fetchIARRecords } = useReceivingHook();
   const [filter, setFilter] = useState({});
@@ -22,6 +22,7 @@ export const IARTransmittal = () => {
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [load, setLoad] = useState(false);
   const { PrintIARTransmittal, OpenSmallWindow } = usePrintHooks();
+  const [searchlist, setSearchlist] = useState("");
 
   const handleChange = (key, value) => {
     setFilter((prev) => ({
@@ -154,8 +155,38 @@ export const IARTransmittal = () => {
       {search.length >= 1 && (
         <PaginatedTable
           columns={itemColumn}
-          rows={search}
+          rows={
+            searchlist
+              ? search?.filter(
+                  (x) =>
+                    x.itemName
+                      .toLowerCase()
+                      .includes(searchlist.toLowerCase()) ||
+                    x.unit.toLowerCase().includes(searchlist.toLowerCase()) ||
+                    x.suppliers_name
+                      .toLowerCase()
+                      .includes(searchlist.toLowerCase()) ||
+                    x.releasedRemarks
+                      .toLowerCase()
+                      .includes(searchlist.toLowerCase()) ||
+                    x.record_date
+                      .toLowerCase()
+                      .includes(searchlist.toLowerCase())
+                )
+              : search
+          }
           customAction={true}
+          actionBtns={
+            <Stack>
+              <Input
+                placeholder="Search from list ..."
+                sx={{ mt: 1 }}
+                startDecorator={<Search size={15} />}
+                onChange={(e) => setSearchlist(e.target.value)}
+                value={searchlist}
+              />
+            </Stack>
+          }
           handleCustomAction={(row) => {
             return (
               <Stack
