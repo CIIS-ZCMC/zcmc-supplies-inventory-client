@@ -1,10 +1,10 @@
 import { Fragment, useEffect, useState } from "react";
 
 import { Box, Stack, Divider, Typography, Chip } from "@mui/joy";
-import { Info, SquareArrowOutUpRight } from "lucide-react";
+import { Container, Info, SquareArrowOutUpRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import * as XLSX from "xlsx";
-
+import LineChart from "./LineChart";
 import { Link } from "react-router-dom";
 
 import Header from "../Layout/Header/Header";
@@ -289,6 +289,11 @@ function Dashboard() {
               ))}
             </Stack>
           </Box>
+        </ContainerComponent>
+
+        <ContainerComponent>
+          <Typography>ISSUANCE - CHART</Typography>
+          <LineChart />
         </ContainerComponent>
 
         {/* <ContainerComponent>

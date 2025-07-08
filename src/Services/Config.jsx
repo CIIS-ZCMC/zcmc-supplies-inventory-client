@@ -139,6 +139,8 @@ export const API = {
   GETCAF: "caflist",
   BALANCECARDFETCH: "fetchBalanceCard",
   UPDATEBALANCECARD: "updateBalanceCard",
+  GETITEMDETAILS: "getitemsdetails",
+  DASHBOARDISSUANCE: "dashboardIssuance",
 
   DELETECAF: "delete-caf",
 

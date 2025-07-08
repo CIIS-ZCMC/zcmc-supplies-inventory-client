@@ -19,6 +19,7 @@ import {
   CalendarClock,
   CalendarRange,
   ChartBar,
+  ClipboardList,
   Grid2X2,
   Grid2x2Check,
   Layers,
@@ -106,6 +107,7 @@ const Inventory = () => {
   const InventoryFilter = useInventoryHook((state) => state.InventoryFilter);
   const [isDV, setIsDV] = useState(false);
   const [isItemarea, setIsItemarea] = useState(false);
+  const [itemsummary, setItemsummary] = useState(false);
   const [items, setItems] = useState([]);
   const btnGenerateStockCard = useRef();
   const setInventoryFilter = useInventoryHook(
@@ -620,12 +622,26 @@ const Inventory = () => {
                     sx={reportButtonstyle}
                     onClick={() => {
                       setIsItemarea(true);
+                      setItemsummary(false);
                     }}
                   >
                     <ListItemDecorator>
                       <SquareChartGantt />
                     </ListItemDecorator>{" "}
                     Item-Area Query
+                  </ListItem>
+
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      setIsItemarea(true);
+                      setItemsummary(true);
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <ClipboardList />
+                    </ListItemDecorator>{" "}
+                    Item-Issuance Summary
                   </ListItem>
                 </List>
               </div>
@@ -721,8 +737,8 @@ const Inventory = () => {
       <ModalComponent
         isOpen={isItemarea}
         handleClose={() => setIsItemarea(false)}
-        title="Issuance - Area"
-        content={<IssuanceQuery />}
+        title={itemsummary ? "Issuance Summary" : "Issuance - Area"}
+        content={<IssuanceQuery itemsummary={itemsummary} />}
       />
 
       <ModalComponent

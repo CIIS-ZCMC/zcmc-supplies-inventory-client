@@ -2,14 +2,20 @@ import { Input, Grid, Stack, Button } from "@mui/joy";
 import React from "react";
 import InputComponent from "../../Components/Form/InputComponent";
 import usePrintHooks from "../../Hooks/PrintHooks";
-export const IssuanceQuery = () => {
+export const IssuanceQuery = ({ itemsummary }) => {
   const { printIssuanceArea, OpenSmallWindow, postPrint } = usePrintHooks();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    postPrint("printIssuanceArea", data).then((printPath) => {
+
+    let print_data = "printIssuanceArea";
+    if (itemsummary) {
+      print_data = "printIssuanceSummary";
+    }
+
+    postPrint(print_data, data).then((printPath) => {
       OpenSmallWindow(printPath);
     });
   };
