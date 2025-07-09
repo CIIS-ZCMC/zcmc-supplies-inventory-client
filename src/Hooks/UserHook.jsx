@@ -7,8 +7,35 @@ const useUserHook = create((set) => ({
   userData: [],
   moduleData: [],
   autoLogout: false,
+  usersList: [],
+  userRoles: [],
   setAutoLogout: (boolean) => {
     set({ autoLogout: boolean });
+  },
+  getUsers: async () => {
+    try {
+      const response = await inventory_api.get(`/users`);
+      set({ usersList: response.data.data, userRoles: response.data.roles });
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  manageRole: async (data) => {
+    try {
+      const response = await inventory_api.post(`/manageRole`, data);
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  updateUser: async (data) => {
+    try {
+      const response = await inventory_api.post(`/updateUser`, data);
+      return response;
+    } catch (error) {
+      return error;
+    }
   },
   signIn: async (credentials) => {
     try {

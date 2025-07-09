@@ -7,6 +7,7 @@ import {
   ChartCandlestick,
   NotebookTextIcon,
   NotebookTabs,
+  Users2,
 } from "lucide-react";
 import { BiCategory } from "react-icons/bi";
 import { GrDocument } from "react-icons/gr";
@@ -55,6 +56,7 @@ import { SupplierMonitoring } from "../Pages/SupplierMonitoring/SupplierMonitori
 import { MaterialsIssuanceReport } from "../Pages/Inventory/MaterialsIssuanceReport";
 import { BalanceCard } from "../Pages/Inventory/BalanceCard";
 import { BinCard } from "../Pages/Inventory/BinCard";
+import { Accountmanagement } from "../Pages/Accounts/Accountmanagement";
 export const sidebarRoutes = [
   {
     path: "/dashboard",
@@ -92,6 +94,13 @@ export const sidebarRoutes = [
     name: "Inspection and Acceptance Report ( IAR ) ", //Receiving (IAR)
     element: <ReceivingOverview />,
     icon: <ArrowDownToLine />,
+    permissions: ["view"],
+  },
+  {
+    path: "/users",
+    name: "Account Management ", //Receiving (IAR)
+    element: <Accountmanagement />,
+    icon: <Users2 />,
     permissions: ["view"],
   },
   {
