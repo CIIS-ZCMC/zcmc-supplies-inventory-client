@@ -33,7 +33,7 @@ function Sidebar() {
       },
     })
   );
-
+  const sideRoutes = sidebarRoutes?.filter((x) => moduleData.includes(x.path));
   return (
     <Stack
       p={{ xs: 1.5, sm: 2.5 }} // Responsive padding
@@ -41,13 +41,17 @@ function Sidebar() {
     >
       <BrandLogo />
       <Stack mt={4} gap={1} flexGrow={1}>
-        {sidebarRoutes
-          ?.filter((x) => moduleData.includes(x.path))
-          .map(({ path, name, icon, hidden }, key) => {
-            if (hidden) {
-              return;
-            }
-            return (
+        {sideRoutes.map(({ path, name, icon, hidden }, key) => {
+          if (hidden) {
+            return;
+          }
+          return (
+            <Box
+              sx={{
+                userSelect: sideRoutes.length == 1 && "none",
+                pointerEvents: sideRoutes.length == 1 && "none",
+              }}
+            >
               <CustomLink to={path} path={path} key={key}>
                 <Box
                   sx={{
@@ -62,11 +66,12 @@ function Sidebar() {
                   {name}
                 </Typography>
               </CustomLink>
-            );
-          })}
+            </Box>
+          );
+        })}
       </Stack>
 
-      <Sheet
+      {/* <Sheet
         sx={{
           p: 1.5,
           borderRadius: "10px",
@@ -96,7 +101,7 @@ function Sidebar() {
         </Typography>
 
         <Stack mt={2} direction={"row"} alignItems={"center"}>
-          {/* render only if not in the path '/libraries' */}
+        
           {currentPath !== "/libraries" && (
             <Box mr={2}>
               <Link to={"/libraries"}>
@@ -119,7 +124,7 @@ function Sidebar() {
             </Stack>
           </Link>
         </Stack>
-      </Sheet>
+      </Sheet> */}
 
       <Sheet
         sx={{
@@ -150,14 +155,23 @@ function Sidebar() {
         </Typography>
 
         <Stack mt={2} direction={"row"} alignItems={"center"}>
-          <Link>
+          <Box
+            sx={{ cursor: "pointer" }}
+            onClick={() => {
+              swal(
+                "To report an issue",
+                "Kindly contact the developer: \n  Information below : \n  Reenjay Caimor | Computer programmer II \n zcmc.caimor@gmail.com \n or contact IISU @ Tel no.262",
+                "info"
+              );
+            }}
+          >
             <Stack direction={"row"} alignItems={"center"}>
               <Typography mr={1} fontSize={12} sx={{ color: "#E6E6E6" }}>
                 Report an issue?
               </Typography>
               <MessageCircleQuestion color="#E6E6E6" size={16} />
             </Stack>
-          </Link>
+          </Box>
         </Stack>
       </Sheet>
     </Stack>

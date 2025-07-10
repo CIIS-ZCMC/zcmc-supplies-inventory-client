@@ -29,6 +29,14 @@ const useUserHook = create((set) => ({
       return error;
     }
   },
+  saveUser: async (data) => {
+    try {
+      const response = await inventory_api.post(`/saveUser`, data);
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
   updateUser: async (data) => {
     try {
       const response = await inventory_api.post(`/updateUser`, data);

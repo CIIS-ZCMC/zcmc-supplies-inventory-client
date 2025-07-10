@@ -5,7 +5,7 @@ import ContainerComponent from "../../Components/Container/ContainerComponent";
 import { Box, Button, Chip, Input, Modal, Stack, Typography } from "@mui/joy";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import useUserHook from "../../hooks/UserHook";
-import { ExternalLink, Search } from "lucide-react";
+import { ExternalLink, Search, UserPlus } from "lucide-react";
 import ModalComponent from "../../Components/Dialogs/ModalComponent";
 import { Accounts } from "./Accounts";
 export const Accountmanagement = () => {
@@ -13,6 +13,7 @@ export const Accountmanagement = () => {
   const [openManage, setopenManage] = useState(null);
   const [refresh, setRefresh] = useState(false);
   const [search, setSearch] = useState("");
+  const [newAccount, setNewAccount] = useState(false);
   useEffect(() => {
     getUsers();
     setRefresh(false);
@@ -97,7 +98,7 @@ export const Accountmanagement = () => {
             rows={displayRow()}
             customAction={true}
             actionBtns={
-              <Box mt={2}>
+              <Stack direction={"row"} spacing={1} mt={2}>
                 <Input
                   sx={{ width: "300px" }}
                   placeholder="Search ..."
@@ -105,7 +106,17 @@ export const Accountmanagement = () => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-              </Box>
+                <Button
+                  sx={{ fontWeight: "normal", fontSize: 13 }}
+                  endDecorator={<UserPlus size={16} />}
+                  onClick={() => {
+                    setNewAccount(true);
+                    setopenManage(true);
+                  }}
+                >
+                  New User
+                </Button>
+              </Stack>
             }
             handleCustomAction={(row) => {
               return (
@@ -120,7 +131,10 @@ export const Accountmanagement = () => {
                       textTransform: "uppercase",
                       color: "#3674B5",
                     }}
-                    onClick={() => setopenManage(row.id)}
+                    onClick={() => {
+                      setopenManage(row.id);
+                      setNewAccount(false);
+                    }}
                     endDecorator={<ExternalLink size={14} />}
                   >
                     Manage
@@ -133,9 +147,16 @@ export const Accountmanagement = () => {
         <ModalComponent
           isOpen={openManage ? true : false}
           handleClose={() => setopenManage(null)}
-          title="Manage User Account"
+          title={newAccount ? "Add User Account" : "Manage User Account"}
           description={"user access management"}
-          content={<Accounts userInfo={openManage} setRefresh={setRefresh} />}
+          content={
+            <Accounts
+              userInfo={openManage}
+              setRefresh={setRefresh}
+              newAccount={newAccount}
+              setopenManage={setopenManage}
+            />
+          }
         />
       </Box>
     </div>

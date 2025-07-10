@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PaginatedTable from "../../Components/Table/PaginatedTable";
 import { PurchaseOrderHeaderView } from "../../Data/TableHeader";
 import usePOTaggingHooks from "../../Hooks/POTaggingHook";
@@ -26,6 +26,10 @@ function ViewTaggedPurchasedOrder(props) {
     queryKey: ["purchased_tagged"],
     queryFn: getPOTagged,
   });
+
+  useEffect(() => {
+    setTableData(taggedRecords);
+  }, [taggedRecords]);
 
   const purchaseORderData = search
     ? tableData.filter((x) => {

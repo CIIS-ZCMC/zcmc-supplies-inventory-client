@@ -57,6 +57,9 @@ function Dashboard() {
 
   const dashboardSuppiesData = dashboardSupplies || [];
   useEffect(() => {
+    if (moduleData.some((row) => row == "/dashboard")) {
+      return;
+    }
     navigate(moduleData[0]);
   }, [moduleData]);
 
