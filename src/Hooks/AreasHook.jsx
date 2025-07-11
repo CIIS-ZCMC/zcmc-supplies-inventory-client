@@ -9,6 +9,7 @@ const useAreasHook = create((set) => ({
     id: null,
     areaName: "",
   },
+  Arealist: [],
 
   validationSchema: Yup.object({
     areaName: Yup.string().required("Area Name is required"),
@@ -30,7 +31,7 @@ const useAreasHook = create((set) => ({
   getAreas: async () => {
     try {
       const response = await inventory_api.get(`/${API.AREAS}`);
-
+      set({ Arealist: response.data.data });
       return response.data;
     } catch (error) {
       error.message;

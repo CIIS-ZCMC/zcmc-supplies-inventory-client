@@ -25,6 +25,7 @@ const useSuppliersHook = create((set) => ({
   HasCaf: [],
   nextCaf: null,
   DeliveredList: [],
+  issuanceList: [],
 
   // ✅ Validation Schema
   validationSchema: Yup.object({
@@ -83,7 +84,28 @@ const useSuppliersHook = create((set) => ({
       throw error;
     }
   },
-
+  getGeneratedDirectIssuance: async () => {
+    try {
+      const response = await inventory_api.get(`/generated_directissuance`);
+      set({ issuanceList: response.data.data });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching suppliers:", error.message);
+      throw error;
+    }
+  },
+  getDataDI: async (data) => {
+    try {
+      const response = await inventory_api.post(
+        `/generated_data_directissuance`,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching suppliers:", error.message);
+      throw error;
+    }
+  },
   setToAll: async (data) => {
     try {
       const response = await inventory_api.post(`/${API.APPLYTOALL}`, data);

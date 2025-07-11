@@ -16,6 +16,7 @@ import InputComponent from "../../Components/Form/InputComponent";
 import {
   ArrowDown,
   ArrowUp,
+  Boxes,
   CalendarClock,
   CalendarRange,
   ChartBar,
@@ -642,6 +643,18 @@ const Inventory = () => {
                       <ClipboardList />
                     </ListItemDecorator>{" "}
                     Item-Issuance Summary
+                  </ListItem>
+
+                  <ListItem
+                    sx={reportButtonstyle}
+                    onClick={() => {
+                      navigate("/direct-issuance");
+                    }}
+                  >
+                    <ListItemDecorator>
+                      <Boxes />
+                    </ListItemDecorator>{" "}
+                    Direct Purchase Issuance Supplies
                   </ListItem>
                 </List>
               </div>

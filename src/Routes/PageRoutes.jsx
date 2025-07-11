@@ -57,6 +57,7 @@ import { MaterialsIssuanceReport } from "../Pages/Inventory/MaterialsIssuanceRep
 import { BalanceCard } from "../Pages/Inventory/BalanceCard";
 import { BinCard } from "../Pages/Inventory/BinCard";
 import { Accountmanagement } from "../Pages/Accounts/Accountmanagement";
+import { DirectIssuance } from "../Pages/Inventory/DirectIssuance";
 export const sidebarRoutes = [
   {
     path: "/dashboard",
@@ -225,6 +226,12 @@ export const childrenRoutes = [
   {
     path: "/bin-card",
     element: <BinCard />,
+    icon: null,
+    permissions: ["view"],
+  },
+  {
+    path: "/direct-issuance",
+    element: <DirectIssuance />,
     icon: null,
     permissions: ["view"],
   },
