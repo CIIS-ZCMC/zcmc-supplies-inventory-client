@@ -1,4 +1,4 @@
-export const BASE_URL = "http://192.168.9.95:8000/api";
+export const BASE_URL = "http://192.168.9.243:9999/api";
 
 export const PATH = {
   AREAS: "areas",

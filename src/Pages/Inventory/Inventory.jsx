@@ -758,7 +758,7 @@ const Inventory = () => {
         isOpen={isDV}
         handleClose={() => setIsDV(false)}
         title="Generate Disbursement Voucher"
-        content={<NewDisbursement />}
+        content={<NewDisbursement isDV={isDV} />}
       />
 
       <ModalComponent

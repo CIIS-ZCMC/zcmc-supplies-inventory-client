@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -6,17 +7,21 @@ import {
   Input,
   Radio,
   Stack,
+  Textarea,
   Typography,
 } from "@mui/joy";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Delete } from "lucide-react";
 import usePrintHooks from "../../Hooks/PrintHooks";
 import usePOTaggingHooks from "../../Hooks/POTaggingHook";
 import { ScanSearch } from "lucide-react";
-export const NewDisbursement = () => {
+import useSuppliersHook from "../../Hooks/SuppliersHook";
+export const NewDisbursement = ({ isDV }) => {
   const [inputs, setInputs] = useState([]);
   const [Deductions, setDeductions] = useState([]);
   const [orsburs, setOrsburs] = useState();
+
+  const { getSuppliers, suppliersList } = useSuppliersHook();
   const { printDisbursementVoucher, OpenSmallWindow, postPrint } =
     usePrintHooks();
   const [load, setLoad] = useState(false);
@@ -44,6 +49,12 @@ export const NewDisbursement = () => {
     );
     setDeductions(updated);
   };
+
+  useEffect(() => {
+    if (isDV) {
+      getSuppliers();
+    }
+  }, [isDV]);
   return (
     <div style={{ width: "500px" }}>
       <Typography>Enter PO Number:</Typography>
@@ -97,6 +108,25 @@ export const NewDisbursement = () => {
         onChange={(e) => {
           handleChange("invoiceno", e.target.value);
         }}
+      />
+
+      <Typography sx={{ mt: 1 }}>Payee:</Typography>
+
+      <Autocomplete
+        options={suppliersList}
+        getOptionLabel={(option) => option.supplier_name || ""} // if options are objects
+        onChange={(event, newValue) => {
+          handleChange("payee", newValue?.supplier_name || "");
+        }}
+        renderInput={(params) => <TextField {...params} label="Supplier" />}
+      />
+
+      <Typography sx={{ mt: 1 }}>Particulars Description:</Typography>
+      <Textarea
+        onChange={(e) => {
+          handleChange("paymentof", e.target.value);
+        }}
+        minRows={2}
       />
 
       <Box>
